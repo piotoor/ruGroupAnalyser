@@ -35,3 +35,4 @@
 *.depend
 bin/
 obj/
+bld/
