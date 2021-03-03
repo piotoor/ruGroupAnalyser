@@ -29,6 +29,7 @@ TEST(ruCubeTest, cubeStateResetTest) {
     ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
     cube.setEdges(076543210);
     cube.setCorners(01511413121110);
+    ASSERT_FALSE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
     cube.reset();
     ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
 }
@@ -101,6 +102,7 @@ TEST(ruCubeTest, singleTurnInversionTest) {
 
 	for (int trn = 0; trn < 6; ++trn) {
         cube.turn(trn);
+        ASSERT_FALSE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
         cube.inverseTurn(trn);
         ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
 	}
