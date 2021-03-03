@@ -111,7 +111,7 @@ void ruCube::scramble(std::vector<uint8_t> moves) {
 
 void ruCube::inverseScramble(std::vector<uint8_t> moves) {
     for (int i = size(moves) - 1; i >= 0; --i) {
-        inverseTurn(i);
+        inverseTurn(moves[i]);
     }
 }
 
