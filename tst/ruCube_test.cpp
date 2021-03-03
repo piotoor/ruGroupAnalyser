@@ -67,3 +67,13 @@ TEST(ruCubeTest, singleTurnTest) {
 	ASSERT_EQ(0442320452241, cube.getCorners());
 }
 
+TEST(ruCubeTest, singleTurnInversionTest) {
+    ruCube cube;
+
+	for (int trn = 0; trn < 6; ++trn) {
+        cube.turn(trn);
+        cube.inverseTurn(trn);
+        ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+	}
+
+}
