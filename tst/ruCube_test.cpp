@@ -105,6 +105,61 @@ TEST(ruCubeTest, singleTurnInversionTest) {
         ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
 	}
 
+    cube.inverseTurn(0);
+	cube.inverseTurn(0);
+	cube.inverseTurn(0);
+	cube.inverseTurn(0);
+
+	cube.inverseTurn(1);
+	cube.inverseTurn(1);
+
+	cube.inverseTurn(2);
+	cube.inverseTurn(2);
+	cube.inverseTurn(2);
+	cube.inverseTurn(2);
+
+	cube.inverseTurn(3);
+	cube.inverseTurn(3);
+	cube.inverseTurn(3);
+	cube.inverseTurn(3);
+
+	cube.inverseTurn(4);
+	cube.inverseTurn(4);
+
+	cube.inverseTurn(5);
+	cube.inverseTurn(5);
+	cube.inverseTurn(5);
+	cube.inverseTurn(5);
+
+	cube.inverseTurn(0);
+	cube.inverseTurn(0);
+	cube.turn(1);
+	cube.turn(0);
+	cube.turn(0);
+	cube.inverseTurn(1);
+
+    cube.inverseTurn(2);
+	cube.inverseTurn(2);
+	cube.turn(1);
+	cube.turn(2);
+	cube.turn(2);
+	cube.inverseTurn(1);
+
+    cube.inverseTurn(3);
+	cube.inverseTurn(3);
+	cube.turn(4);
+	cube.turn(3);
+	cube.turn(3);
+	cube.inverseTurn(4);
+
+    cube.inverseTurn(5);
+	cube.inverseTurn(5);
+	cube.turn(4);
+	cube.turn(5);
+	cube.turn(5);
+	cube.inverseTurn(4);
+
+    ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
 }
 
 TEST(ruCubeTest, scrambleTest) {
