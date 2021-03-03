@@ -77,3 +77,24 @@ TEST(ruCubeTest, singleTurnInversionTest) {
 	}
 
 }
+
+TEST(ruCubeTest, scrambleTest) {
+    	/*
+	 *	0 - R
+	 * 	1 - R2
+	 * 	2 - R'
+	 *  3 - U
+	 *  4 - U2
+	 *  5 - U'
+	 */
+    ruCube cube;
+    std::vector<uint8_t> moves{0, 3, 1, 4, 2, 5};
+    cube.scramble(moves);
+    ASSERT_EQ(04651230, cube.getEdges());
+	ASSERT_EQ(0442320452241, cube.getCorners());
+
+	cube.scramble({1, 4, 1, 4, 0, 3, 2, 5});
+	ASSERT_EQ(04130265, cube.getEdges());
+	ASSERT_EQ(0434541142042, cube.getCorners());
+}
+
