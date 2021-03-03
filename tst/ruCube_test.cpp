@@ -65,6 +65,35 @@ TEST(ruCubeTest, singleTurnTest) {
 	cube.turn(5); // U'
 	ASSERT_EQ(04651230, cube.getEdges());
 	ASSERT_EQ(0442320452241, cube.getCorners());
+
+	cube.turn(0);
+	cube.turn(0);
+	cube.turn(0);
+	cube.turn(0);
+
+	cube.turn(1);
+	cube.turn(1);
+
+	cube.turn(2);
+	cube.turn(2);
+	cube.turn(2);
+	cube.turn(2);
+
+	cube.turn(3);
+	cube.turn(3);
+	cube.turn(3);
+	cube.turn(3);
+
+	cube.turn(4);
+	cube.turn(4);
+
+	cube.turn(5);
+	cube.turn(5);
+	cube.turn(5);
+	cube.turn(5);
+
+    ASSERT_EQ(04651230, cube.getEdges());
+    ASSERT_EQ(0442320452241, cube.getCorners());
 }
 
 TEST(ruCubeTest, singleTurnInversionTest) {
