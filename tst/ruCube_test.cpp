@@ -193,3 +193,20 @@ TEST(ruCubeTest, scrambleInversionTest) {
 	ASSERT_EQ(04130265, cube.getEdges());
 	ASSERT_EQ(0434541142042, cube.getCorners());
 }
+
+TEST(ruCubeTest, isInDominoTest) {
+    ruCube cube;
+    ASSERT_TRUE(cube.isInDomino());
+    cube.scramble({1, 4, 1, 4, 1, 4});
+    ASSERT_TRUE(cube.isInDomino());
+    cube.scramble({1, 3, 1, 5, 1, 3, 1, 3, 1, 5, 1, 5, 1, 3, 1, 4, 1, 5, 1, 4, 1, 4, 1, 5, 1, 5});
+    ASSERT_TRUE(cube.isInDomino());
+    cube.scramble({0, 3, 2, 3, 0, 4, 2});
+    ASSERT_FALSE(cube.isInDomino());
+    cube.scramble({0, 3, 2, 3, 0, 4, 2});
+    ASSERT_FALSE(cube.isInDomino());
+    cube.scramble({3, 0, 3, 2, 3, 0, 5, 2, 3, 0, 4, 0});
+    ASSERT_TRUE(cube.isInDomino());
+    cube.scramble({0, 2, 3, 2, 5, 2, 5, 2, 3, 0, 3, 1, 0});
+    ASSERT_FALSE(cube.isInDomino());
+}
