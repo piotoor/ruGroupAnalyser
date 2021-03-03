@@ -182,3 +182,14 @@ TEST(ruCubeTest, scrambleTest) {
 	ASSERT_EQ(0434541142042, cube.getCorners());
 }
 
+TEST(ruCubeTest, scrambleInversionTest) {
+    ruCube cube;
+    std::vector<uint8_t> moves{3, 0, 4, 1, 5, 2};
+    cube.inverseScramble(moves);
+    ASSERT_EQ(04651230, cube.getEdges());
+	ASSERT_EQ(0442320452241, cube.getCorners());
+
+	cube.inverseScramble({3, 0, 5, 2, 4, 1, 4, 1});
+	ASSERT_EQ(04130265, cube.getEdges());
+	ASSERT_EQ(0434541142042, cube.getCorners());
+}
