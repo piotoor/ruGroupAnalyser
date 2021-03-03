@@ -24,3 +24,13 @@ TEST(ruCubeTest, settersGettersTest) {
     ASSERT_EQ (01011112151413, cube.getCorners());
 }
 
+TEST(ruCubeTest, cubeStateResetTest) {
+    ruCube cube;
+    ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+    cube.setEdges(076543210);
+    cube.setCorners(01511413121110);
+    cube.reset();
+    ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+}
+
+
