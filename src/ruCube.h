@@ -87,8 +87,11 @@ class ruCube
         bool isSolvedMEinM() const;
         bool isSolvedSEinS() const;
 
+    public:
         static inline const uint64_t solvedCorners = 0101112131415;
         static inline const uint32_t solvedEdges = 00123456;
+        static inline const uint64_t allCornersMask = 0777777777777;
+        static inline const uint32_t allEdgesMask = 07777777;
 
 };
 

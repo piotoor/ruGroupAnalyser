@@ -3,6 +3,7 @@
 
 ruCube::ruCube() {
     initializeMovesVectors();
+    reset();
 }
 
 ruCube::~ruCube() {
@@ -11,6 +12,7 @@ ruCube::~ruCube() {
 
 ruCube::ruCube(uint32_t edges, uint64_t corners): edges(edges), corners(corners) {
     initializeMovesVectors();
+    reset();
 }
 
 ruCube::ruCube(const ruCube& other) {
