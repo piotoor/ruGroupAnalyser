@@ -2,7 +2,7 @@
 #include <algorithm>
 #include <iterator>
 #include <numeric>
-
+#include <iostream>
 permutationGenerator::permutationGenerator() {
     //ctor
 }
@@ -66,5 +66,5 @@ std::vector<std::vector<int8_t>> permutationGenerator::generatePermutationsWithI
 void permutationGenerator::initializePermutation(int8_t n) {
     pieces.clear();
     pieces.resize(n);
-    std::iota(begin(pieces), end(pieces), n);
+    std::iota(begin(pieces), end(pieces), 0);
 }
