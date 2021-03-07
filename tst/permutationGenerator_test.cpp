@@ -99,8 +99,9 @@ TEST(permutationGeneratorTest, generatePermutationsTest) {
 
 TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
     permutationGenerator gen;
-    std::vector<int8_t> lockedPieces = {3, 4, 5};
-    auto perms = gen.generatePermutationsWithLockedPieces(6, lockedPieces);
+
+    std::vector<int8_t> lockedPieces = {};
+    auto perms = gen.generatePermutationsWithLockedPieces(3, lockedPieces);
     std::vector<std::vector<int8_t>> expectedPerms = {
         { 0, 1, 2 },
         { 0, 2, 1 },
@@ -109,7 +110,23 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
         { 2, 0, 1 },
         { 2, 1, 0 }
     };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
 
+
+
+    lockedPieces = {3, 4, 5};
+    perms = gen.generatePermutationsWithLockedPieces(6, lockedPieces);
+    expectedPerms = {
+        { 0, 1, 2 },
+        { 0, 2, 1 },
+        { 1, 0, 2 },
+        { 1, 2, 0 },
+        { 2, 0, 1 },
+        { 2, 1, 0 }
+    };
     ASSERT_EQ(expectedPerms.size(), perms.size());
     for (int i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
@@ -122,6 +139,18 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
     expectedPerms = {
         { 0, 2 },
         { 2, 0 }
+    };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
+
+
+
+    lockedPieces = {};
+    perms = gen.generatePermutationsWithLockedPieces(0, lockedPieces);
+    expectedPerms = {
+        {  }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
     for (int i = 0; i < expectedPerms.size(); ++i) {
