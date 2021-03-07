@@ -6,21 +6,59 @@
 
 TEST(permutationGeneratorTest, generatePermutationsTest) {
     permutationGenerator gen;
-    auto perms = gen.generatePermutations(3);
 
+
+    auto perms = gen.generatePermutations(0);
     std::vector<std::vector<int8_t>> expectedPerms = {
-        { 0, 1, 2 },
-        { 0, 2, 1 },
-        { 1, 0, 2 },
-        { 1, 2, 0 },
-        { 2, 0, 1 },
-        { 2, 1, 0 }
+        {  }
     };
-
     ASSERT_EQ(expectedPerms.size(), perms.size());
     for (int i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
+
+
+
+    perms = gen.generatePermutations(1);
+    expectedPerms = {
+        { 0 }
+    };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
+
+
+
+    perms = gen.generatePermutations(2);
+    expectedPerms = {
+        { 0, 1 },
+        { 1, 0 }
+    };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
+
+
+
+    perms = gen.generatePermutations(3);
+    expectedPerms = {
+        { 0, 1, 2 },
+        { 0, 2, 1 },
+
+        { 1, 0, 2 },
+        { 1, 2, 0 },
+
+        { 2, 0, 1 },
+        { 2, 1, 0 }
+    };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
+
+
 
     perms = gen.generatePermutations(4);
     expectedPerms = {
@@ -52,7 +90,6 @@ TEST(permutationGeneratorTest, generatePermutationsTest) {
         { 3, 2, 0, 1 },
         { 3, 2, 1, 0 },
     };
-
     ASSERT_EQ(expectedPerms.size(), perms.size());
     for (int i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
@@ -124,7 +161,6 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
     for (int i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
-
 
 
 
