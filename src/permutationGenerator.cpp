@@ -45,7 +45,7 @@ std::vector<std::vector<int8_t>> permutationGenerator::generatePermutationsWithL
 std::vector<std::vector<int8_t>> permutationGenerator::generatePermutationsWithIgnoredPieces(int8_t n, const std::vector<int8_t>& ignored) {
     initializePermutation(n);
 
-    std::vector<int8_t> piecesAfterIgnoring;
+    std::vector<int8_t> piecesAfterIgnoring (begin(pieces), end(pieces));
     std::vector<std::vector<int8_t>> ans;
 
     for (const auto &x: ignored) {
