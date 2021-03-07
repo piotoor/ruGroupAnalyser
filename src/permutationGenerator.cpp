@@ -49,7 +49,9 @@ std::vector<std::vector<int8_t>> permutationGenerator::generatePermutationsWithI
     std::vector<std::vector<int8_t>> ans;
 
     for (const auto &x: ignored) {
-        piecesAfterIgnoring[x] = -1;
+        if (size(piecesAfterIgnoring) > x) {
+            piecesAfterIgnoring[x] = -1;
+        }
     }
 
     sort(   begin(piecesAfterIgnoring),
