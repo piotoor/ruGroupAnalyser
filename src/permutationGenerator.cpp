@@ -70,3 +70,18 @@ void permutationGenerator::initializePermutation(int8_t n) {
     pieces.resize(n);
     std::iota(begin(pieces), end(pieces), 0);
 }
+
+
+
+std::vector<std::vector<int8_t>>  permutationGenerator::generateOrientations(int8_t n) {
+    std::vector<int8_t> orientation(n);
+
+}
+
+std::vector<std::vector<int8_t>>  permutationGenerator::generateOrientationsWithLockedPieces(int8_t n, const std::vector<int8_t>& locked) {
+
+}
+
+std::vector<std::vector<int8_t>>  permutationGenerator::generateOrientationsWithIgnoredPieces(int8_t n, const std::vector<int8_t>& ignored) {
+
+}
