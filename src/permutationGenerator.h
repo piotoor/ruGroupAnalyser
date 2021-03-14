@@ -13,9 +13,6 @@ class permutationGenerator
         std::vector<std::vector<int8_t>> generatePermutations(int8_t n);
         std::vector<std::vector<int8_t>> generatePermutationsWithLockedPieces(int8_t n, const std::vector<int8_t> &locked);
         std::vector<std::vector<int8_t>> generatePermutationsWithIgnoredPieces(int8_t n, const std::vector<int8_t> &ignored);
-        std::vector<std::vector<int8_t>> generateOrientations(int8_t n);
-        std::vector<std::vector<int8_t>> generateOrientationsWithLockedPieces(int8_t n, const std::vector<int8_t> &locked);
-        std::vector<std::vector<int8_t>> generateOrientationsWithIgnoredPieces(int8_t n, const std::vector<int8_t> &ignored);
 
     private:
         void initializePermutation(int8_t n);

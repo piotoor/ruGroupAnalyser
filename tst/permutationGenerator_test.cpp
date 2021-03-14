@@ -399,3 +399,4 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 }
+
