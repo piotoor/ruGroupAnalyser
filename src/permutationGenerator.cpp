@@ -13,20 +13,13 @@ permutationGenerator::~permutationGenerator() {
 
 std::vector<std::vector<int8_t>> permutationGenerator::generatePermutations(int8_t n) {
     initializePermutation(n);
-    std::vector<std::vector<int8_t>> ans;
-
-    do {
-        ans.push_back(pieces);
-    } while (next_permutation(begin(pieces),
-                              end(pieces)));
-
+    generateAns();
     return ans;
 }
 
 std::vector<std::vector<int8_t>> permutationGenerator::generatePermutationsWithLockedPieces(int8_t n, const std::vector<int8_t>& locked) {
     initializePermutation(n);
     std::vector<int8_t> piecesAfterLocking;
-    std::vector<std::vector<int8_t>> ans;
 
     set_difference( begin(pieces),
                     end(pieces),
@@ -34,40 +27,38 @@ std::vector<std::vector<int8_t>> permutationGenerator::generatePermutationsWithL
                     end(locked),
                     back_inserter(piecesAfterLocking));
 
-    do {
-        ans.push_back(piecesAfterLocking);
-    } while (next_permutation(begin(piecesAfterLocking),
-                              end(piecesAfterLocking)));
+    pieces = std::move(piecesAfterLocking);
 
+    generateAns();
     return ans;
 }
 
 std::vector<std::vector<int8_t>> permutationGenerator::generatePermutationsWithIgnoredPieces(int8_t n, const std::vector<int8_t>& ignored) {
     initializePermutation(n);
 
-    std::vector<int8_t> piecesAfterIgnoring (begin(pieces), end(pieces));
-    std::vector<std::vector<int8_t>> ans;
-
     for (const auto &x: ignored) {
-        if (size(piecesAfterIgnoring) > x) {
-            piecesAfterIgnoring[x] = -1;
+        if (size(pieces) > x) {
+            pieces[x] = -1;
         }
     }
 
-    sort(   begin(piecesAfterIgnoring),
-            end(piecesAfterIgnoring));
+    sort(   begin(pieces),
+            end(pieces));
 
-    do {
-        ans.push_back(piecesAfterIgnoring);
-    } while (next_permutation(begin(piecesAfterIgnoring),
-                              end(piecesAfterIgnoring)));
-
+    generateAns();
     return ans;
 }
 
 void permutationGenerator::initializePermutation(int8_t n) {
     pieces.clear();
     pieces.resize(n);
+    ans.clear();
     std::iota(begin(pieces), end(pieces), 0);
 }
 
+void permutationGenerator::generateAns() {
+    do {
+        ans.push_back(pieces);
+    } while (next_permutation(begin(pieces),
+                              end(pieces)));
+}

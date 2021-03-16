@@ -16,7 +16,9 @@ class permutationGenerator
 
     private:
         void initializePermutation(int8_t n);
+        void generateAns();
         std::vector<int8_t> pieces;
+        std::vector<std::vector<int8_t>> ans;
 
 };
 
