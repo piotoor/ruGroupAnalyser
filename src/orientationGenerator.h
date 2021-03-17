@@ -16,6 +16,12 @@ class orientationGenerator
     protected:
 
     private:
+        void dfs(uint8_t depth, uint8_t maxDepth);
+        void cleanup();
+
+        std::vector<std::vector<int8_t>> ans;
+        std::vector<int8_t> curr;
+        int8_t currSum;
 };
 
 #endif // ORIENTATIONGENERATOR_H
