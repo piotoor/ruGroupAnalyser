@@ -350,5 +350,102 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
 
 TEST(permutationGeneratorTest, generatePermutationsWithLockedAndIgnoredPiecesTest) {
     permutationGenerator gen;
-    ASSERT_TRUE(false);
+    std::vector<int8_t> ignoredPieces = {};
+    std::vector<int8_t> lockedPieces = {};
+    auto perms = gen.generatePermutations(0, lockedPieces, ignoredPieces);
+    std::vector<std::vector<int8_t>> expectedPerms = {
+        { }
+    };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
+
+
+
+    ignoredPieces = {};
+    lockedPieces = {};
+    perms = gen.generatePermutations(3, lockedPieces, ignoredPieces);
+    expectedPerms = {
+        { 0, 1, 2 },
+        { 0, 2, 1 },
+        { 1, 0, 2 },
+        { 1, 2, 0 },
+        { 2, 0, 1 },
+        { 2, 1, 0 },
+    };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
+
+
+
+    ignoredPieces = {0, 1};
+    lockedPieces = {2, 3};
+    perms = gen.generatePermutations(4, lockedPieces, ignoredPieces);
+    expectedPerms = {
+        { -1, -1, 2, 3 }
+    };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
+
+
+
+    ignoredPieces = {0, 1};
+    lockedPieces = {2, 3};
+    perms = gen.generatePermutations(5, lockedPieces, ignoredPieces);
+    expectedPerms = {
+        { -1, -1, 2, 3, 4 },
+        { -1, 4, 2, 3, -1 },
+        { 4, -1, 2, 3, -1 }
+
+    };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
+
+
+
+    ignoredPieces = {0, 1};
+    lockedPieces = {2, 3};
+    perms = gen.generatePermutations(6, lockedPieces, ignoredPieces);
+    expectedPerms = {
+        { -1, -1, 2, 3, 4, 5 },
+        { -1, -1, 2, 3, 5, 4 },
+        { -1, 4, 2, 3, -1, 5 },
+        { -1, 4, 2, 3, 5, -1 },
+        { -1, 5, 2, 3, -1, 4 },
+        { -1, 5, 2, 3, 4, -1 },
+        { 4, -1, 2, 3, -1, 5 },
+        { 4, -1, 2, 3, 5, -1 },
+        { 4, 5, 2, 3, -1, -1 },
+        { 5, -1, 2, 3, -1, 4 },
+        { 5, -1, 2, 3, 4, -1 },
+        { 5, 4, 2, 3, -1, -1 },
+
+    };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
+
+
+
+    ignoredPieces = {0, 1, 2};
+    lockedPieces = {3, 4, 5};
+    perms = gen.generatePermutations(6, lockedPieces, ignoredPieces);
+    expectedPerms = {
+        { -1, -1, -1, 3, 4, 5 }
+
+    };
+    ASSERT_EQ(expectedPerms.size(), perms.size());
+    for (int i = 0; i < expectedPerms.size(); ++i) {
+        ASSERT_EQ(expectedPerms[i], perms[i]);
+    }
+
+
 }
