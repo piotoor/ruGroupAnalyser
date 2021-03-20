@@ -21,10 +21,6 @@ std::vector<std::vector<int8_t>> permutationGenerator::generatePermutations(int8
     }
 
     std::sort(begin(pieces), end(pieces));
-//      validated one level above
-//    std::sort(begin(locked), end(locked));
-//    std::unique(begin(locked), end(locked));
-
     if (!locked.empty()) {
         std::set_difference( begin(pieces),
                         end(pieces),
