@@ -14,7 +14,7 @@ class orientationGenerator
     protected:
 
     private:
-        void dfs(uint8_t depth, uint8_t maxDepth);
+        void dfs(uint8_t depth, uint8_t maxDepth, const std::vector<int8_t> &locked = {});
         void cleanup();
 
         std::vector<std::vector<int8_t>> ans;
