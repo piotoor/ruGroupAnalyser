@@ -9,9 +9,7 @@ class orientationGenerator
     public:
         orientationGenerator();
         virtual ~orientationGenerator();
-        std::vector<std::vector<int8_t>> generateOrientations(int8_t n);
-        std::vector<std::vector<int8_t>> generateOrientationsWithLockedPieces(int8_t n, const std::vector<int8_t> &locked);
-        std::vector<std::vector<int8_t>> generateOrientationsWithIgnoredPieces(int8_t n, const std::vector<int8_t> &ignored);
+        std::vector<std::vector<int8_t>> generateOrientations(int8_t n, const std::vector<int8_t> &locked = {}, const std::vector<int8_t> &ignored = {});
 
     protected:
 
