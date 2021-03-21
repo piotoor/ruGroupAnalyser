@@ -184,3 +184,148 @@ TEST(orientationGeneratorTest, generateOrientationtTest) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 }
+
+
+TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
+    orientationGenerator gen;
+
+    std::vector<int8_t> lockedPieces = {};
+    auto orients = gen.generateOrientations(0, lockedPieces);
+    std::vector<std::vector<int8_t>> expectedOrients = {
+        { }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    lockedPieces = {};
+    orients = gen.generateOrientations(1, lockedPieces);
+    expectedOrients = {
+        { 0 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    lockedPieces = {};
+    orients = gen.generateOrientations(2, lockedPieces);
+    expectedOrients = {
+        { 0, 0 },
+        { 1, 2 },
+        { 2, 1 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    lockedPieces = { -1, 2 };
+    orients = gen.generateOrientations(2, lockedPieces);
+    expectedOrients = {
+        { 1, 2 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    lockedPieces = { -1, -1 };
+    orients = gen.generateOrientations(2, lockedPieces);
+    expectedOrients = {
+        { 0, 0 },
+        { 1, 2 },
+        { 2, 1 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    lockedPieces = { -1, -1, -1 };
+    orients = gen.generateOrientations(3, lockedPieces);
+    expectedOrients = {
+        { 0, 0, 0 },
+        { 0, 1, 2 },
+        { 0, 2, 1 },
+        { 1, 0, 2 },
+        { 1, 1, 1 },
+        { 1, 2, 0 },
+        { 2, 0, 1 },
+        { 2, 1, 0 },
+        { 2, 2, 2 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    lockedPieces = { -1, -1, 2 };
+    orients = gen.generateOrientations(3, lockedPieces);
+    expectedOrients = {
+        { 0, 1, 2 },
+        { 1, 0, 2 },
+        { 2, 2, 2 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    lockedPieces = { 0, -1, 2 };
+    orients = gen.generateOrientations(3, lockedPieces);
+    expectedOrients = {
+        { 0, 1, 2 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    lockedPieces = { 1, 0, 2 };
+    orients = gen.generateOrientations(3, lockedPieces);
+    expectedOrients = {
+        { 1, 0, 2 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    lockedPieces = { 1, 0, 2, -1, -1, -1 };
+    orients = gen.generateOrientations(6, lockedPieces);
+    expectedOrients = {
+        { 1, 0, 2, 0, 0, 0 },
+        { 1, 0, 2, 0, 1, 2 },
+        { 1, 0, 2, 0, 2, 1 },
+        { 1, 0, 2, 1, 0, 2 },
+        { 1, 0, 2, 1, 1, 1 },
+        { 1, 0, 2, 1, 2, 0 },
+        { 1, 0, 2, 2, 0, 1 },
+        { 1, 0, 2, 2, 1, 0 },
+        { 1, 0, 2, 2, 2, 2 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+}
