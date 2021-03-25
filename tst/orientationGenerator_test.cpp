@@ -495,6 +495,10 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
         { 2, -1, -1 }
     };
 
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
 
 
     ignoredPieces = { 0, 1, 1, 0 };
@@ -510,4 +514,8 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
         { 2, -1, -1, 1 },
         { 2, -1, -1, 2 }
     };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
 }
