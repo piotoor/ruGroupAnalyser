@@ -440,13 +440,73 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
 
 
 
-    ignoredPieces = { 0, -1 };
+    ignoredPieces = { 0, 1 };
     orients = gen.generateOrientations(3, lockedPieces, ignoredPieces);
     expectedOrients = {
-
+        { -1, -1, 0 },
+        { -1, -1, 1 },
+        { -1, -1, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
     for (int i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
+
+
+
+    ignoredPieces = { 0, 1, 2 };
+    orients = gen.generateOrientations(3, lockedPieces, ignoredPieces);
+    expectedOrients = {
+        { -1, -1, -1 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    ignoredPieces = { 0 };
+    orients = gen.generateOrientations(3, lockedPieces, ignoredPieces);
+    expectedOrients = {
+        { -1, 0, 0 },
+        { -1, 0, 1 },
+        { -1, 0, 2 },
+        { -1, 1, 0 },
+        { -1, 1, 1 },
+        { -1, 1, 2 },
+        { -1, 2, 0 },
+        { -1, 2, 1 },
+        { -1, 2, 2 }
+    };
+    ASSERT_EQ(expectedOrients.size(), orients.size());
+    for (int i = 0; i < expectedOrients.size(); ++i) {
+        ASSERT_EQ(expectedOrients[i], orients[i]);
+    }
+
+
+
+    ignoredPieces = { 1, 2 };
+    orients = gen.generateOrientations(3, lockedPieces, ignoredPieces);
+    expectedOrients = {
+        { 0, -1, -1 },
+        { 1, -1, -1 },
+        { 2, -1, -1 }
+    };
+
+
+
+    ignoredPieces = { 1, 2 };
+    orients = gen.generateOrientations(4, lockedPieces, ignoredPieces);
+    expectedOrients = {
+        { 0, -1, -1, 0 },
+        { 0, -1, -1, 1 },
+        { 0, -1, -1, 2 },
+        { 1, -1, -1, 0 },
+        { 1, -1, -1, 1 },
+        { 1, -1, -1, 2 },
+        { 2, -1, -1, 0 },
+        { 2, -1, -1, 1 },
+        { 2, -1, -1, 2 }
+    };
 }
