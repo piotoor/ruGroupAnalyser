@@ -440,7 +440,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
 
 
 
-    std::cout << "tu jest spieprzone" << std::endl;
+
     ignoredPieces = { 1, 1, 0 };
     orients = gen.generateOrientations(3, lockedPieces, ignoredPieces);
     expectedOrients = {
