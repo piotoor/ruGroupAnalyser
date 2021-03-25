@@ -440,7 +440,8 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
 
 
 
-    ignoredPieces = { 0, 1 };
+    std::cout << "tu jest spieprzone" << std::endl;
+    ignoredPieces = { 1, 1, 0 };
     orients = gen.generateOrientations(3, lockedPieces, ignoredPieces);
     expectedOrients = {
         { -1, -1, 0 },
@@ -454,7 +455,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
 
 
 
-    ignoredPieces = { 0, 1, 2 };
+    ignoredPieces = { 1, 1, 1};
     orients = gen.generateOrientations(3, lockedPieces, ignoredPieces);
     expectedOrients = {
         { -1, -1, -1 }
@@ -466,7 +467,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
 
 
 
-    ignoredPieces = { 0 };
+    ignoredPieces = { 1, 0, 0 };
     orients = gen.generateOrientations(3, lockedPieces, ignoredPieces);
     expectedOrients = {
         { -1, 0, 0 },
@@ -486,7 +487,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
 
 
 
-    ignoredPieces = { 1, 2 };
+    ignoredPieces = { 0, 1, 1 };
     orients = gen.generateOrientations(3, lockedPieces, ignoredPieces);
     expectedOrients = {
         { 0, -1, -1 },
@@ -496,7 +497,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
 
 
 
-    ignoredPieces = { 1, 2 };
+    ignoredPieces = { 0, 1, 1, 0 };
     orients = gen.generateOrientations(4, lockedPieces, ignoredPieces);
     expectedOrients = {
         { 0, -1, -1, 0 },
