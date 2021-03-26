@@ -1,6 +1,7 @@
 #include "orientationGenerator.h"
 #include <iostream>
 #include <iterator>
+#include <algorithm>
 
 orientationGenerator::orientationGenerator() {
     //ctor
@@ -12,7 +13,7 @@ orientationGenerator::~orientationGenerator() {
 
 std::vector<std::vector<int8_t>> orientationGenerator::generateOrientations(int8_t n, const std::vector<int8_t> &locked, const std::vector<int8_t> &ignored) {
     cleanup();
-    hasIgnoredPiece = !ignored.empty();
+    hasIgnoredPiece = !ignored.empty() and std::any_of(begin(ignored), end(ignored), [] (const auto &x) { return x == 1; });
     dfs(0, n, locked, ignored);
     return ans;
 }
