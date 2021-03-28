@@ -137,3 +137,50 @@ TEST(ruCubeStateConverterTest, convertVectCornersToInt) {
     corners = conv.vectCornersToInt(cornersPerm, cornersOrient);
     ASSERT_EQ(expectedCorners, corners);
 }
+
+TEST(ruCubeStateConverterTest, convertVectEdgesToInt) {
+    ruCubeStateConverter conv;
+
+    std::vector<uint8_t> edgesPerm = {
+        0, 1, 2, 3, 4, 5, 6
+    };
+    uint32_t expectedEdges = 00123456;
+    auto edges = conv.vectEdgesToInt(edgesPerm);
+    ASSERT_EQ(expectedEdges, edges);
+
+
+
+    edgesPerm = {
+        6, 5, 4, 3, 2, 1, 0
+    };
+    expectedEdges = 06543210;
+    edges = conv.vectEdgesToInt(edgesPerm);
+    ASSERT_EQ(expectedEdges, edges);
+
+
+
+    edgesPerm = {
+        1, 3, 0, 2, 4, 5, 6
+    };
+    expectedEdges = 01302456;
+    edges = conv.vectEdgesToInt(edgesPerm);
+    ASSERT_EQ(expectedEdges, edges);
+
+
+
+    edgesPerm = {
+        6, 5, 1, 3, 4, 2, 0
+    };
+    expectedEdges = 06513420;
+    edges = conv.vectEdgesToInt(edgesPerm);
+    ASSERT_EQ(expectedEdges, edges);
+
+
+
+    edgesPerm = {
+        2, 0, 1, 3, 6, 4, 5
+    };
+    expectedEdges = 02013645;
+    edges = conv.vectEdgesToInt(edgesPerm);
+    ASSERT_EQ(expectedEdges, edges);
+}
