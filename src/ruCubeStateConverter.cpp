@@ -22,7 +22,7 @@ uint64_t ruCubeStateConverter::vectCornersToInt(const std::vector<uint8_t>& perm
 }
 
 uint32_t ruCubeStateConverter::vectEdgesToInt(const std::vector<uint8_t>& perm) {
-    uint32_t ans;
+    uint32_t ans = 0;
 
     for (int i = 0; i < size(perm); ++i) {
         ans <<= 3;
