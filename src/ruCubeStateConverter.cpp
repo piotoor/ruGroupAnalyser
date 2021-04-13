@@ -1,11 +1,11 @@
 #include "ruCubeStateConverter.h"
 
 ruCubeStateConverter::ruCubeStateConverter() {
-    //ctor
+
 }
 
 ruCubeStateConverter::~ruCubeStateConverter() {
-    //dtor
+
 }
 
 uint64_t ruCubeStateConverter::vectCornersToInt(const std::vector<uint8_t>& perm, const std::vector<uint8_t>& orient) {

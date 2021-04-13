@@ -1,7 +1,6 @@
 #ifndef RUEXCEPTION_H
 #define RUEXCEPTION_H
 
-#include <exception>
 #include <string>
 
 class ruException {

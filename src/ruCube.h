@@ -10,7 +10,6 @@ class ruCube
         ruCube();
         ruCube(uint32_t edges, uint64_t corners);
         ruCube(const ruCube& other);
-        //ruCube& operator=(const ruCube& other);
         virtual ~ruCube();
 
         uint32_t getEdges() const;
@@ -23,7 +22,6 @@ class ruCube
         bool isSolvedEdges(uint32_t edgesMask) const;
         bool isSolvedCorners(uint64_t cornersMask) const;
         bool isInDomino() const;
-        // bool isInR2U2() const;
 
         void reset();
         void turn(uint8_t turnIndex);
@@ -31,7 +29,6 @@ class ruCube
         void scramble(std::vector<uint8_t> moves);
         void inverseScramble(std::vector<uint8_t> moves);
 
-    protected:
 
     private:
         uint32_t edges;

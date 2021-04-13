@@ -8,11 +8,9 @@
 
 
 ruCubeStateValidator::ruCubeStateValidator() {
-    //ctor
 }
 
 ruCubeStateValidator::~ruCubeStateValidator() {
-    //dtor
 }
 
 bool ruCubeStateValidator::isVectCornersValid(const std::vector<uint8_t>& orient, const std::vector<uint8_t>& perm) {

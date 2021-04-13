@@ -22,14 +22,6 @@ ruCube::ruCube(const ruCube& other) {
     this->edges = other.getEdges();
 }
 
-
-//ruCube& ruCube::operator=(const ruCube& other)
-//{
-//
-//}
-//
-
-
 uint32_t ruCube::getEdges() const{
     return this->edges;
 }
@@ -86,10 +78,6 @@ bool ruCube::isSolvedSEinS() const {
 bool ruCube::isInDomino() const {
     return isSolvedCornersO() && isSolvedEEinE();
 }
-
-//bool ruCube::isInR2U2() const {
-//    return (isSolvedEEinE()) && (isSolvedMEinM()) && (isSolvedSEinS()) && (isSolvedCornersO()) && (isSolvedCornersWarm());
-//}
 
 void ruCube::reset() {
     edges = ruCube::solvedEdges;
