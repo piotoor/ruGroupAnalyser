@@ -4,11 +4,11 @@
 #include <exception>
 #include <string>
 
-class ruException : public std::exception {
+class ruException {
     public:
         ruException(std::string msg);
         virtual ~ruException();
-        virtual std::string what() = 0;
+        virtual std::string what() const noexcept = 0;
 
     protected:
         std::string msg;
@@ -19,14 +19,15 @@ class ruCubeStateException: public ruException {
     public:
         ruCubeStateException(std::string msg = "Invalid cube state");
         virtual ~ruCubeStateException();
-        std::string what();
+        std::string what() const noexcept override;
 };
 
 class ruCubeTurnException: public ruException {
     public:
-        ruCubeTurnException(std::string msg = "Cube turn index out of range");
+        ruCubeTurnException(uint8_t index);
         virtual ~ruCubeTurnException();
-        std::string what();
+        std::string what() const noexcept override;
 };
 
 #endif // RUEXCEPTION_H
+
