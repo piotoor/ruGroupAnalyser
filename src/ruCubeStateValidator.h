@@ -18,6 +18,7 @@ class ruCubeStateValidator
     private:
         bool isPermutationValid(const std::vector<uint8_t> &perm);
         bool isOrientationValid(const std::vector<uint8_t> &orient);
+        bool isVectCornersInRU(const std::vector<uint8_t> &perm);
 };
 
 #endif // RUCUBESTATEVALIDATOR_H

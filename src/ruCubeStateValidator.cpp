@@ -1,4 +1,11 @@
 #include "ruCubeStateValidator.h"
+#include "ruCubeStateConverter.h"
+#include "ruCube.h"
+
+#include <algorithm>
+#include <numeric>
+#include <iterator>
+
 
 ruCubeStateValidator::ruCubeStateValidator() {
     //ctor
@@ -17,8 +24,8 @@ bool ruCubeStateValidator::isVectEdgesValid(const std::vector<uint8_t>& perm) {
 }
 
 bool ruCubeStateValidator::isPermutationValid(const std::vector<uint8_t>& perm) {
-    auto &[l, h] = std::minmax(begin(perm), end(perm));
-    if (l < -1 or h >= size(perm)) {
+    const auto &[l, h] = std::minmax(begin(perm), end(perm));
+    if (*l < -1 or *h >= size(perm)) {
         return false;
     }
 
@@ -33,8 +40,8 @@ bool ruCubeStateValidator::isPermutationValid(const std::vector<uint8_t>& perm) 
 }
 
 bool ruCubeStateValidator::isOrientationValid(const std::vector<uint8_t>& orient) {
-    auto &[l, h] = std::minmax(begin(perm), end(perm));
-    if (l < -1 or h > 2) {
+    const auto &[l, h] = std::minmax(begin(orient), end(orient));
+    if (*l < -1 or *h > 2) {
         return false;
     }
 
@@ -55,10 +62,20 @@ bool ruCubeStateValidator::isOrientationValid(const std::vector<uint8_t>& orient
 }
 
 bool ruCubeStateValidator::isVectCubeStateSolveable(const std::vector<uint8_t>& cornersOrient, const std::vector<uint8_t>& cornersPerm, const std::vector<uint8_t>& edgesPerm) {
-    bool valid = isVectCornersValid(cornersOrient, cornersPerm) and isVectEdgesValid(edgesPerm);
-    // todo solveability check
-
-    return valid;
+    return isVectCornersValid(cornersOrient, cornersPerm) and isVectEdgesValid(edgesPerm) and isVectCornersInRU(cornersPerm);
 }
+
+bool ruCubeStateValidator::isVectCornersInRU(const std::vector<uint8_t>& perm) {
+    ruCube cube;
+    ruCubeStateConverter converter;
+    const uint64_t cornersInt = converter.vectCornersToInt(perm, {0, 0, 0, 0, 0, 0});
+    cube.setCorners(cornersInt);
+
+    constexpr uint64_t dfrCornersMask = 0000000000007;
+    constexpr uint64_t drbDfrCornersMask = 0000000000707;
+    constexpr uint64_t ubrDrbDfrCornersMask = 0000000070707;
+    return true;
+}
+
 
 
