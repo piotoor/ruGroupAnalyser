@@ -1,4 +1,5 @@
 #include "ruCube.h"
+#include "ruException.h"
 #include <iostream>
 
 ruCube::ruCube() {
@@ -96,11 +97,19 @@ void ruCube::reset() {
 }
 
 void ruCube::turn(uint8_t turnIndex) {
-    (this->*(movesVect[turnIndex]))();
+    if (turnIndex > 5) {
+        throw ruCubeTurnException(turnIndex);
+    } else {
+        (this->*(movesVect[turnIndex]))();
+    }
 }
 
 void ruCube::inverseTurn(uint8_t turnIndex) {
-    (this->*(movesInvertionsVect[turnIndex]))();
+    if (turnIndex > 5) {
+        throw ruCubeTurnException(turnIndex);
+    } else {
+        (this->*(movesInvertionsVect[turnIndex]))();
+    }
 }
 
 void ruCube::scramble(std::vector<uint8_t> moves) {
