@@ -48,7 +48,7 @@ bool ruCubeStateValidator::isOrientationValid(const std::vector<uint8_t>& orient
                 [] (const auto &x) {
                     return x == -1;
                 })) {
-        int acc = std::accumulate(begin(orient),
+        const int acc = std::accumulate(begin(orient),
                                     end(orient),
                                     0);
         if (acc % 3 != 0) {
