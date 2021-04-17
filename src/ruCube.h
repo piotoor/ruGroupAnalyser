@@ -4,7 +4,7 @@
 #include <cstdint>
 #include <vector>
 
-enum class ruCubeMove {
+enum ruCubeMove {
     R,
     R2,
     Ri,

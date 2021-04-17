@@ -48,50 +48,50 @@ TEST(ruCubeTest, singleTurnTest) {
 	 */
     ruCube cube;
 
-	cube.turn(0); // R
+	cube.turn(R); // R
 	ASSERT_EQ(00126345, cube.getEdges());
 	ASSERT_EQ(0251112402344, cube.getCorners());
-	cube.turn(3); // U
+	cube.turn(U); // U
 	ASSERT_EQ(06012345, cube.getEdges());
 	ASSERT_EQ(0402511122344, cube.getCorners());
-	cube.turn(1); // R2
+	cube.turn(R2); // R2
 	ASSERT_EQ(06014523, cube.getEdges());
 	ASSERT_EQ(0232511444012, cube.getCorners());
-	cube.turn(4); // U2
+	cube.turn(U2); // U2
 	ASSERT_EQ(01460523, cube.getEdges());
 	ASSERT_EQ(0114423254012, cube.getCorners());
-	cube.turn(2); // R'
+	cube.turn(Ri); // R'
 	ASSERT_EQ(01465230, cube.getEdges());
 	ASSERT_EQ(0454423202241, cube.getCorners());
-	cube.turn(5); // U'
+	cube.turn(Ui); // U'
 	ASSERT_EQ(04651230, cube.getEdges());
 	ASSERT_EQ(0442320452241, cube.getCorners());
 
-	cube.turn(0);
-	cube.turn(0);
-	cube.turn(0);
-	cube.turn(0);
+	cube.turn(R);
+	cube.turn(R);
+	cube.turn(R);
+	cube.turn(R);
 
-	cube.turn(1);
-	cube.turn(1);
+	cube.turn(R2);
+	cube.turn(R2);
 
-	cube.turn(2);
-	cube.turn(2);
-	cube.turn(2);
-	cube.turn(2);
+	cube.turn(Ri);
+	cube.turn(Ri);
+	cube.turn(Ri);
+	cube.turn(Ri);
 
-	cube.turn(3);
-	cube.turn(3);
-	cube.turn(3);
-	cube.turn(3);
+	cube.turn(U);
+	cube.turn(U);
+	cube.turn(U);
+	cube.turn(U);
 
-	cube.turn(4);
-	cube.turn(4);
+	cube.turn(U2);
+	cube.turn(U2);
 
-	cube.turn(5);
-	cube.turn(5);
-	cube.turn(5);
-	cube.turn(5);
+	cube.turn(Ui);
+	cube.turn(Ui);
+	cube.turn(Ui);
+	cube.turn(Ui);
 
     ASSERT_EQ(04651230, cube.getEdges());
     ASSERT_EQ(0442320452241, cube.getCorners());
@@ -100,66 +100,66 @@ TEST(ruCubeTest, singleTurnTest) {
 TEST(ruCubeTest, singleTurnInversionTest) {
     ruCube cube;
 
-	for (int trn = 0; trn < 6; ++trn) {
+	for (int trn = R; trn <= Ui; ++trn) {
         cube.turn(trn);
         ASSERT_FALSE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
         cube.inverseTurn(trn);
         ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
 	}
 
-    cube.inverseTurn(0);
-	cube.inverseTurn(0);
-	cube.inverseTurn(0);
-	cube.inverseTurn(0);
+    cube.inverseTurn(R);
+	cube.inverseTurn(R);
+	cube.inverseTurn(R);
+	cube.inverseTurn(R);
 
-	cube.inverseTurn(1);
-	cube.inverseTurn(1);
+	cube.inverseTurn(R2);
+	cube.inverseTurn(R2);
 
-	cube.inverseTurn(2);
-	cube.inverseTurn(2);
-	cube.inverseTurn(2);
-	cube.inverseTurn(2);
+	cube.inverseTurn(Ri);
+	cube.inverseTurn(Ri);
+	cube.inverseTurn(Ri);
+	cube.inverseTurn(Ri);
 
-	cube.inverseTurn(3);
-	cube.inverseTurn(3);
-	cube.inverseTurn(3);
-	cube.inverseTurn(3);
+	cube.inverseTurn(U);
+	cube.inverseTurn(U);
+	cube.inverseTurn(U);
+	cube.inverseTurn(U);
 
-	cube.inverseTurn(4);
-	cube.inverseTurn(4);
+	cube.inverseTurn(U2);
+	cube.inverseTurn(U2);
 
-	cube.inverseTurn(5);
-	cube.inverseTurn(5);
-	cube.inverseTurn(5);
-	cube.inverseTurn(5);
+	cube.inverseTurn(Ui);
+	cube.inverseTurn(Ui);
+	cube.inverseTurn(Ui);
+	cube.inverseTurn(Ui);
 
-	cube.inverseTurn(0);
-	cube.inverseTurn(0);
-	cube.turn(1);
-	cube.turn(0);
-	cube.turn(0);
-	cube.inverseTurn(1);
+	cube.inverseTurn(R);
+	cube.inverseTurn(R);
+	cube.turn(R2);
+	cube.turn(R);
+	cube.turn(R);
+	cube.inverseTurn(R2);
 
-    cube.inverseTurn(2);
-	cube.inverseTurn(2);
-	cube.turn(1);
-	cube.turn(2);
-	cube.turn(2);
-	cube.inverseTurn(1);
+    cube.inverseTurn(Ri);
+	cube.inverseTurn(Ri);
+	cube.turn(R2);
+	cube.turn(Ri);
+	cube.turn(Ri);
+	cube.inverseTurn(R2);
 
-    cube.inverseTurn(3);
-	cube.inverseTurn(3);
-	cube.turn(4);
-	cube.turn(3);
-	cube.turn(3);
-	cube.inverseTurn(4);
+    cube.inverseTurn(U);
+	cube.inverseTurn(U);
+	cube.turn(U2);
+	cube.turn(U);
+	cube.turn(U);
+	cube.inverseTurn(U2);
 
-    cube.inverseTurn(5);
-	cube.inverseTurn(5);
-	cube.turn(4);
-	cube.turn(5);
-	cube.turn(5);
-	cube.inverseTurn(4);
+    cube.inverseTurn(Ui);
+	cube.inverseTurn(Ui);
+	cube.turn(U2);
+	cube.turn(Ui);
+	cube.turn(Ui);
+	cube.inverseTurn(U2);
 
     ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
 }
@@ -174,24 +174,24 @@ TEST(ruCubeTest, scrambleTest) {
 	 *  5 - U'
 	 */
     ruCube cube;
-    std::vector<uint8_t> moves{0, 3, 1, 4, 2, 5};
+    std::vector<uint8_t> moves{R, U, R2, U2, Ri, Ui};
     cube.scramble(moves);
     ASSERT_EQ(04651230, cube.getEdges());
 	ASSERT_EQ(0442320452241, cube.getCorners());
 
-	cube.scramble({1, 4, 1, 4, 0, 3, 2, 5});
+	cube.scramble({R2, U2, R2, U2, R, U, Ri, Ui});
 	ASSERT_EQ(04130265, cube.getEdges());
 	ASSERT_EQ(0434541142042, cube.getCorners());
 }
 
 TEST(ruCubeTest, scrambleInversionTest) {
     ruCube cube;
-    std::vector<uint8_t> moves{3, 0, 4, 1, 5, 2};
+    std::vector<uint8_t> moves{U, R, U2, R2, Ui, Ri};
     cube.inverseScramble(moves);
     ASSERT_EQ(04651230, cube.getEdges());
 	ASSERT_EQ(0442320452241, cube.getCorners());
 
-	cube.inverseScramble({3, 0, 5, 2, 4, 1, 4, 1});
+	cube.inverseScramble({U, R, Ui, Ri, U2, R2, U2, R2});
 	ASSERT_EQ(04130265, cube.getEdges());
 	ASSERT_EQ(0434541142042, cube.getCorners());
 }
@@ -199,17 +199,17 @@ TEST(ruCubeTest, scrambleInversionTest) {
 TEST(ruCubeTest, isInDominoTest) {
     ruCube cube;
     ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({1, 4, 1, 4, 1, 4});
+    cube.scramble({R2, U2, R2, U2, R2, U2});
     ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({1, 3, 1, 5, 1, 3, 1, 3, 1, 5, 1, 5, 1, 3, 1, 4, 1, 5, 1, 4, 1, 4, 1, 5, 1, 5});
+    cube.scramble({R2, U, R2, Ui, R2, U, R2, U, R2, Ui, R2, Ui, R2, U, R2, U2, R2, Ui, R2, U2, R2, U2, R2, Ui, R2, Ui});
     ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({0, 3, 2, 3, 0, 4, 2});
+    cube.scramble({R, U, Ri, U, R, U2, Ri});
     ASSERT_FALSE(cube.isInDomino());
-    cube.scramble({0, 3, 2, 3, 0, 4, 2});
+    cube.scramble({R, U, Ri, U, R, U2, Ri});
     ASSERT_FALSE(cube.isInDomino());
-    cube.scramble({3, 0, 3, 2, 3, 0, 5, 2, 3, 0, 4, 0});
+    cube.scramble({U, R, U, Ri, U, R, Ui, Ri, U, R, U2, R});
     ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({0, 2, 3, 2, 5, 2, 5, 2, 3, 0, 3, 1, 0});
+    cube.scramble({R2, U, Ri, Ui, Ri, Ui, Ri, U, R, U, Ri});
     ASSERT_FALSE(cube.isInDomino());
 }
 
@@ -247,8 +247,8 @@ TEST(ruCubeTest, scrambleNegativeTest) {
     ruCube cube;
     std::vector<std::vector<uint8_t>> invalidScrambles {
         { 6 },
-        { 0, 3, 1, 4, 2, 5, 10, 4, 1, 8, 10 },
-        { 0, 3, 1, 2, 1, 2, 6 }
+        { R, U, R2, U2, Ri, Ui, 10, U2, R2, 8, 10 },
+        { R, U, R2, Ri, R2, Ri, 6 }
     };
 
     std::vector<uint8_t> firstInvalidTurn {
@@ -272,8 +272,8 @@ TEST(ruCubeTest, scrambleInversionNegativeTest) {
     ruCube cube;
     std::vector<std::vector<uint8_t>> invalidScrambleInversions {
         { 6 },
-        { 0, 3, 1, 4, 2, 5, 10, 4, 1, 8, 10 },
-        { 0, 3, 1, 2, 1, 2, 6 }
+        { R, U, R2, U2, Ri, Ui, 10, U2, R2, 8, 10 },
+        { R, U, R2, Ri, R2, Ri, 6 }
     };
 
     std::vector<uint8_t> firstInvalidTurn {
