@@ -10,7 +10,7 @@ ruCubeSolver::~ruCubeSolver() {
 }
 
 
-void ruCubeSolver::configure(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask, uint32_t cornersMask) {
+void ruCubeSolver::configure(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask, uint64_t cornersMask) {
     this->minLength = minLength;
     this->maxLength = maxLength;
     this->maxNumOfSolutions = maxNumOfSolutions;
