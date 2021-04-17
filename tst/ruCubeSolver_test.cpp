@@ -2,22 +2,40 @@
 #include "ruCubeSolver.h"
 
 
-
 TEST(ruCubeSolverTest, simpleDefaultConfigurationSolveTest) {
     ruCube cube;
-    cube.turn(0);
-    cube.turn(3);
+    cube.turn(R);
+    cube.turn(U);
+    cube.turn(R2);
+    cube.turn(Ui);
 
     ruCubeSolver solver;
     solver.solve(&cube);
     auto solutions = solver.getSolutionsAsVectors();
-    #include <iostream>
-    using namespace std;
+    std::vector<std::vector<uint8_t>> expectedSolutions = {
+        { U, R2, Ui, Ri }
+    };
 
-    for (const auto &x: solutions) {
-        copy(begin(x), end(x), ostream_iterator<int>(cout, " "));
-        cout << endl;
+    ASSERT_EQ(expectedSolutions.size(), solutions.size());
+    for (int i = 0; i < expectedSolutions.size(); ++i) {
+        ASSERT_EQ(expectedSolutions[i], solutions[i]);
     }
 
-    ASSERT_TRUE(false);
+
+    cube.reset();
+    cube.turn(Ri);
+    cube.turn(U);
+    cube.turn(Ri);
+    cube.turn(Ui);
+
+    solver.solve(&cube);
+    solutions = solver.getSolutionsAsVectors();
+    expectedSolutions = {
+        { U, R, Ui, R }
+    };
+
+    ASSERT_EQ(expectedSolutions.size(), solutions.size());
+    for (int i = 0; i < expectedSolutions.size(); ++i) {
+        ASSERT_EQ(expectedSolutions[i], solutions[i]);
+    }
 }
