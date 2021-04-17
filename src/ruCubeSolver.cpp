@@ -1,4 +1,5 @@
 #include "ruCubeSolver.h"
+#include <iterator>
 
 ruCubeSolver::ruCubeSolver(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask, uint64_t cornersMask) {
     configure(minLength, maxLength, maxNumOfSolutions, edgesMask, cornersMask);
@@ -26,7 +27,7 @@ void ruCubeSolver::solve(ruCube *cube) {
         bool reachedMaxNumberOfSolutions = false;
 
         for (int length = minLength; length <= maxLength and not reachedMaxNumberOfSolutions; ++length) {
-            reachedMaxNumberOfSolutions = dfs(0, length, -1);
+            reachedMaxNumberOfSolutions = dfs(0, length, -6);
         }
     }
 }
@@ -42,7 +43,6 @@ std::vector<std::vector<uint8_t>> ruCubeSolver::getSolutionsAsVectors() const {
 }
 #include <iostream>
 bool ruCubeSolver::dfs(uint8_t depth, uint8_t maxDepth, int8_t prevMove) {
-    std::cout << "depth = " << (int)depth << std::endl;
     if (depth == maxDepth) {
         if (cube->isSolved(edgesMask, cornersMask)) {
             solutions.push_back(currSolution);
@@ -55,7 +55,7 @@ bool ruCubeSolver::dfs(uint8_t depth, uint8_t maxDepth, int8_t prevMove) {
         return false;
     }
 
-    for (uint8_t i = 0; i < 6; ++i) {
+    for (int8_t i = 0; i < 6; ++i) {
         if (i / 3 == prevMove / 3) {
             continue;
         }
