@@ -27,7 +27,7 @@ class ruCube
         void setCorners(uint64_t corners);
         void setCube(uint32_t edges, uint64_t corners);
 
-        bool isSolved(uint32_t edgesMask, uint64_t cornersMask) const;
+        bool isSolved(uint32_t edgesMask = ruCube::solvedEdges, uint64_t cornersMask = ruCube::solvedCorners) const;
         bool isSolvedEdges(uint32_t edgesMask) const;
         bool isSolvedCorners(uint64_t cornersMask) const;
         bool isInDomino() const;
