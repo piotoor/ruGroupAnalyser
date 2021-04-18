@@ -292,3 +292,97 @@ TEST(ruCubeTest, scrambleInversionNegativeTest) {
         ++i;
     }
 }
+
+TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
+    std::vector<std::vector<uint8_t>> scrambles {
+        { R2, U2, R2, U2, R2, U2 },
+        { R, U, Ri, U, R, U2, Ri, U2 },
+        { Ri, U, Ri, Ui, Ri, Ui, Ri, U, R, U, R2 },
+        { R2, U2, R2, U2, R2, U, R2, U2, R2, U2, R2, Ui },
+        { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
+        { Ri, Ui, R, Ui, Ri, U2, R, U2, R, U, Ri, U, R, U2, Ri, U2 }
+    };
+
+    std::vector<std::pair<uint32_t, uint64_t>> filters {
+        { ruCube::allEdgesMask,     ruCube::allCornersMask },
+        { ruCube::allEdgesMask,     00 },
+        { 00,                       ruCube::allCornersMask },
+        { 00,                       00 },
+        { 00,                       ruCube::cornersOrientationMask },
+        { 00,                       ruCube::cornersPermutationMask },
+        { ruCube::allEdgesMask,     ruCube::cornersOrientationMask },
+        { ruCube::allEdgesMask,     ruCube::cornersPermutationMask }
+    };
+
+    std::vector<std::vector<bool>> expected {
+        {
+            false,
+            false,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false
+        },
+        {
+            false,
+            false,
+            false,
+            true,
+            false,
+            true,
+            false,
+            false
+        },
+        {
+            false,
+            false,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false
+        },
+        {
+            false,
+            false,
+            true,
+            true,
+            true,
+            true,
+            false,
+            false
+        },
+        {
+            false,
+            true,
+            false,
+            true,
+            false,
+            false,
+            false,
+            false
+        },
+        {
+            false,
+            true,
+            false,
+            true,
+            false,
+            true,
+            false,
+            true
+        }
+    };
+
+    for (int i = 0; i < size(scrambles); ++i) {
+        ruCube cube;
+        cube.scramble(scrambles[i]);
+        for (int j = 0; j < size(filters); ++j) {
+            ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
+        }
+    }
+
+}
