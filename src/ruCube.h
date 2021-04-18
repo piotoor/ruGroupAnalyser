@@ -98,7 +98,9 @@ class ruCube
         static inline const uint32_t solvedEdges = 00123456;
         static inline const uint64_t allCornersMask = 0777777777777;
         static inline const uint32_t allEdgesMask = 07777777;
-
+        static inline const uint64_t cornersOrientationMask = 0707070707070;
+        static inline const uint64_t cornersPermutationMask = 0070707070707;
 };
 
 #endif // RUCUBE_H
+
