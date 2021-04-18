@@ -147,3 +147,34 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
         ASSERT_EQ(expectedSolutions[i], solutions[i]);
     }
 }
+
+
+TEST(ruCubeSolverTest, singleMoveSolutionsTest) {
+    std::vector<std::vector<uint8_t>> expectedSolutions = {
+        { Ui },
+        { U2 },
+        { U },
+        { Ri },
+        { R2 },
+        { R }
+    };
+
+    std::vector<std::vector<uint8_t>> scrambles = {
+        { U },
+        { U2 },
+        { Ui },
+        { R },
+        { R2 },
+        { Ri }
+    };
+
+    for (int i = 0; i < expectedSolutions.size(); ++i) {
+        ruCubeSolver solver;
+        ruCube cube;
+        cube.scramble(scrambles[i]);
+        solver.solve(&cube);
+        auto solutions = solver.getSolutionsAsVectors();
+
+        ASSERT_EQ(expectedSolutions[i], solutions[0]);
+    }
+}
