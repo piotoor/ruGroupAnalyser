@@ -178,3 +178,48 @@ TEST(ruCubeSolverTest, singleMoveSolutionsTest) {
         ASSERT_EQ(expectedSolutions[i], solutions[0]);
     }
 }
+
+
+TEST(ruCubeSolverTest, multipleScramblesTest) {
+    std::vector<std::vector<uint8_t>> scrambles {
+        { R2 },
+        { R2, U },
+        { R2, U, R},
+        { R2, U, R, Ui },
+        { R2, U, R, Ui, R2 },
+        { R2, U, R, Ui, R2, U },
+        { R2, U, R, Ui, R2, Ui, Ri },
+        { R2, U, R, Ui, R2, U, R, U },
+        { R2, U, R, Ui, R2, U, R, U, R },
+        { R2, U, R, Ui, R2, U, R, U, R, U2 },
+        { R2, U, R, Ui, R2, U, R, U, R, U, Ri },
+        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2 },
+        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R },
+        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, Ri, U },
+        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri },
+        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2 },
+        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R2 },
+        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, Ri, U2 },
+        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R, U, R },
+        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R, Ui, R, U },
+    };
+
+    ruCube cube;
+    ruCubeSolver solver;
+
+    for (const auto &scr: scrambles) {
+        std::cout << "Solving scramble of length " << size(scr) << "... ";
+        cube.reset();
+        cube.scramble(scr);
+        solver.solve(&cube);
+        auto solution = solver.getSolutionsAsVectors()[0];
+        cube.reset();
+        cube.scramble(scr);
+        cube.scramble(solution);
+        ASSERT_TRUE(cube.isSolved());
+        std::cout << "(sol: " << size(solution) << " moves) ";
+        std::cout << "DONE" << std::endl;
+    }
+
+}
+
