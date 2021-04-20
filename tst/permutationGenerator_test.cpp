@@ -13,7 +13,7 @@ TEST(permutationGeneratorTest, generatePermutationsTest) {
         {  }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -24,7 +24,7 @@ TEST(permutationGeneratorTest, generatePermutationsTest) {
         { 0 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -36,7 +36,7 @@ TEST(permutationGeneratorTest, generatePermutationsTest) {
         { 1, 0 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -54,7 +54,7 @@ TEST(permutationGeneratorTest, generatePermutationsTest) {
         { 2, 1, 0 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -91,7 +91,7 @@ TEST(permutationGeneratorTest, generatePermutationsTest) {
         { 3, 2, 1, 0 },
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 }
@@ -111,7 +111,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
         { 2, 1, 0 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -128,7 +128,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
         { 2, 1, 0, 3, 4, 5 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -141,7 +141,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
         { 2, 1, 0 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -153,7 +153,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
         {  }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -170,7 +170,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
         { 5, 1, 2, 3, 4, 0 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -181,7 +181,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
         { 0, 1, 2, 3 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -193,7 +193,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
         { 0, 1, 2, 3 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -236,7 +236,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
         { 3, 2, 1, 0 },
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -248,7 +248,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
         { }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -260,7 +260,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
         { 0 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -272,7 +272,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
         { -1 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -284,7 +284,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
         { -1, -1 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -297,7 +297,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
         { 1, -1 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -316,7 +316,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
         { 2, 1, -1 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -341,7 +341,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
         { 2, 1, -1, -1 },
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 }
@@ -357,7 +357,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedAndIgnoredPiecesTes
         { }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -375,7 +375,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedAndIgnoredPiecesTes
         { 2, 1, 0 },
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -388,7 +388,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedAndIgnoredPiecesTes
         { -1, -1, 2, 3 }
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -404,7 +404,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedAndIgnoredPiecesTes
 
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -429,7 +429,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedAndIgnoredPiecesTes
 
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 
@@ -443,7 +443,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedAndIgnoredPiecesTes
 
     };
     ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (int i = 0; i < expectedPerms.size(); ++i) {
+    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
     }
 

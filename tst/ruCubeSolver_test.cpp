@@ -17,7 +17,7 @@ TEST(ruCubeSolverTest, simpleDefaultConfigurationSolveTest) {
     };
 
     ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (int i = 0; i < expectedSolutions.size(); ++i) {
+    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ASSERT_EQ(expectedSolutions[i], solutions[i]);
     }
 
@@ -36,7 +36,7 @@ TEST(ruCubeSolverTest, simpleDefaultConfigurationSolveTest) {
     };
 
     ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (int i = 0; i < expectedSolutions.size(); ++i) {
+    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ASSERT_EQ(expectedSolutions[i], solutions[i]);
     }
 }
@@ -54,7 +54,7 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
     };
 
     ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (int i = 0; i < expectedSolutions.size(); ++i) {
+    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ASSERT_EQ(expectedSolutions[i], solutions[i]);
     }
 
@@ -74,7 +74,7 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
     };
 
     ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (int i = 0; i < expectedSolutions.size(); ++i) {
+    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ASSERT_EQ(expectedSolutions[i], solutions[i]);
     }
 
@@ -90,7 +90,7 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
     };
 
     ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (int i = 0; i < expectedSolutions.size(); ++i) {
+    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ASSERT_EQ(expectedSolutions[i], solutions[i]);
     }
 
@@ -107,7 +107,7 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
     };
 
     ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (int i = 0; i < expectedSolutions.size(); ++i) {
+    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ASSERT_EQ(expectedSolutions[i], solutions[i]);
     }
 
@@ -125,7 +125,7 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
     };
 
     ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (int i = 0; i < expectedSolutions.size(); ++i) {
+    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ASSERT_EQ(expectedSolutions[i], solutions[i]);
     }
 
@@ -143,7 +143,7 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
     };
 
     ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (int i = 0; i < expectedSolutions.size(); ++i) {
+    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ASSERT_EQ(expectedSolutions[i], solutions[i]);
     }
 }
@@ -168,7 +168,7 @@ TEST(ruCubeSolverTest, singleMoveSolutionsTest) {
         { Ri }
     };
 
-    for (int i = 0; i < expectedSolutions.size(); ++i) {
+    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ruCubeSolver solver;
         ruCube cube;
         cube.scramble(scrambles[i]);
@@ -247,5 +247,6 @@ TEST (ruCubeSolverTest, benchmarkTest) {
 
     using namespace std::literals;
     const auto stop = std::chrono::steady_clock::now();
-    //(stop - start) / 1ms << "ms";
+    std::chrono::duration<double> diff = stop - start;
+    std::cout << diff / 1ms << "ms" << std::endl;
 }

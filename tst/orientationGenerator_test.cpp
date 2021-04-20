@@ -14,7 +14,7 @@ TEST(orientationGeneratorTest, generateOrientationtTest) {
         { }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -24,7 +24,7 @@ TEST(orientationGeneratorTest, generateOrientationtTest) {
         { 0 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -36,7 +36,7 @@ TEST(orientationGeneratorTest, generateOrientationtTest) {
         { 2, 1 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -54,7 +54,7 @@ TEST(orientationGeneratorTest, generateOrientationtTest) {
         { 2, 2, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -90,7 +90,7 @@ TEST(orientationGeneratorTest, generateOrientationtTest) {
         { 2, 2, 2, 0 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -180,7 +180,7 @@ TEST(orientationGeneratorTest, generateOrientationtTest) {
         { 2, 2, 2, 2, 1 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 }
@@ -195,7 +195,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -207,7 +207,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { 0 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -221,7 +221,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { 2, 1 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -233,7 +233,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { 1, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -247,7 +247,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { 2, 1 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -267,7 +267,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { 2, 2, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -281,7 +281,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { 2, 2, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -293,7 +293,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { 0, 1, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -305,7 +305,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { 1, 0, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -325,7 +325,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { 1, 0, 2, 2, 2, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 }
@@ -343,7 +343,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
         { }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -434,7 +434,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
         { 2, 2, 2, 2, 1 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -449,7 +449,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
         { -1, -1, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -461,7 +461,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
         { -1, -1, -1 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -481,7 +481,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
         { -1, 2, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -496,7 +496,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
     };
 
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -515,7 +515,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
         { 2, -1, -1, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 }
@@ -530,7 +530,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredAndLockedPiecesTes
         { -1, -1, 2, 1 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -545,7 +545,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredAndLockedPiecesTes
         { -1, 2, 2, 1 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -566,7 +566,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredAndLockedPiecesTes
         { -1, 2, 2, 2 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -581,7 +581,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredAndLockedPiecesTes
         { -1, 2, 2, -1, 1}
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -597,7 +597,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredAndLockedPiecesTes
         { -1, 2, 2, -1, 1}
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -618,7 +618,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredAndLockedPiecesTes
         { -1, 2, 2, -1, 0}
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -711,7 +711,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredAndLockedPiecesTes
         { 2, 2, 2, 2, 1 }
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 
@@ -724,7 +724,7 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredAndLockedPiecesTes
         { -1, -1, -1, -1, 0}
     };
     ASSERT_EQ(expectedOrients.size(), orients.size());
-    for (int i = 0; i < expectedOrients.size(); ++i) {
+    for (uint8_t i = 0; i < expectedOrients.size(); ++i) {
         ASSERT_EQ(expectedOrients[i], orients[i]);
     }
 }

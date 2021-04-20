@@ -323,10 +323,10 @@ TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
         { false, true, false, true, false, true, false, true }
     };
 
-    for (int i = 0; i < size(scrambles); ++i) {
+    for (uint8_t i = 0 ; i < size(scrambles); ++i) {
         ruCube cube;
         cube.scramble(scrambles[i]);
-        for (int j = 0; j < size(filters); ++j) {
+        for (uint8_t j = 0; j < size(filters); ++j) {
             ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
         }
     }
@@ -379,10 +379,10 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
         { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true }
     };
 
-    for (int i = 0; i < size(scrambles); ++i) {
+    for (uint8_t i = 0 ; i < size(scrambles); ++i) {
         ruCube cube;
         cube.scramble(scrambles[i]);
-        for (int j = 0; j < size(filters); ++j) {
+        for (uint8_t j = 0; j < size(filters); ++j) {
             ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
         }
     }
