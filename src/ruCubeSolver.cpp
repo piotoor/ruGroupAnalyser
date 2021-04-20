@@ -25,8 +25,8 @@ void ruCubeSolver::solve(ruCube *cube) {
     if (maxNumOfSolutions > 0) {
         this->cube = cube;
         bool reachedMaxNumberOfSolutions = false;
-
         for (int length = minLength; length <= maxLength and not reachedMaxNumberOfSolutions; ++length) {
+            currSolution.resize(length);
             reachedMaxNumberOfSolutions = dfs(0, length, -6);
         }
     }
@@ -61,11 +61,11 @@ bool ruCubeSolver::dfs(uint8_t depth, uint8_t maxDepth, int8_t prevMove) {
         }
 
         cube->turn(i);
-        currSolution.push_back(i);
+        currSolution[depth] = i;
         if (dfs(depth + 1, maxDepth, i) ) {
             return true;
         }
-        currSolution.pop_back();
+
         cube->inverseTurn(i);
     }
     return false;
