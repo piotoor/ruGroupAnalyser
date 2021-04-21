@@ -234,9 +234,10 @@ TEST (ruCubeSolverTest, benchmarkTest) {
     const uint8_t numOfSolves = 10;
 
     ruCubeSolver solver(minLength, maxLength, numOfSolves);
-    solver.solve(&cube);
 
     const std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
+
+    solver.solve(&cube);
     auto solutions = solver.getSolutionsAsVectors();
     for (const auto &sol: solutions) {
         cube.reset();
