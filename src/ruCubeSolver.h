@@ -13,7 +13,7 @@ class ruCubeSolver
         ruCubeSolver(uint8_t minLength = 0, uint8_t maxLength = 20, uint8_t maxNumOfSolutions = 1, uint32_t edgesMask = ruCube::allEdgesMask, uint64_t cornersMask = ruCube::allCornersMask);
         virtual ~ruCubeSolver();
         void configure(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask = ruCube::allEdgesMask, uint64_t cornersMask = ruCube::allCornersMask);
-        void solve(ruCube *cube, bool multiThreading = false);
+        void solve(ruCube *cube, bool multiThreading = false, uint8_t multiThreadingThreshold = 8);
         std::vector<std::string> getSolutionsAsStrings() const;
         std::vector<std::vector<uint8_t>> getSolutionsAsVectors() const;
 

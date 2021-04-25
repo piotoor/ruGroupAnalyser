@@ -19,7 +19,7 @@ void ruCubeSolver::configure(uint8_t minLength, uint8_t maxLength, uint8_t maxNu
 }
 #include <iostream>
 
-void ruCubeSolver::solve(ruCube *cube, bool multiThreading) {
+void ruCubeSolver::solve(ruCube *cube, bool multiThreading, uint8_t multiThreadingThreshold) {
     solutions.clear();
     currSolution.clear();
     this->cube = cube;
@@ -28,7 +28,7 @@ void ruCubeSolver::solve(ruCube *cube, bool multiThreading) {
         if (multiThreading) {
             currSolutions.clear();
             currSolutions.resize(numOfThreads);
-            cubes.clear();
+            //cubes.clear();
             cubes.resize(numOfThreads);
             threads.clear();
             std::fill(begin(cubes), end(cubes), ruCube(*cube));
@@ -39,7 +39,7 @@ void ruCubeSolver::solve(ruCube *cube, bool multiThreading) {
                 cubes[i].turn(i);
             }
             for (uint8_t length = minLength; length <= maxLength and solutions.size() < maxNumOfSolutions; ++length) {
-                if (length >= 8) {
+                if (length >= multiThreadingThreshold) {
                     for (uint8_t t = 0; t < numOfThreads; ++t) {
                         //threads.push_back(std::thread(&ruCubeSolver::multiThreadingDfs, this, 0, length - 1, t, t));
                         currSolutions[t].resize(length);
