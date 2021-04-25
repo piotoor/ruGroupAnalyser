@@ -330,32 +330,3 @@ TEST_F(ruCubeSolverPerformanceTests, MultithreadingTest) {
     printReport();
 }
 
-//TEST (ruCubeSolverTest, benchmarkTest) {
-//    ruCube cube;
-//    std::vector<uint8_t> scr { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R, U, Ri, U };
-//    cube.scramble(scr);
-//
-//    const uint8_t minLength = 1;
-//    const uint8_t maxLength = 20;
-//    const uint8_t numOfSolves = 10;
-//
-//    ruCubeSolver solver(minLength, maxLength, numOfSolves);
-//
-//    const std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
-//
-//    solver.solve(&cube, true);
-//    auto solutions = solver.getSolutionsAsVectors();
-//    for (const auto &sol: solutions) {
-//        std::copy(begin(sol), end(sol), std::ostream_iterator<int>(std::cout, " "));
-//        std::cout << std::endl;
-//        cube.reset();
-//        cube.scramble(scr);
-//        cube.scramble(sol);
-//        ASSERT_TRUE(cube.isSolved());
-//    }
-//
-//    using namespace std::literals;
-//    const auto stop = std::chrono::steady_clock::now();
-//    std::chrono::duration<double> diff = stop - start;
-//    std::cout << diff / 1ms << "ms" << std::endl;
-//}
