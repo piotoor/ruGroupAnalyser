@@ -237,9 +237,11 @@ TEST (ruCubeSolverTest, benchmarkTest) {
 
     const std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
 
-    solver.solve(&cube);
+    solver.solve(&cube, true);
     auto solutions = solver.getSolutionsAsVectors();
     for (const auto &sol: solutions) {
+        std::copy(begin(sol), end(sol), std::ostream_iterator<int>(std::cout, " "));
+        std::cout << std::endl;
         cube.reset();
         cube.scramble(scr);
         cube.scramble(sol);
