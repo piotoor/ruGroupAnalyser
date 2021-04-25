@@ -81,7 +81,7 @@ std::vector<std::vector<uint8_t>> ruCubeSolver::getSolutionsAsVectors() const {
 void ruCubeSolver::dfs(uint8_t depth, uint8_t maxDepth, int8_t prevMove) {
     if (solutions.size() < maxNumOfSolutions) {
         if (depth == maxDepth) {
-            if (cube->isSolved(edgesMask, cornersMask) and solutions.size() < maxNumOfSolutions) {
+            if (cube->isSolved(edgesMask, cornersMask)) {
                 solutions.push_back(currSolution);
             }
         } else {
