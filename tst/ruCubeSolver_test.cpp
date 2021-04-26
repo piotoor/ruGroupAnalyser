@@ -291,16 +291,18 @@ class ruCubeSolverPerformanceTests : public ::testing::Test
         void printReport() {
             using namespace std::literals;
             std::cout << std::endl;
-            std::cout << "+---------+-- Report -+-----------+" << std::endl;
-            std::cout << "| threads | threshold |" << std::setw(11) << " time [ms] " << "|" << std::endl;
-            std::cout << "+---------+-----------+-----------+" << std::endl;
-            std::cout << "| " << std::setw(7) << 1 << " | " << std::setw(9) << "N/A" << " | " << std::setw(9) << singleThreadTime / 1ms << " |" << std::endl;
-
+            std::cout << "+---------+-- Report -+-----------+-------+" << std::endl;
+            std::cout << "| threads | threshold |" << std::setw(11) << " time [ms] " << "| ratio |" << std::endl;
+            std::cout << "+---------+-----------+-----------+-------+" << std::endl;
+            std::cout << "| " << std::setw(7) << 1 << " | " << std::setw(9) << "N/A" << " | " << std::setw(9) << singleThreadTime / 1ms << " | " << std::setw(5) << 1 << " |" << std::endl;
+            std::cout << "+---------+-----------+-----------+-------+" << std::endl;
             for (const auto &[k, v]: multiThreadingThresholdsTimes) {
-                std::cout << "| " << std::setw(7) << 6 << " | " << std::setw(9) << static_cast<int>(k) << " | " << std::setw(9) << v / 1ms << " |" << std::endl;
+                double ms = v / 1ms;
+                double ratio_ = ms / (singleThreadTime / 1ms);
+                std::cout << "| " << std::setw(7) << 6 << " | " << std::setw(9) << static_cast<int>(k) << " | " << std::setprecision(1) <<  std::setw(9) << ms << " | " << std::setw(5) << std::setprecision(3) << ratio_ << " |" << std::endl;
             }
 
-            std::cout << "+---------+-----------+-----------+" << std::endl;
+            std::cout << "+---------+-----------+-----------+-------+" << std::endl;
             std::cout << std::endl;
         }
 
