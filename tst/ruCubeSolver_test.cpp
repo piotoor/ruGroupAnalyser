@@ -290,6 +290,7 @@ class ruCubeSolverPerformanceTests : public ::testing::Test
 
         void printReport() {
             using namespace std::literals;
+            std::streamsize ss = std::cout.precision();
             std::cout << std::endl;
             std::cout << "+---------+-- Report -+-----------+-------+" << std::endl;
             std::cout << "| threads | threshold |" << std::setw(11) << " time [ms] " << "| ratio |" << std::endl;
@@ -299,7 +300,7 @@ class ruCubeSolverPerformanceTests : public ::testing::Test
             for (const auto &[k, v]: multiThreadingThresholdsTimes) {
                 double ms = v / 1ms;
                 double ratio_ = ms / (singleThreadTime / 1ms);
-                std::cout << "| " << std::setw(7) << 6 << " | " << std::setw(9) << static_cast<int>(k) << " | " << std::setprecision(1) <<  std::setw(9) << ms << " | " << std::setw(5) << std::setprecision(3) << ratio_ << " |" << std::endl;
+                std::cout << "| " << std::setw(7) << 6 << " | " << std::setw(9) << static_cast<int>(k) << " | " << std::setprecision(ss) <<  std::setw(9) << ms << " | " << std::setw(5) << std::setprecision(3) << ratio_ << " |" << std::endl;
             }
 
             std::cout << "+---------+-----------+-----------+-------+" << std::endl;
