@@ -13,7 +13,11 @@ enum ruCubeMove {
     Ui
 };
 
-class ruCube
+class ruBaseCube {
+
+};
+
+class ruCube: public ruBaseCube
 {
     public:
         ruCube();
@@ -100,6 +104,10 @@ class ruCube
         static inline const uint32_t allEdgesMask = 07777777;
         static inline const uint64_t cornersOrientationMask = 0707070707070;
         static inline const uint64_t cornersPermutationMask = 0070707070707;
+};
+
+class ruLutCube: public ruBaseCube {
+
 };
 
 #endif // RUCUBE_H
