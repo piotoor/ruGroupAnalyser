@@ -29,3 +29,16 @@ std::string ruCubeTurnException::what() const noexcept {
     return std::string("ruCubeTurnException: " + msg);
 }
 
+
+
+ruCubeFactoryException::ruCubeFactoryException(std::string msg): ruException(msg) {
+
+}
+
+ruCubeFactoryException::~ruCubeFactoryException() {
+
+}
+
+std::string ruCubeFactoryException::what() const noexcept {
+    return std::string("ruCubeFactoryException: " + msg);
+}

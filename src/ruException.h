@@ -28,5 +28,12 @@ class ruCubeTurnException: public ruException {
         std::string what() const noexcept override;
 };
 
+class ruCubeFactoryException: public ruException {
+    public:
+        ruCubeFactoryException(std::string msg = "Invalid cube type");
+        virtual ~ruCubeFactoryException();
+        std::string what() const noexcept override;
+};
+
 #endif // RUEXCEPTION_H
 
