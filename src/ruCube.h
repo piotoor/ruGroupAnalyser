@@ -38,6 +38,8 @@ class ruBaseCube {
 
         virtual std::unique_ptr<ruBaseCube> clone() const = 0;
 
+        virtual bool isPruningPossible(uint8_t remainingMoves) const = 0;
+
     protected:
         virtual void R() = 0;
         virtual void R2() = 0;
@@ -82,6 +84,7 @@ class ruCube: public ruBaseCube
 
         std::unique_ptr<ruBaseCube> clone() const override;
 
+        bool isPruningPossible(uint8_t remainingMoves) const override;
 
     protected:
         void R() override;

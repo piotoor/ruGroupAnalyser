@@ -206,3 +206,8 @@ void ruCube::Ui() {
 std::unique_ptr<ruBaseCube> ruCube:: clone() const {
     return std::make_unique<ruCube>(*this);
 }
+
+
+bool ruCube::isPruningPossible(uint8_t remainingMoves) const {
+    return false;
+}
