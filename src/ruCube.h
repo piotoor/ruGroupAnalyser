@@ -62,7 +62,7 @@ class ruCube: public ruBaseCube
     public:
         ruCube();
         ruCube(uint32_t edges, uint64_t corners);
-        ruCube(const ruCube& other);
+        explicit ruCube(const ruCube& other);
         ~ruCube();
 
         uint32_t getEdges() const override;
