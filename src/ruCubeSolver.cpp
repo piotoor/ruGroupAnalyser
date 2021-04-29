@@ -6,7 +6,7 @@ ruCubeSolver::ruCubeSolver(uint8_t minLength, uint8_t maxLength, uint8_t maxNumO
 }
 
 ruCubeSolver::~ruCubeSolver() {
-    //dtor
+
 }
 
 
@@ -28,11 +28,8 @@ void ruCubeSolver::solve(ruBaseCube *cube, bool multiThreading, uint8_t multiThr
         if (multiThreading) {
             currSolutions.clear();
             currSolutions.resize(numOfThreads);
-            //cubes.clear();
             cubes.clear();
             threads.clear();
-            //std::fill(begin(cubes), end(cubes), std::move(cube->clone()));
-            //currSolution.clear();
 
             for (int i = 0; i < numOfThreads; ++i) {
                 currSolutions[i].push_back(i);
@@ -42,7 +39,6 @@ void ruCubeSolver::solve(ruBaseCube *cube, bool multiThreading, uint8_t multiThr
             for (uint8_t length = minLength; length <= maxLength and solutions.size() < maxNumOfSolutions; ++length) {
                 if (length >= multiThreadingThreshold) {
                     for (uint8_t t = 0; t < numOfThreads; ++t) {
-                        //threads.push_back(std::thread(&ruCubeSolver::multiThreadingDfs, this, 0, length - 1, t, t));
                         currSolutions[t].resize(length);
                         threads.emplace_back(&ruCubeSolver::multiThreadingDfs, this, 1, length, t, t);
                     }
@@ -59,8 +55,6 @@ void ruCubeSolver::solve(ruBaseCube *cube, bool multiThreading, uint8_t multiThr
             }
 
         } else {
-//            currSolution.clear();
-//            this->cube = cube;
             for (uint8_t length = minLength; length <= maxLength and solutions.size() < maxNumOfSolutions; ++length) {
                 currSolution.resize(length);
                 dfs(0, length, -6);
