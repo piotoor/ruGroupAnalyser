@@ -12,6 +12,9 @@ enum class ruCubeType {
 class ruCubeFactory {
     public:
         ruCubeFactory();
+        explicit ruCubeFactory(const ruCubeFactory& other) = delete;
+        ruCubeFactory& operator =(const ruCubeFactory& other) = delete;
+
         virtual ~ruCubeFactory();
         virtual std::unique_ptr<ruBaseCube> createCube(ruCubeType cubeType) const;
 

@@ -8,6 +8,8 @@ class orientationGenerator
 {
     public:
         orientationGenerator();
+        explicit orientationGenerator(const orientationGenerator &other) = delete;
+        orientationGenerator& operator=(const orientationGenerator &other) = delete;
         virtual ~orientationGenerator();
         std::vector<std::vector<int8_t>> generateOrientations(int8_t n, const std::vector<int8_t> &locked = {}, const std::vector<int8_t> &ignored = {});
 

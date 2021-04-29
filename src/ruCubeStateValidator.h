@@ -8,6 +8,8 @@ class ruCubeStateValidator
 {
     public:
         ruCubeStateValidator();
+        explicit ruCubeStateValidator(const ruCubeStateValidator &other) = delete;
+        ruCubeStateValidator& operator=(const ruCubeStateValidator &other) = delete;
         virtual ~ruCubeStateValidator();
         bool isVectCubeStateSolveable(const std::vector<uint8_t> &cornersOrient,
                                       const std::vector<uint8_t> &cornersPerm,

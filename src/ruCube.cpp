@@ -38,7 +38,6 @@ ruCube::ruCube(uint32_t edges, uint64_t corners): edges(edges), corners(corners)
 }
 
 ruCube::ruCube(const ruCube& other) {
-    //initializeMovesVectors();
     this->corners = other.getCorners();
     this->edges = other.getEdges();
 }

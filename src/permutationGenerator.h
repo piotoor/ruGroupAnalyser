@@ -8,6 +8,8 @@ class permutationGenerator
 {
     public:
         permutationGenerator();
+        explicit permutationGenerator(const permutationGenerator &other) = delete;
+        permutationGenerator& operator=(const permutationGenerator &other) = delete;
         virtual ~permutationGenerator();
 
         std::vector<std::vector<int8_t>> generatePermutations(int8_t n, const std::vector<int8_t> &locked = {}, const std::vector<int8_t> &ignored = {});

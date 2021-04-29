@@ -17,8 +17,11 @@ enum ruCubeMove {
 class ruBaseCube {
     public:
         ruBaseCube();
-
+        ruBaseCube(const ruBaseCube &other) = delete;
+        ruBaseCube & operator=(const ruBaseCube &other) = delete;
         virtual ~ruBaseCube() = 0;
+
+
         virtual uint32_t getEdges() const = 0;
         virtual uint64_t getCorners() const = 0;
         virtual void setEdges(uint32_t edges) = 0;
