@@ -2,8 +2,30 @@
 #include "ruException.h"
 #include <iostream>
 
+ruBaseCube:: ruBaseCube() {
+    movesVect = {
+        &ruBaseCube::R,
+        &ruBaseCube::R2,
+        &ruBaseCube::Ri,
+        &ruBaseCube::U,
+        &ruBaseCube::U2,
+        &ruBaseCube::Ui,
+    };
+
+    movesInvertionsVect = {
+        &ruBaseCube::Ri,
+        &ruBaseCube::R2,
+        &ruBaseCube::R,
+        &ruBaseCube::Ui,
+        &ruBaseCube::U2,
+        &ruBaseCube::U,
+    };
+}
+
+ruBaseCube::~ruBaseCube() {
+}
+
 ruCube::ruCube() {
-    initializeMovesVectors();
     reset();
 }
 
@@ -12,12 +34,11 @@ ruCube::~ruCube() {
 }
 
 ruCube::ruCube(uint32_t edges, uint64_t corners): edges(edges), corners(corners) {
-    initializeMovesVectors();
     reset();
 }
 
 ruCube::ruCube(const ruCube& other) {
-    initializeMovesVectors();
+    //initializeMovesVectors();
     this->corners = other.getCorners();
     this->edges = other.getEdges();
 }
@@ -182,24 +203,6 @@ void ruCube::Ui() {
 	corners = (corners & 07777) | ((corners & 0007777770000) << 6) | ((corners & 0770000000000) >> 18);
 }
 
-void ruCube::initializeMovesVectors() {
-    movesVect = {
-        &ruCube::R,
-        &ruCube::R2,
-        &ruCube::Ri,
-        &ruCube::U,
-        &ruCube::U2,
-        &ruCube::Ui,
-    };
-
-    movesInvertionsVect = {
-        &ruCube::Ri,
-        &ruCube::R2,
-        &ruCube::R,
-        &ruCube::Ui,
-        &ruCube::U2,
-        &ruCube::U,
-    };
+std::unique_ptr<ruBaseCube> ruCube:: clone() const {
+    return std::make_unique<ruCube>(*this);
 }
-
-

@@ -13,7 +13,7 @@ class ruCubeSolver
         ruCubeSolver(uint8_t minLength = 0, uint8_t maxLength = 20, uint8_t maxNumOfSolutions = 1, uint32_t edgesMask = ruCube::allEdgesMask, uint64_t cornersMask = ruCube::allCornersMask);
         virtual ~ruCubeSolver();
         void configure(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask = ruCube::allEdgesMask, uint64_t cornersMask = ruCube::allCornersMask);
-        void solve(ruCube *cube, bool multiThreading = false, uint8_t multiThreadingThreshold = 8);
+        void solve(ruBaseCube *cube, bool multiThreading = false, uint8_t multiThreadingThreshold = 8);
         std::vector<std::string> getSolutionsAsStrings() const;
         std::vector<std::vector<uint8_t>> getSolutionsAsVectors() const;
 
@@ -28,10 +28,10 @@ class ruCubeSolver
         std::vector<uint8_t> currSolution;
         uint32_t edgesMask;
         uint64_t cornersMask;
-        ruCube *cube;
+        ruBaseCube *cube;
 
         std::vector<std::vector<uint8_t>> currSolutions;
-        std::vector<ruCube> cubes;
+        std::vector<std::unique_ptr<ruBaseCube>> cubes;
         std::mutex solutionsMutex;
         std::vector<std::thread> threads;
         static inline const uint8_t numOfThreads = 6;

@@ -3,6 +3,7 @@
 
 #include <cstdint>
 #include <vector>
+#include <memory>
 
 enum ruCubeMove {
     R,
@@ -14,7 +15,44 @@ enum ruCubeMove {
 };
 
 class ruBaseCube {
+    public:
+        ruBaseCube();
 
+        virtual ~ruBaseCube() = 0;
+        virtual uint32_t getEdges() const = 0;
+        virtual uint64_t getCorners() const = 0;
+        virtual void setEdges(uint32_t edges) = 0;
+        virtual void setCorners(uint64_t corners) = 0;
+        virtual void setCube(uint32_t edges, uint64_t corners) = 0;
+
+        virtual bool isSolved(uint32_t edgesMask, uint64_t cornersMask) const = 0;
+        virtual bool isSolvedEdges(uint32_t edgesMask) const = 0;
+        virtual bool isSolvedCorners(uint64_t cornersMask) const = 0;
+        virtual bool isInDomino() const = 0;
+
+        virtual void reset() = 0;
+        virtual void turn(uint8_t turnIndex) = 0;
+        virtual void inverseTurn(uint8_t turnIndex) = 0;
+        virtual void scramble(std::vector<uint8_t> moves) = 0;
+        virtual void inverseScramble(std::vector<uint8_t> moves) = 0;
+
+        virtual std::unique_ptr<ruBaseCube> clone() const = 0;
+
+    protected:
+        virtual void R() = 0;
+        virtual void R2() = 0;
+        virtual void Ri() = 0;
+        virtual void U() = 0;
+        virtual void U2() = 0;
+        virtual void Ui() = 0;
+        virtual bool isSolvedCornersO() const = 0;
+        virtual bool isSolvedEEinE() const = 0;
+        virtual bool isSolvedMEinM() const = 0;
+        virtual bool isSolvedSEinS() const = 0;
+
+        using movePointer = void (ruBaseCube::*)();
+        std::vector<movePointer> movesVect;
+        std::vector<movePointer> movesInvertionsVect;
 };
 
 class ruCube: public ruBaseCube
@@ -23,27 +61,41 @@ class ruCube: public ruBaseCube
         ruCube();
         ruCube(uint32_t edges, uint64_t corners);
         ruCube(const ruCube& other);
-        virtual ~ruCube();
+        ~ruCube();
 
-        uint32_t getEdges() const;
-        uint64_t getCorners() const;
-        void setEdges(uint32_t edges);
-        void setCorners(uint64_t corners);
-        void setCube(uint32_t edges, uint64_t corners);
+        uint32_t getEdges() const override;
+        uint64_t getCorners() const override;
+        void setEdges(uint32_t edges) override;
+        void setCorners(uint64_t corners) override;
+        void setCube(uint32_t edges, uint64_t corners) override;
 
-        bool isSolved(uint32_t edgesMask = ruCube::solvedEdges, uint64_t cornersMask = ruCube::solvedCorners) const;
-        bool isSolvedEdges(uint32_t edgesMask) const;
-        bool isSolvedCorners(uint64_t cornersMask) const;
-        bool isInDomino() const;
+        bool isSolved(uint32_t edgesMask = ruCube::solvedEdges, uint64_t cornersMask = ruCube::solvedCorners) const override;
+        bool isSolvedEdges(uint32_t edgesMask) const override;
+        bool isSolvedCorners(uint64_t cornersMask) const override;
+        bool isInDomino() const override;
 
-        void reset();
-        void turn(uint8_t turnIndex);
-        void inverseTurn(uint8_t turnIndex);
-        void scramble(std::vector<uint8_t> moves);
-        void inverseScramble(std::vector<uint8_t> moves);
+        void reset() override;
+        void turn(uint8_t turnIndex) override;
+        void inverseTurn(uint8_t turnIndex) override;
+        void scramble(std::vector<uint8_t> moves) override;
+        void inverseScramble(std::vector<uint8_t> moves) override;
+
+        std::unique_ptr<ruBaseCube> clone() const override;
 
 
-    private:
+    protected:
+        void R() override;
+        void R2() override;
+        void Ri() override;
+        void U() override;
+        void U2() override;
+        void Ui() override;
+        bool isSolvedCornersO() const override;
+        bool isSolvedEEinE() const override;
+        bool isSolvedMEinM() const override;
+        bool isSolvedSEinS() const override;
+
+
         uint32_t edges;
         struct cornersPBits
         {
@@ -80,23 +132,6 @@ class ruCube: public ruBaseCube
 
         uint64_t tmp;
 
-        using movePointer = void (ruCube::*)();
-        std::vector<movePointer> movesVect;
-        std::vector<movePointer> movesInvertionsVect;
-
-
-        void R();
-        void R2();
-        void Ri();
-        void U();
-        void U2();
-        void Ui();
-        void initializeMovesVectors();
-        bool isSolvedCornersO() const;
-        bool isSolvedEEinE() const;
-        bool isSolvedMEinM() const;
-        bool isSolvedSEinS() const;
-
     public:
         static inline const uint64_t solvedCorners = 0101112131415;
         static inline const uint32_t solvedEdges = 00123456;
@@ -106,9 +141,9 @@ class ruCube: public ruBaseCube
         static inline const uint64_t cornersPermutationMask = 0070707070707;
 };
 
-class ruLutCube: public ruBaseCube {
-
-};
+//class ruLutCube: public ruBaseCube {
+//
+//};
 
 #endif // RUCUBE_H
 

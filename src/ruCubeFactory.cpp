@@ -20,7 +20,7 @@ std::unique_ptr<ruBaseCube> ruCubeFactory::createCube(ruCubeType cubeType) const
         case ruCubeType::ruLutCube:
             // generate lut table first time it gets there
             // inject the dependency to lut cube
-            return std::make_unique<ruLutCube>();
+            //return std::make_unique<ruLutCube>();
         default:
             throw ruCubeFactoryException();
     }

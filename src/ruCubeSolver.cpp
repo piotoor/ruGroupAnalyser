@@ -19,7 +19,7 @@ void ruCubeSolver::configure(uint8_t minLength, uint8_t maxLength, uint8_t maxNu
 }
 #include <iostream>
 
-void ruCubeSolver::solve(ruCube *cube, bool multiThreading, uint8_t multiThreadingThreshold) {
+void ruCubeSolver::solve(ruBaseCube *cube, bool multiThreading, uint8_t multiThreadingThreshold) {
     solutions.clear();
     currSolution.clear();
     this->cube = cube;
@@ -29,14 +29,15 @@ void ruCubeSolver::solve(ruCube *cube, bool multiThreading, uint8_t multiThreadi
             currSolutions.clear();
             currSolutions.resize(numOfThreads);
             //cubes.clear();
-            cubes.resize(numOfThreads);
+            cubes.clear();
             threads.clear();
-            std::fill(begin(cubes), end(cubes), ruCube(*cube));
+            //std::fill(begin(cubes), end(cubes), std::move(cube->clone()));
             //currSolution.clear();
 
             for (int i = 0; i < numOfThreads; ++i) {
                 currSolutions[i].push_back(i);
-                cubes[i].turn(i);
+                cubes.push_back(cube->clone());
+                cubes[i]->turn(i);
             }
             for (uint8_t length = minLength; length <= maxLength and solutions.size() < maxNumOfSolutions; ++length) {
                 if (length >= multiThreadingThreshold) {
@@ -104,7 +105,7 @@ void ruCubeSolver::multiThreadingDfs(uint8_t depth, uint8_t maxDepth, int8_t pre
     if (solutions.size() < maxNumOfSolutions) {
         if (depth == maxDepth) {
 
-            if (cubes[id].isSolved(edgesMask, cornersMask)) {
+            if (cubes[id]->isSolved(edgesMask, cornersMask)) {
                 std::lock_guard<std::mutex> guard(solutionsMutex);
                 if (solutions.size() < maxNumOfSolutions) {
                     solutions.push_back(currSolutions[id]);
@@ -116,10 +117,10 @@ void ruCubeSolver::multiThreadingDfs(uint8_t depth, uint8_t maxDepth, int8_t pre
                     continue;
                 }
 
-                cubes[id].turn(i);
+                cubes[id]->turn(i);
                 currSolutions[id][depth] = i;
                 multiThreadingDfs(depth + 1, maxDepth, i, id);
-                cubes[id].inverseTurn(i);
+                cubes[id]->inverseTurn(i);
             }
         }
     }

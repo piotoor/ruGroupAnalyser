@@ -1,16 +1,19 @@
 #include "gtest/gtest.h"
 #include "ruCubeSolver.h"
+#include "ruCubeFactory.h"
 #include <chrono>
 
 TEST(ruCubeSolverTest, simpleDefaultConfigurationSolveTest) {
-    ruCube cube;
-    cube.turn(R);
-    cube.turn(U);
-    cube.turn(R2);
-    cube.turn(Ui);
+    ruCubeFactory factory;
+
+    auto cube = factory.createCube(ruCubeType::ruCube);
+    cube->turn(R);
+    cube->turn(U);
+    cube->turn(R2);
+    cube->turn(Ui);
 
     ruCubeSolver solver;
-    solver.solve(&cube);
+    solver.solve(cube.get());
     auto solutions = solver.getSolutionsAsVectors();
     std::vector<std::vector<uint8_t>> expectedSolutions = {
         { U, R2, Ui, Ri }
@@ -23,13 +26,13 @@ TEST(ruCubeSolverTest, simpleDefaultConfigurationSolveTest) {
 
 
 
-    cube.reset();
-    cube.turn(Ri);
-    cube.turn(U);
-    cube.turn(Ri);
-    cube.turn(Ui);
+    cube->reset();
+    cube->turn(Ri);
+    cube->turn(U);
+    cube->turn(Ri);
+    cube->turn(Ui);
 
-    solver.solve(&cube);
+    solver.solve(cube.get());
     solutions = solver.getSolutionsAsVectors();
     expectedSolutions = {
         { U, R, Ui, R }
@@ -42,11 +45,12 @@ TEST(ruCubeSolverTest, simpleDefaultConfigurationSolveTest) {
 }
 
 TEST(ruCubeSolverTest, customConfigurationSolveTest) {
-    ruCube cube;
-    cube.scramble({ R2, U2, R2, U2, R2, U2 });
+    ruCubeFactory factory;
+    auto cube = factory.createCube(ruCubeType::ruCube);
+    cube->scramble({ R2, U2, R2, U2, R2, U2 });
 
     ruCubeSolver solver (6, 6, 2);
-    solver.solve(&cube);
+    solver.solve(cube.get());
     auto solutions = solver.getSolutionsAsVectors();
     std::vector<std::vector<uint8_t>> expectedSolutions = {
         { R2, U2, R2, U2, R2, U2 },
@@ -60,11 +64,11 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
 
 
 
-    cube.reset();
-    cube.scramble({ R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U });
+    cube->reset();
+    cube->scramble({ R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U });
 
     solver.configure(12, 14, 4);
-    solver.solve(&cube);
+    solver.solve(cube.get());
     solutions = solver.getSolutionsAsVectors();
     expectedSolutions = {
         { R2, U2, R2, U2, R2, U, R2, U2, R2, U2, R2, Ui },
@@ -80,11 +84,11 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
 
 
 
-    cube.reset();
-    cube.scramble({ R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U });
+    cube->reset();
+    cube->scramble({ R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U });
 
     solver.configure(6, 10, 4);
-    solver.solve(&cube);
+    solver.solve(cube.get());
     solutions = solver.getSolutionsAsVectors();
     expectedSolutions = {
     };
@@ -96,11 +100,11 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
 
 
 
-    cube.reset();
-    cube.scramble({ R, U, Ri, U, R, U2, Ri });
+    cube->reset();
+    cube->scramble({ R, U, Ri, U, R, U2, Ri });
 
     solver.configure(6, 8, 1);
-    solver.solve(&cube);
+    solver.solve(cube.get());
     solutions = solver.getSolutionsAsVectors();
     expectedSolutions = {
         { R, U2, Ri, Ui, R, Ui, Ri }
@@ -113,11 +117,11 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
 
 
 
-    cube.reset();
-    cube.scramble({ R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui });
+    cube->reset();
+    cube->scramble({ R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui });
 
     solver.configure(12, 12, 2);
-    solver.solve(&cube);
+    solver.solve(cube.get());
     solutions = solver.getSolutionsAsVectors();
     expectedSolutions = {
         { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
@@ -131,11 +135,11 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
 
 
 
-    cube.reset();
-    cube.scramble({ R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui });
+    cube->reset();
+    cube->scramble({ R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui });
 
     solver.configure(12, 12, 200);
-    solver.solve(&cube);
+    solver.solve(cube.get());
     solutions = solver.getSolutionsAsVectors();
     expectedSolutions = {
         { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
@@ -170,9 +174,10 @@ TEST(ruCubeSolverTest, singleMoveSolutionsTest) {
 
     for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ruCubeSolver solver;
-        ruCube cube;
-        cube.scramble(scrambles[i]);
-        solver.solve(&cube);
+        ruCubeFactory factory;
+        auto cube = factory.createCube(ruCubeType::ruCube);
+        cube->scramble(scrambles[i]);
+        solver.solve(cube.get());
         auto solutions = solver.getSolutionsAsVectors();
 
         ASSERT_EQ(expectedSolutions[i], solutions[0]);
@@ -204,20 +209,21 @@ TEST(ruCubeSolverTest, multipleScramblesTest) {
         { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R, U, Ri, U },
     };
 
-    ruCube cube;
+    ruCubeFactory factory;
+    auto cube = factory.createCube(ruCubeType::ruCube);
     ruCubeSolver solver;
 
     for (const auto &scr: scrambles) {
         std::cout << "Solving scramble of length " << std::setw(2) << size(scr) << "... ";
         std::cout.flush();
-        cube.reset();
-        cube.scramble(scr);
-        solver.solve(&cube);
+        cube->reset();
+        cube->scramble(scr);
+        solver.solve(cube.get());
         auto solution = solver.getSolutionsAsVectors()[0];
-        cube.reset();
-        cube.scramble(scr);
-        cube.scramble(solution);
-        ASSERT_TRUE(cube.isSolved());
+        cube->reset();
+        cube->scramble(scr);
+        cube->scramble(solution);
+        ASSERT_TRUE(cube->isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
         std::cout << "(sol: " << std::setw(2) << size(solution) << " moves) ";
         std::cout << "DONE" << std::endl;
     }
@@ -245,12 +251,12 @@ class ruCubeSolverPerformanceTests : public ::testing::Test
 
         void solveSingleThread() {
             std::cout << "solveSingleThread... ";
-            cube.reset();
-            cube.scramble(scramble);
+            cube->reset();
+            cube->scramble(scramble);
 
             const std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
 
-            solver.solve(&cube);
+            solver.solve(cube.get());
             solutions = solver.getSolutionsAsVectors();
 
             const auto stop = std::chrono::steady_clock::now();
@@ -262,11 +268,11 @@ class ruCubeSolverPerformanceTests : public ::testing::Test
 
         void solveMultiThread(uint8_t multiThreadingThreshold) {
             std::cout << "solveMultiThread of threshold " << std::setw(2) << static_cast<int>(multiThreadingThreshold) << "... ";
-            cube.scramble(scramble);
+            cube->scramble(scramble);
 
             const std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
 
-            solver.solve(&cube, true, multiThreadingThreshold);
+            solver.solve(cube.get(), true, multiThreadingThreshold);
             solutions = solver.getSolutionsAsVectors();
 
             const auto stop = std::chrono::steady_clock::now();
@@ -281,10 +287,10 @@ class ruCubeSolverPerformanceTests : public ::testing::Test
             for (const auto &sol: solutions) {
     //            std::copy(begin(sol), end(sol), std::ostream_iterator<int>(std::cout, " "));
     //            std::cout << std::endl;
-                cube.reset();
-                cube.scramble(scramble);
-                cube.scramble(sol);
-                ASSERT_TRUE(cube.isSolved());
+                cube->reset();
+                cube->scramble(scramble);
+                cube->scramble(sol);
+                ASSERT_TRUE(cube->isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
             }
         }
 
@@ -309,7 +315,8 @@ class ruCubeSolverPerformanceTests : public ::testing::Test
 
 
         ruCubeSolver solver;
-        ruCube cube;
+        ruCubeFactory factory;
+        std::unique_ptr<ruBaseCube>  cube = factory.createCube(ruCubeType::ruCube);
         std::map<uint8_t, std::chrono::duration<double>> multiThreadingThresholdsTimes;
         std::chrono::duration<double> singleThreadTime;
 
