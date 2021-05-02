@@ -13,15 +13,15 @@ ruCubeStateValidator::ruCubeStateValidator() {
 ruCubeStateValidator::~ruCubeStateValidator() {
 }
 
-bool ruCubeStateValidator::isVectCornersValid(const std::vector<uint8_t>& orient, const std::vector<uint8_t>& perm) {
+bool ruCubeStateValidator::isVectCornersValid(const std::vector<int8_t>& orient, const std::vector<int8_t>& perm) {
     return isOrientationValid(orient) and size(orient) == 6 and isPermutationValid(perm) and size(perm) == 6;
 }
 
-bool ruCubeStateValidator::isVectEdgesValid(const std::vector<uint8_t>& perm) {
+bool ruCubeStateValidator::isVectEdgesValid(const std::vector<int8_t>& perm) {
     return isPermutationValid(perm) and size(perm) == 7;
 }
 
-bool ruCubeStateValidator::isPermutationValid(const std::vector<uint8_t>& perm) {
+bool ruCubeStateValidator::isPermutationValid(const std::vector<int8_t>& perm) {
     const auto &[l, h] = std::minmax(begin(perm), end(perm));
     if (*l < -1 or *h >= size(perm)) {
         return false;
@@ -37,7 +37,7 @@ bool ruCubeStateValidator::isPermutationValid(const std::vector<uint8_t>& perm) 
     return true;
 }
 
-bool ruCubeStateValidator::isOrientationValid(const std::vector<uint8_t>& orient) {
+bool ruCubeStateValidator::isOrientationValid(const std::vector<int8_t>& orient) {
     const auto &[l, h] = std::minmax(begin(orient), end(orient));
     if (*l < -1 or *h > 2) {
         return false;
@@ -59,11 +59,11 @@ bool ruCubeStateValidator::isOrientationValid(const std::vector<uint8_t>& orient
     return true;
 }
 
-bool ruCubeStateValidator::isVectCubeStateSolveable(const std::vector<uint8_t>& cornersOrient, const std::vector<uint8_t>& cornersPerm, const std::vector<uint8_t>& edgesPerm) {
+bool ruCubeStateValidator::isVectCubeStateSolveable(const std::vector<int8_t>& cornersOrient, const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
     return isVectCornersValid(cornersOrient, cornersPerm) and isVectEdgesValid(edgesPerm) and isVectCornersInRU(cornersPerm);
 }
 
-bool ruCubeStateValidator::isVectCornersInRU(const std::vector<uint8_t>& perm) {
+bool ruCubeStateValidator::isVectCornersInRU(const std::vector<int8_t>& perm) {
     ruCube cube;
     ruCubeStateConverter converter;
     const uint64_t cornersInt = converter.vectCornersToInt(perm, {0, 0, 0, 0, 0, 0});
