@@ -7,10 +7,10 @@
 
 TEST(ruCubeStateConverterTest, convertVectCornersToInt) {
     ruCubeStateConverter conv;
-    std::vector<uint8_t> cornersOrient = {
+    std::vector<int8_t> cornersOrient = {
         0, 0, 0, 0, 0, 0
     };
-    std::vector<uint8_t> cornersPerm = {
+    std::vector<int8_t> cornersPerm = {
         0, 1, 2, 3, 4, 5
     };
     uint64_t expectedCorners = 0101112131415;
@@ -141,7 +141,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersToInt) {
 TEST(ruCubeStateConverterTest, convertVectEdgesToInt) {
     ruCubeStateConverter conv;
 
-    std::vector<uint8_t> edgesPerm = {
+    std::vector<int8_t> edgesPerm = {
         0, 1, 2, 3, 4, 5, 6
     };
     uint32_t expectedEdges = 00123456;
@@ -183,4 +183,103 @@ TEST(ruCubeStateConverterTest, convertVectEdgesToInt) {
     expectedEdges = 02013645;
     edges = conv.vectEdgesToInt(edgesPerm);
     ASSERT_EQ(expectedEdges, edges);
+}
+
+TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToInt) {
+    ruCubeStateConverter conv;
+    std::vector<int8_t> cornersOrient = {
+        0, 0, 0, 0, 0, 0
+    };
+    std::vector<int8_t> cornersPerm = {
+        0, 1, 2, 3, -1, -1
+    };
+    uint64_t expectedCorners = 0101112131415;
+    auto corners = conv.vectCornersToInt(cornersPerm, cornersOrient);
+    ASSERT_EQ(expectedCorners, corners);
+
+
+
+    cornersOrient = {
+        -1, 1, 1, 1, 1, -1
+    };
+    cornersPerm = {
+        0, 1, 2, 3, 4, 5
+    };
+    expectedCorners = 0402122232415;
+    corners = conv.vectCornersToInt(cornersPerm, cornersOrient);
+//    std::cout << "actual = " << std::oct << corners << std::endl;
+//    std::cout << "expected = " << std::oct << expectedCorners << std::endl;
+    ASSERT_EQ(expectedCorners, corners);
+
+
+
+    cornersOrient = {
+        -1, 1, 1, 1, 1, -1
+    };
+    cornersPerm = {
+        0, -1, -1, 3, 4, 5
+    };
+    expectedCorners = 0402122232415;
+    corners = conv.vectCornersToInt(cornersPerm, cornersOrient);
+    ASSERT_EQ(expectedCorners, corners);
+
+
+
+    cornersOrient = {
+        -1, -1, -1, -1, -1, -1
+    };
+    cornersPerm = {
+        0, 1, 2, 3, 4, 5
+    };
+    expectedCorners = 0101112131415;
+    corners = conv.vectCornersToInt(cornersPerm, cornersOrient);
+    ASSERT_EQ(expectedCorners, corners);
+
+
+
+    cornersOrient = {
+        0, 0, 0, 0, 0, 0
+    };
+    cornersPerm = {
+        -1, -1, -1, -1, -1, -1
+    };
+    expectedCorners = 0101112131415;
+    corners = conv.vectCornersToInt(cornersPerm, cornersOrient);
+    ASSERT_EQ(expectedCorners, corners);
+
+
+
+    cornersOrient = {
+        -1, -1, -1, -1, -1, -1
+    };
+    cornersPerm = {
+        -1, -1, -1, -1, -1, -1
+    };
+    expectedCorners = 0101112131415;
+    corners = conv.vectCornersToInt(cornersPerm, cornersOrient);
+    ASSERT_EQ(expectedCorners, corners);
+
+
+
+    cornersOrient = {
+        2, 2, 2, 2, 2, -1
+    };
+    cornersPerm = {
+        -1, -1, -1, -1, -1, -1
+    };
+    expectedCorners = 0404142434445;
+    corners = conv.vectCornersToInt(cornersPerm, cornersOrient);
+    ASSERT_EQ(expectedCorners, corners);
+
+
+
+    cornersOrient = {
+        2, 2, 2, 1, 1, -1
+    };
+    cornersPerm = {
+        -1, -1, -1, -1, -1, -1
+    };
+    expectedCorners = 0404142232425;
+    corners = conv.vectCornersToInt(cornersPerm, cornersOrient);
+    ASSERT_EQ(expectedCorners, corners);
 }
