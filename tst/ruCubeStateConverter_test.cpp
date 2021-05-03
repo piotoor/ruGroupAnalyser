@@ -332,4 +332,13 @@ TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToInt) {
     expectedEdges = 00234561;
     edges = conv.vectEdgesToInt(edgesPerm);
     ASSERT_EQ(expectedEdges, edges);
+
+
+
+    edgesPerm = {
+        3, -1, 0, -1, -1, -1, 1
+    };
+    expectedEdges = 03204561;
+    edges = conv.vectEdgesToInt(edgesPerm);
+    ASSERT_EQ(expectedEdges, edges);
 }
