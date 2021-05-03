@@ -55,12 +55,22 @@ uint64_t ruCubeStateConverter::vectCornersToInt(const std::vector<int8_t>& perm,
     return ans;
 }
 
+#include <iostream>
 uint32_t ruCubeStateConverter::vectEdgesToInt(const std::vector<int8_t>& perm) {
     uint32_t ans = 0;
+    std::set<int8_t> availPerm { 0, 1, 2, 3, 4, 5, 6 };
+    for (const auto &x: perm) {
+        availPerm.erase(x);
+    }
+    auto permIt = availPerm.begin();
 
     for (int i = 0; i < size(perm); ++i) {
         ans <<= 3;
-        ans = ans |= perm[i];
+        if (perm[i] != -1) {
+            ans = ans | perm[i];
+        } else {
+            ans = ans | *permIt++;
+        }
     }
 
     return ans;
