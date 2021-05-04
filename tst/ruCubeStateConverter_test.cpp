@@ -343,3 +343,25 @@ TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
     ASSERT_EQ(expectedEdges, edges);
 }
 
+TEST(ruCubeStateConverterTest, convertIntEdgesToEdgesLexIndexTest) {
+    ruCubeStateConverter conv;
+
+    std::vector<uint32_t> edgesInts = {
+        0012345,
+        0012354
+    };
+
+
+    std::vector<uint16_t> expectedEdgesLexIndices = {
+        0,
+        1
+    };
+
+    for (int i = 0; i < std::size(edgesInts); ++i) {
+        uint16_t edgesLexIndex = conv.intEdgesToEdgesLexIndex(edgesInts[1]);
+        ASSERT_EQ(expectedEdgesLexIndices[i], edgesLexIndex);
+    }
+
+
+
+}
