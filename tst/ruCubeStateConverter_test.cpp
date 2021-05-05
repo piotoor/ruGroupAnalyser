@@ -128,48 +128,26 @@ TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
 TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
     ruCubeStateConverter conv;
 
-    std::vector<int8_t> edgesPerm = {
-        0, 1, 2, 3, 4, 5, -1
+    std::vector<std::vector<int8_t>> edgesPerm = {
+        { 0, 1, 2, 3, 4, 5, -1 },
+        { 6, 5, -1, 3, 2, 1, 0 },
+        { 6, 5, -1, -1, -1, -1, 0 },
+        { -1, -1, -1, -1, -1, -1, 1 },
+        { 3, -1, 0, -1, -1, -1, 1 },
     };
-    uint32_t expectedEdges = 00123456;
-    auto edges = conv.vectEdgesToInt(edgesPerm);
-    ASSERT_EQ(expectedEdges, edges);
 
-
-
-    edgesPerm = {
-        6, 5, -1, 3, 2, 1, 0
+    std::vector<uint64_t> expectedEdges = {
+        00123456,
+        06543210,
+        06512340,
+        00234561,
+        03204561,
     };
-    expectedEdges = 06543210;
-    edges = conv.vectEdgesToInt(edgesPerm);
-    ASSERT_EQ(expectedEdges, edges);
 
-
-
-    edgesPerm = {
-        6, 5, -1, -1, -1, -1, 0
-    };
-    expectedEdges = 06512340;
-    edges = conv.vectEdgesToInt(edgesPerm);
-    ASSERT_EQ(expectedEdges, edges);
-
-
-
-    edgesPerm = {
-        -1, -1, -1, -1, -1, -1, 1
-    };
-    expectedEdges = 00234561;
-    edges = conv.vectEdgesToInt(edgesPerm);
-    ASSERT_EQ(expectedEdges, edges);
-
-
-
-    edgesPerm = {
-        3, -1, 0, -1, -1, -1, 1
-    };
-    expectedEdges = 03204561;
-    edges = conv.vectEdgesToInt(edgesPerm);
-    ASSERT_EQ(expectedEdges, edges);
+    for (uint8_t i = 0; i < std::size(edgesPerm); ++i) {
+        auto edges = conv.vectEdgesToInt(edgesPerm[i]);
+        ASSERT_EQ(expectedEdges[i], edges);
+    }
 }
 
 TEST(ruCubeStateConverterTest, convertIntEdgesToEdgesLexIndexTest) {
