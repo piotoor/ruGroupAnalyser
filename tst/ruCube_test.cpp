@@ -14,6 +14,7 @@ TEST(ruCubeTest, initialStateTest) {
 
 TEST(ruCubeTest, settersGettersTest) {
     ruCube cube;
+
     cube.setEdges(076543210);
     cube.setCorners(01511413121110);
     ASSERT_EQ (076543210, cube.getEdges());
@@ -26,6 +27,7 @@ TEST(ruCubeTest, settersGettersTest) {
 
 TEST(ruCubeTest, cubeStateResetTest) {
     ruCube cube;
+
     ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
     cube.setEdges(076543210);
     cube.setCorners(01511413121110);
@@ -35,17 +37,6 @@ TEST(ruCubeTest, cubeStateResetTest) {
 }
 
 TEST(ruCubeTest, singleTurnTest) {
-	/*
-	 *	0 - R
-	 * 	1 - R2
-	 * 	2 - R'
-	 *  3 - U
-	 *  4 - U2
-	 *  5 - U'
-	 *
-	 * const unsigned long int edgesSolved = 00123456;
-	 * const unsigned long int cornersSolved = 0000102030405;
-	 */
     ruCube cube;
 
 	cube.turn(R); // R
@@ -165,15 +156,8 @@ TEST(ruCubeTest, singleTurnInversionTest) {
 }
 
 TEST(ruCubeTest, scrambleTest) {
-    	/*
-	 *	0 - R
-	 * 	1 - R2
-	 * 	2 - R'
-	 *  3 - U
-	 *  4 - U2
-	 *  5 - U'
-	 */
     ruCube cube;
+
     std::vector<uint8_t> moves{R, U, R2, U2, Ri, Ui};
     cube.scramble(moves);
     ASSERT_EQ(04651230, cube.getEdges());
@@ -186,6 +170,7 @@ TEST(ruCubeTest, scrambleTest) {
 
 TEST(ruCubeTest, scrambleInversionTest) {
     ruCube cube;
+
     std::vector<uint8_t> moves{U, R, U2, R2, Ui, Ri};
     cube.inverseScramble(moves);
     ASSERT_EQ(04651230, cube.getEdges());
@@ -198,6 +183,7 @@ TEST(ruCubeTest, scrambleInversionTest) {
 
 TEST(ruCubeTest, isInDominoTest) {
     ruCube cube;
+
     ASSERT_TRUE(cube.isInDomino());
     cube.scramble({R2, U2, R2, U2, R2, U2});
     ASSERT_TRUE(cube.isInDomino());
@@ -215,6 +201,7 @@ TEST(ruCubeTest, isInDominoTest) {
 
 TEST(ruCubeTest, singleTurnNegativeTest) {
     ruCube cube;
+
     const std::vector<uint8_t> invalidTurns {
         6, 7, 8, 9, 10, 11, 12, 15, 20, 30, 100, 255
     };
@@ -230,6 +217,7 @@ TEST(ruCubeTest, singleTurnNegativeTest) {
 
 TEST(ruCubeTest, singleTurnInversionNegativeTest) {
     ruCube cube;
+
     const std::vector<uint8_t> invalidTurns {
         6, 7, 8, 9, 10, 11, 12, 15, 20, 30, 100, 255
     };
@@ -245,6 +233,7 @@ TEST(ruCubeTest, singleTurnInversionNegativeTest) {
 
 TEST(ruCubeTest, scrambleNegativeTest) {
     ruCube cube;
+
     std::vector<std::vector<uint8_t>> invalidScrambles {
         { 6 },
         { R, U, R2, U2, Ri, Ui, 10, U2, R2, 8, 10 },
@@ -270,6 +259,7 @@ TEST(ruCubeTest, scrambleNegativeTest) {
 
 TEST(ruCubeTest, scrambleInversionNegativeTest) {
     ruCube cube;
+
     std::vector<std::vector<uint8_t>> invalidScrambleInversions {
         { 6 },
         { R, U, R2, U2, Ri, Ui, 10, U2, R2, 8, 10 },
@@ -296,11 +286,11 @@ TEST(ruCubeTest, scrambleInversionNegativeTest) {
 TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
     std::vector<std::vector<uint8_t>> scrambles {
         { R2, U2, R2, U2, R2, U2 },
-        { R, U, Ri, U, R, U2, Ri, U2 },
-        { Ri, U, Ri, Ui, Ri, Ui, Ri, U, R, U, R2 },
-        { R2, U2, R2, U2, R2, U, R2, U2, R2, U2, R2, Ui },
-        { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
-        { Ri, Ui, R, Ui, Ri, U2, R, U2, R, U, Ri, U, R, U2, Ri, U2 }
+        { R,  U,  Ri, U,  R,  U2, Ri, U2 },
+        { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
+        { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
+        { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
+        { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
     };
 
     std::vector<std::pair<uint32_t, uint64_t>> filters {
@@ -315,12 +305,12 @@ TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
     };
 
     std::vector<std::vector<bool>> expected {
-        { false, false, true, true, true, true, false, false },
-        { false, false, false, true, false, true, false, false },
-        { false, false, true, true, true, true, false, false },
-        { false, false, true, true, true, true, false, false },
-        { false, true, false, true, false, false, false, false },
-        { false, true, false, true, false, true, false, true }
+        { false, false, true,  true,  true,  true,  false, false },
+        { false, false, false, true,  false, true,  false, false },
+        { false, false, true,  true,  true,  true,  false, false },
+        { false, false, true,  true,  true,  true,  false, false },
+        { false, true,  false, true,  false, false, false, false },
+        { false, true,  false, true,  false, true,  false, true  }
     };
 
     for (uint8_t i = 0 ; i < size(scrambles); ++i) {
@@ -333,15 +323,14 @@ TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
 
 }
 
-
 TEST(ruCubeTest, customIsSolvedFilterTest) {
     std::vector<std::vector<uint8_t>> scrambles {
         { R2, U2, R2, U2, R2, U2 },
-        { R, U, Ri, U, R, U2, Ri, U2 },
-        { Ri, U, Ri, Ui, Ri, Ui, Ri, U, R, U, R2 },
-        { R2, U2, R2, U2, R2, U, R2, U2, R2, U2, R2, Ui },
-        { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
-        { Ri, Ui, R, Ui, Ri, U2, R, U2, R, U, Ri, U, R, U2, Ri, U2 }
+        { R,  U,  Ri, U,  R,  U2, Ri, U2 },
+        { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
+        { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
+        { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
+        { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
     };
 
     std::vector<std::pair<uint32_t, uint64_t>> filters {
@@ -356,7 +345,7 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
         { 00000070, 0000000770000 },
         { 00000070, 0000000070000 },
         { 00000070, 0000000700000 },
-        // -------------------------
+
         { 07000070, 0000000000077 },
         { 07000070, 0000000000007 },
         { 07000070, 0000000000070 },
@@ -371,12 +360,12 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
     };
 
     std::vector<std::vector<bool>> expected {
-        { true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false, false },
-        { true, true, true, true, true, true, false, true, false, false, false, false, false, false, false, false, false, false },
-        { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true },
-        { true, true, true, true, true, true, true, true, true, false, false, false, false, false, false, false, false, false },
-        { false, false, true, true, true, true, false, false, false, false, false, true, true, true, true, false, false, false },
-        { true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true, true }
+        { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false },
+        { true,  true,  true,       true,  true,  true,     false, true,  false,    false, false, false,    false, false, false,    false, false, false },
+        { true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true  },
+        { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false },
+        { false, false, true,       true,  true,  true,     false, false, false,    false, false, true,     true,  true,  true,     false, false, false },
+        { true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true  }
     };
 
     for (uint8_t i = 0 ; i < size(scrambles); ++i) {
