@@ -7,7 +7,7 @@
 
 TEST(ruCubeStateConverterTest, convertVectCornersToIntTest) {
     ruCubeStateConverter conv;
-    std::vector<std::vector<int8_t>> cornersOrient = {
+    const std::vector<std::vector<int8_t>> cornersOrient = {
         { 0, 0, 0, 0, 0, 0 },
         { 1, 1, 1, 1, 1, 1 },
         { 0, 1, 0, 1, 0, 1 },
@@ -21,7 +21,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersToIntTest) {
         { 2, 1, 1, 0, 1, 1 },
     };
 
-    std::vector<std::vector<int8_t>> cornersPerm = {
+    const std::vector<std::vector<int8_t>> cornersPerm = {
         { 0, 1, 2, 3, 4, 5 },
         { 0, 1, 2, 3, 4, 5 },
         { 0, 1, 2, 3, 4, 5 },
@@ -35,7 +35,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersToIntTest) {
         { 0, 4, 3, 1, 2, 5 },
     };
 
-    std::vector<uint64_t> expectedCorners = {
+    const std::vector<uint64_t> expectedCorners = {
         0101112131415,
         0202122232425,
         0102112231425,
@@ -58,7 +58,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersToIntTest) {
 TEST(ruCubeStateConverterTest, convertVectEdgesToIntTest) {
     ruCubeStateConverter conv;
 
-    std::vector<std::vector<int8_t>> edgesPerm = {
+    const std::vector<std::vector<int8_t>> edgesPerm = {
         { 0, 1, 2, 3, 4, 5, 6 },
         { 6, 5, 4, 3, 2, 1, 0 },
         { 1, 3, 0, 2, 4, 5, 6 },
@@ -66,7 +66,7 @@ TEST(ruCubeStateConverterTest, convertVectEdgesToIntTest) {
         { 2, 0, 1, 3, 6, 4, 5 },
     };
 
-    std::vector<uint64_t> expectedEdges = {
+    const std::vector<uint64_t> expectedEdges = {
         00123456,
         06543210,
         01302456,
@@ -83,7 +83,7 @@ TEST(ruCubeStateConverterTest, convertVectEdgesToIntTest) {
 TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
     ruCubeStateConverter conv;
 
-    std::vector<std::vector<int8_t>> cornersOrient = {
+    const std::vector<std::vector<int8_t>> cornersOrient = {
         {  0,  0,  0,  0,  0,  0 },
         { -1,  1,  1,  1,  1, -1 },
         { -1,  1,  1,  1,  1, -1 },
@@ -94,7 +94,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
         {  2,  2,  2,  1,  1, -1 },
         {  2,  2,  2,  1,  1,  1 },
     };
-    std::vector<std::vector<int8_t>> cornersPerm = {
+    const std::vector<std::vector<int8_t>> cornersPerm = {
         {  0,  1,  2,  3, -1, -1 },
         {  0,  1,  2,  3,  4,  5 },
         {  0, -1, -1,  3,  4,  5 },
@@ -106,7 +106,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
         {  5,  4,  3, -1, -1,  1 },
     };
 
-    std::vector<uint64_t> expectedCorners = {
+    const std::vector<uint64_t> expectedCorners = {
         0101112131415,
         0402122232415,
         0402122232415,
@@ -128,7 +128,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
 TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
     ruCubeStateConverter conv;
 
-    std::vector<std::vector<int8_t>> edgesPerm = {
+    const std::vector<std::vector<int8_t>> edgesPerm = {
         {  0,  1,  2,  3,  4,  5, -1 },
         {  6,  5, -1,  3,  2,  1,  0 },
         {  6,  5, -1, -1, -1, -1,  0 },
@@ -136,7 +136,7 @@ TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
         {  3, -1,  0, -1, -1, -1,  1 },
     };
 
-    std::vector<uint64_t> expectedEdges = {
+    const std::vector<uint64_t> expectedEdges = {
         00123456,
         06543210,
         06512340,
@@ -153,13 +153,13 @@ TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
 TEST(ruCubeStateConverterTest, convertIntEdgesToEdgesLexIndexTest) {
     ruCubeStateConverter conv;
 
-    std::vector<uint32_t> edgesInts = {
+    const std::vector<uint32_t> edgesInts = {
         0012345,
         0012354
     };
 
 
-    std::vector<uint16_t> expectedEdgesLexIndices = {
+    const std::vector<uint16_t> expectedEdgesLexIndices = {
         0,
         1
     };
@@ -168,7 +168,4 @@ TEST(ruCubeStateConverterTest, convertIntEdgesToEdgesLexIndexTest) {
         uint16_t edgesLexIndex = conv.intEdgesToEdgesLexIndex(edgesInts[1]);
         ASSERT_EQ(expectedEdgesLexIndices[i], edgesLexIndex);
     }
-
-
-
 }
