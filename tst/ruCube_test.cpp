@@ -158,7 +158,7 @@ TEST(ruCubeTest, singleTurnInversionTest) {
 TEST(ruCubeTest, scrambleTest) {
     ruCube cube;
 
-    std::vector<uint8_t> moves{R, U, R2, U2, Ri, Ui};
+    const std::vector<uint8_t> moves{R, U, R2, U2, Ri, Ui};
     cube.scramble(moves);
     ASSERT_EQ(04651230, cube.getEdges());
 	ASSERT_EQ(0442320452241, cube.getCorners());
@@ -171,7 +171,7 @@ TEST(ruCubeTest, scrambleTest) {
 TEST(ruCubeTest, scrambleInversionTest) {
     ruCube cube;
 
-    std::vector<uint8_t> moves{U, R, U2, R2, Ui, Ri};
+    const std::vector<uint8_t> moves{U, R, U2, R2, Ui, Ri};
     cube.inverseScramble(moves);
     ASSERT_EQ(04651230, cube.getEdges());
 	ASSERT_EQ(0442320452241, cube.getCorners());
@@ -234,13 +234,13 @@ TEST(ruCubeTest, singleTurnInversionNegativeTest) {
 TEST(ruCubeTest, scrambleNegativeTest) {
     ruCube cube;
 
-    std::vector<std::vector<uint8_t>> invalidScrambles {
+    const std::vector<std::vector<uint8_t>> invalidScrambles {
         { 6 },
         { R, U, R2, U2, Ri, Ui, 10, U2, R2, 8, 10 },
         { R, U, R2, Ri, R2, Ri, 6 }
     };
 
-    std::vector<uint8_t> firstInvalidTurn {
+    const std::vector<uint8_t> firstInvalidTurn {
         6,
         10,
         6
@@ -260,13 +260,13 @@ TEST(ruCubeTest, scrambleNegativeTest) {
 TEST(ruCubeTest, scrambleInversionNegativeTest) {
     ruCube cube;
 
-    std::vector<std::vector<uint8_t>> invalidScrambleInversions {
+    const std::vector<std::vector<uint8_t>> invalidScrambleInversions {
         { 6 },
         { R, U, R2, U2, Ri, Ui, 10, U2, R2, 8, 10 },
         { R, U, R2, Ri, R2, Ri, 6 }
     };
 
-    std::vector<uint8_t> firstInvalidTurn {
+    const std::vector<uint8_t> firstInvalidTurn {
         6,
         10,
         6
@@ -284,7 +284,7 @@ TEST(ruCubeTest, scrambleInversionNegativeTest) {
 }
 
 TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
-    std::vector<std::vector<uint8_t>> scrambles {
+    const std::vector<std::vector<uint8_t>> scrambles {
         { R2, U2, R2, U2, R2, U2 },
         { R,  U,  Ri, U,  R,  U2, Ri, U2 },
         { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
@@ -293,7 +293,7 @@ TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
         { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
     };
 
-    std::vector<std::pair<uint32_t, uint64_t>> filters {
+    const std::vector<std::pair<uint32_t, uint64_t>> filters {
         { ruCube::allEdgesMask,     ruCube::allCornersMask },
         { ruCube::allEdgesMask,     00 },
         { 00,                       ruCube::allCornersMask },
@@ -304,7 +304,7 @@ TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
         { ruCube::allEdgesMask,     ruCube::cornersPermutationMask }
     };
 
-    std::vector<std::vector<bool>> expected {
+    const std::vector<std::vector<bool>> expected {
         { false, false, true,  true,  true,  true,  false, false },
         { false, false, false, true,  false, true,  false, false },
         { false, false, true,  true,  true,  true,  false, false },
@@ -324,7 +324,7 @@ TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
 }
 
 TEST(ruCubeTest, customIsSolvedFilterTest) {
-    std::vector<std::vector<uint8_t>> scrambles {
+    const std::vector<std::vector<uint8_t>> scrambles {
         { R2, U2, R2, U2, R2, U2 },
         { R,  U,  Ri, U,  R,  U2, Ri, U2 },
         { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
@@ -333,7 +333,7 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
         { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
     };
 
-    std::vector<std::pair<uint32_t, uint64_t>> filters {
+    const std::vector<std::pair<uint32_t, uint64_t>> filters {
         { 00000070, 0000000000077 },
         { 00000070, 0000000000007 },
         { 00000070, 0000000000070 },
@@ -359,7 +359,7 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
         { 07000070, 0000000700000 }
     };
 
-    std::vector<std::vector<bool>> expected {
+    const std::vector<std::vector<bool>> expected {
         { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false },
         { true,  true,  true,       true,  true,  true,     false, true,  false,    false, false, false,    false, false, false,    false, false, false },
         { true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true  },
