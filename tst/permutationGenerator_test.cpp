@@ -124,150 +124,108 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
 TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
     permutationGenerator gen;
 
-    std::vector<int8_t> ignoredPieces = {};
-    std::vector<int8_t> lockedPieces = {};
-    auto perms = gen.generatePermutations(4, lockedPieces, ignoredPieces);
-    std::vector<std::vector<int8_t>> expectedPerms = {
-        { 0, 1, 2, 3 },
-        { 0, 1, 3, 2 },
-        { 0, 2, 1, 3 },
-        { 0, 2, 3, 1 },
-        { 0, 3, 1, 2 },
-        { 0, 3, 2, 1 },
+    const std::vector<std::vector<std::vector<int8_t>>> expectedPerms = {
+        {{ 0, 1, 2, 3 },
+         { 0, 1, 3, 2 },
+         { 0, 2, 1, 3 },
+         { 0, 2, 3, 1 },
+         { 0, 3, 1, 2 },
+         { 0, 3, 2, 1 },
 
-        { 1, 0, 2, 3 },
-        { 1, 0, 3, 2 },
-        { 1, 2, 0, 3 },
-        { 1, 2, 3, 0 },
-        { 1, 3, 0, 2 },
-        { 1, 3, 2, 0 },
+         { 1, 0, 2, 3 },
+         { 1, 0, 3, 2 },
+         { 1, 2, 0, 3 },
+         { 1, 2, 3, 0 },
+         { 1, 3, 0, 2 },
+         { 1, 3, 2, 0 },
 
-        { 2, 0, 1, 3 },
-        { 2, 0, 3, 1 },
-        { 2, 1, 0, 3 },
-        { 2, 1, 3, 0 },
-        { 2, 3, 0, 1 },
-        { 2, 3, 1, 0 },
+         { 2, 0, 1, 3 },
+         { 2, 0, 3, 1 },
+         { 2, 1, 0, 3 },
+         { 2, 1, 3, 0 },
+         { 2, 3, 0, 1 },
+         { 2, 3, 1, 0 },
 
-        { 3, 0, 1, 2 },
-        { 3, 0, 2, 1 },
-        { 3, 1, 0, 2 },
-        { 3, 1, 2, 0 },
-        { 3, 2, 0, 1 },
-        { 3, 2, 1, 0 },
+         { 3, 0, 1, 2 },
+         { 3, 0, 2, 1 },
+         { 3, 1, 0, 2 },
+         { 3, 1, 2, 0 },
+         { 3, 2, 0, 1 },
+         { 3, 2, 1, 0 }},
+
+
+        {{ }},
+
+
+        {{ 0 }},
+
+
+        {{ -1 }},
+
+
+        {{ -1, -1 }},
+
+
+        {{ -1,  1 },
+         {  1, -1 }},
+
+
+        {{ -1,  1,  2 },
+         { -1,  2,  1 },
+         {  1, -1,  2 },
+         {  1,  2, -1 },
+         {  2, -1,  1 },
+         {  2,  1, -1 }},
+
+
+        {{ -1, -1,  1,  2 },
+         { -1, -1,  2,  1 },
+         { -1,  1, -1,  2 },
+         { -1,  1,  2, -1 },
+         { -1,  2, -1,  1 },
+         { -1,  2,  1, -1 },
+
+         {  1, -1, -1,  2 },
+         {  1, -1,  2, -1 },
+         {  1,  2, -1, -1 },
+
+         {  2, -1, -1,  1 },
+         {  2, -1,  1, -1 },
+         {  2,  1, -1, -1 }}
     };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
 
-
-
-    ignoredPieces = {};
-    perms = gen.generatePermutations(0, lockedPieces, ignoredPieces);
-    expectedPerms = {
-        { }
+    const std::vector<std::vector<int8_t>> lockedPieces = {
+        { },
+        { },
+        { },
+        { },
+        { },
+        { },
+        { },
+        { },
     };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
 
-
-
-    ignoredPieces = {};
-    perms = gen.generatePermutations(1, lockedPieces, ignoredPieces);
-    expectedPerms = {
-        { 0 }
+    const std::vector<std::vector<int8_t>> ignoredPieces = {
+        { },
+        { },
+        { },
+        { 0 },
+        { 0, 1 },
+        { 0 },
+        { 0 },
+        { 0, 3 },
     };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
 
+    const std::vector<uint8_t> permLengths { 4, 0, 1, 1, 2, 2, 3, 4 };
 
-
-    ignoredPieces = { 0 };
-    perms = gen.generatePermutations(1, lockedPieces, ignoredPieces);
-    expectedPerms = {
-        { -1 }
-    };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
-
-
-
-    ignoredPieces = { 0, 1 };
-    perms = gen.generatePermutations(2, lockedPieces, ignoredPieces);
-    expectedPerms = {
-        { -1, -1 }
-    };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
-
-
-
-    ignoredPieces = { 0 };
-    perms = gen.generatePermutations(2, lockedPieces, ignoredPieces);
-    expectedPerms = {
-        { -1, 1 },
-        { 1, -1 }
-    };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
-
-
-
-    ignoredPieces = { 0 };
-    perms = gen.generatePermutations(3, lockedPieces, ignoredPieces);
-    expectedPerms = {
-        { -1, 1, 2 },
-        { -1, 2, 1 },
-
-        { 1, -1, 2 },
-        { 1, 2, -1 },
-
-        { 2, -1, 1 },
-        { 2, 1, -1 }
-    };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
-
-
-
-    ignoredPieces = {0, 3};
-    perms = gen.generatePermutations(4, lockedPieces, ignoredPieces);
-    expectedPerms = {
-        { -1, -1, 1, 2 },
-        { -1, -1, 2, 1 },
-        { -1, 1, -1, 2 },
-        { -1, 1, 2, -1 },
-        { -1, 2, -1, 1 },
-        { -1, 2, 1, -1 },
-
-        { 1, -1, -1, 2 },
-        { 1, -1, 2, -1 },
-        { 1, 2, -1, -1 },
-
-        { 2, -1, -1, 1 },
-        { 2, -1, 1, -1 },
-        { 2, 1, -1, -1 },
-    };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
+    for (uint8_t test = 0; test < size(expectedPerms); ++test) {
+        auto perms = gen.generatePermutations(permLengths[test], lockedPieces[test], ignoredPieces[test]);
+        ASSERT_EQ(expectedPerms[test].size(), perms.size());
+        for (uint8_t i = 0; i < expectedPerms[test].size(); ++i) {
+            ASSERT_EQ(expectedPerms[test][i], perms[i]);
+        }
     }
 }
-
-
 
 TEST(permutationGeneratorTest, generatePermutationsWithLockedAndIgnoredPiecesTest) {
     permutationGenerator gen;
