@@ -3,96 +3,65 @@
 
 #include <vector>
 
-
 TEST(permutationGeneratorTest, generatePermutationsTest) {
     permutationGenerator gen;
 
+    std::vector<std::vector<std::vector<int8_t>>> expectedPerms = {
+        {{  }},
 
-    auto perms = gen.generatePermutations(0);
-    std::vector<std::vector<int8_t>> expectedPerms = {
-        {  }
+
+        {{ 0 }},
+
+
+        {{ 0, 1 },
+         { 1, 0 }},
+
+
+        {{ 0, 1, 2 },
+         { 0, 2, 1 },
+         { 1, 0, 2 },
+         { 1, 2, 0 },
+         { 2, 0, 1 },
+         { 2, 1, 0 }},
+
+
+        {{ 0, 1, 2, 3 },
+         { 0, 1, 3, 2 },
+         { 0, 2, 1, 3 },
+         { 0, 2, 3, 1 },
+         { 0, 3, 1, 2 },
+         { 0, 3, 2, 1 },
+
+         { 1, 0, 2, 3 },
+         { 1, 0, 3, 2 },
+         { 1, 2, 0, 3 },
+         { 1, 2, 3, 0 },
+         { 1, 3, 0, 2 },
+         { 1, 3, 2, 0 },
+
+         { 2, 0, 1, 3 },
+         { 2, 0, 3, 1 },
+         { 2, 1, 0, 3 },
+         { 2, 1, 3, 0 },
+         { 2, 3, 0, 1 },
+         { 2, 3, 1, 0 },
+
+         { 3, 0, 1, 2 },
+         { 3, 0, 2, 1 },
+         { 3, 1, 0, 2 },
+         { 3, 1, 2, 0 },
+         { 3, 2, 0, 1 },
+         { 3, 2, 1, 0 }},
     };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
 
+    const std::vector<uint8_t> permLengths { 0, 1, 2, 3, 4 };
 
-
-    perms = gen.generatePermutations(1);
-    expectedPerms = {
-        { 0 }
-    };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
-
-
-
-    perms = gen.generatePermutations(2);
-    expectedPerms = {
-        { 0, 1 },
-        { 1, 0 }
-    };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
-
-
-
-    perms = gen.generatePermutations(3);
-    expectedPerms = {
-        { 0, 1, 2 },
-        { 0, 2, 1 },
-
-        { 1, 0, 2 },
-        { 1, 2, 0 },
-
-        { 2, 0, 1 },
-        { 2, 1, 0 }
-    };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
-
-
-
-    perms = gen.generatePermutations(4);
-    expectedPerms = {
-        { 0, 1, 2, 3 },
-        { 0, 1, 3, 2 },
-        { 0, 2, 1, 3 },
-        { 0, 2, 3, 1 },
-        { 0, 3, 1, 2 },
-        { 0, 3, 2, 1 },
-
-        { 1, 0, 2, 3 },
-        { 1, 0, 3, 2 },
-        { 1, 2, 0, 3 },
-        { 1, 2, 3, 0 },
-        { 1, 3, 0, 2 },
-        { 1, 3, 2, 0 },
-
-        { 2, 0, 1, 3 },
-        { 2, 0, 3, 1 },
-        { 2, 1, 0, 3 },
-        { 2, 1, 3, 0 },
-        { 2, 3, 0, 1 },
-        { 2, 3, 1, 0 },
-
-        { 3, 0, 1, 2 },
-        { 3, 0, 2, 1 },
-        { 3, 1, 0, 2 },
-        { 3, 1, 2, 0 },
-        { 3, 2, 0, 1 },
-        { 3, 2, 1, 0 },
-    };
-    ASSERT_EQ(expectedPerms.size(), perms.size());
-    for (uint8_t i = 0; i < expectedPerms.size(); ++i) {
-        ASSERT_EQ(expectedPerms[i], perms[i]);
+    for (const auto &permLength: permLengths) {
+        auto perms = gen.generatePermutations(permLength);
+        ASSERT_EQ(expectedPerms[permLength].size(), perms.size());
+        for (uint8_t i = 0; i < expectedPerms[permLength].size(); ++i) {
+            ASSERT_EQ(expectedPerms[permLength][i], perms[i]);
+        }
     }
 }
 
