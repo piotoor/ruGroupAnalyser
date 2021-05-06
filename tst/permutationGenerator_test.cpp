@@ -6,7 +6,7 @@
 TEST(permutationGeneratorTest, generatePermutationsTest) {
     permutationGenerator gen;
 
-    std::vector<std::vector<std::vector<int8_t>>> expectedPerms = {
+    const std::vector<std::vector<std::vector<int8_t>>> expectedPerms = {
         {{  }},
 
 
@@ -68,7 +68,7 @@ TEST(permutationGeneratorTest, generatePermutationsTest) {
 TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
     permutationGenerator gen;
 
-    std::vector<std::vector<std::vector<int8_t>>> expectedPerms = {
+    const std::vector<std::vector<std::vector<int8_t>>> expectedPerms = {
         {{ 0, 1, 2 },
          { 0, 2, 1 },
          { 1, 0, 2 },
@@ -100,7 +100,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
         {{ 0, 1, 2, 3 }},
     };
 
-    std::vector<std::vector<int8_t>> lockedPieces = {
+    const std::vector<std::vector<int8_t>> lockedPieces = {
         { },
         { 3, 4, 5 },
         { 1 },
