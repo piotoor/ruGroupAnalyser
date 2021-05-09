@@ -77,7 +77,7 @@ uint32_t ruCubeStateConverter::vectEdgesToInt(const std::vector<int8_t>& perm) c
 }
 
 uint16_t ruCubeStateConverter::intEdgesToEdgesLexIndex(const uint32_t edges) {
-    return intPermToPermLexIndex(edges, 3, 18, 7);
+    return intPermToPermLexIndex(edges, pieceSizeEdges, shiftBaseEdges, numOfEdges);
 }
 
 uint16_t ruCubeStateConverter::intPermToPermLexIndex(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces) {
@@ -100,7 +100,7 @@ uint16_t ruCubeStateConverter::intPermToPermLexIndex(const uint64_t perm, uint8_
 }
 
 uint16_t ruCubeStateConverter::intCornersToCornersPermLexIndex(const uint64_t corners) {
-    return intPermToPermLexIndex(corners, 6, 30, 6);
+    return intPermToPermLexIndex(corners, pieceSizeCorners, shiftBaseCorners, numOfCorners);
 }
 
 uint16_t ruCubeStateConverter::intCornersToCornersOrientLexIndex(const uint64_t corners) {

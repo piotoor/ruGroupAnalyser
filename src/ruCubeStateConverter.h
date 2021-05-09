@@ -24,12 +24,17 @@ class ruCubeStateConverter
 
         static inline constexpr uint8_t maxNumOfPieces = 7;
         static inline const uint8_t numOfEdges = 7;
+        static inline const uint8_t numOfCorners = 6;
+
+        static inline const uint8_t pieceSizeEdges = 3;
+        static inline const uint8_t shiftBaseEdges = 18;
+        static inline const uint8_t pieceSizeCorners = 6;
+        static inline const uint8_t shiftBaseCorners = 30;
 
         std::bitset<maxNumOfPieces> visited;
         std::array<uint8_t, maxNumOfPieces> lehmer;
 
         static constexpr std::array<uint16_t, maxNumOfPieces> factLookup = {
-//            720, 120, 24, 6, 2, 1, 0
             0, 1, 2, 6, 24, 120, 720
         };
 
