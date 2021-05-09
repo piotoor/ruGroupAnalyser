@@ -29,7 +29,8 @@ class ruCubeStateConverter
         std::array<uint8_t, maxNumOfPieces> lehmer;
 
         static constexpr std::array<uint16_t, maxNumOfPieces> factLookup = {
-            720, 120, 24, 6, 2, 1, 0
+//            720, 120, 24, 6, 2, 1, 0
+            0, 1, 2, 6, 24, 120, 720
         };
 
 };

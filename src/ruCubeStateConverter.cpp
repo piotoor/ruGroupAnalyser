@@ -83,27 +83,24 @@ uint16_t ruCubeStateConverter::intEdgesToEdgesLexIndex(const uint32_t edges) {
 uint16_t ruCubeStateConverter::intPermToPermLexIndex(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces) {
     lehmer.fill(0);
     visited.reset();
-
     for (uint8_t i = 0; i < numOfPieces; ++i) {
         uint8_t shift = shiftBase - i * pieceSize;
-        uint8_t curr = ((perm & (7 << shift)) >> shift);
+        uint8_t curr = ((perm & (7UL << shift)) >> shift);
         visited[curr] = 1;
 
-
-        lehmer[i] = curr - (visited << (numOfPieces - curr)).count();
+        lehmer[i] = curr - (visited << (numOfPieces - curr + (maxNumOfPieces - numOfPieces))).count();
     }
 
     uint16_t ans = 0;
     for (uint8_t i = 0; i < numOfPieces; ++i) {
-        ans += lehmer[i] * factLookup[i];
+        ans += lehmer[i] * factLookup[numOfPieces - 1 - i];
     }
-
 
     return ans;
 }
 
 uint16_t ruCubeStateConverter::intCornersToCornersPermLexIndex(const uint64_t corners) {
-    return 0;
+    return intPermToPermLexIndex(corners, 6, 30, 6);
 }
 
 uint16_t ruCubeStateConverter::intCornersToCornersOrientLexIndex(const uint64_t corners) {
