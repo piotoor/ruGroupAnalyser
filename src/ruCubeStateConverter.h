@@ -15,17 +15,23 @@ class ruCubeStateConverter
         virtual ~ruCubeStateConverter();
         uint64_t vectCornersToInt(const std::vector<int8_t> &perm, const std::vector<int8_t> &orient) const;
         uint32_t vectEdgesToInt(const std::vector<int8_t> &perm) const;
-        uint16_t intEdgesToEdgesLexIndex(const uint32_t edges) const;
-        uint16_t intCornersToCornersPermLexIndex(const uint64_t corners) const;
-        uint16_t intCornersToCornersOrientLexIndex(const uint64_t corners) const;
+        uint16_t intEdgesToEdgesLexIndex(const uint32_t edges);
+        uint16_t intCornersToCornersPermLexIndex(const uint64_t corners);
+        uint16_t intCornersToCornersOrientLexIndex(const uint64_t corners);
 
-    protected:
-//        static std::array<uint8_t, maxNumOfPieces> onesCountLookup;
-//        static std::array<uint8_t, maxNumOfPieces> factorialLookup;
-
-        static inline const uint8_t maxNumOfPieces = 7;
-        static inline const uint8_t numOfEdges = 7;
     private:
+    uint16_t intPermToPermLexIndex(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces);
+
+        static inline constexpr uint8_t maxNumOfPieces = 7;
+        static inline const uint8_t numOfEdges = 7;
+
+        std::bitset<maxNumOfPieces> visited;
+        std::array<uint8_t, maxNumOfPieces> lehmer;
+
+        static constexpr std::array<uint16_t, maxNumOfPieces> factLookup = {
+            720, 120, 24, 6, 2, 1, 0
+        };
+
 };
 
 #endif // RUCUBESTATECONVERTER_H

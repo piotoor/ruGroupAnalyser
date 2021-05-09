@@ -76,49 +76,36 @@ uint32_t ruCubeStateConverter::vectEdgesToInt(const std::vector<int8_t>& perm) c
     return ans;
 }
 
-uint16_t ruCubeStateConverter::intEdgesToEdgesLexIndex(const uint32_t edges) const {
-    std::bitset<numOfEdges> visited;
-    std::array<uint8_t, numOfEdges> lehmer;
+uint16_t ruCubeStateConverter::intEdgesToEdgesLexIndex(const uint32_t edges) {
+    return intPermsToPermLexIndex(edges, 3, 18, 7);
+}
 
-    std::array<uint16_t, numOfEdges> fact {
-        720, 120, 24, 6, 2, 1, 0
-    };
+uint16_t ruCubeStateConverter::intPermToPermLexIndex(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces) {
+    lehmer.fill(0);
+    visited.reset();
 
-//    std::cout << std::endl << "-----------------------\n";
-//    std::cout << std::oct << "edges = " << edges << std::dec << std::endl;
-    uint8_t shift = 18;
-    uint8_t curr = ((edges & (7 << shift)) >> shift);
-    visited[curr] = 1;
-//    std::cout << "curr = " << (int)curr << std::endl;
-//    std::cout << 0 << ") visited = " << visited << std::endl;
-    lehmer[0] = curr;
-
-    for (uint8_t i = 1; i < numOfEdges; ++i) {
-        shift = 18 - i * 3;
-        curr = ((edges & (7 << shift)) >> shift);
+    for (uint8_t i = 0; i < numOfPieces; ++i) {
+        uint8_t shift = shiftBase - i * pieceSize;
+        uint8_t curr = ((perm & (7 << shift)) >> shift);
         visited[curr] = 1;
-//        std::cout << "curr = " << (int)curr << std::endl;
-//        std::cout << (int)i << ") visited = " << visited << std::endl;
-//        std::cout << "shifted = " << (visited << (numOfEdges - curr)) << std::endl;
 
 
-        lehmer[i] = curr - (visited << (numOfEdges - curr)).count();
+        lehmer[i] = curr - (visited << (numOfPieces - curr)).count();
     }
 
     uint16_t ans = 0;
-    for (uint8_t i = 0; i < numOfEdges; ++i) {
-        //std::cout << (int)lehmer[i] << " ";
-        ans += lehmer[i] * fact[i];
+    for (uint8_t i = 0; i < numOfPieces; ++i) {
+        ans += lehmer[i] * factLookup[i];
     }
-    //std::cout << std::endl;
+
 
     return ans;
 }
 
-uint16_t ruCubeStateConverter::intCornersToCornersPermLexIndex(const uint64_t corners) const {
+uint16_t ruCubeStateConverter::intCornersToCornersPermLexIndex(const uint64_t corners) {
     return 0;
 }
 
-uint16_t ruCubeStateConverter::intCornersToCornersOrientLexIndex(const uint64_t corners) const {
+uint16_t ruCubeStateConverter::intCornersToCornersOrientLexIndex(const uint64_t corners) {
     return 0;
 }
