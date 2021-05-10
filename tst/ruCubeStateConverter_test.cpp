@@ -627,3 +627,44 @@ TEST(ruCubeStateConverterTest, convertIntCornersToCornersPermLexIndexTest) {
         ASSERT_EQ(i, cornersLexIndex);
     }
 }
+
+TEST(ruCubeStateConverterTest, convertIntCornersToCornersOrientLexIndexTest) {
+    ruCubeStateConverter conv;
+
+    const std::vector<uint64_t> cornersInts = {
+        0101112131415,
+        0202122232425,
+        0102112231425,
+        0404142434445,
+
+        0401142134415,
+        0402142234425,
+        0452443224120,
+        0451443124110,
+
+        0452443221110,
+        0422443211510,
+        0402423112225,
+    };
+
+    const std::vector<uint16_t> cornersOrientsExpected = {
+        0,
+        364,
+        91,
+        728,
+
+        546,
+        637,
+        637,
+        546,
+
+        630,
+        630,
+        598
+    };
+
+    for (uint16_t i = 0; i < std::size(cornersInts); ++i) {
+        uint16_t cornersLexIndex = conv.intCornersToCornersOrientLexIndex(cornersInts[i]);
+        ASSERT_EQ(cornersOrientsExpected[i], cornersLexIndex);
+    }
+}
