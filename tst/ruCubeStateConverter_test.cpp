@@ -150,7 +150,7 @@ TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
     }
 }
 
-TEST(ruCubeStateConverterTest, convertIntEdgesToEdgesLexIndexTest) {
+TEST(ruCubeStateConverterTest, convertIntEdgesToLexIndexEdgesTest) {
     ruCubeStateConverter conv;
 
     const std::vector<uint32_t> edgesInts = {
@@ -552,12 +552,12 @@ TEST(ruCubeStateConverterTest, convertIntEdgesToEdgesLexIndexTest) {
     };
 
     for (uint16_t i = 0; i < std::size(edgesInts); ++i) {
-        uint16_t edgesLexIndex = conv.intEdgesToEdgesLexIndex(edgesInts[i]);
+        uint16_t edgesLexIndex = conv.intEdgesToLexIndexEdges(edgesInts[i]);
         ASSERT_EQ(i, edgesLexIndex);
     }
 }
 
-TEST(ruCubeStateConverterTest, convertIntCornersToCornersPermLexIndexTest) {
+TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersPermTest) {
     ruCubeStateConverter conv;
 
     const std::vector<uint64_t> cornersInts = {
@@ -623,12 +623,12 @@ TEST(ruCubeStateConverterTest, convertIntCornersToCornersPermLexIndexTest) {
     };
 
     for (uint16_t i = 0; i < std::size(cornersInts); ++i) {
-        uint16_t cornersLexIndex = conv.intCornersToCornersPermLexIndex(cornersInts[i]);
+        uint16_t cornersLexIndex = conv.intCornersToLexIndexCornersPerm(cornersInts[i]);
         ASSERT_EQ(i, cornersLexIndex);
     }
 }
 
-TEST(ruCubeStateConverterTest, convertIntCornersToCornersOrientLexIndexTest) {
+TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersOrientTest) {
     ruCubeStateConverter conv;
 
     const std::vector<uint64_t> cornersInts = {
@@ -664,7 +664,7 @@ TEST(ruCubeStateConverterTest, convertIntCornersToCornersOrientLexIndexTest) {
     };
 
     for (uint16_t i = 0; i < std::size(cornersInts); ++i) {
-        uint16_t cornersLexIndex = conv.intCornersToCornersOrientLexIndex(cornersInts[i]);
+        uint16_t cornersLexIndex = conv.intCornersToLexIndexCornersOrient(cornersInts[i]);
         ASSERT_EQ(cornersOrientsExpected[i], cornersLexIndex);
     }
 }
