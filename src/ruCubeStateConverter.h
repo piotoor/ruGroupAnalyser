@@ -20,7 +20,8 @@ class ruCubeStateConverter
         uint16_t intCornersToCornersOrientLexIndex(const uint64_t corners);
 
     private:
-    uint16_t intPermToPermLexIndex(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces);
+        uint16_t intPermToPermLexIndex(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces);
+
 
         static inline constexpr uint8_t maxNumOfPieces = 7;
         static inline const uint8_t numOfEdges = 7;
@@ -30,6 +31,7 @@ class ruCubeStateConverter
         static inline const uint8_t shiftBaseEdges = 18;
         static inline const uint8_t pieceSizeCorners = 6;
         static inline const uint8_t shiftBaseCorners = 30;
+        static inline const uint8_t shiftBaseCornersOrient = 33;
 
         std::bitset<maxNumOfPieces> visited;
         std::array<uint8_t, maxNumOfPieces> lehmer;

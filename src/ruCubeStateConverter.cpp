@@ -2,6 +2,7 @@
 
 #include <set>
 #include <numeric>
+#include <cmath>
 
 ruCubeStateConverter::ruCubeStateConverter() {
 
@@ -104,5 +105,13 @@ uint16_t ruCubeStateConverter::intCornersToCornersPermLexIndex(const uint64_t co
 }
 
 uint16_t ruCubeStateConverter::intCornersToCornersOrientLexIndex(const uint64_t corners) {
-    return 0;
+    uint16_t ans = 0;
+
+    for (int8_t i = numOfCorners - 1; i >= 0; --i) {
+        uint8_t shift = shiftBaseCornersOrient - i * pieceSizeCorners;
+        uint8_t curr = ((corners & (7UL << shift)) >> shift) / 2;
+        ans += curr * static_cast<uint16_t>(pow(3.0, static_cast<double>(numOfCorners - 1 - i)));
+    }
+
+    return ans;
 }
