@@ -23,7 +23,7 @@ bool ruCubeStateValidator::isVectEdgesValid(const std::vector<int8_t>& perm) {
 
 bool ruCubeStateValidator::isPermutationValid(const std::vector<int8_t>& perm) {
     const auto &[l, h] = std::minmax(begin(perm), end(perm));
-    if (*l < -1 or *h >= size(perm)) {
+    if (*l < -1 or static_cast<uint8_t>(*h) >= size(perm)) {
         return false;
     }
 
@@ -39,7 +39,7 @@ bool ruCubeStateValidator::isPermutationValid(const std::vector<int8_t>& perm) {
 
 bool ruCubeStateValidator::isOrientationValid(const std::vector<int8_t>& orient) {
     const auto &[l, h] = std::minmax(begin(orient), end(orient));
-    if (*l < -1 or *h > 2) {
+    if (*l < -1 or static_cast<uint8_t>(*h) > 2) {
         return false;
     }
 

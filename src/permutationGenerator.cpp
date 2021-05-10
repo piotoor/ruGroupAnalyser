@@ -15,7 +15,7 @@ std::vector<std::vector<int8_t>> permutationGenerator::generatePermutations(int8
     cleanup(n);
 
     for (const auto &x: ignored) {
-        if (size(pieces) > x) {
+        if (size(pieces) > static_cast<uint8_t>(x)) {
             pieces[x] = -1;
         }
     }

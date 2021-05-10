@@ -37,7 +37,7 @@ uint64_t ruCubeStateConverter::vectCornersToInt(const std::vector<int8_t>& perm,
     constexpr uint8_t maxTotalOrient = 12;
     uint8_t orientReplacement = (maxTotalOrient - sumOfPositiveOrients) % 3;
 
-    for (int i = 0; i < size(perm); ++i) {
+    for (uint8_t i = 0; i < size(perm); ++i) {
         ans <<= 3;
         if (orient[i] != -1) {
             ans = ans | (01 << orient[i]);
@@ -65,7 +65,7 @@ uint32_t ruCubeStateConverter::vectEdgesToInt(const std::vector<int8_t>& perm) c
     }
     auto permIt = availPerm.begin();
 
-    for (int i = 0; i < size(perm); ++i) {
+    for (uint8_t i = 0; i < size(perm); ++i) {
         ans <<= 3;
         if (perm[i] != -1) {
             ans = ans | perm[i];
