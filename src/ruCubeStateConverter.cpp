@@ -79,10 +79,10 @@ uint32_t ruCubeStateConverter::vectEdgesToInt(const std::vector<int8_t>& perm) c
 }
 
 uint16_t ruCubeStateConverter::intEdgesToLexIndexEdges(const uint32_t edges) {
-    return intPermToPermLexIndex(edges, pieceSizeEdges, shiftBaseEdges, numOfEdges);
+    return intPermToLexIndexPerm(edges, pieceSizeEdges, shiftBaseEdges, numOfEdges);
 }
 
-uint16_t ruCubeStateConverter::intPermToPermLexIndex(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces) {
+uint16_t ruCubeStateConverter::intPermToLexIndexPerm(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces) {
     lehmer.fill(0);
     visited.reset();
     for (uint8_t i = 0; i < numOfPieces; ++i) {
@@ -102,7 +102,7 @@ uint16_t ruCubeStateConverter::intPermToPermLexIndex(const uint64_t perm, uint8_
 }
 
 uint16_t ruCubeStateConverter::intCornersToLexIndexCornersPerm(const uint64_t corners) {
-    return intPermToPermLexIndex(corners, pieceSizeCorners, shiftBaseCorners, numOfCorners);
+    return intPermToLexIndexPerm(corners, pieceSizeCorners, shiftBaseCorners, numOfCorners);
 }
 
 uint16_t ruCubeStateConverter::intCornersToLexIndexCornersOrient(const uint64_t corners) {
@@ -118,22 +118,9 @@ uint16_t ruCubeStateConverter::intCornersToLexIndexCornersOrient(const uint64_t 
 }
 
 uint32_t ruCubeStateConverter::lexIndexEdgesToIntEdges(uint16_t lexIndexEdges) {
-    std::array<uint8_t, numOfEdges> perm;
     uint32_t ans = 0;
 
-    for (uint8_t i = 0; i < numOfEdges; ++i) {
-        perm[i] = lexIndexEdges / factLookup[numOfEdges - 1 - i];
-        lexIndexEdges = lexIndexEdges % factLookup[numOfEdges - 1 - i];
-    }
-
-
-    for (int8_t i = numOfEdges - 1; i > 0; --i) {
-        for (int8_t j = i - 1; j >= 0; --j) {
-            if (perm[j] <= perm[i]) {
-                perm[i]++;
-            }
-        }
-    }
+    lexIndexPermToArrayPermIntermediate(lexIndexEdges, numOfEdges);
 
     for (int8_t i = 0; i < numOfEdges; ++i) {
         ans <<= pieceSizeEdges;
@@ -141,4 +128,22 @@ uint32_t ruCubeStateConverter::lexIndexEdgesToIntEdges(uint16_t lexIndexEdges) {
     }
 
     return ans;
+}
+
+void ruCubeStateConverter::lexIndexPermToArrayPermIntermediate(uint16_t lexPerm, uint8_t numOfPieces) {
+    perm.fill(0);
+
+    for (uint8_t i = 0; i < numOfPieces; ++i) {
+        perm[i] = lexPerm / factLookup[numOfPieces - 1 - i];
+        lexPerm = lexPerm % factLookup[numOfPieces - 1 - i];
+    }
+
+
+    for (int8_t i = numOfPieces - 1; i > 0; --i) {
+        for (int8_t j = i - 1; j >= 0; --j) {
+            if (perm[j] <= perm[i]) {
+                perm[i]++;
+            }
+        }
+    }
 }
