@@ -20,10 +20,12 @@ class ruCubeStateConverter
         uint16_t intCornersToLexIndexCornersOrient(const uint64_t corners);
 
         uint32_t lexIndexEdgesToIntEdges(uint16_t lexIndexEdges);
+        uint64_t lexIndexCornersToIntCorners(uint16_t lexIndexPerm, uint16_t lexIndexOrient);
 
     private:
         uint16_t intPermToLexIndexPerm(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces);
         void lexIndexPermToArrayPermIntermediate(uint16_t lexPerm, uint8_t numOfPieces);
+        uint64_t lexIndexCornersOrientToIntCornersOrient(uint16_t lexIndexOrient);
 
         static inline constexpr uint8_t maxNumOfPieces = 7;
         static inline const uint8_t numOfEdges = 7;

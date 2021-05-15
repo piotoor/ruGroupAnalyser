@@ -147,3 +147,29 @@ void ruCubeStateConverter::lexIndexPermToArrayPermIntermediate(uint16_t lexPerm,
         }
     }
 }
+
+uint64_t ruCubeStateConverter::lexIndexCornersToIntCorners(uint16_t lexIndexPerm, uint16_t lexIndexOrient) {
+    uint64_t ans = lexIndexCornersOrientToIntCornersOrient(lexIndexOrient);
+    lexIndexPermToArrayPermIntermediate(lexIndexPerm, numOfCorners);
+
+    uint8_t shift = 0;
+    for (int8_t i = 0; i < numOfCorners; ++i) {
+        ans |= perm[numOfCorners - 1 - i] << shift;
+        shift += pieceSizeCorners;
+    }
+
+    return ans;
+}
+
+uint64_t ruCubeStateConverter::lexIndexCornersOrientToIntCornersOrient(uint16_t lexIndexOrient) {
+    uint64_t ans = 0;
+    uint64_t shift = 3;
+
+    for (int8_t i = 0; i < numOfCorners; ++i) {
+        ans |= static_cast<uint64_t>(1 << (lexIndexOrient % 3)) << shift;
+        shift += pieceSizeCorners;
+        lexIndexOrient /= 3;
+    }
+
+    return ans;
+}
