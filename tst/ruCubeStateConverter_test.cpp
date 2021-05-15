@@ -1075,3 +1075,48 @@ TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersOrientTest) {
         ASSERT_EQ(cornersOrientsExpected[i], cornersLexIndex);
     }
 }
+
+TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersTest) {
+    ruCubeStateConverter conv;
+
+    const std::vector<uint16_t> lexIndexCornersPerms = {
+        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+    };
+
+    const std::vector<uint16_t> lexIndexCornersOrients = {
+        0,
+        364,
+        91,
+        728,
+
+        546,
+        637,
+        637,
+        546,
+
+        630,
+        630,
+        598
+    };
+
+    const std::vector<uint64_t> expectedCornersInts = {
+        0101112131415,
+        0202122232524,
+        0102112241325,
+        0404142444543,
+
+        0401142154314,
+        0402142254423,
+        0402143224425,
+        0401143124514,
+
+        0402143241215,
+        0402143241512,
+        0402123152224,
+    };
+
+    for (uint16_t i = 0; i < std::size(expectedCornersInts); ++i) {
+        uint64_t cornersInt = conv.lexIndexCornersToIntCorners(lexIndexCornersPerms[i], lexIndexCornersOrients[i]);
+        ASSERT_EQ(expectedCornersInts[i], cornersInt);
+    }
+}
