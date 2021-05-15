@@ -19,6 +19,8 @@ class ruCubeStateConverter
         uint16_t intCornersToLexIndexCornersPerm(const uint64_t corners);
         uint16_t intCornersToLexIndexCornersOrient(const uint64_t corners);
 
+        uint32_t lexIndexEdgesToIntEdges(uint16_t lexIndexEdges);
+
     private:
         uint16_t intPermToPermLexIndex(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces);
 
@@ -37,7 +39,7 @@ class ruCubeStateConverter
         std::array<uint8_t, maxNumOfPieces> lehmer;
 
         static constexpr std::array<uint16_t, maxNumOfPieces> factLookup = {
-            0, 1, 2, 6, 24, 120, 720
+            1, 1, 2, 6, 24, 120, 720
         };
 
 };

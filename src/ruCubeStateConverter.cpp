@@ -3,6 +3,7 @@
 #include <set>
 #include <numeric>
 #include <cmath>
+#include <iterator>
 
 ruCubeStateConverter::ruCubeStateConverter() {
 
@@ -111,6 +112,32 @@ uint16_t ruCubeStateConverter::intCornersToLexIndexCornersOrient(const uint64_t 
         uint8_t shift = shiftBaseCornersOrient - i * pieceSizeCorners;
         uint8_t curr = ((corners & (7UL << shift)) >> shift) / 2;
         ans += curr * static_cast<uint16_t>(pow(3.0, static_cast<double>(numOfCorners - 1 - i)));
+    }
+
+    return ans;
+}
+
+uint32_t ruCubeStateConverter::lexIndexEdgesToIntEdges(uint16_t lexIndexEdges) {
+    std::array<uint8_t, numOfEdges> perm;
+    uint32_t ans = 0;
+
+    for (uint8_t i = 0; i < numOfEdges; ++i) {
+        perm[i] = lexIndexEdges / factLookup[numOfEdges - 1 - i];
+        lexIndexEdges = lexIndexEdges % factLookup[numOfEdges - 1 - i];
+    }
+
+
+    for (int8_t i = numOfEdges - 1; i > 0; --i) {
+        for (int8_t j = i - 1; j >= 0; --j) {
+            if (perm[j] <= perm[i]) {
+                perm[i]++;
+            }
+        }
+    }
+
+    for (int8_t i = 0; i < numOfEdges; ++i) {
+        ans <<= pieceSizeEdges;
+        ans |= perm[i];
     }
 
     return ans;
