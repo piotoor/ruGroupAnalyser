@@ -39,7 +39,6 @@ jobs:
     - name: Run unit tests
       working-directory: ${{github.workspace}}/build/debug
       run: valgrind --leak-check=full \
-                    --show-leak-kinds=all \
                     --track-origins=yes \
                     --verbose \
                     ./ruGroupAnalyser_tst --gtest_filter=*.*-*Multithreading*
