@@ -5,6 +5,12 @@ on:
     branches: [ main ]
   pull_request:
     branches: [ main ]
+  
+  workflow_dispatch:
+    inputs:
+      filter:
+        description: 'Testcase filter'     
+        required: false
 
 env:
   BUILD_TYPE: Debug
