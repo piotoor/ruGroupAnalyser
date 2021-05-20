@@ -17,10 +17,6 @@ env:
 
 jobs:
   Build_and_run_tests:
-    # The CMake configure and build commands are platform agnostic and should work equally
-    # well on Windows or Mac.  You can convert this to a matrix build if you need
-    # cross-platform coverage.
-    # See: https://docs.github.com/en/free-pro-team@latest/actions/learn-github-actions/managing-complex-workflows#using-a-build-matrix
     runs-on: ubuntu-latest
 
     steps:
@@ -37,7 +33,9 @@ jobs:
       working-directory: ${{github.workspace}}/build/
       run: make all
 
+    - name: Install valgrind
+      run: sudo apt install -y valgrind
+      
     - name: Run unit tests
       working-directory: ${{github.workspace}}/build/debug
-      run: ./ruGroupAnalyser_tst --gtest_filter=*.*-*Multithreading*
-      
+      run: valgrind --leak-check=full --track-origins=yes --verbose ./ruGroupAnalyser_tst --gtest_filter=*.*-*Multithreading*
