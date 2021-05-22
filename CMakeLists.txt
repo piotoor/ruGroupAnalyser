@@ -36,7 +36,14 @@ configure_file(
 )
 
 configure_file(
-    "${CMAKE_SOURCE_DIR}/scripts/runWithValgrind.sh"
+    "${CMAKE_SOURCE_DIR}/scripts/runWithCallgrind.sh"
     "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}"
+    COPYONLY
+)
+
+
+configure_file(
+    "${CMAKE_SOURCE_DIR}/scripts/runWithMemcheck.sh"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}"
     COPYONLY
 )
