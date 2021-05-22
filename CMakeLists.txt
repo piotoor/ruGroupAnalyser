@@ -31,19 +31,19 @@ add_subdirectory(lib/googletest)
 
 configure_file(
     "${CMAKE_SOURCE_DIR}/scripts/parseCallgrind.sh"
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}/parseCallgrind.sh"
     COPYONLY
 )
 
 configure_file(
     "${CMAKE_SOURCE_DIR}/scripts/runWithCallgrind.sh"
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}/runWithCallgrind.sh"
     COPYONLY
 )
 
 
 configure_file(
     "${CMAKE_SOURCE_DIR}/scripts/runWithMemcheck.sh"
-    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}/runWithMemcheck.sh"
     COPYONLY
 )
