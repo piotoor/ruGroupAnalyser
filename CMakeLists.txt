@@ -27,3 +27,16 @@ include_directories(src)
 add_subdirectory(src)
 add_subdirectory(tst)
 add_subdirectory(lib/googletest)
+
+
+configure_file(
+    "${CMAKE_SOURCE_DIR}/scripts/parseCallgrind.sh"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}"
+    COPYONLY
+)
+
+configure_file(
+    "${CMAKE_SOURCE_DIR}/scripts/runWithValgrind.sh"
+    "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE}"
+    COPYONLY
+)
