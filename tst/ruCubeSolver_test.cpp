@@ -185,7 +185,7 @@ TEST(ruCubeSolverTest, singleMoveSolutionsTest) {
 }
 
 
-TEST(ruCubeSolverTest, multipleScramblesTest) {
+TEST(ruCubeSolverTest, DISABLED_multipleScramblesTest) {
     std::vector<std::vector<uint8_t>> scrambles {
         { R2 },
         { R2, U },
@@ -329,7 +329,7 @@ class ruCubeSolverPerformanceTests : public ::testing::Test
 
 };
 
-TEST_F(ruCubeSolverPerformanceTests, MultithreadingTest) {
+TEST_F(ruCubeSolverPerformanceTests, DISABLED_MultithreadingTest) {
     setupSolver();
     solveSingleThread();
 

@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "ruCubeStateConverter.h"
-
+#include <valgrind/callgrind.h>
 #include <vector>
 #include <iostream>
 
@@ -1071,7 +1071,9 @@ TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersOrientTest) {
     };
 
     for (uint16_t i = 0; i < std::size(cornersInts); ++i) {
+        CALLGRIND_TOGGLE_COLLECT;
         uint16_t cornersLexIndex = conv.intCornersToLexIndexCornersOrient(cornersInts[i]);
+        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(cornersOrientsExpected[i], cornersLexIndex);
     }
 }
