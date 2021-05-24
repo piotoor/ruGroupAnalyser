@@ -552,7 +552,9 @@ TEST(ruCubeStateConverterTest, convertIntEdgesToLexIndexEdgesTest) {
     };
 
     for (uint16_t i = 0; i < std::size(edgesInts); ++i) {
+        CALLGRIND_TOGGLE_COLLECT;
         uint16_t edgesLexIndex = conv.intEdgesToLexIndexEdges(edgesInts[i]);
+        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(i, edgesLexIndex);
     }
 }
@@ -959,7 +961,9 @@ TEST(ruCubeStateConverterTest, convertLexIndexEdgesToIntEdgesTest) {
     };
 
     for (uint16_t i = 0; i < std::size(expectedEdgesInts); ++i) {
+        CALLGRIND_TOGGLE_COLLECT;
         uint32_t intEdges = conv.lexIndexEdgesToIntEdges(i);
+        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(expectedEdgesInts[i], intEdges);
     }
 }
@@ -1030,7 +1034,9 @@ TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersPermTest) {
     };
 
     for (uint16_t i = 0; i < std::size(cornersInts); ++i) {
+        CALLGRIND_TOGGLE_COLLECT;
         uint16_t cornersLexIndex = conv.intCornersToLexIndexCornersPerm(cornersInts[i]);
+        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(i, cornersLexIndex);
     }
 }
@@ -1118,7 +1124,9 @@ TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersTest) {
     };
 
     for (uint16_t i = 0; i < std::size(expectedCornersInts); ++i) {
+        CALLGRIND_TOGGLE_COLLECT;
         uint64_t cornersInt = conv.lexIndexCornersToIntCorners(lexIndexCornersPerms[i], lexIndexCornersOrients[i]);
+        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(expectedCornersInts[i], cornersInt);
     }
 }
