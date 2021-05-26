@@ -58,9 +58,7 @@ TEST(permutationGeneratorTest, generatePermutationsTest) {
     const std::vector<uint8_t> permLengths { 0, 1, 2, 3, 4 };
 
     for (uint8_t test = 0; test < size(expectedPerms); ++test) {
-        CALLGRIND_TOGGLE_COLLECT;
         auto perms = gen.generatePermutations(permLengths[test]);
-        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(expectedPerms[test].size(), perms.size());
         for (uint8_t i = 0; i < expectedPerms[test].size(); ++i) {
             ASSERT_EQ(expectedPerms[test][i], perms[i]);
@@ -116,9 +114,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedPiecesTest) {
     const std::vector<uint8_t> permLengths { 3, 6, 3, 0, 6, 4, 4 };
 
     for (uint8_t test = 0; test < size(expectedPerms); ++test) {
-        CALLGRIND_TOGGLE_COLLECT;
         auto perms = gen.generatePermutations(permLengths[test], lockedPieces[test]);
-        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(expectedPerms[test].size(), perms.size());
         for (uint8_t i = 0; i < expectedPerms[test].size(); ++i) {
             ASSERT_EQ(expectedPerms[test][i], perms[i]);
@@ -224,9 +220,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithIgnoredPiecesTest) {
     const std::vector<uint8_t> permLengths { 4, 0, 1, 1, 2, 2, 3, 4 };
 
     for (uint8_t test = 0; test < size(expectedPerms); ++test) {
-        CALLGRIND_TOGGLE_COLLECT;
         auto perms = gen.generatePermutations(permLengths[test], lockedPieces[test], ignoredPieces[test]);
-        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(expectedPerms[test].size(), perms.size());
         for (uint8_t i = 0; i < expectedPerms[test].size(); ++i) {
             ASSERT_EQ(expectedPerms[test][i], perms[i]);
@@ -290,9 +284,7 @@ TEST(permutationGeneratorTest, generatePermutationsWithLockedAndIgnoredPiecesTes
     const std::vector<uint8_t> permLengths { 0, 3, 4, 5, 6, 6 };
 
     for (uint8_t test = 0; test < size(expectedPerms); ++test) {
-        CALLGRIND_TOGGLE_COLLECT;
         auto perms = gen.generatePermutations(permLengths[test], lockedPieces[test], ignoredPieces[test]);
-        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(expectedPerms[test].size(), perms.size());
         for (uint8_t i = 0; i < expectedPerms[test].size(); ++i) {
             ASSERT_EQ(expectedPerms[test][i], perms[i]);
