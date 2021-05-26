@@ -16,17 +16,17 @@ std::vector<std::vector<int8_t>> permutationGenerator::generatePermutations(int8
 
     for (const auto &x: ignored) {
         if (size(pieces) > static_cast<uint8_t>(x)) {
-            pieces[x] = -1;
+            pieces.insert(-1);
+            pieces.erase(x);
         }
     }
 
-    std::sort(begin(pieces), end(pieces));
     if (!locked.empty()) {
         std::set_difference( begin(pieces),
                         end(pieces),
                         begin(locked),
                         end(locked),
-                        back_inserter(lockedPieces));
+                        inserter(lockedPieces, lockedPieces.end()));
 
     } else {
         lockedPieces = pieces;
@@ -40,16 +40,19 @@ std::vector<std::vector<int8_t>> permutationGenerator::generatePermutations(int8
 void permutationGenerator::cleanup(int8_t n) {
     pieces.clear();
     lockedPieces.clear();
-    pieces.resize(n);
     ans.clear();
-    std::iota(begin(pieces), end(pieces), 0);
+
+    for (int i = 0; i < n; ++i) {
+        pieces.insert(i);
+    }
 }
 
 void permutationGenerator::generateAns() {
+    std::vector<int8_t> pieces (begin(lockedPieces), end(lockedPieces));
     do {
-        ans.push_back(lockedPieces);
-    } while (next_permutation(begin(lockedPieces),
-                              end(lockedPieces)));
+        ans.push_back(pieces);
+    } while (next_permutation(begin(pieces),
+                              end(pieces)));
 }
 
 void permutationGenerator::mergeWithLocked(const std::vector<int8_t> &locked) {
