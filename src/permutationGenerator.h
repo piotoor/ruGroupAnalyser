@@ -2,6 +2,7 @@
 #define PERMUTATIONGENERATOR_H
 
 #include <vector>
+#include <set>
 #include <cstdint>
 
 class permutationGenerator
@@ -18,8 +19,8 @@ class permutationGenerator
         void cleanup(int8_t n);
         void generateAns();
         void mergeWithLocked(const std::vector<int8_t> &locked);
-        std::vector<int8_t> pieces;
-        std::vector<int8_t> lockedPieces;
+        std::multiset<int8_t> pieces;
+        std::multiset<int8_t> lockedPieces;
         std::vector<std::vector<int8_t>> ans;
 
 };
