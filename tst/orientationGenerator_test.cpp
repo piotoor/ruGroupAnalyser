@@ -1,6 +1,6 @@
 #include "gtest/gtest.h"
 #include "orientationGenerator.h"
-
+#include <valgrind/callgrind.h>
 #include <vector>
 #include <iostream>
 using namespace std;
@@ -142,7 +142,9 @@ TEST(orientationGeneratorTest, generateOrientationtTest) {
     const std::vector<uint8_t> orientLengths { 0, 1, 2, 3, 4, 5 };
 
     for (uint8_t test = 0; test < size(expectedOrients); ++test) {
+        CALLGRIND_TOGGLE_COLLECT;
         auto perms = gen.generateOrientations(orientLengths[test]);
+        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(expectedOrients[test].size(), perms.size());
         for (uint8_t i = 0; i < expectedOrients[test].size(); ++i) {
             ASSERT_EQ(expectedOrients[test][i], perms[i]);
@@ -213,7 +215,9 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
     const std::vector<uint8_t> orientLengths { 0, 1, 2, 2, 2, 3, 3, 3, 3, 6 };
 
     for (uint8_t test = 0; test < size(expectedOrients); ++test) {
+        CALLGRIND_TOGGLE_COLLECT;
         auto perms = gen.generateOrientations(orientLengths[test], lockedPieces[test]);
+        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(expectedOrients[test].size(), perms.size());
         for (uint8_t i = 0; i < expectedOrients[test].size(); ++i) {
             ASSERT_EQ(expectedOrients[test][i], perms[i]);
@@ -363,7 +367,9 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredPiecesTest) {
     const std::vector<uint8_t> orientLengths { 0, 5, 3, 3, 3, 3, 4 };
 
     for (uint8_t test = 0; test < size(expectedOrients); ++test) {
+        CALLGRIND_TOGGLE_COLLECT;
         auto perms = gen.generateOrientations(orientLengths[test], lockedPieces[test], ignoredPieces[test]);
+        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(expectedOrients[test].size(), perms.size());
         for (uint8_t i = 0; i < expectedOrients[test].size(); ++i) {
             ASSERT_EQ(expectedOrients[test][i], perms[i]);
@@ -521,7 +527,9 @@ TEST(orientationGeneratorTest, generateOrientationtWithIgnoredAndLockedPiecesTes
     const std::vector<uint8_t> orientLengths {4, 4, 4, 5, 5, 5, 5, 5 };
 
     for (uint8_t test = 0; test < size(expectedOrients); ++test) {
+        CALLGRIND_TOGGLE_COLLECT;
         auto perms = gen.generateOrientations(orientLengths[test], lockedPieces[test], ignoredPieces[test]);
+        CALLGRIND_TOGGLE_COLLECT;
         ASSERT_EQ(expectedOrients[test].size(), perms.size());
         for (uint8_t i = 0; i < expectedOrients[test].size(); ++i) {
             ASSERT_EQ(expectedOrients[test][i], perms[i]);
