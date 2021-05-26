@@ -1,5 +1,4 @@
 #include "gtest/gtest.h"
-#include <valgrind/callgrind.h>
 #include "permutationGenerator.h"
 
 #include <vector>

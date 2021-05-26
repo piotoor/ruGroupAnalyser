@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 #include "orientationGenerator.h"
-#include <valgrind/callgrind.h>
 #include <vector>
 #include <iostream>
 using namespace std;
