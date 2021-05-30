@@ -1,6 +1,5 @@
 #include "gtest/gtest.h"
 #include "ruCubeStateConverter.h"
-
 #include <vector>
 #include <iostream>
 
