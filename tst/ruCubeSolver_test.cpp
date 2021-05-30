@@ -4,9 +4,8 @@
 #include <chrono>
 
 TEST(ruCubeSolverTest, simpleDefaultConfigurationSolveTest) {
-    ruCubeFactory factory;
 
-    auto cube = factory.createCube(ruCubeType::ruCube);
+    auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
     cube->turn(R);
     cube->turn(U);
     cube->turn(R2);
@@ -45,8 +44,8 @@ TEST(ruCubeSolverTest, simpleDefaultConfigurationSolveTest) {
 }
 
 TEST(ruCubeSolverTest, customConfigurationSolveTest) {
-    ruCubeFactory factory;
-    auto cube = factory.createCube(ruCubeType::ruCube);
+
+    auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
     cube->scramble({ R2, U2, R2, U2, R2, U2 });
 
     ruCubeSolver solver (6, 6, 2);
@@ -174,8 +173,8 @@ TEST(ruCubeSolverTest, singleMoveSolutionsTest) {
 
     for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ruCubeSolver solver;
-        ruCubeFactory factory;
-        auto cube = factory.createCube(ruCubeType::ruCube);
+
+        auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
         cube->scramble(scrambles[i]);
         solver.solve(cube.get());
         auto solutions = solver.getSolutionsAsVectors();
@@ -209,8 +208,8 @@ TEST(ruCubeSolverTest, multipleScramblesTest) {
         { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R, U, Ri, U },
     };
 
-    ruCubeFactory factory;
-    auto cube = factory.createCube(ruCubeType::ruCube);
+
+    auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
     ruCubeSolver solver;
 
     for (const auto &scr: scrambles) {
@@ -315,8 +314,8 @@ class ruCubeSolverPerformanceTests : public ::testing::Test
 
 
         ruCubeSolver solver;
-        ruCubeFactory factory;
-        std::unique_ptr<ruBaseCube>  cube = factory.createCube(ruCubeType::ruCube);
+
+        std::unique_ptr<ruBaseCube>  cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
         std::map<uint8_t, std::chrono::duration<double>> multiThreadingThresholdsTimes;
         std::chrono::duration<double> singleThreadTime;
 
