@@ -6,10 +6,7 @@
 
 
 namespace lutGenerators {
-    constexpr uint8_t noOfTurns = 6;
-    constexpr uint16_t noOfEdgesPermutations = 5040;
-
-    auto generateEdgesPermMoveMap () {
+    std::array<std::array<uint16_t, noOfTurns>, noOfEdgesPermutations> generateEdgesPermMoveMap () {
         std::array<std::array<uint16_t, noOfTurns>, noOfEdgesPermutations> ans {};
         auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
         ruCubeStateConverter converter;
