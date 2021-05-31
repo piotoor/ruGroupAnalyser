@@ -145,6 +145,11 @@ class ruCube: public ruBaseCube
         static inline const uint32_t allEdgesMask = 07777777;
         static inline const uint64_t cornersOrientationMask = 0707070707070;
         static inline const uint64_t cornersPermutationMask = 0070707070707;
+
+        // move to ruLutCube
+        static inline const uint16_t solvedLexIndexEdgesPerm = 0;
+        static inline const uint16_t solvedLexIndexCornersPerm = 0;
+        static inline const uint16_t solvedLexIndexCornersOrient = 0;
 };
 
 //class ruLutCube: public ruBaseCube {
