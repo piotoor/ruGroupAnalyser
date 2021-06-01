@@ -171,3 +171,36 @@ uint64_t ruCubeStateConverter::lexIndexCornersOrientToIntCornersOrient(uint16_t 
 
     return ans;
 }
+
+uint16_t ruCubeStateConverter::vectPermToLexIndexPerm(const std::vector<int8_t> &perm) {
+    lehmer.fill(0);
+    visited.reset();
+    uint16_t ans = 0;
+
+    for (uint8_t i = 0; i < size(perm); ++i) {
+        visited[perm[i]] = 1;
+
+        lehmer[i] = perm[i] - (visited << (maxNumOfPieces - perm[i])).count();
+        ans += lehmer[i] * factLookup[size(perm) - 1 - i];
+    }
+
+    return ans;
+}
+
+uint16_t ruCubeStateConverter::vectEdgesPermToLexIndexEdgesPerm(const std::vector<int8_t> &perm) {
+    return vectPermToLexIndexPerm(perm);
+}
+
+uint16_t ruCubeStateConverter::vectCornersPermToLexIndexCornersPerm(const std::vector<int8_t> &perm) {
+    return vectPermToLexIndexPerm(perm);
+}
+
+uint16_t ruCubeStateConverter::vectCornersOrientToLexIndexCornersOrient(const std::vector<int8_t> &orient) {
+    uint16_t ans = 0;
+
+    for (uint8_t i = 0; i < size(orient); ++i) {
+        ans += orient[i] * static_cast<uint16_t>(pow(3.0, static_cast<double>(numOfCorners - 1 - i)));
+    }
+
+    return ans;
+}

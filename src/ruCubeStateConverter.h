@@ -22,8 +22,13 @@ class ruCubeStateConverter
         uint32_t lexIndexEdgesToIntEdges(uint16_t lexIndexEdges);
         uint64_t lexIndexCornersToIntCorners(uint16_t lexIndexPerm, uint16_t lexIndexOrient);
 
+        uint16_t vectEdgesPermToLexIndexEdgesPerm(const std::vector<int8_t> &perm);
+        uint16_t vectCornersPermToLexIndexCornersPerm(const std::vector<int8_t> &perm);
+        uint16_t vectCornersOrientToLexIndexCornersOrient(const std::vector<int8_t> &orient);
+
     private:
         uint16_t intPermToLexIndexPerm(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces);
+        uint16_t vectPermToLexIndexPerm(const std::vector<int8_t> &perm);
         void lexIndexPermToArrayPermIntermediate(uint16_t lexPerm, uint8_t numOfPieces);
         uint64_t lexIndexCornersOrientToIntCornersOrient(uint16_t lexIndexOrient);
 
