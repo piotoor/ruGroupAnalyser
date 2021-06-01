@@ -13,7 +13,7 @@ ruCubeStateConverter::~ruCubeStateConverter() {
 
 }
 
-uint64_t ruCubeStateConverter::vectCornersToInt(const std::vector<int8_t>& perm, const std::vector<int8_t>& orient) const {
+uint64_t ruCubeStateConverter::vectCornersToIntCorners(const std::vector<int8_t>& perm, const std::vector<int8_t>& orient) const {
     uint64_t ans = 0;
 
     std::set<int8_t> availPerm { 0, 1, 2, 3, 4, 5 };
@@ -58,7 +58,7 @@ uint64_t ruCubeStateConverter::vectCornersToInt(const std::vector<int8_t>& perm,
 }
 
 #include <iostream>
-uint32_t ruCubeStateConverter::vectEdgesToInt(const std::vector<int8_t>& perm) const {
+uint32_t ruCubeStateConverter::vectEdgesToIntEdges(const std::vector<int8_t>& perm) const {
     uint32_t ans = 0;
     std::set<int8_t> availPerm { 0, 1, 2, 3, 4, 5, 6 };
     for (const auto &x: perm) {

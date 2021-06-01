@@ -13,8 +13,8 @@ class ruCubeStateConverter
         explicit ruCubeStateConverter(const ruCubeStateConverter &other) = delete;
         ruCubeStateConverter& operator=(const ruCubeStateConverter &other) = delete;
         virtual ~ruCubeStateConverter();
-        uint64_t vectCornersToInt(const std::vector<int8_t> &perm, const std::vector<int8_t> &orient) const;
-        uint32_t vectEdgesToInt(const std::vector<int8_t> &perm) const;
+        uint64_t vectCornersToIntCorners(const std::vector<int8_t> &perm, const std::vector<int8_t> &orient) const;
+        uint32_t vectEdgesToIntEdges(const std::vector<int8_t> &perm) const;
         uint16_t intEdgesToLexIndexEdges(const uint32_t edges);
         uint16_t intCornersToLexIndexCornersPerm(const uint64_t corners);
         uint16_t intCornersToLexIndexCornersOrient(const uint64_t corners);

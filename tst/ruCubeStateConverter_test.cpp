@@ -4,7 +4,7 @@
 #include <iostream>
 
 
-TEST(ruCubeStateConverterTest, convertVectCornersToIntTest) {
+TEST(ruCubeStateConverterTest, convertvectCornersToIntCornersTest) {
     ruCubeStateConverter conv;
     const std::vector<std::vector<int8_t>> cornersOrient = {
         { 0, 0, 0, 0, 0, 0 },
@@ -49,12 +49,12 @@ TEST(ruCubeStateConverterTest, convertVectCornersToIntTest) {
     };
 
     for (uint8_t i = 0; i < std::size(cornersOrient); ++i) {
-        auto corners = conv.vectCornersToInt(cornersPerm[i], cornersOrient[i]);
+        auto corners = conv.vectCornersToIntCorners(cornersPerm[i], cornersOrient[i]);
         ASSERT_EQ(expectedCorners[i], corners);
     }
 }
 
-TEST(ruCubeStateConverterTest, convertVectEdgesToIntTest) {
+TEST(ruCubeStateConverterTest, convertvectEdgesToIntEdgesTest) {
     ruCubeStateConverter conv;
 
     const std::vector<std::vector<int8_t>> edgesPerm = {
@@ -74,7 +74,7 @@ TEST(ruCubeStateConverterTest, convertVectEdgesToIntTest) {
     };
 
     for (uint8_t i = 0; i < std::size(edgesPerm); ++i) {
-        auto edges = conv.vectEdgesToInt(edgesPerm[i]);
+        auto edges = conv.vectEdgesToIntEdges(edgesPerm[i]);
         ASSERT_EQ(expectedEdges[i], edges);
     }
 }
@@ -118,7 +118,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
     };
 
     for (uint8_t i = 0; i < std::size(cornersPerm); ++i) {
-        auto corners = conv.vectCornersToInt(cornersPerm[i], cornersOrient[i]);
+        auto corners = conv.vectCornersToIntCorners(cornersPerm[i], cornersOrient[i]);
         ASSERT_EQ(expectedCorners[i], corners);
     }
 
@@ -144,7 +144,7 @@ TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
     };
 
     for (uint8_t i = 0; i < std::size(edgesPerm); ++i) {
-        auto edges = conv.vectEdgesToInt(edgesPerm[i]);
+        auto edges = conv.vectEdgesToIntEdges(edgesPerm[i]);
         ASSERT_EQ(expectedEdges[i], edges);
     }
 }

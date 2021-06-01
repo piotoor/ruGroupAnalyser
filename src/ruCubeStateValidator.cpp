@@ -66,7 +66,7 @@ bool ruCubeStateValidator::isVectCubeStateSolveable(const std::vector<int8_t>& c
 bool ruCubeStateValidator::isVectCornersInRU(const std::vector<int8_t>& perm) {
     ruCube cube;
     ruCubeStateConverter converter;
-    const uint64_t cornersInt = converter.vectCornersToInt(perm, {0, 0, 0, 0, 0, 0});
+    const uint64_t cornersInt = converter.vectCornersToIntCorners(perm, {0, 0, 0, 0, 0, 0});
     cube.setCorners(cornersInt);
 
     constexpr uint64_t dfrCornersMask = 0000000000007;
