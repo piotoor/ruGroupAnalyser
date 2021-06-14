@@ -59,4 +59,37 @@ namespace lutGenerators {
 
         return ans;
     }
+
+    std::array<std::bitset<noOfEdgesPermSolvedStates>, noOfEdgesPermutations> generateEdgesPermSolvedTable () {
+        std::array<std::bitset<noOfEdgesPermSolvedStates>, noOfEdgesPermutations> ans {};
+        auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
+        ruCubeStateConverter converter;
+
+        for (uint16_t ep = 0; ep < noOfEdgesPermutations; ++ep) {
+            cube->setEdges(converter.lexIndexEdgesToIntEdges(ep));
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::allEdges)] = cube->isSolvedEdges(ruCube::allEdgesMask);
+
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::mEdgesInM)] = cube->isSolvedMEinM();
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::eEdgesInE)] = cube->isSolvedEEinE();
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::sEdgesInS)] = cube->isSolvedSEinS();
+
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UF)] = cube->isSolvedEdges(ruCube::UFMask);
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UL)] = cube->isSolvedEdges(ruCube::ULMask);
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UB)] = cube->isSolvedEdges(ruCube::UBMask);
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UR)] = cube->isSolvedEdges(ruCube::URMask);
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::BR)] = cube->isSolvedEdges(ruCube::BRMask);
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::DR)] = cube->isSolvedEdges(ruCube::DRMask);
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::FR)] = cube->isSolvedEdges(ruCube::FRMask);
+
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::f2lEdgesInRSolved)] =    ans[ep][static_cast<uint8_t>(edgesPermSolvedState::BR)] and
+                                                                                        ans[ep][static_cast<uint8_t>(edgesPermSolvedState::DR)] and
+                                                                                        ans[ep][static_cast<uint8_t>(edgesPermSolvedState::FR)];
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::f2lEdgesInUSolved)] =    ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UF)] and
+                                                                                        ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UL)] and
+                                                                                        ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UB)];
+        }
+
+        return ans;
+    }
 }
+

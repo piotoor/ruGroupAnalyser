@@ -32,6 +32,10 @@ class ruBaseCube {
         virtual bool isSolvedEdges(uint32_t edgesMask) const = 0;
         virtual bool isSolvedCorners(uint64_t cornersMask) const = 0;
         virtual bool isInDomino() const = 0;
+        virtual bool isSolvedCornersO() const = 0;
+        virtual bool isSolvedEEinE() const = 0;
+        virtual bool isSolvedMEinM() const = 0;
+        virtual bool isSolvedSEinS() const = 0;
 
         virtual void reset() = 0;
         virtual void turn(uint8_t turnIndex) = 0;
@@ -50,10 +54,7 @@ class ruBaseCube {
         virtual void U() = 0;
         virtual void U2() = 0;
         virtual void Ui() = 0;
-        virtual bool isSolvedCornersO() const = 0;
-        virtual bool isSolvedEEinE() const = 0;
-        virtual bool isSolvedMEinM() const = 0;
-        virtual bool isSolvedSEinS() const = 0;
+
 
         using movePointer = void (ruBaseCube::*)();
         std::vector<movePointer> movesVect;
@@ -78,6 +79,10 @@ class ruCube: public ruBaseCube
         bool isSolvedEdges(uint32_t edgesMask) const override;
         bool isSolvedCorners(uint64_t cornersMask) const override;
         bool isInDomino() const override;
+        bool isSolvedCornersO() const override;
+        bool isSolvedEEinE() const override;
+        bool isSolvedMEinM() const override;
+        bool isSolvedSEinS() const override;
 
         void reset() override;
         void turn(uint8_t turnIndex) override;
@@ -96,11 +101,6 @@ class ruCube: public ruBaseCube
         void U() override;
         void U2() override;
         void Ui() override;
-        bool isSolvedCornersO() const override;
-        bool isSolvedEEinE() const override;
-        bool isSolvedMEinM() const override;
-        bool isSolvedSEinS() const override;
-
 
         uint32_t edges;
         struct cornersPBits
@@ -141,10 +141,18 @@ class ruCube: public ruBaseCube
     public:
         static inline const uint64_t solvedCorners = 0101112131415;
         static inline const uint32_t solvedEdges = 00123456;
+
         static inline const uint64_t allCornersMask = 0777777777777;
         static inline const uint32_t allEdgesMask = 07777777;
         static inline const uint64_t cornersOrientationMask = 0707070707070;
         static inline const uint64_t cornersPermutationMask = 0070707070707;
+        static inline const uint32_t UFMask = 07000000;
+        static inline const uint32_t ULMask = 00700000;
+        static inline const uint32_t UBMask = 00070000;
+        static inline const uint32_t URMask = 00007000;
+        static inline const uint32_t BRMask = 00000700;
+        static inline const uint32_t DRMask = 00000070;
+        static inline const uint32_t FRMask = 00000007;
 
         // move to ruLutCube
         static inline const uint16_t solvedLexIndexEdgesPerm = 0;
@@ -152,9 +160,9 @@ class ruCube: public ruBaseCube
         static inline const uint16_t solvedLexIndexCornersOrient = 0;
 };
 
-//class ruLutCube: public ruBaseCube {
-//
-//};
+class ruLutCube: public ruBaseCube {
+
+};
 
 #endif // RUCUBE_H
 
