@@ -87,6 +87,12 @@ namespace lutGenerators {
             ans[ep][static_cast<uint8_t>(edgesPermSolvedState::f2lEdgesInUSolved)] =    ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UF)] and
                                                                                         ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UL)] and
                                                                                         ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UB)];
+
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::llEdgesInRSolved)] =     ans[ep][static_cast<uint8_t>(edgesPermSolvedState::f2lEdgesInRSolved)] and
+                                                                                        ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UR)];
+
+            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::llEdgesInUSolved)] =     ans[ep][static_cast<uint8_t>(edgesPermSolvedState::f2lEdgesInUSolved)] and
+                                                                                        ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UR)];
         }
 
         return ans;
