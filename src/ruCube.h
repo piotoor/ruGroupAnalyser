@@ -152,6 +152,12 @@ class ruCube: public ruBaseCube
         static inline const uint32_t DRMask = 00000070;
         static inline const uint32_t FRMask = 00000007;
         static inline const uint64_t cornersOrientationMask = 0707070707070;
+        static inline const uint64_t URFOrientMask = 0700000000000;
+        static inline const uint64_t UFLOrientMask = 0007000000000;
+        static inline const uint64_t ULBOrientMask = 0000070000000;
+        static inline const uint64_t UBROrientMask = 0000000700000;
+        static inline const uint64_t DRBOrientMask = 0000000007000;
+        static inline const uint64_t DFROrientMask = 0000000000070;
         static inline const uint64_t cornersPermutationMask = 0070707070707;
         static inline const uint64_t URFPermMask = 0070000000000;
         static inline const uint64_t UFLPermMask = 0000700000000;

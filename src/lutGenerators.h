@@ -49,6 +49,23 @@ namespace lutGenerators {
         DFR
     };
     std::array<std::bitset<noOfCornersPermSolvedStates>, noOfCornersPermutations> generateCornersPermSolvedTable ();
+
+    inline static const uint16_t noOfCornersOrientSolvedStates = 11;
+    enum class cornersOrientSolvedState {
+        allCorners,
+        f2lCornersInROriented,
+        f2lCornersInUOriented,
+        llCornersInROriented,
+        llCornersInUOriented,
+
+        URF,
+        UFL,
+        ULB,
+        UBR,
+        DRB,
+        DFR
+    };
+    std::array<std::bitset<noOfCornersOrientSolvedStates>, noOfCornersOrientations> generateCornersOrientSolvedTable ();
 }
 
 

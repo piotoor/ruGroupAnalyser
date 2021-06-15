@@ -121,9 +121,39 @@ namespace lutGenerators {
 
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInRSolved)] =     ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] and
                                                                                             not ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInUSolved)];
-
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInUSolved)] =     ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] and
                                                                                             not ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInRSolved)];
+        }
+
+        return ans;
+    }
+
+    std::array<std::bitset<noOfCornersOrientSolvedStates>, noOfCornersOrientations> generateCornersOrientSolvedTable () {
+        std::array<std::bitset<noOfCornersOrientSolvedStates>, noOfCornersOrientations> ans {};
+        auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
+        ruCubeStateConverter converter;
+
+        for (uint16_t co = 0; co < noOfCornersOrientations; ++co) {
+            cube->setCorners(converter.lexIndexCornersToIntCorners(ruCube::solvedLexIndexCornersPerm, co));
+
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] = cube->isSolvedCorners(ruCube::cornersOrientationMask);
+
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::URF)] = cube->isSolvedCorners(ruCube::URFOrientMask);
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::UFL)] = cube->isSolvedCorners(ruCube::UFLOrientMask);
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::ULB)] = cube->isSolvedCorners(ruCube::ULBOrientMask);
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::UBR)] = cube->isSolvedCorners(ruCube::UBROrientMask);
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::DRB)] = cube->isSolvedCorners(ruCube::DRBOrientMask);
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::DFR)] = cube->isSolvedCorners(ruCube::DFROrientMask);
+
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInROriented)] =    ans[co][static_cast<uint8_t>(cornersOrientSolvedState::DRB)]  and
+                                                                                                ans[co][static_cast<uint8_t>(cornersOrientSolvedState::DFR)];
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInUOriented)] =    ans[co][static_cast<uint8_t>(cornersOrientSolvedState::UFL)]  and
+                                                                                                ans[co][static_cast<uint8_t>(cornersOrientSolvedState::ULB)];
+
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInROriented)] =     ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] and
+                                                                                                not ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInUOriented)];
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInUOriented)] =     ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] and
+                                                                                                not ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInROriented)];
         }
 
         return ans;
