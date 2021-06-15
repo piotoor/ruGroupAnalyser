@@ -144,8 +144,6 @@ class ruCube: public ruBaseCube
 
         static inline const uint64_t allCornersMask = 0777777777777;
         static inline const uint32_t allEdgesMask = 07777777;
-        static inline const uint64_t cornersOrientationMask = 0707070707070;
-        static inline const uint64_t cornersPermutationMask = 0070707070707;
         static inline const uint32_t UFMask = 07000000;
         static inline const uint32_t ULMask = 00700000;
         static inline const uint32_t UBMask = 00070000;
@@ -153,10 +151,21 @@ class ruCube: public ruBaseCube
         static inline const uint32_t BRMask = 00000700;
         static inline const uint32_t DRMask = 00000070;
         static inline const uint32_t FRMask = 00000007;
+        static inline const uint64_t cornersOrientationMask = 0707070707070;
+        static inline const uint64_t cornersPermutationMask = 0070707070707;
+        static inline const uint64_t URFPermMask = 0070000000000;
+        static inline const uint64_t UFLPermMask = 0000700000000;
+        static inline const uint64_t ULBPermMask = 0000007000000;
+        static inline const uint64_t UBRPermMask = 0000000070000;
+        static inline const uint64_t DRBPermMask = 0000000000700;
+        static inline const uint64_t DFRPermMask = 0000000000007;
+
 
         // move to ruLutCube
         static inline const uint16_t solvedLexIndexEdgesPerm = 0;
         static inline const uint16_t solvedLexIndexCornersPerm = 0;
+
+
         static inline const uint16_t solvedLexIndexCornersOrient = 0;
 };
 
