@@ -119,9 +119,9 @@ namespace lutGenerators {
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInUSolved)] =    ans[cp][static_cast<uint8_t>(cornersPermSolvedState::UFL)]  and
                                                                                             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::ULB)];
 
-            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInRSolved)] =     ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] and
+            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInRSolved)] =         ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] and
                                                                                             not ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInUSolved)];
-            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInUSolved)] =     ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] and
+            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInUSolved)] =         ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] and
                                                                                             not ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInRSolved)];
         }
 
@@ -150,9 +150,9 @@ namespace lutGenerators {
             ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInUOriented)] =    ans[co][static_cast<uint8_t>(cornersOrientSolvedState::UFL)]  and
                                                                                                 ans[co][static_cast<uint8_t>(cornersOrientSolvedState::ULB)];
 
-            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInROriented)] =     ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] and
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInROriented)] =         ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] and
                                                                                                 not ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInUOriented)];
-            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInUOriented)] =     ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] and
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInUOriented)] =         ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] and
                                                                                                 not ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInROriented)];
         }
 
