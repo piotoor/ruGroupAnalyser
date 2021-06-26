@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
+#include "lutGenerators.h"
 
 enum ruCubeMove {
     R,
@@ -17,8 +18,8 @@ enum ruCubeMove {
 class ruBaseCube {
     public:
         ruBaseCube();
-        ruBaseCube(const ruBaseCube &other) = delete;
-        ruBaseCube & operator=(const ruBaseCube &other) = delete;
+        ruBaseCube(const ruBaseCube &other) = default;
+        ruBaseCube & operator=(const ruBaseCube &other) = default;
         virtual ~ruBaseCube() = 0;
 
 
@@ -38,10 +39,10 @@ class ruBaseCube {
         virtual bool isSolvedSEinS() const = 0;
 
         virtual void reset() = 0;
-        virtual void turn(uint8_t turnIndex) = 0;
-        virtual void inverseTurn(uint8_t turnIndex) = 0;
-        virtual void scramble(std::vector<uint8_t> moves) = 0;
-        virtual void inverseScramble(std::vector<uint8_t> moves) = 0;
+        void turn(uint8_t turnIndex);
+        void inverseTurn(uint8_t turnIndex);
+        void scramble(std::vector<uint8_t> moves);
+        void inverseScramble(std::vector<uint8_t> moves);
 
         virtual std::unique_ptr<ruBaseCube> clone() const = 0;
 
@@ -66,7 +67,7 @@ class ruCube: public ruBaseCube
     public:
         ruCube();
         ruCube(uint32_t edges, uint64_t corners);
-        explicit ruCube(const ruCube& other);
+        explicit ruCube(const ruCube& other) = default;
         ~ruCube();
 
         uint32_t getEdges() const override;
@@ -85,10 +86,6 @@ class ruCube: public ruBaseCube
         bool isSolvedSEinS() const override;
 
         void reset() override;
-        void turn(uint8_t turnIndex) override;
-        void inverseTurn(uint8_t turnIndex) override;
-        void scramble(std::vector<uint8_t> moves) override;
-        void inverseScramble(std::vector<uint8_t> moves) override;
 
         std::unique_ptr<ruBaseCube> clone() const override;
 
@@ -166,17 +163,73 @@ class ruCube: public ruBaseCube
         static inline const uint64_t DRBPermMask = 0000000000700;
         static inline const uint64_t DFRPermMask = 0000000000007;
 
-
-        // move to ruLutCube
-        static inline const uint16_t solvedLexIndexEdgesPerm = 0;
-        static inline const uint16_t solvedLexIndexCornersPerm = 0;
-
-
-        static inline const uint16_t solvedLexIndexCornersOrient = 0;
 };
 
 class ruLutCube: public ruBaseCube {
+    public:
+        ruLutCube();
+        ruLutCube(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient);
+        explicit ruLutCube(const ruLutCube& other) = default;
+        ~ruLutCube();
 
+        uint32_t getEdges() const override;
+        uint64_t getCorners() const override;
+        void setEdges(uint32_t edges) override;
+        void setCorners(uint64_t corners) override;
+        void setCube(uint32_t edges, uint64_t corners) override;
+
+        uint16_t getCornersOrient() const;
+        uint16_t getCornersPerm() const;
+        void setCornersPerm(uint16_t cornersPerm);
+        void setCornersOrient(uint16_t cornersOrient);
+
+        bool isSolved(uint32_t edgesMask = ruLutCube::allEdgesMask, uint64_t cornersMask = ruLutCube::allCornersMask) const override;
+        bool isSolvedEdges(uint32_t edgesMask) const override;
+        bool isSolvedCorners(uint64_t cornersMask) const override;
+        bool isInDomino() const override;
+        bool isSolvedCornersO() const override;
+        bool isSolvedEEinE() const override;
+        bool isSolvedMEinM() const override;
+        bool isSolvedSEinS() const override;
+
+        void reset() override;
+
+        std::unique_ptr<ruBaseCube> clone() const override;
+
+        bool isPruningPossible(uint8_t remainingMoves) const override;
+
+    protected:
+        void R() override;
+        void R2() override;
+        void Ri() override;
+        void U() override;
+        void U2() override;
+        void Ui() override;
+
+        uint16_t edgesPerm;
+        uint16_t cornersPerm;
+        uint16_t cornersOrient;
+
+        static std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfEdgesPermutations>     edgesPermMoveMap;
+        static std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfCornersPermutations>   cornersPermMoveMap;
+        static std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfCornersOrientations>   cornersOrientMoveMap;
+
+        static std::array<std::bitset<lutGenerators::noOfEdgesPermSolvedStates>, lutGenerators::noOfEdgesPermutations>          edgesPermSolvedTable;
+        static std::array<std::bitset<lutGenerators::noOfCornersPermSolvedStates>, lutGenerators::noOfCornersPermutations>      cornersPermSolvedTable;
+        static std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerators::noOfCornersOrientations>    cornersOrientSolvedTable;
+
+    public:
+        static inline const uint16_t solvedLexIndexEdgesPerm = 0;
+        static inline const uint16_t solvedLexIndexCornersPerm = 0;
+        static inline const uint16_t solvedLexIndexCornersOrient = 0;
+
+        static inline const uint32_t allEdgesMask = 0x7FFF;
+        static inline const uint32_t allCornersOrientMask = 0x7FF;
+        static inline const uint32_t allCornersPermMask = 0x7FF;
+        static inline const uint64_t allCornersMask = 0x000007FF000007FF;
+
+        static inline const uint64_t setCornersPermMask     = 0x0000FFFF;
+        static inline const uint64_t setCornersOrientMask   = 0xFFFF0000;
 };
 
 #endif // RUCUBE_H
