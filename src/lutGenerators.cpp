@@ -30,7 +30,7 @@ namespace lutGenerators {
         ruCubeStateConverter converter;
 
         for (uint16_t cornersPerm = 0; cornersPerm < noOfCornersPermutations; ++cornersPerm) {
-            cube->setCorners(converter.lexIndexCornersToIntCorners(cornersPerm, ruCube::solvedLexIndexCornersOrient));
+            cube->setCorners(converter.lexIndexCornersToIntCorners(cornersPerm, ruLutCube::solvedLexIndexCornersOrient));
 
             for (uint8_t t = R; t <= Ui; ++t) {
                 cube->turn(t);
@@ -48,7 +48,7 @@ namespace lutGenerators {
         ruCubeStateConverter converter;
 
         for (uint16_t cornersOrient = 0; cornersOrient < noOfCornersOrientations; ++cornersOrient) {
-            cube->setCorners(converter.lexIndexCornersToIntCorners(ruCube::solvedLexIndexCornersPerm, cornersOrient));
+            cube->setCorners(converter.lexIndexCornersToIntCorners(ruLutCube::solvedLexIndexCornersPerm, cornersOrient));
 
             for (uint8_t t = R; t <= Ui; ++t) {
                 cube->turn(t);
@@ -104,7 +104,7 @@ namespace lutGenerators {
         ruCubeStateConverter converter;
 
         for (uint16_t cp = 0; cp < noOfCornersPermutations; ++cp) {
-            cube->setCorners(converter.lexIndexCornersToIntCorners(cp, ruCube::solvedLexIndexCornersOrient));
+            cube->setCorners(converter.lexIndexCornersToIntCorners(cp, ruLutCube::solvedLexIndexCornersOrient));
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] = cube->isSolvedCorners(ruCube::cornersPermutationMask);
 
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::URF)] = cube->isSolvedCorners(ruCube::URFPermMask);
@@ -119,10 +119,12 @@ namespace lutGenerators {
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInUSolved)] =    ans[cp][static_cast<uint8_t>(cornersPermSolvedState::UFL)]  and
                                                                                             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::ULB)];
 
-            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInRSolved)] =         ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] and
-                                                                                            not ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInUSolved)];
-            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInUSolved)] =         ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] and
-                                                                                            not ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInRSolved)];
+            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInRSolved)] =     ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInRSolved)]  and
+                                                                                            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::URF)]  and
+                                                                                            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::UBR)];
+            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInUSolved)] =     ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInUSolved)]  and
+                                                                                            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::URF)]  and
+                                                                                            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::UBR)];
         }
 
         return ans;
@@ -134,7 +136,7 @@ namespace lutGenerators {
         ruCubeStateConverter converter;
 
         for (uint16_t co = 0; co < noOfCornersOrientations; ++co) {
-            cube->setCorners(converter.lexIndexCornersToIntCorners(ruCube::solvedLexIndexCornersPerm, co));
+            cube->setCorners(converter.lexIndexCornersToIntCorners(ruLutCube::solvedLexIndexCornersPerm, co));
 
             ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] = cube->isSolvedCorners(ruCube::cornersOrientationMask);
 
@@ -150,10 +152,12 @@ namespace lutGenerators {
             ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInUOriented)] =    ans[co][static_cast<uint8_t>(cornersOrientSolvedState::UFL)]  and
                                                                                                 ans[co][static_cast<uint8_t>(cornersOrientSolvedState::ULB)];
 
-            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInROriented)] =         ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] and
-                                                                                                not ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInUOriented)];
-            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInUOriented)] =         ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] and
-                                                                                                not ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInROriented)];
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInROriented)] =     ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInROriented)]  and
+                                                                                                ans[co][static_cast<uint8_t>(cornersOrientSolvedState::URF)]  and
+                                                                                                ans[co][static_cast<uint8_t>(cornersOrientSolvedState::UBR)];
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInUOriented)] =     ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInUOriented)]  and
+                                                                                                ans[co][static_cast<uint8_t>(cornersOrientSolvedState::URF)]  and
+                                                                                                ans[co][static_cast<uint8_t>(cornersOrientSolvedState::UBR)];
         }
 
         return ans;
