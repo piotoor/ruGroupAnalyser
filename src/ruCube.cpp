@@ -256,13 +256,13 @@ bool ruLutCube::isSolved(uint32_t edgesMask, uint64_t cornersMask) const {
 }
 
 bool ruLutCube::isSolvedEdges(uint32_t edgesMask) const {
-    return edgesPermSolvedTable[edgesPerm].to_ulong() == edgesMask;
+    return edgesPermSolvedTable[edgesPerm].to_ulong() & edgesMask;
 }
 
 bool ruLutCube::isSolvedCorners(uint64_t cornersMask) const {
     uint32_t cornersPermMask    = cornersMask & 0xFFFFFFFF;
     uint32_t cornersOrientMask  = (cornersMask >> (sizeof(uint32_t) * 8)) & 0xFFFFFFFF;
-    return cornersPermSolvedTable[cornersPerm].to_ulong() == cornersPermMask and cornersOrientSolvedTable[cornersOrient].to_ulong() == cornersOrientMask;
+    return (cornersPermSolvedTable[cornersPerm].to_ulong() & cornersPermMask) and (cornersOrientSolvedTable[cornersOrient].to_ulong() & cornersOrientMask);
 }
 
 bool ruLutCube::isInDomino() const {
@@ -270,7 +270,7 @@ bool ruLutCube::isInDomino() const {
 }
 
 bool ruLutCube::isSolvedCornersO() const {
-    return cornersPermSolvedTable[cornersPerm][static_cast<uint8_t>(lutGenerators::cornersOrientSolvedState::allCorners)];
+    return cornersPermSolvedTable[cornersOrient][static_cast<uint8_t>(lutGenerators::cornersOrientSolvedState::allCorners)];
 }
 
 bool ruLutCube::isSolvedEEinE() const {
