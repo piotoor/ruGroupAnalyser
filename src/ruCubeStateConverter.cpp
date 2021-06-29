@@ -152,10 +152,9 @@ uint64_t ruCubeStateConverter::lexIndexCornersToIntCorners(uint16_t lexIndexPerm
 
     uint8_t shift = 0;
     for (int8_t i = 0; i < numOfCorners; ++i) {
-        ans |= perm[numOfCorners - 1 - i] << shift;
+        ans |= static_cast<uint64_t>(perm[numOfCorners - 1 - i]) << shift;
         shift += pieceSizeCorners;
     }
-
     return ans;
 }
 
