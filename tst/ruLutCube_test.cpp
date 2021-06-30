@@ -129,3 +129,70 @@ TEST(ruLutCubeTest, singleTurnTest) {
 
     ASSERT_TRUE (cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
 }
+
+TEST(ruLutCubeTest, singleTurnInversionTest) {
+    ruLutCube cube;
+
+    for (int trn = R; trn <= Ui; ++trn) {
+        cube.turn(trn);
+        ASSERT_FALSE(cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+        cube.inverseTurn(trn);
+        ASSERT_TRUE(cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+    }
+
+    cube.inverseTurn(R);
+    cube.inverseTurn(R);
+    cube.inverseTurn(R);
+    cube.inverseTurn(R);
+
+    cube.inverseTurn(R2);
+    cube.inverseTurn(R2);
+
+    cube.inverseTurn(Ri);
+    cube.inverseTurn(Ri);
+    cube.inverseTurn(Ri);
+    cube.inverseTurn(Ri);
+
+    cube.inverseTurn(U);
+    cube.inverseTurn(U);
+    cube.inverseTurn(U);
+    cube.inverseTurn(U);
+
+    cube.inverseTurn(U2);
+    cube.inverseTurn(U2);
+
+    cube.inverseTurn(Ui);
+    cube.inverseTurn(Ui);
+    cube.inverseTurn(Ui);
+    cube.inverseTurn(Ui);
+
+    cube.inverseTurn(R);
+    cube.inverseTurn(R);
+    cube.turn(R2);
+    cube.turn(R);
+    cube.turn(R);
+    cube.inverseTurn(R2);
+
+    cube.inverseTurn(Ri);
+    cube.inverseTurn(Ri);
+    cube.turn(R2);
+    cube.turn(Ri);
+    cube.turn(Ri);
+    cube.inverseTurn(R2);
+
+    cube.inverseTurn(U);
+    cube.inverseTurn(U);
+    cube.turn(U2);
+    cube.turn(U);
+    cube.turn(U);
+    cube.inverseTurn(U2);
+
+    cube.inverseTurn(Ui);
+    cube.inverseTurn(Ui);
+    cube.turn(U2);
+    cube.turn(Ui);
+    cube.turn(Ui);
+    cube.inverseTurn(U2);
+
+    ASSERT_TRUE(cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+}
