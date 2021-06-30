@@ -206,3 +206,21 @@ TEST(ruLutCubeTest, scrambleAndScrambleInversionTest) {
     cube.inverseScramble(moves);
     ASSERT_TRUE(cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
 }
+
+TEST(ruLutCubeTest, isInDominoTest) {
+    ruLutCube cube;
+
+    ASSERT_TRUE(cube.isInDomino());
+    cube.scramble({R2, U2, R2, U2, R2, U2});
+    ASSERT_TRUE(cube.isInDomino());
+    cube.scramble({R2, U, R2, Ui, R2, U, R2, U, R2, Ui, R2, Ui, R2, U, R2, U2, R2, Ui, R2, U2, R2, U2, R2, Ui, R2, Ui});
+    ASSERT_TRUE(cube.isInDomino());
+    cube.scramble({R, U, Ri, U, R, U2, Ri});
+    ASSERT_FALSE(cube.isInDomino());
+    cube.scramble({R, U, Ri, U, R, U2, Ri});
+    ASSERT_FALSE(cube.isInDomino());
+    cube.scramble({U, R, U, Ri, U, R, Ui, Ri, U, R, U2, R});
+    ASSERT_TRUE(cube.isInDomino());
+    cube.scramble({R2, U, Ri, Ui, Ri, Ui, Ri, U, R, U, Ri});
+    ASSERT_FALSE(cube.isInDomino());
+}
