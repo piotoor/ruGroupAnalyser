@@ -161,11 +161,11 @@ TEST(ruCubeTest, scrambleTest) {
     const std::vector<uint8_t> moves{R, U, R2, U2, Ri, Ui};
     cube.scramble(moves);
     ASSERT_EQ(04651230, cube.getEdges());
-	ASSERT_EQ(0442320452241, cube.getCorners());
+    ASSERT_EQ(0442320452241, cube.getCorners());
 
-	cube.scramble({R2, U2, R2, U2, R, U, Ri, Ui});
-	ASSERT_EQ(04130265, cube.getEdges());
-	ASSERT_EQ(0434541142042, cube.getCorners());
+    cube.scramble({R2, U2, R2, U2, R, U, Ri, Ui});
+    ASSERT_EQ(04130265, cube.getEdges());
+    ASSERT_EQ(0434541142042, cube.getCorners());
 }
 
 TEST(ruCubeTest, scrambleInversionTest) {
@@ -174,11 +174,11 @@ TEST(ruCubeTest, scrambleInversionTest) {
     const std::vector<uint8_t> moves{U, R, U2, R2, Ui, Ri};
     cube.inverseScramble(moves);
     ASSERT_EQ(04651230, cube.getEdges());
-	ASSERT_EQ(0442320452241, cube.getCorners());
+    ASSERT_EQ(0442320452241, cube.getCorners());
 
-	cube.inverseScramble({U, R, Ui, Ri, U2, R2, U2, R2});
-	ASSERT_EQ(04130265, cube.getEdges());
-	ASSERT_EQ(0434541142042, cube.getCorners());
+    cube.inverseScramble({U, R, Ui, Ri, U2, R2, U2, R2});
+    ASSERT_EQ(04130265, cube.getEdges());
+    ASSERT_EQ(0434541142042, cube.getCorners());
 }
 
 TEST(ruCubeTest, isInDominoTest) {
