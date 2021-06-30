@@ -39,50 +39,50 @@ TEST(ruCubeTest, cubeStateResetTest) {
 TEST(ruCubeTest, singleTurnTest) {
     ruCube cube;
 
-	cube.turn(R); // R
-	ASSERT_EQ(00126345, cube.getEdges());
-	ASSERT_EQ(0251112402344, cube.getCorners());
-	cube.turn(U); // U
-	ASSERT_EQ(06012345, cube.getEdges());
-	ASSERT_EQ(0402511122344, cube.getCorners());
-	cube.turn(R2); // R2
-	ASSERT_EQ(06014523, cube.getEdges());
-	ASSERT_EQ(0232511444012, cube.getCorners());
-	cube.turn(U2); // U2
-	ASSERT_EQ(01460523, cube.getEdges());
-	ASSERT_EQ(0114423254012, cube.getCorners());
-	cube.turn(Ri); // R'
-	ASSERT_EQ(01465230, cube.getEdges());
-	ASSERT_EQ(0454423202241, cube.getCorners());
-	cube.turn(Ui); // U'
-	ASSERT_EQ(04651230, cube.getEdges());
-	ASSERT_EQ(0442320452241, cube.getCorners());
+    cube.turn(R); // R
+    ASSERT_EQ(00126345, cube.getEdges());
+    ASSERT_EQ(0251112402344, cube.getCorners());
+    cube.turn(U); // U
+    ASSERT_EQ(06012345, cube.getEdges());
+    ASSERT_EQ(0402511122344, cube.getCorners());
+    cube.turn(R2); // R2
+    ASSERT_EQ(06014523, cube.getEdges());
+    ASSERT_EQ(0232511444012, cube.getCorners());
+    cube.turn(U2); // U2
+    ASSERT_EQ(01460523, cube.getEdges());
+    ASSERT_EQ(0114423254012, cube.getCorners());
+    cube.turn(Ri); // R'
+    ASSERT_EQ(01465230, cube.getEdges());
+    ASSERT_EQ(0454423202241, cube.getCorners());
+    cube.turn(Ui); // U'
+    ASSERT_EQ(04651230, cube.getEdges());
+    ASSERT_EQ(0442320452241, cube.getCorners());
 
-	cube.turn(R);
-	cube.turn(R);
-	cube.turn(R);
-	cube.turn(R);
+    cube.turn(R);
+    cube.turn(R);
+    cube.turn(R);
+    cube.turn(R);
 
-	cube.turn(R2);
-	cube.turn(R2);
+    cube.turn(R2);
+    cube.turn(R2);
 
-	cube.turn(Ri);
-	cube.turn(Ri);
-	cube.turn(Ri);
-	cube.turn(Ri);
+    cube.turn(Ri);
+    cube.turn(Ri);
+    cube.turn(Ri);
+    cube.turn(Ri);
 
-	cube.turn(U);
-	cube.turn(U);
-	cube.turn(U);
-	cube.turn(U);
+    cube.turn(U);
+    cube.turn(U);
+    cube.turn(U);
+    cube.turn(U);
 
-	cube.turn(U2);
-	cube.turn(U2);
+    cube.turn(U2);
+    cube.turn(U2);
 
-	cube.turn(Ui);
-	cube.turn(Ui);
-	cube.turn(Ui);
-	cube.turn(Ui);
+    cube.turn(Ui);
+    cube.turn(Ui);
+    cube.turn(Ui);
+    cube.turn(Ui);
 
     ASSERT_EQ(04651230, cube.getEdges());
     ASSERT_EQ(0442320452241, cube.getCorners());
@@ -91,66 +91,66 @@ TEST(ruCubeTest, singleTurnTest) {
 TEST(ruCubeTest, singleTurnInversionTest) {
     ruCube cube;
 
-	for (int trn = R; trn <= Ui; ++trn) {
+    for (int trn = R; trn <= Ui; ++trn) {
         cube.turn(trn);
         ASSERT_FALSE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
         cube.inverseTurn(trn);
         ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
-	}
+    }
 
     cube.inverseTurn(R);
-	cube.inverseTurn(R);
-	cube.inverseTurn(R);
-	cube.inverseTurn(R);
+    cube.inverseTurn(R);
+    cube.inverseTurn(R);
+    cube.inverseTurn(R);
 
-	cube.inverseTurn(R2);
-	cube.inverseTurn(R2);
-
-	cube.inverseTurn(Ri);
-	cube.inverseTurn(Ri);
-	cube.inverseTurn(Ri);
-	cube.inverseTurn(Ri);
-
-	cube.inverseTurn(U);
-	cube.inverseTurn(U);
-	cube.inverseTurn(U);
-	cube.inverseTurn(U);
-
-	cube.inverseTurn(U2);
-	cube.inverseTurn(U2);
-
-	cube.inverseTurn(Ui);
-	cube.inverseTurn(Ui);
-	cube.inverseTurn(Ui);
-	cube.inverseTurn(Ui);
-
-	cube.inverseTurn(R);
-	cube.inverseTurn(R);
-	cube.turn(R2);
-	cube.turn(R);
-	cube.turn(R);
-	cube.inverseTurn(R2);
+    cube.inverseTurn(R2);
+    cube.inverseTurn(R2);
 
     cube.inverseTurn(Ri);
-	cube.inverseTurn(Ri);
-	cube.turn(R2);
-	cube.turn(Ri);
-	cube.turn(Ri);
-	cube.inverseTurn(R2);
+    cube.inverseTurn(Ri);
+    cube.inverseTurn(Ri);
+    cube.inverseTurn(Ri);
 
     cube.inverseTurn(U);
-	cube.inverseTurn(U);
-	cube.turn(U2);
-	cube.turn(U);
-	cube.turn(U);
-	cube.inverseTurn(U2);
+    cube.inverseTurn(U);
+    cube.inverseTurn(U);
+    cube.inverseTurn(U);
+
+    cube.inverseTurn(U2);
+    cube.inverseTurn(U2);
 
     cube.inverseTurn(Ui);
-	cube.inverseTurn(Ui);
-	cube.turn(U2);
-	cube.turn(Ui);
-	cube.turn(Ui);
-	cube.inverseTurn(U2);
+    cube.inverseTurn(Ui);
+    cube.inverseTurn(Ui);
+    cube.inverseTurn(Ui);
+
+    cube.inverseTurn(R);
+    cube.inverseTurn(R);
+    cube.turn(R2);
+    cube.turn(R);
+    cube.turn(R);
+    cube.inverseTurn(R2);
+
+    cube.inverseTurn(Ri);
+    cube.inverseTurn(Ri);
+    cube.turn(R2);
+    cube.turn(Ri);
+    cube.turn(Ri);
+    cube.inverseTurn(R2);
+
+    cube.inverseTurn(U);
+    cube.inverseTurn(U);
+    cube.turn(U2);
+    cube.turn(U);
+    cube.turn(U);
+    cube.inverseTurn(U2);
+
+    cube.inverseTurn(Ui);
+    cube.inverseTurn(Ui);
+    cube.turn(U2);
+    cube.turn(Ui);
+    cube.turn(Ui);
+    cube.inverseTurn(U2);
 
     ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
 }
