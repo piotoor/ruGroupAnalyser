@@ -196,3 +196,13 @@ TEST(ruLutCubeTest, singleTurnInversionTest) {
 
     ASSERT_TRUE(cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
 }
+
+TEST(ruLutCubeTest, scrambleAndScrambleInversionTest) {
+    ruLutCube cube;
+
+    const std::vector<uint8_t> moves{R, U, R2, U2, Ri, Ui, R, U, R, U, R2, Ui, Ri, Ui};
+    cube.scramble(moves);
+
+    cube.inverseScramble(moves);
+    ASSERT_TRUE(cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+}
