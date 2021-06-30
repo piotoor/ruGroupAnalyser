@@ -224,3 +224,35 @@ TEST(ruLutCubeTest, isInDominoTest) {
     cube.scramble({R2, U, Ri, Ui, Ri, Ui, Ri, U, R, U, Ri});
     ASSERT_FALSE(cube.isInDomino());
 }
+
+TEST(ruLutCubeTest, singleTurnNegativeTest) {
+    ruLutCube cube;
+
+    const std::vector<uint8_t> invalidTurns {
+        6, 7, 8, 9, 10, 11, 12, 15, 20, 30, 100, 255
+    };
+
+    for (const auto &i: invalidTurns) {
+        try {
+            cube.turn(i);
+        } catch (const ruCubeTurnException &e) {
+            ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(i) + ") out of range (which is [0:5])"), e.what());
+        }
+    }
+}
+
+TEST(ruLutCubeTest, singleTurnInversionNegativeTest) {
+    ruLutCube cube;
+
+    const std::vector<uint8_t> invalidTurns {
+        6, 7, 8, 9, 10, 11, 12, 15, 20, 30, 100, 255
+    };
+
+    for (const auto &i: invalidTurns) {
+        try {
+            cube.inverseTurn(i);
+        } catch (const ruCubeTurnException &e) {
+            ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(i) + ") out of range (which is [0:5])"), e.what());
+        }
+    }
+}
