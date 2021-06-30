@@ -256,3 +256,55 @@ TEST(ruLutCubeTest, singleTurnInversionNegativeTest) {
         }
     }
 }
+
+TEST(ruLutCubeTest, scrambleNegativeTest) {
+    ruLutCube cube;
+
+    const std::vector<std::vector<uint8_t>> invalidScrambles {
+        { 6 },
+        { R, U, R2, U2, Ri, Ui, 10, U2, R2, 8, 10 },
+        { R, U, R2, Ri, R2, Ri, 6 }
+    };
+
+    const std::vector<uint8_t> firstInvalidTurn {
+        6,
+        10,
+        6
+    };
+
+    int i = 0;
+    for (const auto &scr: invalidScrambles) {
+        try {
+            cube.scramble(scr);
+        } catch (const ruCubeTurnException &e) {
+            ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(firstInvalidTurn[i]) + ") out of range (which is [0:5])"), e.what());
+        }
+        ++i;
+    }
+}
+
+TEST(ruLutCubeTest, scrambleInversionNegativeTest) {
+    ruLutCube cube;
+
+    const std::vector<std::vector<uint8_t>> invalidScrambleInversions {
+        { 6 },
+        { R, U, R2, U2, Ri, Ui, 10, U2, R2, 8, 10 },
+        { R, U, R2, Ri, R2, Ri, 6 }
+    };
+
+    const std::vector<uint8_t> firstInvalidTurn {
+        6,
+        10,
+        6
+    };
+
+    int i = 0;
+    for (const auto &scr: invalidScrambleInversions) {
+        try {
+            cube.scramble(scr);
+        } catch (const ruCubeTurnException &e) {
+            ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(firstInvalidTurn[i]) + ") out of range (which is [0:5])"), e.what());
+        }
+        ++i;
+    }
+}
