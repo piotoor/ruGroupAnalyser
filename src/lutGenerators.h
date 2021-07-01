@@ -12,7 +12,7 @@ namespace lutGenerators {
     std::array<std::array<uint16_t, noOfTurns>, noOfCornersPermutations> generateCornersPermMoveMap ();
     std::array<std::array<uint16_t, noOfTurns>, noOfCornersOrientations> generateCornersOrientMoveMap ();
 
-    inline static const uint16_t noOfEdgesPermSolvedStates = 15;
+    inline static const uint16_t noOfEdgesPermSolvedStates = 16;
     enum class edgesPermSolvedState {
         allEdges,
         f2lEdgesInRSolved,
@@ -29,11 +29,13 @@ namespace lutGenerators {
         UR,
         BR,
         DR,
-        FR
+        FR,
+
+        noEdges
     };
     std::array<std::bitset<noOfEdgesPermSolvedStates>, noOfEdgesPermutations> generateEdgesPermSolvedTable ();
 
-    inline static const uint16_t noOfCornersPermSolvedStates = 11;
+    inline static const uint16_t noOfCornersPermSolvedStates = 12;
     enum class cornersPermSolvedState {
         allCorners,
         f2lCornersInRSolved,
@@ -46,11 +48,13 @@ namespace lutGenerators {
         ULB,
         UBR,
         DRB,
-        DFR
+        DFR,
+
+        noCorners
     };
     std::array<std::bitset<noOfCornersPermSolvedStates>, noOfCornersPermutations> generateCornersPermSolvedTable ();
 
-    inline static const uint16_t noOfCornersOrientSolvedStates = 11;
+    inline static const uint16_t noOfCornersOrientSolvedStates = 12;
     enum class cornersOrientSolvedState {
         allCorners,
         f2lCornersInROriented,
@@ -63,7 +67,9 @@ namespace lutGenerators {
         ULB,
         UBR,
         DRB,
-        DFR
+        DFR,
+
+        noCorners
     };
     std::array<std::bitset<noOfCornersOrientSolvedStates>, noOfCornersOrientations> generateCornersOrientSolvedTable ();
 }
