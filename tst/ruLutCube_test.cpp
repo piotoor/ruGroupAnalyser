@@ -308,3 +308,42 @@ TEST(ruLutCubeTest, scrambleInversionNegativeTest) {
         ++i;
     }
 }
+
+TEST(ruLutCubeTest, predefinedIsSolvedFilterTest) {
+    const std::vector<std::vector<uint8_t>> scrambles {
+        { R2, U2, R2, U2, R2, U2 },
+        { R,  U,  Ri, U,  R,  U2, Ri, U2 },
+        { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
+        { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
+        { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
+        { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
+    };
+
+    const std::vector<std::pair<uint32_t, uint64_t>> filters {
+        { ruLutCube::allEdgesMask,  ruLutCube::allCornersMask },
+        { ruLutCube::allEdgesMask,  0x0 },
+        { 0x0,                      ruLutCube::allCornersMask },
+        { 0x0,                      0x0 },
+        { 0x0,                      ruLutCube::allCornersOrientMask },
+        { 0x0,                      ruLutCube::allCornersPermMask },
+        { ruLutCube::allEdgesMask,  ruLutCube::allCornersOrientMask },
+        { ruLutCube::allEdgesMask,  ruLutCube::allCornersPermMask }
+    };
+
+    const std::vector<std::vector<bool>> expected {
+        { false, false, true,  true,  true,  true,  false, false },
+        { false, false, false, true,  false, true,  false, false },
+        { false, false, true,  true,  true,  true,  false, false },
+        { false, false, true,  true,  true,  true,  false, false },
+        { false, true,  false, true,  false, false, false, false },
+        { false, true,  false, true,  false, true,  false, true  }
+    };
+
+    for (uint8_t i = 0 ; i < size(scrambles); ++i) {
+        ruLutCube cube;
+        cube.scramble(scrambles[i]);
+        for (uint8_t j = 0; j < size(filters); ++j) {
+            ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
+        }
+    }
+}
