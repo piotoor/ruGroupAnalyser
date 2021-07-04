@@ -347,3 +347,58 @@ TEST(ruLutCubeTest, predefinedIsSolvedFilterTest) {
         }
     }
 }
+
+TEST(ruLutCubeTest, customIsSolvedFilterTest) {
+    const std::vector<std::vector<uint8_t>> scrambles {
+        { R2, U2, R2, U2, R2, U2 },
+        { R,  U,  Ri, U,  R,  U2, Ri, U2 },
+        { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
+        { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
+        { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
+        { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
+    };
+
+    const std::vector<std::pair<uint32_t, uint64_t>> filters {
+        { 0b0'0101010'111'0000'0,   0b0'111111'0001'0'00000000000000000000'0'111111'0000'0 },
+        { 0b0'0101010'111'0000'0,   0b0'111111'0001'0'00000000000000000000'0'110111'0000'0 },
+        { 0b0'0100010'010'0000'0,   0b0'000010'0001'0'00000000000000000000'0'111111'0000'0 },
+
+        { 0b0'0101010'111'0000'0,   0b0'111111'0001'0'00000000000000000000'0'111111'0000'0 },
+        { 0b0'0000010'000'0000'0,   0b0'000010'0000'0'00000000000000000000'0'100000'0000'0 },
+        { 0b0'0101000'000'0000'0,   0b0'010000'0000'0'00000000000000000000'0'000100'0000'0 },
+
+        { 0b0'0000010'000'0000'0,   0b0'000001'0000'0'00000000000000000000'0'100000'0000'0 },
+        { 0b0'0100010'000'0000'0,   0b0'111001'0000'0'00000000000000000000'0'000000'0000'1 },
+        { 0b0'0001000'000'0000'0,   0b0'101010'0100'1'00000000000000000000'0'100000'0000'0 },
+
+        { 0b0'0001000'000'0000'1,   0b0'111111'0001'0'00000000000000000000'0'111111'0000'0 },
+        { 0b0'1000000'000'0000'0,   0b0'000010'0000'0'00000000000000000000'0'100000'0000'0 },
+        { 0b0'0010000'000'0000'0,   0b0'010000'0000'0'00000000000000000000'0'000100'0000'0 },
+
+        { 0b0'0001000'000'0000'1,   0b0'010000'0000'0'00000000000000000000'0'000100'0000'0 },
+        { 0b0'0001000'000'0000'1,   0b0'010000'0000'0'00000000000000000000'0'000100'0000'0 },
+        { 0b0'0001000'000'0000'1,   0b0'010000'0000'0'00000000000000000000'0'000100'0000'0 },
+
+        { 0b0'0101010'111'0000'0,   0b1'000000'0000'0'00000000000000000000'1'000000'0000'0 },
+        { 0b0'0101010'000'0000'0,   0b1'000000'0000'1'00000000000000000000'1'000000'0000'1 },
+        { 0b0'0101010'100'0000'1,   0b1'111111'1111'1'00000000000000000000'1'111111'1111'1 }
+
+    };
+
+    const std::vector<std::vector<bool>> expected {
+        { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false },
+        { false, false, true,       false, true,  false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false },
+        { false, false, false,      false, false, false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false },
+        { false, false, false,      false, false, false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false },
+        { false, false, false,      false, false, false,    false, false, false,    false, false, false,    false, false, false,    false, false, false },
+        { false, false, false,      false, false, true,     true,  true,  false,    false, false, true,     true,  true,  true,     false, false, false },
+    };
+
+    for (uint8_t i = 0 ; i < size(scrambles); ++i) {
+        ruLutCube cube;
+        cube.scramble(scrambles[i]);
+        for (uint8_t j = 0; j < size(filters); ++j) {
+            ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
+        }
+    }
+}
