@@ -327,16 +327,19 @@ TEST(ruLutCubeTest, predefinedIsSolvedFilterTest) {
         { 0x0,                      ruLutCube::allCornersOrientMask },
         { 0x0,                      ruLutCube::allCornersPermMask },
         { ruLutCube::allEdgesMask,  ruLutCube::allCornersOrientMask },
-        { ruLutCube::allEdgesMask,  ruLutCube::allCornersPermMask }
+        { ruLutCube::allEdgesMask,  ruLutCube::allCornersPermMask },
+        { ruLutCube::noEdgesMask,   ruLutCube::noCornersMask },
+        { ruLutCube::noEdgesMask,   ruLutCube::noCornersOrientMask },
+        { ruLutCube::noEdgesMask,   ruLutCube::noCornersPermMask },
     };
 
     const std::vector<std::vector<bool>> expected {
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, false, false, true,  false, true,  false, false },
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, true,  false, true,  false, false, false, false },
-        { false, true,  false, true,  false, true,  false, true  }
+        { false, false, true,  true,  true,  true,  false, false, false, false, false },
+        { false, false, false, true,  false, true,  false, false, false, false, false },
+        { false, false, true,  true,  true,  true,  false, false, false, false, false },
+        { false, false, true,  true,  true,  true,  false, false, false, false, false },
+        { false, true,  false, true,  false, false, false, false, false, false, false },
+        { false, true,  false, true,  false, true,  false, true , false, false, false },
     };
 
     for (uint8_t i = 0 ; i < size(scrambles); ++i) {
