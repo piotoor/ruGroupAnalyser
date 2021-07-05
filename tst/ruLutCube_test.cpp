@@ -328,18 +328,15 @@ TEST(ruLutCubeTest, predefinedIsSolvedFilterTest) {
         { 0x0,                      ruLutCube::allCornersPermMask },
         { ruLutCube::allEdgesMask,  ruLutCube::allCornersOrientMask },
         { ruLutCube::allEdgesMask,  ruLutCube::allCornersPermMask },
-        { ruLutCube::noEdgesMask,   ruLutCube::noCornersMask },
-        { ruLutCube::noEdgesMask,   ruLutCube::noCornersOrientMask },
-        { ruLutCube::noEdgesMask,   ruLutCube::noCornersPermMask },
     };
 
     const std::vector<std::vector<bool>> expected {
-        { false, false, true,  true,  true,  true,  false, false, false, false, false },
-        { false, false, false, true,  false, true,  false, false, false, false, false },
-        { false, false, true,  true,  true,  true,  false, false, false, false, false },
-        { false, false, true,  true,  true,  true,  false, false, false, false, false },
-        { false, true,  false, true,  false, false, false, false, false, false, false },
-        { false, true,  false, true,  false, true,  false, true , false, false, false },
+        { false, false, true,  true,  true,  true,  false, false },
+        { false, false, false, true,  false, true,  false, false },
+        { false, false, true,  true,  true,  true,  false, false },
+        { false, false, true,  true,  true,  true,  false, false },
+        { false, true,  false, true,  false, false, false, false },
+        { false, true,  false, true,  false, true,  false, true  },
     };
 
     for (uint8_t i = 0 ; i < size(scrambles); ++i) {
@@ -362,45 +359,46 @@ TEST(ruLutCubeTest, customIsSolvedFilterTest) {
     };
 
     const std::vector<std::pair<uint32_t, uint64_t>> filters {
-        { 0b0'0101010'111'0000'0,   0b0'111111'0001'0'00000000000000000000'0'111111'0000'0 },
-        { 0b0'0101010'111'0000'0,   0b0'111111'0001'0'00000000000000000000'0'110111'0000'0 },
-        { 0b0'0100010'010'0000'0,   0b0'000010'0001'0'00000000000000000000'0'111111'0000'0 },
+        { 0b0'0101010'111'0000'0,   0b111111'0001'0'000000000000000000000'111111'0000'0 },
+        { 0b0'0101010'111'0000'0,   0b111111'0001'0'000000000000000000000'110111'0000'0 },
+        { 0b0'0100010'010'0000'0,   0b000010'0001'0'000000000000000000000'111111'0000'0 },
 
-        { 0b0'0101010'111'0000'0,   0b0'111111'0001'0'00000000000000000000'0'111111'0000'0 },
-        { 0b0'0000010'000'0000'0,   0b0'000010'0000'0'00000000000000000000'0'100000'0000'0 },
-        { 0b0'0101000'000'0000'0,   0b0'010000'0000'0'00000000000000000000'0'000100'0000'0 },
+        { 0b0'0101010'111'0000'0,   0b111111'0001'0'000000000000000000000'111111'0000'0 },
+        { 0b0'0000010'000'0000'0,   0b000010'0000'0'000000000000000000000'100000'0000'0 },
+        { 0b0'0101000'000'0000'0,   0b010000'0000'0'000000000000000000000'000100'0000'0 },
 
-        { 0b0'0000010'000'0000'0,   0b0'000001'0000'0'00000000000000000000'0'100000'0000'0 },
-        { 0b0'0100010'000'0000'0,   0b0'111001'0000'0'00000000000000000000'0'000000'0000'1 },
-        { 0b0'0001000'000'0000'0,   0b0'101010'0100'1'00000000000000000000'0'100000'0000'0 },
+        { 0b0'0000010'000'0000'0,   0b000001'0000'0'000000000000000000000'100000'0000'0 },
+        { 0b0'0100010'000'0000'0,   0b111001'0000'0'000000000000000000000'000000'0000'1 },
+        { 0b0'0001000'000'0000'0,   0b101010'0100'1'000000000000000000000'100000'0000'0 },
 
-        { 0b0'0001000'000'0000'1,   0b0'111111'0001'0'00000000000000000000'0'111111'0000'0 },
-        { 0b0'1000000'000'0000'0,   0b0'000010'0000'0'00000000000000000000'0'100000'0000'0 },
-        { 0b0'0010000'000'0000'0,   0b0'010000'0000'0'00000000000000000000'0'000100'0000'0 },
+        { 0b0'0001000'000'0000'1,   0b111111'0001'0'000000000000000000000'111111'0000'0 },
+        { 0b0'1000000'000'0000'0,   0b000010'0000'0'000000000000000000000'100000'0000'0 },
+        { 0b0'0010000'000'0000'0,   0b010000'0000'0'000000000000000000000'000100'0000'0 },
 
-        { 0b0'0001000'000'0000'1,   0b0'010000'0000'0'00000000000000000000'0'000100'0000'0 },
-        { 0b0'0001000'000'0000'1,   0b0'010000'0000'0'00000000000000000000'0'000100'0000'0 },
-        { 0b0'0001000'000'0000'1,   0b0'010000'0000'0'00000000000000000000'0'000100'0000'0 },
+        { 0b0'0001000'000'0000'1,   0b010000'0000'0'000000000000000000000'000100'0000'0 },
+        { 0b0'0001000'000'0000'1,   0b010000'0000'0'000000000000000000000'000100'0000'0 },
+        { 0b0'0001000'000'0000'1,   0b010000'0000'0'000000000000000000000'000100'0000'0 },
 
-        { 0b0'0101010'111'0000'0,   0b1'000000'0000'0'00000000000000000000'1'000000'0000'0 },
-        { 0b0'0101010'000'0000'0,   0b1'000000'0000'1'00000000000000000000'1'000000'0000'1 },
-        { 0b0'0101010'100'0000'1,   0b1'111111'1111'1'00000000000000000000'1'111111'1111'1 }
+        { 0b0'0101010'111'0000'0,   0b000000'0000'0'000000000000000000000'000000'0000'0 },
+        { 0b0'0101010'000'0000'0,   0b000000'0000'1'000000000000000000000'000000'0000'1 },
+        { 0b0'0101010'100'0000'1,   0b111111'1111'1'000000000000000000000'111111'1111'1 }
 
     };
 
     const std::vector<std::vector<bool>> expected {
-        { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false },
+        { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    true , true , false },
         { false, false, true,       false, true,  false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false },
         { false, false, false,      false, false, false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false },
         { false, false, false,      false, false, false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false },
-        { false, false, false,      false, false, false,    false, false, false,    false, false, false,    false, false, false,    false, false, false },
-        { false, false, false,      false, false, true,     true,  true,  false,    false, false, true,     true,  true,  true,     false, false, false },
+        { false, false, false,      false, false, false,    false, false, false,    false, false, false,    false, false, false,    true , false, false },
+        { false, false, false,      false, false, true,     true,  true,  false,    false, false, true,     true,  true,  true,     true , false, false },
     };
 
     for (uint8_t i = 0 ; i < size(scrambles); ++i) {
         ruLutCube cube;
         cube.scramble(scrambles[i]);
         for (uint8_t j = 0; j < size(filters); ++j) {
+            std::cout << "i = " << (int)i << "; j = " << (int) j << std::endl;
             ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
         }
     }

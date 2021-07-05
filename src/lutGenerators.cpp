@@ -90,8 +90,6 @@ namespace lutGenerators {
 
             ans[ep][static_cast<uint8_t>(edgesPermSolvedState::llEdgesInUSolved)] =     ans[ep][static_cast<uint8_t>(edgesPermSolvedState::f2lEdgesInUSolved)] and
                                                                                         ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UR)];
-
-            ans[ep][static_cast<uint8_t>(edgesPermSolvedState::noEdges)] = ans[ep].none();
         }
 
         return ans;
@@ -124,8 +122,6 @@ namespace lutGenerators {
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::llCornersInUSolved)] =     ans[cp][static_cast<uint8_t>(cornersPermSolvedState::f2lCornersInUSolved)]  and
                                                                                             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::URF)]  and
                                                                                             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::UBR)];
-
-            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::noCorners)] = ans[cp].none();
         }
 
         return ans;
@@ -159,8 +155,6 @@ namespace lutGenerators {
             ans[co][static_cast<uint8_t>(cornersOrientSolvedState::llCornersInUOriented)] =     ans[co][static_cast<uint8_t>(cornersOrientSolvedState::f2lCornersInUOriented)]  and
                                                                                                 ans[co][static_cast<uint8_t>(cornersOrientSolvedState::URF)]  and
                                                                                                 ans[co][static_cast<uint8_t>(cornersOrientSolvedState::UBR)];
-
-            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::noCorners)] = ans[co].none();
         }
 
         return ans;

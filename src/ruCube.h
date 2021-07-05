@@ -139,8 +139,8 @@ class ruCube: public ruBaseCube
         static inline const uint64_t solvedCorners = 0101112131415;
         static inline const uint32_t solvedEdges = 00123456;
 
-        static inline const uint64_t allCornersMask = 0777777777777;
-        static inline const uint32_t allEdgesMask = 07777777;
+        static inline const uint64_t allCornersMask = UINT64_MAX;
+        static inline const uint32_t allEdgesMask = UINT32_MAX;
         static inline const uint32_t UFMask = 07000000;
         static inline const uint32_t ULMask = 00700000;
         static inline const uint32_t UBMask = 00070000;
@@ -223,15 +223,10 @@ class ruLutCube: public ruBaseCube {
         static inline const uint16_t solvedLexIndexCornersPerm = 0;
         static inline const uint16_t solvedLexIndexCornersOrient = 0;
 
-        static inline const uint32_t allEdgesMask = 0x1;
+        static inline const uint32_t allEdgesMask = UINT32_MAX;
         static inline const uint64_t allCornersOrientMask = 0x0000000100000000;
         static inline const uint64_t allCornersPermMask = 0x0000000000000001;
-        static inline const uint64_t allCornersMask = 0x0000000100000001;
-
-        static inline const uint32_t noEdgesMask = 0x8000;
-        static inline const uint64_t noCornersOrientMask = 0x0000080000000000;
-        static inline const uint64_t noCornersPermMask = 0x0000000000000800;
-        static inline const uint64_t noCornersMask = 0x0000080000000800;
+        static inline const uint64_t allCornersMask = UINT64_MAX;
 
         static inline const uint64_t setCornersPermMask     = 0x0000FFFF;
         static inline const uint64_t setCornersOrientMask   = 0xFFFF0000;
