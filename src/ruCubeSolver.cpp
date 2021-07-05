@@ -31,11 +31,6 @@ void ruCubeSolver::solve(ruBaseCube *cube, bool multiThreading, uint8_t multiThr
             cubes.clear();
             threads.clear();
 
-//            for (int i = 0; i < numOfThreads; ++i) {
-//                currSolutions[i].push_back(i);
-//                cubes.push_back(cube->clone());
-//                cubes[i]->turn(i);
-//            }
             for (uint8_t length = minLength; length <= maxLength and solutions.size() < maxNumOfSolutions; ++length) {
                 if (length >= multiThreadingThreshold) {
                     for (uint8_t t = 0; t < numOfThreads; ++t) {
