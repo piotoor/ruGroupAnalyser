@@ -398,7 +398,6 @@ TEST(ruLutCubeTest, customIsSolvedFilterTest) {
         ruLutCube cube;
         cube.scramble(scrambles[i]);
         for (uint8_t j = 0; j < size(filters); ++j) {
-            std::cout << "i = " << (int)i << "; j = " << (int) j << std::endl;
             ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
         }
     }
