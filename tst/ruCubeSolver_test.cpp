@@ -222,7 +222,7 @@ TEST(ruCubeSolverTest, DISABLED_multipleScramblesTest) {
         cube->reset();
         cube->scramble(scr);
         cube->scramble(solution);
-        ASSERT_TRUE(cube->isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+        ASSERT_TRUE(cube->isSolved(ruBaseCube::allEdgesMask, ruBaseCube::allCornersMask));
         std::cout << "(sol: " << std::setw(2) << size(solution) << " moves) ";
         std::cout << "DONE" << std::endl;
     }
@@ -289,7 +289,7 @@ class ruCubeSolverPerformanceTests : public ::testing::Test
                 cube->reset();
                 cube->scramble(scramble);
                 cube->scramble(sol);
-                ASSERT_TRUE(cube->isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+                ASSERT_TRUE(cube->isSolved(ruBaseCube::allEdgesMask, ruBaseCube::allCornersMask));
             }
         }
 
