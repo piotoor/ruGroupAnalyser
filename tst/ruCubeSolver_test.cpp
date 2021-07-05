@@ -2,152 +2,163 @@
 #include "ruCubeSolver.h"
 #include "ruCubeFactory.h"
 #include <chrono>
+#include <vector>
 
 TEST(ruCubeSolverTest, simpleDefaultConfigurationSolveTest) {
+    std::vector<std::unique_ptr<ruBaseCube>> cubes;
+    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube));
+    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruLutCube));
 
-    auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
-    cube->turn(R);
-    cube->turn(U);
-    cube->turn(R2);
-    cube->turn(Ui);
+    ASSERT_EQ(2, size(cubes));
 
-    ruCubeSolver solver;
-    solver.solve(cube.get());
-    auto solutions = solver.getSolutionsAsVectors();
-    std::vector<std::vector<uint8_t>> expectedSolutions = {
-        { U, R2, Ui, Ri }
-    };
+    for (auto &cube: cubes) {
+        cube->turn(R);
+        cube->turn(U);
+        cube->turn(R2);
+        cube->turn(Ui);
 
-    ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-        ASSERT_EQ(expectedSolutions[i], solutions[i]);
-    }
+        ruCubeSolver solver;
+        solver.solve(cube.get());
+        auto solutions = solver.getSolutionsAsVectors();
+        std::vector<std::vector<uint8_t>> expectedSolutions = {
+            { U, R2, Ui, Ri }
+        };
+
+        ASSERT_EQ(expectedSolutions.size(), solutions.size());
+        for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
+            ASSERT_EQ(expectedSolutions[i], solutions[i]);
+        }
 
 
 
-    cube->reset();
-    cube->turn(Ri);
-    cube->turn(U);
-    cube->turn(Ri);
-    cube->turn(Ui);
+        cube->reset();
+        cube->turn(Ri);
+        cube->turn(U);
+        cube->turn(Ri);
+        cube->turn(Ui);
 
-    solver.solve(cube.get());
-    solutions = solver.getSolutionsAsVectors();
-    expectedSolutions = {
-        { U, R, Ui, R }
-    };
+        solver.solve(cube.get());
+        solutions = solver.getSolutionsAsVectors();
+        expectedSolutions = {
+            { U, R, Ui, R }
+        };
 
-    ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-        ASSERT_EQ(expectedSolutions[i], solutions[i]);
+        ASSERT_EQ(expectedSolutions.size(), solutions.size());
+        for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
+            ASSERT_EQ(expectedSolutions[i], solutions[i]);
+        }
     }
 }
 
 TEST(ruCubeSolverTest, customConfigurationSolveTest) {
+    std::vector<std::unique_ptr<ruBaseCube>> cubes;
+    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube));
+    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruLutCube));
 
-    auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
-    cube->scramble({ R2, U2, R2, U2, R2, U2 });
+    for (auto &cube: cubes) {
+        cube->scramble({ R2, U2, R2, U2, R2, U2 });
 
-    ruCubeSolver solver (6, 6, 2);
-    solver.solve(cube.get());
-    auto solutions = solver.getSolutionsAsVectors();
-    std::vector<std::vector<uint8_t>> expectedSolutions = {
-        { R2, U2, R2, U2, R2, U2 },
-        { U2, R2, U2, R2, U2, R2 },
-    };
+        ruCubeSolver solver (6, 6, 2);
+        solver.solve(cube.get());
+        auto solutions = solver.getSolutionsAsVectors();
+        std::vector<std::vector<uint8_t>> expectedSolutions = {
+            { R2, U2, R2, U2, R2, U2 },
+            { U2, R2, U2, R2, U2, R2 },
+        };
 
-    ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-        ASSERT_EQ(expectedSolutions[i], solutions[i]);
-    }
-
-
-
-    cube->reset();
-    cube->scramble({ R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U });
-
-    solver.configure(12, 14, 4);
-    solver.solve(cube.get());
-    solutions = solver.getSolutionsAsVectors();
-    expectedSolutions = {
-        { R2, U2, R2, U2, R2, U, R2, U2, R2, U2, R2, Ui },
-        { R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U },
-        { U, R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2 },
-        { Ui, R2, U2, R2, U2, R2, U, R2, U2, R2, U2, R2 }
-    };
-
-    ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-        ASSERT_EQ(expectedSolutions[i], solutions[i]);
-    }
+        ASSERT_EQ(expectedSolutions.size(), solutions.size());
+        for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
+            ASSERT_EQ(expectedSolutions[i], solutions[i]);
+        }
 
 
 
-    cube->reset();
-    cube->scramble({ R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U });
+        cube->reset();
+        cube->scramble({ R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U });
 
-    solver.configure(6, 10, 4);
-    solver.solve(cube.get());
-    solutions = solver.getSolutionsAsVectors();
-    expectedSolutions = {
-    };
+        solver.configure(12, 14, 4);
+        solver.solve(cube.get());
+        solutions = solver.getSolutionsAsVectors();
+        expectedSolutions = {
+            { R2, U2, R2, U2, R2, U, R2, U2, R2, U2, R2, Ui },
+            { R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U },
+            { U, R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2 },
+            { Ui, R2, U2, R2, U2, R2, U, R2, U2, R2, U2, R2 }
+        };
 
-    ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-        ASSERT_EQ(expectedSolutions[i], solutions[i]);
-    }
-
-
-
-    cube->reset();
-    cube->scramble({ R, U, Ri, U, R, U2, Ri });
-
-    solver.configure(6, 8, 1);
-    solver.solve(cube.get());
-    solutions = solver.getSolutionsAsVectors();
-    expectedSolutions = {
-        { R, U2, Ri, Ui, R, Ui, Ri }
-    };
-
-    ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-        ASSERT_EQ(expectedSolutions[i], solutions[i]);
-    }
+        ASSERT_EQ(expectedSolutions.size(), solutions.size());
+        for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
+            ASSERT_EQ(expectedSolutions[i], solutions[i]);
+        }
 
 
 
-    cube->reset();
-    cube->scramble({ R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui });
+        cube->reset();
+        cube->scramble({ R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U });
 
-    solver.configure(12, 12, 2);
-    solver.solve(cube.get());
-    solutions = solver.getSolutionsAsVectors();
-    expectedSolutions = {
-        { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
-        { U, R, Ui, Ri, U, R, Ui, Ri, U, R, Ui, Ri }
-    };
+        solver.configure(6, 10, 4);
+        solver.solve(cube.get());
+        solutions = solver.getSolutionsAsVectors();
+        expectedSolutions = {
+        };
 
-    ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-        ASSERT_EQ(expectedSolutions[i], solutions[i]);
-    }
+        ASSERT_EQ(expectedSolutions.size(), solutions.size());
+        for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
+            ASSERT_EQ(expectedSolutions[i], solutions[i]);
+        }
 
 
 
-    cube->reset();
-    cube->scramble({ R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui });
+        cube->reset();
+        cube->scramble({ R, U, Ri, U, R, U2, Ri });
 
-    solver.configure(12, 12, 200);
-    solver.solve(cube.get());
-    solutions = solver.getSolutionsAsVectors();
-    expectedSolutions = {
-        { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
-        { U, R, Ui, Ri, U, R, Ui, Ri, U, R, Ui, Ri }
-    };
+        solver.configure(6, 8, 1);
+        solver.solve(cube.get());
+        solutions = solver.getSolutionsAsVectors();
+        expectedSolutions = {
+            { R, U2, Ri, Ui, R, Ui, Ri }
+        };
 
-    ASSERT_EQ(expectedSolutions.size(), solutions.size());
-    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-        ASSERT_EQ(expectedSolutions[i], solutions[i]);
+        ASSERT_EQ(expectedSolutions.size(), solutions.size());
+        for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
+            ASSERT_EQ(expectedSolutions[i], solutions[i]);
+        }
+
+
+
+        cube->reset();
+        cube->scramble({ R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui });
+
+        solver.configure(12, 12, 2);
+        solver.solve(cube.get());
+        solutions = solver.getSolutionsAsVectors();
+        expectedSolutions = {
+            { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
+            { U, R, Ui, Ri, U, R, Ui, Ri, U, R, Ui, Ri }
+        };
+
+        ASSERT_EQ(expectedSolutions.size(), solutions.size());
+        for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
+            ASSERT_EQ(expectedSolutions[i], solutions[i]);
+        }
+
+
+
+        cube->reset();
+        cube->scramble({ R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui });
+
+        solver.configure(12, 12, 200);
+        solver.solve(cube.get());
+        solutions = solver.getSolutionsAsVectors();
+        expectedSolutions = {
+            { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
+            { U, R, Ui, Ri, U, R, Ui, Ri, U, R, Ui, Ri }
+        };
+
+        ASSERT_EQ(expectedSolutions.size(), solutions.size());
+        for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
+            ASSERT_EQ(expectedSolutions[i], solutions[i]);
+        }
     }
 }
 
@@ -174,12 +185,17 @@ TEST(ruCubeSolverTest, singleMoveSolutionsTest) {
     for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
         ruCubeSolver solver;
 
-        auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
-        cube->scramble(scrambles[i]);
-        solver.solve(cube.get());
-        auto solutions = solver.getSolutionsAsVectors();
+        std::vector<std::unique_ptr<ruBaseCube>> cubes;
+        cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube));
+        cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruLutCube));
 
-        ASSERT_EQ(expectedSolutions[i], solutions[0]);
+        for (auto &cube: cubes) {
+            cube->scramble(scrambles[i]);
+            solver.solve(cube.get());
+            auto solutions = solver.getSolutionsAsVectors();
+
+            ASSERT_EQ(expectedSolutions[i], solutions[0]);
+        }
     }
 }
 
@@ -209,24 +225,28 @@ TEST(ruCubeSolverTest, DISABLED_multipleScramblesTest) {
     };
 
 
-    auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
-    ruCubeSolver solver;
+    std::vector<std::unique_ptr<ruBaseCube>> cubes;
+    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube));
+    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruLutCube));
 
-    for (const auto &scr: scrambles) {
-        std::cout << "Solving scramble of length " << std::setw(2) << size(scr) << "... ";
-        std::cout.flush();
-        cube->reset();
-        cube->scramble(scr);
-        solver.solve(cube.get());
-        auto solution = solver.getSolutionsAsVectors()[0];
-        cube->reset();
-        cube->scramble(scr);
-        cube->scramble(solution);
-        ASSERT_TRUE(cube->isSolved(ruBaseCube::allEdgesMask, ruBaseCube::allCornersMask));
-        std::cout << "(sol: " << std::setw(2) << size(solution) << " moves) ";
-        std::cout << "DONE" << std::endl;
+    for (auto &cube: cubes) {
+        ruCubeSolver solver;
+
+        for (const auto &scr: scrambles) {
+            std::cout << "Solving scramble of length " << std::setw(2) << size(scr) << "... ";
+            std::cout.flush();
+            cube->reset();
+            cube->scramble(scr);
+            solver.solve(cube.get());
+            auto solution = solver.getSolutionsAsVectors()[0];
+            cube->reset();
+            cube->scramble(scr);
+            cube->scramble(solution);
+            ASSERT_TRUE(cube->isSolved(ruBaseCube::allEdgesMask, ruBaseCube::allCornersMask));
+            std::cout << "(sol: " << std::setw(2) << size(solution) << " moves) ";
+            std::cout << "DONE" << std::endl;
+        }
     }
-
 }
 
 class ruCubeSolverPerformanceTests : public ::testing::Test
