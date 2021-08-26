@@ -50,7 +50,7 @@ void ruCubeSolver::dfs(uint8_t depth, uint8_t maxDepth, int8_t prevMove) {
             }
         } else {
             for (int8_t i = 0; i < 6; ++i) {
-                if (i / 3 == prevMove / 3) {
+                if (i / 3 == prevMove / 3 or cube->isPruningPossible(maxDepth - depth)) {
                     continue;
                 }
 
