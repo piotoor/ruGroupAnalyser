@@ -19,44 +19,15 @@ void ruCubeSolver::configure(uint8_t minLength, uint8_t maxLength, uint8_t maxNu
 }
 #include <iostream>
 
-void ruCubeSolver::solve(ruBaseCube *cube, bool multiThreading, uint8_t multiThreadingThreshold) {
+void ruCubeSolver::solve(ruBaseCube *cube) {
     solutions.clear();
     currSolution.clear();
     this->cube = cube;
 
     if (maxNumOfSolutions > 0) {
-        if (multiThreading) {
-            currSolutions.clear();
-            currSolutions.resize(numOfThreads);
-            cubes.clear();
-            threads.clear();
-
-            for (uint8_t length = minLength; length <= maxLength and solutions.size() < maxNumOfSolutions; ++length) {
-                if (length >= multiThreadingThreshold) {
-                    for (uint8_t t = 0; t < numOfThreads; ++t) {
-                        cubes.push_back(cube->clone());
-                        cubes[t]->turn(t);
-                        currSolutions[t].resize(length);
-                        currSolutions[t][0] = t;
-                        threads.emplace_back(&ruCubeSolver::multiThreadingDfs, this, 1, length, t, t);
-                    }
-
-                    for (auto &thread: threads) {
-                        if (thread.joinable()) {
-                            thread.join();
-                        }
-                    }
-                } else {
-                    currSolution.resize(length);
-                    dfs(0, length, -6);
-                }
-            }
-
-        } else {
-            for (uint8_t length = minLength; length <= maxLength and solutions.size() < maxNumOfSolutions; ++length) {
-                currSolution.resize(length);
-                dfs(0, length, -6);
-            }
+        for (uint8_t length = minLength; length <= maxLength and solutions.size() < maxNumOfSolutions; ++length) {
+            currSolution.resize(length);
+            dfs(0, length, -6);
         }
     }
 }
@@ -92,28 +63,3 @@ void ruCubeSolver::dfs(uint8_t depth, uint8_t maxDepth, int8_t prevMove) {
     }
 }
 
-
-void ruCubeSolver::multiThreadingDfs(uint8_t depth, uint8_t maxDepth, int8_t prevMove, uint8_t id) {
-    if (solutions.size() < maxNumOfSolutions) {
-        if (depth == maxDepth) {
-
-            if (cubes[id]->isSolved(edgesMask, cornersMask)) {
-                std::lock_guard<std::mutex> guard(solutionsMutex);
-                if (solutions.size() < maxNumOfSolutions) {
-                    solutions.push_back(currSolutions[id]);
-                }
-            }
-        } else {
-            for (int8_t i = 0; i < 6; ++i) {
-                if (i / 3 == prevMove / 3) {
-                    continue;
-                }
-
-                cubes[id]->turn(i);
-                currSolutions[id][depth] = i;
-                multiThreadingDfs(depth + 1, maxDepth, i, id);
-                cubes[id]->inverseTurn(i);
-            }
-        }
-    }
-}
