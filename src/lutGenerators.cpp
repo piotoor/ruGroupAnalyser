@@ -159,5 +159,41 @@ namespace lutGenerators {
 
         return ans;
     }
+
+
+    void edgesPermPruningDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<uint8_t, noOfEdgesPermutations> &pruningTable) {
+        if (depth <= maxDepth) {
+            for (int8_t i = 0; i < 6; ++i) {
+                if (i / 3 == prevMove / 3) {
+                    continue;
+                }
+
+                auto lexIndexEdges = conv.intEdgesToLexIndexEdges(cube.getEdges());
+                if (depth < pruningTable[lexIndexEdges]) {
+                    pruningTable[lexIndexEdges] = depth;
+                }
+
+                cube.turn(i);
+                edgesPermPruningDfs(cube, conv, depth + 1, maxDepth, i, pruningTable);
+                cube.inverseTurn(i);
+            }
+        }
+    }
+    std::array<uint8_t, noOfEdgesPermutations> generateEdgesPermPruningTable() {
+        std::array<uint8_t, noOfEdgesPermutations> ans {};
+        ans.fill(maxEdgesPermPruningDepth);
+        ruCube cube;
+        ruCubeStateConverter converter;
+
+        edgesPermPruningDfs(cube, converter, 0, maxEdgesPermPruningDepth, -6, ans);
+
+        return ans;
+    }
+
+    std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> generateCornersPruningTable() {
+        std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> ans {};
+
+        return ans;
+    }
 }
 

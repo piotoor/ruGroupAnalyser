@@ -1,7 +1,8 @@
 #ifndef LUTGENERATORS_H
 #define LUTGENERATORS_H
 #include <bitset>
-
+#include <iostream>
+#include <iterator>
 namespace lutGenerators {
     inline static const uint8_t noOfTurns = 6;
     inline static const uint16_t noOfEdgesPermutations = 5040;
@@ -69,6 +70,11 @@ namespace lutGenerators {
         DFR,
     };
     std::array<std::bitset<noOfCornersOrientSolvedStates>, noOfCornersOrientations> generateCornersOrientSolvedTable ();
+
+
+    inline static const uint8_t maxEdgesPermPruningDepth = 11;
+    std::array<uint8_t, noOfEdgesPermutations> generateEdgesPermPruningTable();
+    std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> generateCornersPruningTable();
 }
 
 

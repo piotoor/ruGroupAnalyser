@@ -215,6 +215,9 @@ std::array<std::bitset<lutGenerators::noOfEdgesPermSolvedStates>, lutGenerators:
 std::array<std::bitset<lutGenerators::noOfCornersPermSolvedStates>, lutGenerators::noOfCornersPermutations>      ruLutCube::cornersPermSolvedTable  = lutGenerators::generateCornersPermSolvedTable();
 std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerators::noOfCornersOrientations>    ruLutCube::cornersOrientSolvedTable = lutGenerators::generateCornersOrientSolvedTable();
 
+std::array<uint8_t, lutGenerators::noOfEdgesPermutations>                                                        ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
+std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>  ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
+
 ruLutCube::ruLutCube() {
     reset();
 }
@@ -297,7 +300,7 @@ std::unique_ptr<ruBaseCube> ruLutCube::clone() const {
 }
 
 bool ruLutCube::isPruningPossible(uint8_t remainingMoves) const {
-    return false; //todo
+    return this->edgesPermPruningTable[this->edgesPerm] > remainingMoves;
 }
 
 void ruLutCube::R() {
