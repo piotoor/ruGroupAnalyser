@@ -300,7 +300,7 @@ std::unique_ptr<ruBaseCube> ruLutCube::clone() const {
 }
 
 bool ruLutCube::isPruningPossible(uint8_t remainingMoves) const {
-    return this->edgesPermPruningTable[this->edgesPerm] > remainingMoves;
+    return this->edgesPermPruningTable[this->edgesPerm] > remainingMoves or this->cornersPruningTable[this->cornersPerm][this->cornersOrient] > remainingMoves;
 }
 
 void ruLutCube::R() {

@@ -1,8 +1,5 @@
-#include "ruCube.h"
-#include "ruCubeStateConverter.h"
 #include "ruCubeFactory.h"
 #include "lutGenerators.h"
-#include <array>
 
 namespace lutGenerators {
     std::array<std::array<uint16_t, noOfTurns>, noOfEdgesPermutations> generateEdgesPermMoveMap () {
@@ -179,6 +176,7 @@ namespace lutGenerators {
             }
         }
     }
+
     std::array<uint8_t, noOfEdgesPermutations> generateEdgesPermPruningTable() {
         std::array<uint8_t, noOfEdgesPermutations> ans {};
         ans.fill(maxEdgesPermPruningDepth);
@@ -190,8 +188,36 @@ namespace lutGenerators {
         return ans;
     }
 
+
+    void cornersPruningDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> &pruningTable) {
+        if (depth <= maxDepth) {
+            for (int8_t i = 0; i < 6; ++i) {
+                if (i / 3 == prevMove / 3) {
+                    continue;
+                }
+
+                auto lexIndexCornersPerm = conv.intCornersToLexIndexCornersPerm(cube.getCorners());
+                auto lexIndexCornersOrient = conv.intCornersToLexIndexCornersOrient(cube.getCorners());
+                if (depth < pruningTable[lexIndexCornersPerm][lexIndexCornersOrient]) {
+                    pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] = depth;
+                }
+
+                cube.turn(i);
+                cornersPruningDfs(cube, conv, depth + 1, maxDepth, i, pruningTable);
+                cube.inverseTurn(i);
+            }
+        }
+    }
+
     std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> generateCornersPruningTable() {
         std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> ans {};
+        for (auto &row: ans) {
+            row.fill(maxCornersPruningDepth);
+        }
+        ruCube cube;
+        ruCubeStateConverter converter;
+
+        cornersPruningDfs(cube, converter, 0, maxCornersPruningDepth, -6, ans);
 
         return ans;
     }
