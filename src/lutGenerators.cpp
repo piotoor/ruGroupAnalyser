@@ -1,8 +1,11 @@
 #include "ruCubeFactory.h"
 #include "lutGenerators.h"
 
+
 namespace lutGenerators {
     std::array<std::array<uint16_t, noOfTurns>, noOfEdgesPermutations> generateEdgesPermMoveMap () {
+        std::cout << std::setw(48) << std::left << "Generating edges permutation move map..." << std::flush;
+
         std::array<std::array<uint16_t, noOfTurns>, noOfEdgesPermutations> ans {};
         auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
         ruCubeStateConverter converter;
@@ -17,9 +20,12 @@ namespace lutGenerators {
             }
         }
 
+        std::cout << "DONE" << std::endl;
         return ans;
     }
     std::array<std::array<uint16_t, noOfTurns>, noOfCornersPermutations> generateCornersPermMoveMap () {
+        std::cout << std::setw(48) << std::left << "Generating corners permutation move map..." << std::flush;
+
         std::array<std::array<uint16_t, noOfTurns>, noOfCornersPermutations> ans {};
         auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
         ruCubeStateConverter converter;
@@ -33,10 +39,13 @@ namespace lutGenerators {
             }
         }
 
+        std::cout << "DONE" << std::endl;
         return ans;
     }
 
     std::array<std::array<uint16_t, noOfTurns>, noOfCornersOrientations> generateCornersOrientMoveMap () {
+        std::cout << std::setw(48) << std::left << "Generating corners orientation move map..." << std::flush;
+
         std::array<std::array<uint16_t, noOfTurns>, noOfCornersOrientations> ans {};
         auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
         ruCubeStateConverter converter;
@@ -51,10 +60,13 @@ namespace lutGenerators {
             }
         }
 
+        std::cout << "DONE" << std::endl;
         return ans;
     }
 
     std::array<std::bitset<noOfEdgesPermSolvedStates>, noOfEdgesPermutations> generateEdgesPermSolvedTable () {
+        std::cout << std::setw(48) << std::left << "Generating edges permutation solved table..." << std::flush;
+
         std::array<std::bitset<noOfEdgesPermSolvedStates>, noOfEdgesPermutations> ans {};
         auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
         ruCubeStateConverter converter;
@@ -89,10 +101,13 @@ namespace lutGenerators {
                                                                                         ans[ep][static_cast<uint8_t>(edgesPermSolvedState::UR)];
         }
 
+        std::cout << "DONE" << std::endl;
         return ans;
     }
 
     std::array<std::bitset<noOfCornersPermSolvedStates>, noOfCornersPermutations> generateCornersPermSolvedTable () {
+        std::cout << std::setw(48) << std::left << "Generating corners permutation solved table..." << std::flush;
+
         std::array<std::bitset<noOfCornersPermSolvedStates>, noOfCornersPermutations> ans {};
         auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
         ruCubeStateConverter converter;
@@ -121,10 +136,13 @@ namespace lutGenerators {
                                                                                             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::UBR)];
         }
 
+        std::cout << "DONE" << std::endl;
         return ans;
     }
 
     std::array<std::bitset<noOfCornersOrientSolvedStates>, noOfCornersOrientations> generateCornersOrientSolvedTable () {
+        std::cout << std::setw(48) << std::left << "Generating corners orientation solved table..." << std::flush;
+
         std::array<std::bitset<noOfCornersOrientSolvedStates>, noOfCornersOrientations> ans {};
         auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
         ruCubeStateConverter converter;
@@ -154,6 +172,7 @@ namespace lutGenerators {
                                                                                                 ans[co][static_cast<uint8_t>(cornersOrientSolvedState::UBR)];
         }
 
+        std::cout << "DONE" << std::endl;
         return ans;
     }
 
@@ -178,6 +197,8 @@ namespace lutGenerators {
     }
 
     std::array<uint8_t, noOfEdgesPermutations> generateEdgesPermPruningTable() {
+        std::cout << std::setw(48) << std::left << "Generating edges permutation pruning table..." << std::flush;
+
         std::array<uint8_t, noOfEdgesPermutations> ans {};
         ans.fill(maxEdgesPermPruningDepth);
         ruCube cube;
@@ -185,6 +206,7 @@ namespace lutGenerators {
 
         edgesPermPruningDfs(cube, converter, 0, maxEdgesPermPruningDepth, -6, ans);
 
+        std::cout << "DONE" << std::endl;
         return ans;
     }
 
@@ -210,6 +232,8 @@ namespace lutGenerators {
     }
 
     std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> generateCornersPruningTable() {
+        std::cout << std::setw(48) << std::left << "Generating corners pruning table..." << std::flush;
+
         std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> ans {};
         for (auto &row: ans) {
             row.fill(maxCornersPruningDepth);
@@ -219,6 +243,7 @@ namespace lutGenerators {
 
         cornersPruningDfs(cube, converter, 0, maxCornersPruningDepth, -6, ans);
 
+        std::cout << "DONE" << std::endl;
         return ans;
     }
 }

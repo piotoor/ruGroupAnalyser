@@ -7,6 +7,7 @@
 #include <iostream>
 #include <iterator>
 #include <array>
+#include <iomanip>
 
 namespace lutGenerators {
     inline static const uint8_t noOfTurns = 6;
