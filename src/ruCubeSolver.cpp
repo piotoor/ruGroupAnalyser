@@ -1,5 +1,6 @@
 #include "ruCubeSolver.h"
 #include <iterator>
+#include <algorithm>
 #include "ruCubeScrambleParser.h"
 
 ruCubeSolver::ruCubeSolver(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask, uint64_t cornersMask) {
@@ -35,9 +36,12 @@ void ruCubeSolver::solve(ruBaseCube *cube) {
 std::vector<std::string> ruCubeSolver::getSolutionsAsStrings() const {
     std::vector<std::string> solutionsStr;
 
-    for (const auto &sol: solutions) {
-        solutionsStr.push_back(ruCubeScrambleParser::vectorScrambleToStringScramble(sol));
-    }
+    std::transform(begin(solutions),
+                   end(solutions),
+                   std::back_inserter(solutionsStr),
+                   [] (const auto &x) {
+                        return ruCubeScrambleParser::vectorScrambleToStringScramble(x);
+                   });
 
     return solutionsStr;
 }
