@@ -215,8 +215,9 @@ std::array<std::bitset<lutGenerators::noOfEdgesPermSolvedStates>, lutGenerators:
 std::array<std::bitset<lutGenerators::noOfCornersPermSolvedStates>, lutGenerators::noOfCornersPermutations>      ruLutCube::cornersPermSolvedTable  = lutGenerators::generateCornersPermSolvedTable();
 std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerators::noOfCornersOrientations>    ruLutCube::cornersOrientSolvedTable = lutGenerators::generateCornersOrientSolvedTable();
 
-std::array<uint8_t, lutGenerators::noOfEdgesPermutations>                                                        ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
-std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>  ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
+std::array<int8_t, lutGenerators::noOfEdgesPermutations>                                                        ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
+std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>  ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
+std::vector<std::vector<std::vector<int8_t>>>  ruLutCube::fullCubePruningTable = lutGenerators::generateFullCubePruningTable();
 
 ruLutCube::ruLutCube() {
     reset();
@@ -300,7 +301,9 @@ std::unique_ptr<ruBaseCube> ruLutCube::clone() const {
 }
 
 bool ruLutCube::isPruningPossible(uint8_t remainingMoves) const {
-    return this->edgesPermPruningTable[this->edgesPerm] > remainingMoves or this->cornersPruningTable[this->cornersPerm][this->cornersOrient] > remainingMoves;
+    return  this->edgesPermPruningTable[this->edgesPerm] > remainingMoves or
+            this->cornersPruningTable[this->cornersPerm][this->cornersOrient] > remainingMoves or
+            this->fullCubePruningTable[this->cornersPerm][this->cornersOrient][this->edgesPerm] > remainingMoves;
 }
 
 void ruLutCube::R() {

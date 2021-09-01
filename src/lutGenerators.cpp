@@ -177,7 +177,7 @@ namespace lutGenerators {
     }
 
 
-    void edgesPermPruningDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<uint8_t, noOfEdgesPermutations> &pruningTable) {
+    void edgesPermPruningDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<int8_t, noOfEdgesPermutations> &pruningTable) {
         if (depth <= maxDepth) {
             for (int8_t i = 0; i < 6; ++i) {
                 if (i / 3 == prevMove / 3) {
@@ -185,7 +185,7 @@ namespace lutGenerators {
                 }
 
                 auto lexIndexEdges = conv.intEdgesToLexIndexEdges(cube.getEdges());
-                if (depth < pruningTable[lexIndexEdges]) {
+                if (depth < pruningTable[lexIndexEdges] or pruningTable[lexIndexEdges] == -1) {
                     pruningTable[lexIndexEdges] = depth;
                 }
 
@@ -196,11 +196,11 @@ namespace lutGenerators {
         }
     }
 
-    std::array<uint8_t, noOfEdgesPermutations> generateEdgesPermPruningTable() {
+    std::array<int8_t, noOfEdgesPermutations> generateEdgesPermPruningTable() {
         std::cout << std::setw(48) << std::left << "Generating edges permutation pruning table..." << std::flush;
 
-        std::array<uint8_t, noOfEdgesPermutations> ans {};
-        ans.fill(maxEdgesPermPruningDepth);
+        std::array<int8_t, noOfEdgesPermutations> ans {};
+        ans.fill(-1);
         ruCube cube;
         ruCubeStateConverter converter;
 
@@ -211,7 +211,7 @@ namespace lutGenerators {
     }
 
 
-    void cornersPruningDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> &pruningTable) {
+    void cornersPruningDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> &pruningTable) {
         if (depth <= maxDepth) {
             for (int8_t i = 0; i < 6; ++i) {
                 if (i / 3 == prevMove / 3) {
@@ -220,7 +220,7 @@ namespace lutGenerators {
 
                 auto lexIndexCornersPerm = conv.intCornersToLexIndexCornersPerm(cube.getCorners());
                 auto lexIndexCornersOrient = conv.intCornersToLexIndexCornersOrient(cube.getCorners());
-                if (depth < pruningTable[lexIndexCornersPerm][lexIndexCornersOrient]) {
+                if (depth < pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] or pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] == -1) {
                     pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] = depth;
                 }
 
@@ -231,17 +231,53 @@ namespace lutGenerators {
         }
     }
 
-    std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> generateCornersPruningTable() {
+    std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> generateCornersPruningTable() {
         std::cout << std::setw(48) << std::left << "Generating corners pruning table..." << std::flush;
 
-        std::array<std::array<uint8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> ans {};
+        std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> ans {};
         for (auto &row: ans) {
-            row.fill(maxCornersPruningDepth);
+            row.fill(-1);
         }
         ruCube cube;
         ruCubeStateConverter converter;
 
         cornersPruningDfs(cube, converter, 0, maxCornersPruningDepth, -6, ans);
+
+        std::cout << "DONE" << std::endl;
+        return ans;
+    }
+
+
+    void fullCubePruningDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::vector<std::vector<std::vector<int8_t>>> &pruningTable) {
+        if (depth <= maxDepth) {
+            for (int8_t i = 0; i < 6; ++i) {
+                if (i / 3 == prevMove / 3) {
+                    continue;
+                }
+
+                auto lexIndexCornersPerm = conv.intCornersToLexIndexCornersPerm(cube.getCorners());
+                auto lexIndexCornersOrient = conv.intCornersToLexIndexCornersOrient(cube.getCorners());
+                auto lexIndexEdgesPerm = conv.intEdgesToLexIndexEdges(cube.getEdges());
+                if (depth < pruningTable[lexIndexCornersPerm][lexIndexCornersOrient][lexIndexEdgesPerm] or pruningTable[lexIndexCornersPerm][lexIndexCornersOrient][lexIndexEdgesPerm] == -1) {
+                    pruningTable[lexIndexCornersPerm][lexIndexCornersOrient][lexIndexEdgesPerm] = depth;
+                }
+
+                cube.turn(i);
+                fullCubePruningDfs(cube, conv, depth + 1, maxDepth, i, pruningTable);
+                cube.inverseTurn(i);
+            }
+        }
+    }
+
+    std::vector<std::vector<std::vector<int8_t>>> generateFullCubePruningTable() {
+        std::cout << std::setw(48) << std::left << "Generating full cube pruning table..." << std::flush;
+
+        std::vector<std::vector<std::vector<int8_t>>> ans (noOfCornersPermutations, std::vector(noOfCornersOrientations, std::vector<int8_t>(noOfEdgesPermutations, -1)));
+
+        ruCube cube;
+        ruCubeStateConverter converter;
+
+        fullCubePruningDfs(cube, converter, 0, maxFullCubePruningDepth, -6, ans);
 
         std::cout << "DONE" << std::endl;
         return ans;
