@@ -213,6 +213,18 @@ TEST(ruCubeSolverTest, ruCubeSolverVsRuLutCubeSolver) {
         { R2, U2, R, U2, R2, Ui, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, R2, U2 },
         { R2, U2, R2, U2, Ri, Ui, R, Ui, Ri, U, R2, U2, Ri, Ui, Ri, U2, R, U, Ri, U2 },
         { R2, U2, R2, Ui, R2, U2, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, Ri, U2 },
+
+        { U2, R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R, U, Ri, U },
+        { Ui, R, U, R, U, R2, U, R, U, R, Ui, R, U2, R2, U2, Ri, U2, R, U, Ri, U },
+        { R, Ui, R, U, R2, U, R, Ui, Ri, U, Ri, Ui, Ri, Ui, Ri, U2, R, U, Ri, Ui },
+        { Ri, Ui, Ri, Ui, R2, U, R, Ui, Ri, Ui, Ri, Ui, Ri, Ui, Ri, U2, R, U, Ri, U2 },
+        { U, R2, U2, R, U2, R2, Ui, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, Ri, U2 },
+
+        { R2, U2, R2, U2, R, U, R2, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, Ri, U2, R },
+        { R2, U2, R2, U, R2, Ui, R, U, Ri, U, Ri, U, Ri, Ui, Ri, U, R, U, Ri, U, Ri },
+        { R2, U2, R, U2, R2, Ui, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, R2, U2, R2 },
+        { R2, U2, R2, U2, Ri, Ui, R, Ui, Ri, U, R2, U2, Ri, Ui, Ri, U2, R, U, Ri, Ui, R },
+        { R2, U2, R2, Ui, R2, U2, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, Ri, U, Ri }
     };
 
     std::vector<std::unique_ptr<ruBaseCube>> cubes;
