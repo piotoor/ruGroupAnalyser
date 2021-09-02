@@ -44,8 +44,6 @@ class ruBaseCube {
         void scramble(std::vector<uint8_t> moves);
         void inverseScramble(std::vector<uint8_t> moves);
 
-        virtual std::unique_ptr<ruBaseCube> clone() const = 0;
-
         virtual bool isPruningPossible(uint8_t remainingMoves) const = 0;
 
     protected:
@@ -90,8 +88,6 @@ class ruCube: public ruBaseCube
         bool isSolvedSEinS() const override;
 
         void reset() override;
-
-        std::unique_ptr<ruBaseCube> clone() const override;
 
         bool isPruningPossible(uint8_t remainingMoves) const override;
 
@@ -195,8 +191,6 @@ class ruLutCube: public ruBaseCube {
         bool isSolvedSEinS() const override;
 
         void reset() override;
-
-        std::unique_ptr<ruBaseCube> clone() const override;
 
         bool isPruningPossible(uint8_t remainingMoves) const override;
 

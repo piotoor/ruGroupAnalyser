@@ -3,7 +3,7 @@
 #include <algorithm>
 #include "ruCubeScrambleParser.h"
 
-ruCubeSolver::ruCubeSolver(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask, uint64_t cornersMask) {
+ruCubeSolver::ruCubeSolver(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask, uint64_t cornersMask): cube(nullptr) {
     configure(minLength, maxLength, maxNumOfSolutions, edgesMask, cornersMask);
 }
 

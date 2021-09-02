@@ -5,7 +5,7 @@
 
 class ruException {
     public:
-        ruException(std::string msg);
+        ruException(const std::string& msg);
         virtual ~ruException();
         virtual std::string what() const noexcept = 0;
 
@@ -16,21 +16,21 @@ class ruException {
 
 class ruCubeStateException: public ruException {
     public:
-        ruCubeStateException(std::string msg = "Invalid cube state");
+        ruCubeStateException(const std::string& msg = "Invalid cube state");
         virtual ~ruCubeStateException();
         std::string what() const noexcept override;
 };
 
 class ruCubeTurnException: public ruException {
     public:
-        ruCubeTurnException(uint8_t index);
+        explicit ruCubeTurnException(uint8_t index);
         virtual ~ruCubeTurnException();
         std::string what() const noexcept override;
 };
 
 class ruCubeFactoryException: public ruException {
     public:
-        ruCubeFactoryException(std::string msg = "Invalid cube type");
+        ruCubeFactoryException(const std::string& msg = "Invalid cube type");
         virtual ~ruCubeFactoryException();
         std::string what() const noexcept override;
 };

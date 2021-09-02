@@ -266,10 +266,10 @@ TEST(ruCubeSolverTest, ruCubeSolverVsRuLutCubeSolver) {
         ss << std::endl << "| " << std::setw(9) << cubesNames[i++] << " |";
         ss << std::setw(11) << dur << "|";
 
-        for (int i = 0; i < size(scrambles); ++i) {
+        for (uint8_t j = 0; j < size(scrambles); ++j) {
             cube->reset();
-            cube->scramble(scrambles[i]);
-            cube->scramble(solutions[i]);
+            cube->scramble(scrambles[j]);
+            cube->scramble(solutions[j]);
             ASSERT_TRUE(cube->isSolved(ruBaseCube::allEdgesMask, ruBaseCube::allCornersMask));
         }
     }
@@ -355,7 +355,7 @@ TEST(ruCubeSolverTest, multipleScramblesSolutionsAsStringsTest) {
     for (auto &cube: cubes) {
         ruCubeSolver solver;
 
-        for (int i = 0; i < std::size(scrambles); ++i) {
+        for (uint8_t i = 0; i < std::size(scrambles); ++i) {
             std::cout << "Solving scramble of length " << std::setw(2) << size(scrambles[i]) << "... ";
             std::cout.flush();
             cube->reset();

@@ -198,11 +198,6 @@ void ruCube::Ui() {
 	corners = (corners & 07777) | ((corners & 0007777770000) << 6) | ((corners & 0770000000000) >> 18);
 }
 
-std::unique_ptr<ruBaseCube> ruCube:: clone() const {
-    return std::make_unique<ruCube>(*this);
-}
-
-
 bool ruCube::isPruningPossible(uint8_t remainingMoves) const {
     return remainingMoves and 0;
 }
@@ -293,11 +288,6 @@ void ruLutCube::reset() {
     this->edgesPerm = solvedLexIndexEdgesPerm;
     this->cornersPerm = solvedLexIndexCornersPerm;
     this->cornersOrient = solvedLexIndexCornersOrient;
-}
-
-
-std::unique_ptr<ruBaseCube> ruLutCube::clone() const {
-    return std::make_unique<ruLutCube>(*this);
 }
 
 bool ruLutCube::isPruningPossible(uint8_t remainingMoves) const {

@@ -1,13 +1,13 @@
 #include "ruException.h"
 
 #include <iostream>
-ruException::ruException(std::string msg): msg(msg) {
+ruException::ruException(const std::string& msg): msg(msg) {
 }
 
 ruException::~ruException() {
 }
 
-ruCubeStateException::ruCubeStateException(std::string msg): ruException(msg) {
+ruCubeStateException::ruCubeStateException(const std::string& msg): ruException(msg) {
 
 }
 
@@ -31,7 +31,7 @@ std::string ruCubeTurnException::what() const noexcept {
 
 
 
-ruCubeFactoryException::ruCubeFactoryException(std::string msg): ruException(msg) {
+ruCubeFactoryException::ruCubeFactoryException(const std::string& msg): ruException(msg) {
 
 }
 
