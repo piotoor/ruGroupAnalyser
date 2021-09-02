@@ -276,7 +276,6 @@ namespace lutGenerators {
 
         ruCube cube;
         ruCubeStateConverter converter;
-
         fullCubePruningDfs(cube, converter, 0, maxFullCubePruningDepth, -6, ans);
 
         std::cout << "DONE" << std::endl;
