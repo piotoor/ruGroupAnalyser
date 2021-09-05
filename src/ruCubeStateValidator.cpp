@@ -34,8 +34,8 @@ bool ruCubeStateValidator::isPermutationValid(const std::vector<int8_t>& perm) {
         return false;
     }
 
-    const auto &[l, h] = std::minmax(begin(perm), end(perm));
-    if (*l < -1 or static_cast<uint8_t>(*h) >= size(perm)) {
+    const auto &[l, h] = std::minmax_element(begin(perm), end(perm));
+    if (*l < -1 or static_cast<int8_t>(*h) >= (uint8_t)size(perm)) {
         return false;
     }
 
@@ -50,7 +50,7 @@ bool ruCubeStateValidator::isPermutationValid(const std::vector<int8_t>& perm) {
 }
 
 bool ruCubeStateValidator::isOrientationValid(const std::vector<int8_t>& orient) {
-    const auto &[l, h] = std::minmax(begin(orient), end(orient));
+    const auto &[l, h] = std::minmax_element(begin(orient), end(orient));
     if (*l < -1 or static_cast<uint8_t>(*h) > 2) {
         return false;
     }

@@ -133,6 +133,7 @@ TEST(ruCubeStateValidatorTest, isVectEdgesValidNegativeTest) {
         { 0, 1, 2, 3, 4, 5 },
         { 0, 1, 2, 3, 4, 5, 6, 7 },
         { 0, 1, 2, 3, 4, 4, 5 },
+        { 0, 1, 2, 3, 4, 5, 7 },
     };
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(permutations), false);
@@ -254,6 +255,30 @@ TEST(ruCubeStateValidatorTest, isVectCornersPermValidTest) {
     };
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(permutations), true);
+
+    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+        ASSERT_EQ(expectedValidities[i], validator.isVectCornersPermValid(permutations[i]));
+    }
+}
+
+TEST(ruCubeStateValidatorTest, isVectCornersPermValidNegativeTest) {
+    ruCubeStateValidator validator;
+
+    const std::vector<std::vector<int8_t>> permutations {
+        { },
+        { -1 },
+        { 0 },
+        { 0, 1 },
+        { 0, 1, 2 },
+        { 0, 1, 2, 3 },
+        { 0, 1, 2, 3, 4 },
+        { 0, 1, 2, 3, 4, 5, 6 },
+        { 0, 1, 2, 3, 4, 5, 6, 7 },
+        { 0, 1, 2, 3, 4, 4, 5 },
+        { 0, 1, 2, 3, 4, 7 },
+    };
+
+    const std::vector<bool> expectedValidities = std::vector<bool> (size(permutations), false);
 
     for (uint8_t i = 0; i < size(expectedValidities); ++i) {
         ASSERT_EQ(expectedValidities[i], validator.isVectCornersPermValid(permutations[i]));
