@@ -284,3 +284,63 @@ TEST(ruCubeStateValidatorTest, isVectCornersPermValidNegativeTest) {
         ASSERT_EQ(expectedValidities[i], validator.isVectCornersPermValid(permutations[i]));
     }
 }
+
+TEST(ruCubeStateValidatorTest, isVectCornersOrientValidTest) {
+    ruCubeStateValidator validator;
+
+    const std::vector<std::vector<int8_t>> orientations {
+        { 0, 0, 0, 0, 0, 0 },
+        { 0, 0, 0, 0, 1, 2 },
+        { 0, 0, 1, 2, 1, 2 },
+        { 1, 2, 1, 2, 1, 2 },
+        { 1, 2, 1, 2, 0, 0 },
+        { 1, 2, 0, 0, 0, 0 },
+        { 2, 1, 1, 2, 0, 0 },
+        { 2, 2, 2, 2, 2, 2 },
+        { 1, 1, 1, 1, 1, 1 },
+        { 2, 1, 2, 1, 2, 1 },
+        { 1, 2, 1, 2, 1, 2 },
+        { 2, 0, 2, 0, 2, 0 },
+        { 1, 0, 1, 0, 1, 0 },
+        { 2, 1, 2, 0, 2, 2 },
+        { 0, 0, 1, 0, 1, 1 },
+        { 2, 1, 1, 0, 1, 1 },
+        { 0, 1, 1, 2, 1, 1 },
+        { 0, 1, 1, 2, 1, 1 },
+
+
+        { -1,  1,  1,  2,  1,  1 },
+        {  0,  1, -1, -1,  1,  1 },
+        { -1, -1, -1, -1, -1, -1 },
+        { -1, -1, -1, -1, -1,  0 },
+        { -1, -1,  2, -1, -1, -1 },
+    };
+
+    const std::vector<bool> expectedValidities = std::vector<bool> (size(orientations), true);
+
+    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+        ASSERT_EQ(expectedValidities[i], validator.isVectCornersOrientValid(orientations[i]));
+    }
+}
+
+TEST(ruCubeStateValidatorTest, isVectCornersOrientValidNegativeTest) {
+    ruCubeStateValidator validator;
+
+    const std::vector<std::vector<int8_t>> orientations {
+        { 1, 0, 0, 0, 0, 0 },
+        { 1, 1, 1, 1, 0, 0 },
+        { 1, 2, 0, 0, 0, 2 },
+        { 0, 0, 0, 4, 0, 0 },
+        { 0, 0, 0, 3, 0, 0 },
+        {  },
+        { 3 },
+        { 1, 2 },
+        { 1, 2, 1, 2, 1, 2, 1, 2 },
+    };
+
+    const std::vector<bool> expectedValidities = std::vector<bool> (size(orientations), false);
+
+    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+        ASSERT_EQ(expectedValidities[i], validator.isVectCornersOrientValid(orientations[i]));
+    }
+}

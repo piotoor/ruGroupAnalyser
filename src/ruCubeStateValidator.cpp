@@ -50,8 +50,12 @@ bool ruCubeStateValidator::isPermutationValid(const std::vector<int8_t>& perm) {
 }
 
 bool ruCubeStateValidator::isOrientationValid(const std::vector<int8_t>& orient) {
+    if (size(orient) == 0) {
+        return false;
+    }
+
     const auto &[l, h] = std::minmax_element(begin(orient), end(orient));
-    if (*l < -1 or static_cast<uint8_t>(*h) > 2) {
+    if (*l < -1 or static_cast<int8_t>(*h) > 2) {
         return false;
     }
 
@@ -71,8 +75,13 @@ bool ruCubeStateValidator::isOrientationValid(const std::vector<int8_t>& orient)
     return true;
 }
 
+bool ruCubeStateValidator::isCubePermSolveable(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
+
+    return false;
+}
+
 bool ruCubeStateValidator::isVectCubeStateSolveable(const std::vector<int8_t>& cornersOrient, const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
-    return isVectCornersValid(cornersOrient, cornersPerm) and isVectEdgesValid(edgesPerm) and isVectCornersInRU(cornersPerm);
+    return isVectCornersValid(cornersOrient, cornersPerm) and isVectEdgesValid(edgesPerm) and isCubePermSolveable(cornersPerm, edgesPerm) and isVectCornersInRU(cornersPerm);
 }
 
 bool ruCubeStateValidator::isVectCornersInRU(const std::vector<int8_t>& perm) {
