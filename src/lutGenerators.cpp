@@ -1,6 +1,7 @@
 #include "ruCubeFactory.h"
 #include "lutGenerators.h"
 
+#include <algorithm>
 
 namespace lutGenerators {
     std::array<std::array<uint16_t, noOfTurns>, noOfEdgesPermutations> generateEdgesPermMoveMap () {
@@ -277,6 +278,41 @@ namespace lutGenerators {
         ruCube cube;
         ruCubeStateConverter converter;
         fullCubePruningDfs(cube, converter, 0, maxFullCubePruningDepth, -6, ans);
+
+        std::cout << "DONE" << std::endl;
+        return ans;
+    }
+
+
+    void permutationValidityDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, noOfCornersPermutations> &pruningTable) {
+        if (depth <= maxDepth) {
+            for (int8_t i = 0; i < 6; ++i) {
+                if (i / 3 == prevMove / 3) {
+                    continue;
+                }
+
+                auto lexIndexCornersPerm = conv.intCornersToLexIndexCornersPerm(cube.getCorners());
+                auto lexIndexEdgesPerm = conv.intEdgesToLexIndexEdges(cube.getEdges());
+                pruningTable[lexIndexCornersPerm][lexIndexEdgesPerm] = true;
+
+                cube.turn(i);
+                permutationValidityDfs(cube, conv, depth + 1, maxDepth, i, pruningTable);
+                cube.inverseTurn(i);
+            }
+        }
+    }
+
+    std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, noOfCornersPermutations> generatePermutationValidityTable() {
+        std::cout << std::setw(48) << std::left << "Generating permutation validity table..." << std::flush;
+
+        std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, noOfCornersPermutations> ans {};
+        for (auto &row: ans) {
+            row.fill(false);
+        }
+
+        ruCube cube;
+        ruCubeStateConverter converter;
+        permutationValidityDfs(cube, converter, 0, maxPermutationValidityDepth, -6, ans);
 
         std::cout << "DONE" << std::endl;
         return ans;

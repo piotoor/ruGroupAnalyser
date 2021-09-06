@@ -213,6 +213,7 @@ std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerat
 std::array<int8_t, lutGenerators::noOfEdgesPermutations>                                                        ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
 std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>  ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
 std::vector<std::vector<std::vector<int8_t>>>  ruLutCube::fullCubePruningTable = lutGenerators::generateFullCubePruningTable();
+std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>    ruLutCube::permutationValidityTable = lutGenerators::generatePermutationValidityTable();
 
 ruLutCube::ruLutCube() {
     reset();
@@ -346,4 +347,19 @@ void ruLutCube::setCornersPerm(uint16_t cornersPerm) {
 
 void ruLutCube::setCornersOrient(uint16_t cornersOrient) {
     this->cornersOrient = cornersOrient;
+}
+
+bool ruLutCube::isPermutationSolveable(uint16_t cornersPerm, uint16_t edgesPerm) const {
+    return  cornersPerm < lutGenerators::noOfCornersPermutations and
+            edgesPerm < lutGenerators::noOfEdgesPermutations and
+            this->permutationValidityTable[cornersPerm][edgesPerm];
+}
+
+bool ruLutCube::isCornersOrientationSolveable(uint16_t cornersOrient) const {
+    return  cornersOrient < lutGenerators::noOfCornersOrientations and
+            this->cornersPruningTable[0][cornersOrient] != -1;
+}
+
+bool ruLutCube::isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient) const {
+    return isPermutationSolveable(cornersPerm, edgesPerm) and isCornersOrientationSolveable(cornersOrient);
 }

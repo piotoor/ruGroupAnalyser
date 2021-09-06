@@ -189,7 +189,9 @@ class ruLutCube: public ruBaseCube {
         bool isSolvedEEinE() const override;
         bool isSolvedMEinM() const override;
         bool isSolvedSEinS() const override;
-
+        bool isPermutationSolveable(uint16_t cornersPerm, uint16_t edgesPerm) const;
+        bool isCornersOrientationSolveable(uint16_t cornersOrient) const;
+        bool isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient) const;
         void reset() override;
 
         bool isPruningPossible(uint8_t remainingMoves) const override;
@@ -217,6 +219,7 @@ class ruLutCube: public ruBaseCube {
         static std::array<int8_t, lutGenerators::noOfEdgesPermutations>                                                            edgesPermPruningTable;
         static std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>      cornersPruningTable;
         static std::vector<std::vector<std::vector<int8_t>>> fullCubePruningTable;
+        static std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
 
     public:
         static inline const uint16_t solvedLexIndexEdgesPerm = 0;

@@ -1,6 +1,4 @@
 #include "ruCubeStateValidator.h"
-#include "ruCubeStateConverter.h"
-#include "ruCube.h"
 
 #include <algorithm>
 #include <numeric>
@@ -75,23 +73,13 @@ bool ruCubeStateValidator::isOrientationValid(const std::vector<int8_t>& orient)
     return true;
 }
 
-bool ruCubeStateValidator::isCubePermSolveable(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
-
-    return false;
+bool ruCubeStateValidator::isVectCubePermSolveable(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
+    return  isVectCornersPermValid(cornersPerm) and
+            isVectEdgesValid(edgesPerm) and
+            cube.isPermutationSolveable(converter.vectCornersPermToLexIndexCornersPerm(cornersPerm), converter.vectEdgesPermToLexIndexEdgesPerm(edgesPerm));
 }
 
 bool ruCubeStateValidator::isVectCubeStateSolveable(const std::vector<int8_t>& cornersOrient, const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
-    return isVectCornersValid(cornersOrient, cornersPerm) and isVectEdgesValid(edgesPerm) and isCubePermSolveable(cornersPerm, edgesPerm) and isVectCornersInRU(cornersPerm);
+    return isVectCubePermSolveable(cornersPerm, edgesPerm) and isVectCornersOrientValid(cornersOrient);
 }
 
-bool ruCubeStateValidator::isVectCornersInRU(const std::vector<int8_t>& perm) {
-    ruCube cube;
-    ruCubeStateConverter converter;
-    const uint64_t cornersInt = converter.vectCornersToIntCorners(perm, {0, 0, 0, 0, 0, 0});
-    cube.setCorners(cornersInt);
-
-    constexpr uint64_t dfrCornersMask = 0000000000007;
-    constexpr uint64_t drbDfrCornersMask = 0000000000707;
-    constexpr uint64_t ubrDrbDfrCornersMask = 0000000070707;
-    return true;
-}

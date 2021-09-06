@@ -1,6 +1,8 @@
 #ifndef RUCUBESTATEVALIDATOR_H
 #define RUCUBESTATEVALIDATOR_H
 
+#include "ruCubeStateConverter.h"
+#include "ruCube.h"
 #include <vector>
 #include <cstdint>
 
@@ -18,12 +20,14 @@ class ruCubeStateValidator
         bool isVectCornersOrientValid(const std::vector<int8_t> &orient);
         bool isVectCornersPermValid(const std::vector<int8_t> &perm);
         bool isVectEdgesValid(const std::vector<int8_t> &perm);
-        bool isCubePermSolveable(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
+        bool isVectCubePermSolveable(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
 
     private:
         bool isPermutationValid(const std::vector<int8_t> &perm);
         bool isOrientationValid(const std::vector<int8_t> &orient);
-        bool isVectCornersInRU(const std::vector<int8_t> &perm);
+
+        ruLutCube cube;
+        ruCubeStateConverter converter;
 };
 
 #endif // RUCUBESTATEVALIDATOR_H

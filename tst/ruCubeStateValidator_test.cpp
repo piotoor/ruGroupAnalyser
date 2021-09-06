@@ -344,3 +344,54 @@ TEST(ruCubeStateValidatorTest, isVectCornersOrientValidNegativeTest) {
         ASSERT_EQ(expectedValidities[i], validator.isVectCornersOrientValid(orientations[i]));
     }
 }
+
+TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableTest) {
+    ruCubeStateValidator validator;
+
+    const std::vector<std::tuple<std::vector<int8_t>, std::vector<int8_t>, std::vector<int8_t>>> cubeStates {
+        { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+        { { 1, 2, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+        { { 1, 2, 1, 2, 1, 2 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+        { { 1, 2, 1, 2, 1, 2 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+        { { 1, 1, 1, 2, 2, 2 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+
+        { { 1, 1, 1, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 5, 6, 4 } },
+        { { 1, 2, 1, 0, 0, 2 }, { 0, 1, 2, 3, 4, 5 }, { 2, 0, 1, 3, 5, 6, 4 } },
+        { { 1, 2, 1, 2, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 1, 2, 0, 3, 5, 6, 4 } },
+        { { 1, 1, 1, 0, 1, 2 }, { 3, 2, 0, 4, 1, 5 }, { 0, 2, 5, 3, 1, 6, 4 } },
+        { { 1, 2, 2, 1, 1, 2 }, { 3, 1, 4, 0, 2, 5 }, { 2, 0, 1, 3, 5, 6, 4 } },
+    };
+
+    const std::vector<bool> expectedValidities = std::vector<bool> (size(cubeStates), true);
+
+    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+        const auto &[co, cp, ep] = cubeStates[i];
+        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveable(co, cp, ep));
+    }
+}
+
+TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableNegativeTest) {
+    ruCubeStateValidator validator;
+
+    const std::vector<std::tuple<std::vector<int8_t>, std::vector<int8_t>, std::vector<int8_t>>> cubeStates {
+        { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 5, 4 }, { 0, 1, 2, 3, 4, 5, 6 } },
+        { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 1, 0, 2, 3, 4, 5, 6 } },
+        { { 1, 1, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+        { { 1, 2, 1, 2, 1, 2 }, { 5, 1, 2, 3, 4, 0 }, { 0, 1, 2, 3, 4, 5, 6 } },
+        { { 1, 1, 1, 2, 2, 2 }, { 2, 1, 0, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+
+        { { 1, 1, 1, 0, 0, 0 }, { 0, 1, 3, 2, 4, 5 }, { 0, 1, 2, 3, 5, 6, 4 } },
+        { { 1, 2, 1, 0, 0, 2 }, { 0, 1, 2, 3, 4, 5 }, { 2, 0, 1, 5, 3, 6, 4 } },
+        { { 1, 2, 1, 2, 0, 0 }, { 0, 1, 2, 4, 5, 3 }, { 1, 2, 0, 3, 5, 6, 4 } },
+        { { 1, 1, 1, 0, 1, 2 }, { 3, 0, 2, 4, 1, 5 }, { 1, 2, 5, 3, 0, 6, 4 } },
+        { { 1, 2, 2, 1, 1, 2 }, { 3, 1, 0, 2, 4, 5 }, { 2, 0, 1, 3, 5, 6, 4 } },
+    };
+
+    const std::vector<bool> expectedValidities = std::vector<bool> (size(cubeStates), false);
+
+    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+        const auto &[co, cp, ep] = cubeStates[i];
+        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveable(co, cp, ep));
+    }
+
+}
