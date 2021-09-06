@@ -83,3 +83,12 @@ bool ruCubeStateValidator::isVectCubeStateSolveable(const std::vector<int8_t>& c
     return isVectCubePermSolveable(cornersPerm, edgesPerm) and isVectCornersOrientValid(cornersOrient);
 }
 
+bool ruCubeStateValidator::isVectCubePermSolveableLutBased(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
+    return cube.isPermutationSolveable(converter.vectCornersPermToLexIndexCornersPerm(cornersPerm), converter.vectEdgesPermToLexIndexEdgesPerm(edgesPerm));
+}
+
+bool ruCubeStateValidator::isVectCubeStateSolveableLutBased(const std::vector<int8_t>& cornersOrient, const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
+    return cube.isCubeSolveable(converter.vectEdgesPermToLexIndexEdgesPerm(edgesPerm),
+                                converter.vectCornersPermToLexIndexCornersPerm(cornersPerm),
+                                converter.vectCornersOrientToLexIndexCornersOrient(cornersOrient));
+}

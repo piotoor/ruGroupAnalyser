@@ -22,6 +22,9 @@ class ruCubeStateValidator
         bool isVectEdgesValid(const std::vector<int8_t> &perm);
         bool isVectCubePermSolveable(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
 
+        bool isVectCubePermSolveableLutBased(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
+        bool isVectCubeStateSolveableLutBased(const std::vector<int8_t>& cornersOrient, const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
+
     private:
         bool isPermutationValid(const std::vector<int8_t> &perm);
         bool isOrientationValid(const std::vector<int8_t> &orient);
