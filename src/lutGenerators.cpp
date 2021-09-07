@@ -280,7 +280,7 @@ namespace lutGenerators {
     }
 
     std::vector<std::vector<std::vector<int8_t>>> generateFullCubePruningTable() {
-        std::cout << std::setw(48) << std::left << "Generating full cube pruning table..." << std::flush;
+        std::cout << std::setw(48) << std::left << std::string("Generating full cube pruning table (") + std::to_string((int)maxFullCubePruningDepth) + ")..." << std::flush;
         ruCubeSimpleBenchmarkTimer bt;
 
         std::vector<std::vector<std::vector<int8_t>>> ans (noOfCornersPermutations, std::vector(noOfCornersOrientations, std::vector<int8_t>(noOfEdgesPermutations, -1)));
