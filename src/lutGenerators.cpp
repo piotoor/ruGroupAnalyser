@@ -192,12 +192,12 @@ namespace lutGenerators {
                     continue;
                 }
 
+                cube.turn(i);
                 auto lexIndexEdges = conv.intEdgesToLexIndexEdges(cube.getEdges());
                 if (depth < pruningTable[lexIndexEdges] or pruningTable[lexIndexEdges] == -1) {
                     pruningTable[lexIndexEdges] = depth;
                 }
 
-                cube.turn(i);
                 edgesPermPruningDfs(cube, conv, depth + 1, maxDepth, i, pruningTable);
                 cube.inverseTurn(i);
             }
@@ -212,9 +212,8 @@ namespace lutGenerators {
         ans.fill(-1);
         ruCube cube;
         ruCubeStateConverter converter;
-
-        edgesPermPruningDfs(cube, converter, 0, maxEdgesPermPruningDepth, -6, ans);
-
+        ans[0] = 0;
+        edgesPermPruningDfs(cube, converter, 1, maxEdgesPermPruningDepth, -6, ans);
         std::cout << "DONE ";
         return ans;
     }
@@ -227,13 +226,13 @@ namespace lutGenerators {
                     continue;
                 }
 
+                cube.turn(i);
                 auto lexIndexCornersPerm = conv.intCornersToLexIndexCornersPerm(cube.getCorners());
                 auto lexIndexCornersOrient = conv.intCornersToLexIndexCornersOrient(cube.getCorners());
                 if (depth < pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] or pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] == -1) {
                     pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] = depth;
                 }
 
-                cube.turn(i);
                 cornersPruningDfs(cube, conv, depth + 1, maxDepth, i, pruningTable);
                 cube.inverseTurn(i);
             }
@@ -250,9 +249,8 @@ namespace lutGenerators {
         }
         ruCube cube;
         ruCubeStateConverter converter;
-
-        cornersPruningDfs(cube, converter, 0, maxCornersPruningDepth, -6, ans);
-
+        ans[0][0] = 0;
+        cornersPruningDfs(cube, converter, 1, maxCornersPruningDepth, -6, ans);
         std::cout << "DONE ";
         return ans;
     }
@@ -265,6 +263,7 @@ namespace lutGenerators {
                     continue;
                 }
 
+                cube.turn(i);
                 auto lexIndexCornersPerm = conv.intCornersToLexIndexCornersPerm(cube.getCorners());
                 auto lexIndexCornersOrient = conv.intCornersToLexIndexCornersOrient(cube.getCorners());
                 auto lexIndexEdgesPerm = conv.intEdgesToLexIndexEdges(cube.getEdges());
@@ -272,7 +271,6 @@ namespace lutGenerators {
                     pruningTable[lexIndexCornersPerm][lexIndexCornersOrient][lexIndexEdgesPerm] = depth;
                 }
 
-                cube.turn(i);
                 fullCubePruningDfs(cube, conv, depth + 1, maxDepth, i, pruningTable);
                 cube.inverseTurn(i);
             }
@@ -287,7 +285,8 @@ namespace lutGenerators {
 
         ruCube cube;
         ruCubeStateConverter converter;
-        fullCubePruningDfs(cube, converter, 0, maxFullCubePruningDepth, -6, ans);
+        ans[0][0][0] = 0;
+        fullCubePruningDfs(cube, converter, 1, maxFullCubePruningDepth, -6, ans);
 
         std::cout << "DONE ";
         return ans;
@@ -301,11 +300,11 @@ namespace lutGenerators {
                     continue;
                 }
 
+                cube.turn(i);
                 auto lexIndexCornersPerm = conv.intCornersToLexIndexCornersPerm(cube.getCorners());
                 auto lexIndexEdgesPerm = conv.intEdgesToLexIndexEdges(cube.getEdges());
                 pruningTable[lexIndexCornersPerm][lexIndexEdgesPerm] = true;
 
-                cube.turn(i);
                 permutationValidityDfs(cube, conv, depth + 1, maxDepth, i, pruningTable);
                 cube.inverseTurn(i);
             }
@@ -323,8 +322,8 @@ namespace lutGenerators {
 
         ruCube cube;
         ruCubeStateConverter converter;
-        permutationValidityDfs(cube, converter, 0, maxPermutationValidityDepth, -6, ans);
-
+        ans[0][0] = true;
+        permutationValidityDfs(cube, converter, 1, maxPermutationValidityDepth, -6, ans);
         std::cout << "DONE ";
         return ans;
     }
