@@ -366,8 +366,8 @@ TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableTest) {
 
     for (uint8_t i = 0; i < size(expectedValidities); ++i) {
         const auto &[co, cp, ep] = cubeStates[i];
-        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveable(co, cp, ep));
-        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableLutBased(co, cp, ep));
+        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableQuick(co, cp, ep));
+        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableFull(co, cp, ep));
     }
 }
 
@@ -392,8 +392,7 @@ TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableNegativeTest) {
 
     for (uint8_t i = 0; i < size(expectedValidities); ++i) {
         const auto &[co, cp, ep] = cubeStates[i];
-        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveable(co, cp, ep));
-        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableLutBased(co, cp, ep));
+        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableQuick(co, cp, ep));
+        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableFull(co, cp, ep));
     }
-
 }

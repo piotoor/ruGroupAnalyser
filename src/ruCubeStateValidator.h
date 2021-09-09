@@ -13,17 +13,22 @@ class ruCubeStateValidator
         explicit ruCubeStateValidator(const ruCubeStateValidator &other) = delete;
         ruCubeStateValidator& operator=(const ruCubeStateValidator &other) = delete;
         virtual ~ruCubeStateValidator();
-        bool isVectCubeStateSolveable(const std::vector<int8_t> &cornersOrient,
-                                      const std::vector<int8_t> &cornersPerm,
-                                      const std::vector<int8_t> &edgesPerm);
         bool isVectCornersValid(const std::vector<int8_t> &orient, const std::vector<int8_t> &perm);
         bool isVectCornersOrientValid(const std::vector<int8_t> &orient);
         bool isVectCornersPermValid(const std::vector<int8_t> &perm);
         bool isVectEdgesValid(const std::vector<int8_t> &perm);
-        bool isVectCubePermSolveable(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
 
-        bool isVectCubePermSolveableLutBased(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
-        bool isVectCubeStateSolveableLutBased(const std::vector<int8_t>& cornersOrient, const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
+        bool isVectCubeStateSolveableQuick( const std::vector<int8_t> &cornersOrient,
+                                            const std::vector<int8_t> &cornersPerm,
+                                            const std::vector<int8_t> &edgesPerm);
+
+        bool isVectCubeStateSolveableFull(  const std::vector<int8_t> &cornersOrient,
+                                            const std::vector<int8_t> &cornersPerm,
+                                            const std::vector<int8_t> &edgesPerm);
+        bool isVectCubePermSolveableQuick(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
+        bool isVectCubePermSolveableFull(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
+        bool isVectCornersOrientSolveableQuick(const std::vector<int8_t>& cornersOrient);
+        bool isVectCornersOrientSolveableFull(const std::vector<int8_t>& cornersOrient);
 
     private:
         bool isPermutationValid(const std::vector<int8_t> &perm);
