@@ -194,6 +194,16 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
          { 1, 0, 2, 2, 0, 1 },
          { 1, 0, 2, 2, 1, 0 },
          { 1, 0, 2, 2, 2, 2 }},
+
+        {{ 1, 0, 2, 0, 0, 0 },
+         { 1, 0, 2, 0, 1, 2 },
+         { 1, 0, 2, 0, 2, 1 },
+         { 1, 0, 2, 1, 0, 2 },
+         { 1, 0, 2, 1, 1, 1 },
+         { 1, 0, 2, 1, 2, 0 },
+         { 1, 0, 2, 2, 0, 1 },
+         { 1, 0, 2, 2, 1, 0 },
+         { 1, 0, 2, 2, 2, 2 }},
     };
 
     const std::vector<std::vector<int8_t>> lockedPieces = {
@@ -206,10 +216,11 @@ TEST(orientationGeneratorTest, generateOrientationtWithLockedPiecesTest) {
         { -1, -1,  2 },
         {  0, -1,  2 },
         {  1,  0,  2 },
-        {  1,  0,  2, -1, -1, -1 }
+        {  1,  0,  2, -1, -1, -1 },
+        {  1,  0,  2 }
     };
 
-    const std::vector<uint8_t> orientLengths { 0, 1, 2, 2, 2, 3, 3, 3, 3, 6 };
+    const std::vector<uint8_t> orientLengths { 0, 1, 2, 2, 2, 3, 3, 3, 3, 6, 6 };
 
     for (uint8_t test = 0; test < size(expectedOrients); ++test) {
         auto orients = gen.generateOrientations(orientLengths[test], lockedPieces[test]);

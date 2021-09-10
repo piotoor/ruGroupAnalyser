@@ -24,7 +24,7 @@ void orientationGenerator::dfs(uint8_t depth, uint8_t maxDepth, const std::vecto
             ans.push_back(curr);
         }
     } else {
-        if (!locked.empty() and locked[depth] != -1) {
+        if (!locked.empty() and depth < size(locked) and locked[depth] != -1) {
             curr[depth] = locked[depth];
             currSum += locked[depth];
 
