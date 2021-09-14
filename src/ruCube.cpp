@@ -229,6 +229,13 @@ ruLutCube::~ruLutCube() {
 
 }
 
+ruLutCube& ruLutCube::operator=(const ruLutCube& other) {
+    edgesPerm = other.edgesPerm;
+    cornersPerm = other.cornersPerm;
+    cornersOrient = other.cornersOrient;
+    return *this;
+}
+
 uint32_t ruLutCube::getEdges() const {
     return this->edgesPerm;
 }
