@@ -20,7 +20,7 @@ class permutationGenerator
         void generateAns();
         void mergeWithLocked(const std::vector<int8_t> &locked);
         std::multiset<int8_t> pieces;
-        std::multiset<int8_t> lockedPieces;
+        std::multiset<int8_t> permuteablePieces;
         std::vector<std::vector<int8_t>> ans;
 
 };
