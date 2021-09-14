@@ -45,6 +45,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillWithGapsTest
         {  2, -1,  2, -1,  0,  0 },
         {  2,  1,  2,  1, -1, -1 },
         {  2,  1,  1,  0, -1,  1 },
+        { -1, -1, -1, -1, -1, -1 },
     };
 
     const std::vector<std::vector<int8_t>> expectedCornersOrient = {
@@ -59,6 +60,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillWithGapsTest
         {  2,  2,  2,  0,  0,  0 },
         {  2,  1,  2,  1,  0,  0 },
         {  2,  1,  1,  0,  1,  1 },
+        {  0,  0,  0,  0,  0,  0 },
     };
 
     for (uint8_t i = 0; i < size(cornersOrient); ++i) {

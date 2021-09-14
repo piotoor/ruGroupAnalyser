@@ -167,8 +167,9 @@ class ruLutCube: public ruBaseCube {
     public:
         ruLutCube();
         ruLutCube(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient);
-        explicit ruLutCube(const ruLutCube& other) = default;
+        ruLutCube(const ruLutCube& other) = default;
         ~ruLutCube();
+        ruLutCube& operator=(const ruLutCube& other);
 
         uint32_t getEdges() const override;
         uint64_t getCorners() const override;
