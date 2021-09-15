@@ -31,11 +31,13 @@ class ruLutCubeGenerator
         std::vector<std::vector<int8_t>> cornersOrientations;
         std::vector<std::vector<int8_t>> cornersPermutations;
         std::vector<std::vector<int8_t>> edgesPermutations;
-        ruLutCube nextCube;
+        uint16_t lexIndexCornersPerm ;
+        uint16_t lexIndexEdgesPerm;
+        uint16_t lexIndexCornersOrient;
+
         bool hasNextCube;
-    public:
+
         uint16_t cpIndex;
-    private:
         uint16_t coIndex;
         uint16_t epIndex;
 

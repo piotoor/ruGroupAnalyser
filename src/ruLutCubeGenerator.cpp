@@ -25,7 +25,9 @@ void ruLutCubeGenerator::init(  const std::vector<int8_t> &lockedEdges, const st
                         return co;
                    });
 
-    nextCube.reset();
+    lexIndexCornersPerm = 0;
+    lexIndexEdgesPerm = 0;
+    lexIndexCornersOrient = 0;
     hasNextCube = false;
     cpIndex = 0;
     coIndex = 0;
@@ -39,23 +41,18 @@ void ruLutCubeGenerator::generateNextCube() {
 
     while (not found and cpIndex < cornersPermutations.size()) {
         filler.permutationIgnoredGapsFillInit(cornersPermutations[cpIndex], edgesPermutations[epIndex]);
-        uint16_t lexIndexCornersPerm = 0;
-        uint16_t lexIndexEdgesPerm = 0;
-        while (filler.permutationIgnoredGapsFillNext(cornersPermutations[cpIndex], edgesPermutations[epIndex])) {
+
+        while (not found and filler.permutationIgnoredGapsFillNext(cornersPermutations[cpIndex], edgesPermutations[epIndex])) {
             lexIndexCornersPerm = converter.vectCornersPermToLexIndexCornersPerm(cornersPermutations[cpIndex]);
             lexIndexEdgesPerm = converter.vectEdgesPermToLexIndexEdgesPerm(edgesPermutations[epIndex]);
             if (ruLutCube::isPermutationSolveable(lexIndexCornersPerm, lexIndexEdgesPerm)) {
                 found = true;
-                break;
-
             }
         }
 
         if (found) {
             hasNextCube = true;
-            nextCube.setCornersOrient(converter.vectCornersOrientToLexIndexCornersOrient(cornersOrientations[coIndex]));
-            nextCube.setCornersPerm(lexIndexCornersPerm);
-            nextCube.setEdges(lexIndexEdgesPerm);
+            lexIndexCornersOrient = converter.vectCornersOrientToLexIndexCornersOrient(cornersOrientations[coIndex]);
 
             coIndex++;
             if (coIndex == cornersOrientations.size()) {
@@ -87,7 +84,7 @@ void ruLutCubeGenerator::generateNextCube() {
 }
 
 ruLutCube ruLutCubeGenerator::next() {
-    ruLutCube ans = nextCube;
+    ruLutCube ans(lexIndexEdgesPerm, lexIndexCornersPerm, lexIndexCornersOrient);
     generateNextCube();
     return ans;
 }
