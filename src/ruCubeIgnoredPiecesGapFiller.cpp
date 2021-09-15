@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iterator>
 #include <set>
+#include <bitset>
 
 ruCubeIgnoredPiecesGapFiller::ruCubeIgnoredPiecesGapFiller() {
     permutationIgnoredGapsFillCleanup();
@@ -53,22 +54,18 @@ void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillCleanup() {
     hasNextCornersPerm = true;
     cornersPermIgnoredIndices.clear();
     edgesPermIgnoredIndices.clear();
+    missingCornersBits.reset();
+    missingEdgesBits.reset();
 }
 
 void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(std::vector<int8_t> cornersPerm, std::vector<int8_t> edgesPerm) {
     permutationIgnoredGapsFillCleanup();
 
-
-    // bitset and lut it
-    std::vector<bool> cornersOccurence (6);
-    std::vector<bool> edgesOccurence (7);
-
-
     for (uint8_t i = 0; i < size(cornersPerm); ++i) {
         if (cornersPerm[i] == -1) {
             cornersPermIgnoredIndices.push_back(i);
         } else {
-            cornersOccurence[cornersPerm[i]] = true;
+            missingCornersBits.flip(cornersPerm[i]);
         }
     }
 
@@ -76,18 +73,18 @@ void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(std::vector<in
         if (edgesPerm[i] == -1) {
             edgesPermIgnoredIndices.push_back(i);
         } else {
-            edgesOccurence[edgesPerm[i]] = true;
+            missingEdgesBits.flip(edgesPerm[i]);
         }
     }
 
-    for (uint8_t i = 0; i < size(cornersOccurence); ++i) {
-        if (!cornersOccurence[i]) {
+    for (uint8_t i = 0; i < noOfCorners; ++i) {
+        if (!missingCornersBits[i]) {
             missingCorners.push_back(i);
         }
     }
 
-    for (uint8_t i = 0; i < size(edgesOccurence); ++i) {
-        if (!edgesOccurence[i]) {
+    for (uint8_t i = 0; i < noOfEdges; ++i) {
+        if (!missingEdgesBits[i]) {
             missingEdges.push_back(i);
         }
     }
