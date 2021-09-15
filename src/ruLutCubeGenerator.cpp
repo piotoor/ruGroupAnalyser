@@ -39,8 +39,12 @@ void ruLutCubeGenerator::generateNextCube() {
 
     while (not found and cpIndex < cornersPermutations.size()) {
         filler.permutationIgnoredGapsFillInit(cornersPermutations[cpIndex], edgesPermutations[epIndex]);
+        uint16_t lexIndexCornersPerm = 0;
+        uint16_t lexIndexEdgesPerm = 0;
         while (filler.permutationIgnoredGapsFillNext(cornersPermutations[cpIndex], edgesPermutations[epIndex])) {
-            if (validator.isVectCubePermSolveableQuick(cornersPermutations[cpIndex], edgesPermutations[epIndex])) {
+            lexIndexCornersPerm = converter.vectCornersPermToLexIndexCornersPerm(cornersPermutations[cpIndex]);
+            lexIndexEdgesPerm = converter.vectEdgesPermToLexIndexEdgesPerm(edgesPermutations[epIndex]);
+            if (ruLutCube::isPermutationSolveable(lexIndexCornersPerm, lexIndexEdgesPerm)) {
                 found = true;
                 break;
 
@@ -50,8 +54,8 @@ void ruLutCubeGenerator::generateNextCube() {
         if (found) {
             hasNextCube = true;
             nextCube.setCornersOrient(converter.vectCornersOrientToLexIndexCornersOrient(cornersOrientations[coIndex]));
-            nextCube.setCornersPerm(converter.vectCornersPermToLexIndexCornersPerm(cornersPermutations[cpIndex]));
-            nextCube.setEdges(converter.vectEdgesPermToLexIndexEdgesPerm(edgesPermutations[epIndex]));
+            nextCube.setCornersPerm(lexIndexCornersPerm);
+            nextCube.setEdges(lexIndexEdgesPerm);
 
             coIndex++;
             if (coIndex == cornersOrientations.size()) {
