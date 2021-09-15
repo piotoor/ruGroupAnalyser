@@ -19,13 +19,11 @@ TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesTest) {
 
     int i = 0;
     for (; i < expectedNumberOfCubes; ++i ) {
-        if (i % 10000000 == 0) {
-            std::cout << "cube no: " << (int)i << std::endl;
-        }
+
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
     }
-    std::cout << "cube no: " << (int) i << std::endl;
+    std::cout << "Total number of cubes: " << (int) i << std::endl;
     ASSERT_FALSE(generator.hasNext());
 }
 
