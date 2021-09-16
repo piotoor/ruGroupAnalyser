@@ -13,7 +13,7 @@ class ruCubeIgnoredPiecesGapFiller
         virtual ~ruCubeIgnoredPiecesGapFiller();
         bool cornersOrientationIgnoredGapsFill(std::vector<int8_t> &cornersOrient);
         bool permutationIgnoredGapsFillNext(std::vector<int8_t>& cornersPerm, std::vector<int8_t>& edgesPerm);
-        void permutationIgnoredGapsFillInit(std::vector<int8_t> cornersPerm, std::vector<int8_t> edgesPerm);
+        void permutationIgnoredGapsFillInit(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
 
     private:
         void permutationIgnoredGapsFillCleanup();

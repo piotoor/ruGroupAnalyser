@@ -61,10 +61,6 @@ void ruLutCubeGenerator::generateNextCube() {
                 if (epIndex >= edgesPermutations.size()) {
                     epIndex = 0;
                     cpIndex++;
-                    if (cpIndex >= cornersPermutations.size()) {
-
-                        return;
-                    }
                 }
             }
         } else {
@@ -73,11 +69,6 @@ void ruLutCubeGenerator::generateNextCube() {
             if (epIndex >= edgesPermutations.size()) {
                 epIndex = 0;
                 cpIndex++;
-                if (cpIndex >= cornersPermutations.size()) {
-
-                    hasNextCube = false;
-                    return;
-                }
             }
         }
     }
