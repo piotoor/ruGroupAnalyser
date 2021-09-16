@@ -25,7 +25,9 @@ void ruLutCubeGenerator::init(  const std::vector<int8_t> &lockedEdges, const st
                         return co;
                    });
 
-    nextCube.reset();
+    lexIndexCornersPerm = 0;
+    lexIndexEdgesPerm = 0;
+    lexIndexCornersOrient = 0;
     hasNextCube = false;
     cpIndex = 0;
     coIndex = 0;
@@ -39,19 +41,18 @@ void ruLutCubeGenerator::generateNextCube() {
 
     while (not found and cpIndex < cornersPermutations.size()) {
         filler.permutationIgnoredGapsFillInit(cornersPermutations[cpIndex], edgesPermutations[epIndex]);
-        while (filler.permutationIgnoredGapsFillNext(cornersPermutations[cpIndex], edgesPermutations[epIndex])) {
-            if (validator.isVectCubePermSolveableQuick(cornersPermutations[cpIndex], edgesPermutations[epIndex])) {
-                found = true;
-                break;
 
+        while (not found and filler.permutationIgnoredGapsFillNext(cornersPermutations[cpIndex], edgesPermutations[epIndex])) {
+            lexIndexCornersPerm = converter.vectCornersPermToLexIndexCornersPerm(cornersPermutations[cpIndex]);
+            lexIndexEdgesPerm = converter.vectEdgesPermToLexIndexEdgesPerm(edgesPermutations[epIndex]);
+            if (ruLutCube::isPermutationSolveable(lexIndexCornersPerm, lexIndexEdgesPerm)) {
+                found = true;
             }
         }
 
         if (found) {
             hasNextCube = true;
-            nextCube.setCornersOrient(converter.vectCornersOrientToLexIndexCornersOrient(cornersOrientations[coIndex]));
-            nextCube.setCornersPerm(converter.vectCornersPermToLexIndexCornersPerm(cornersPermutations[cpIndex]));
-            nextCube.setEdges(converter.vectEdgesPermToLexIndexEdgesPerm(edgesPermutations[epIndex]));
+            lexIndexCornersOrient = converter.vectCornersOrientToLexIndexCornersOrient(cornersOrientations[coIndex]);
 
             coIndex++;
             if (coIndex == cornersOrientations.size()) {
@@ -60,10 +61,6 @@ void ruLutCubeGenerator::generateNextCube() {
                 if (epIndex >= edgesPermutations.size()) {
                     epIndex = 0;
                     cpIndex++;
-                    if (cpIndex >= cornersPermutations.size()) {
-
-                        return;
-                    }
                 }
             }
         } else {
@@ -72,18 +69,13 @@ void ruLutCubeGenerator::generateNextCube() {
             if (epIndex >= edgesPermutations.size()) {
                 epIndex = 0;
                 cpIndex++;
-                if (cpIndex >= cornersPermutations.size()) {
-
-                    hasNextCube = false;
-                    return;
-                }
             }
         }
     }
 }
 
 ruLutCube ruLutCubeGenerator::next() {
-    ruLutCube ans = nextCube;
+    ruLutCube ans(lexIndexEdgesPerm, lexIndexCornersPerm, lexIndexCornersOrient);
     generateNextCube();
     return ans;
 }

@@ -356,17 +356,17 @@ void ruLutCube::setCornersOrient(uint16_t cornersOrient) {
     this->cornersOrient = cornersOrient;
 }
 
-bool ruLutCube::isPermutationSolveable(uint16_t cornersPerm, uint16_t edgesPerm) const {
+bool ruLutCube::isPermutationSolveable(uint16_t cornersPerm, uint16_t edgesPerm) {
     return  cornersPerm < lutGenerators::noOfCornersPermutations and
             edgesPerm < lutGenerators::noOfEdgesPermutations and
-            this->permutationValidityTable[cornersPerm][edgesPerm];
+            permutationValidityTable[cornersPerm][edgesPerm];
 }
 
-bool ruLutCube::isCornersOrientationSolveable(uint16_t cornersOrient) const {
+bool ruLutCube::isCornersOrientationSolveable(uint16_t cornersOrient) {
     return  cornersOrient < lutGenerators::noOfCornersOrientations and
-            this->cornersPruningTable[0][cornersOrient] != -1;
+            cornersPruningTable[0][cornersOrient] != -1;
 }
 
-bool ruLutCube::isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient) const {
+bool ruLutCube::isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient) {
     return isPermutationSolveable(cornersPerm, edgesPerm) and isCornersOrientationSolveable(cornersOrient);
 }

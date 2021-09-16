@@ -26,20 +26,19 @@ std::vector<std::vector<int8_t>> permutationGenerator::generatePermutations(int8
                         end(pieces),
                         begin(locked),
                         end(locked),
-                        inserter(lockedPieces, lockedPieces.end()));
+                        inserter(permuteablePieces, permuteablePieces.end()));
 
     } else {
-        lockedPieces = pieces;
+        permuteablePieces = pieces;
     }
 
-    generateAns();
-    mergeWithLocked(locked);
+    generateAns(locked);
     return ans;
 }
 
 void permutationGenerator::cleanup(int8_t n) {
     pieces.clear();
-    lockedPieces.clear();
+    permuteablePieces.clear();
     ans.clear();
 
     for (int i = 0; i < n; ++i) {
@@ -47,18 +46,14 @@ void permutationGenerator::cleanup(int8_t n) {
     }
 }
 
-void permutationGenerator::generateAns() {
-    std::vector<int8_t> pieces (begin(lockedPieces), end(lockedPieces));
+void permutationGenerator::generateAns(const std::vector<int8_t> &locked) {
+    std::vector<int8_t> pieces (begin(permuteablePieces), end(permuteablePieces));
     do {
         ans.push_back(pieces);
+        for (const auto &x: locked) {
+            ans.back().insert(ans.back().begin() + x, x);
+        }
     } while (next_permutation(begin(pieces),
                               end(pieces)));
 }
 
-void permutationGenerator::mergeWithLocked(const std::vector<int8_t> &locked) {
-    for (const auto &x: locked) {
-        for (auto &perm: ans) {
-            perm.insert(perm.begin() + x, x);
-        }
-    }
-}

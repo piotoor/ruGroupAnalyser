@@ -4,6 +4,7 @@
 #include <iostream>
 #include <iterator>
 #include <set>
+#include <bitset>
 
 ruCubeIgnoredPiecesGapFiller::ruCubeIgnoredPiecesGapFiller() {
     permutationIgnoredGapsFillCleanup();
@@ -53,43 +54,41 @@ void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillCleanup() {
     hasNextCornersPerm = true;
     cornersPermIgnoredIndices.clear();
     edgesPermIgnoredIndices.clear();
+    missingCornersBits.reset();
+    missingEdgesBits.reset();
 }
 
-void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(std::vector<int8_t> cornersPerm, std::vector<int8_t> edgesPerm) {
+void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
     permutationIgnoredGapsFillCleanup();
-
-    std::set<uint8_t> tmpEdges { 0, 1, 2, 3, 4, 5, 6 };
-    std::set<uint8_t> tmpCorners { 0, 1, 2, 3, 4, 5 };
 
     for (uint8_t i = 0; i < size(cornersPerm); ++i) {
         if (cornersPerm[i] == -1) {
             cornersPermIgnoredIndices.push_back(i);
+        } else {
+            missingCornersBits.flip(cornersPerm[i]);
         }
     }
 
     for (uint8_t i = 0; i < size(edgesPerm); ++i) {
         if (edgesPerm[i] == -1) {
             edgesPermIgnoredIndices.push_back(i);
+        } else {
+            missingEdgesBits.flip(edgesPerm[i]);
         }
     }
 
-    std::sort(begin(edgesPerm),
-              end(edgesPerm));
+    for (uint8_t i = 0; i < noOfCorners; ++i) {
+        if (!missingCornersBits[i]) {
+            missingCorners.push_back(i);
+        }
+    }
 
-    std::sort(begin(cornersPerm),
-              end(cornersPerm));
+    for (uint8_t i = 0; i < noOfEdges; ++i) {
+        if (!missingEdgesBits[i]) {
+            missingEdges.push_back(i);
+        }
+    }
 
-    std::set_difference(begin(tmpEdges),
-                        end(tmpEdges),
-                        begin(edgesPerm),
-                        end(edgesPerm),
-                        std::back_inserter(missingEdges));
-
-    std::set_difference(begin(tmpCorners),
-                        end(tmpCorners),
-                        begin(cornersPerm),
-                        end(cornersPerm),
-                        std::back_inserter(missingCorners));
 }
 
 bool ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillNext(std::vector<int8_t>& cornersPerm, std::vector<int8_t>& edgesPerm) {

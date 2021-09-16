@@ -190,9 +190,9 @@ class ruLutCube: public ruBaseCube {
         bool isSolvedEEinE() const override;
         bool isSolvedMEinM() const override;
         bool isSolvedSEinS() const override;
-        bool isPermutationSolveable(uint16_t cornersPerm, uint16_t edgesPerm) const;
-        bool isCornersOrientationSolveable(uint16_t cornersOrient) const;
-        bool isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient) const;
+        static bool isPermutationSolveable(uint16_t cornersPerm, uint16_t edgesPerm);
+        static bool isCornersOrientationSolveable(uint16_t cornersOrient);
+        static bool isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient);
         void reset() override;
 
         bool isPruningPossible(uint8_t remainingMoves) const override;
