@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "ruCubeStateValidator.h"
 
+using cornersArray = std::array<int8_t, 6>;
 
 TEST(ruCubeStateValidatorTest, isVectEdgesValidTest) {
     ruCubeStateValidator validator;
@@ -288,7 +289,7 @@ TEST(ruCubeStateValidatorTest, isVectCornersPermValidNegativeTest) {
 TEST(ruCubeStateValidatorTest, isVectCornersOrientValidTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::vector<int8_t>> orientations {
+    const std::vector<cornersArray> orientations {
         { 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 1, 2 },
         { 0, 0, 1, 2, 1, 2 },
@@ -326,16 +327,14 @@ TEST(ruCubeStateValidatorTest, isVectCornersOrientValidTest) {
 TEST(ruCubeStateValidatorTest, isVectCornersOrientValidNegativeTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::vector<int8_t>> orientations {
+    const std::vector<cornersArray> orientations {
         { 1, 0, 0, 0, 0, 0 },
         { 1, 1, 1, 1, 0, 0 },
         { 1, 2, 0, 0, 0, 2 },
         { 0, 0, 0, 4, 0, 0 },
         { 0, 0, 0, 3, 0, 0 },
-        {  },
-        { 3 },
-        { 1, 2 },
-        { 1, 2, 1, 2, 1, 2, 1, 2 },
+        { 0, 0, 0, 3, 1, 0 },
+        { 9, 0, 0, 3, 0, 0 },
     };
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(orientations), false);
@@ -348,7 +347,7 @@ TEST(ruCubeStateValidatorTest, isVectCornersOrientValidNegativeTest) {
 TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::tuple<std::vector<int8_t>, std::vector<int8_t>, std::vector<int8_t>>> cubeStates {
+    const std::vector<std::tuple<cornersArray, std::vector<int8_t>, std::vector<int8_t>>> cubeStates {
         { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
         { { 1, 2, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
         { { 1, 2, 1, 2, 1, 2 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
@@ -374,7 +373,7 @@ TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableTest) {
 TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableNegativeTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::tuple<std::vector<int8_t>, std::vector<int8_t>, std::vector<int8_t>>> cubeStates {
+    const std::vector<std::tuple<cornersArray, std::vector<int8_t>, std::vector<int8_t>>> cubeStates {
         { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 5, 4 }, { 0, 1, 2, 3, 4, 5, 6 } },
         { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 1, 0, 2, 3, 4, 5, 6 } },
         { { 1, 1, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },

@@ -14,11 +14,7 @@ ruCubeIgnoredPiecesGapFiller::~ruCubeIgnoredPiecesGapFiller() {
     //dtor
 }
 
-bool ruCubeIgnoredPiecesGapFiller::cornersOrientationIgnoredGapsFill(std::vector<int8_t>& cornersOrient) {
-    if (size(cornersOrient) != 6) {
-        return false;
-    }
-
+bool ruCubeIgnoredPiecesGapFiller::cornersOrientationIgnoredGapsFill(cornersArray& cornersOrient) {
     uint8_t numOfNegativeOrients = 0;
     uint8_t sumOfPositiveOrients = std::accumulate(begin(cornersOrient),
                                                    end(cornersOrient),
@@ -61,7 +57,7 @@ void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillCleanup() {
 void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
     permutationIgnoredGapsFillCleanup();
 
-    for (uint8_t i = 0; i < size(cornersPerm); ++i) {
+    for (uint8_t i = 0; i < ruBaseCube::noOfCorners; ++i) {
         if (cornersPerm[i] == -1) {
             cornersPermIgnoredIndices.push_back(i);
         } else {
@@ -69,7 +65,7 @@ void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(const std::vec
         }
     }
 
-    for (uint8_t i = 0; i < size(edgesPerm); ++i) {
+    for (uint8_t i = 0; i < ruBaseCube::noOfEdges; ++i) {
         if (edgesPerm[i] == -1) {
             edgesPermIgnoredIndices.push_back(i);
         } else {
@@ -77,13 +73,13 @@ void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(const std::vec
         }
     }
 
-    for (uint8_t i = 0; i < noOfCorners; ++i) {
+    for (uint8_t i = 0; i < ruBaseCube::noOfCorners; ++i) {
         if (!missingCornersBits[i]) {
             missingCorners.push_back(i);
         }
     }
 
-    for (uint8_t i = 0; i < noOfEdges; ++i) {
+    for (uint8_t i = 0; i < ruBaseCube::noOfEdges; ++i) {
         if (!missingEdgesBits[i]) {
             missingEdges.push_back(i);
         }

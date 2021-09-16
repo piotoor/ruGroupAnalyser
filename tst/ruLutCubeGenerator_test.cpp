@@ -2,14 +2,16 @@
 #include "ruLutCubeGenerator.h"
 #include "ruCubeStateConverter.h"
 
+using cornersArray = std::array<int8_t, 6>;
+
 TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesTest) {
     ruLutCubeGenerator generator;
     std::vector<int8_t> lockedCornersPerm { };
     std::vector<int8_t> ignoredCornersPerm { };
     std::vector<int8_t> lockedEdges { };
     std::vector<int8_t> ignoredEdges { };
-    std::vector<int8_t> lockedCornersOrient { };
-    std::vector<int8_t> ignoredCornersOrient { };
+    cornersArray lockedCornersOrient { -1, -1, -1, -1, -1, -1 };
+    cornersArray ignoredCornersOrient { 0, 0, 0, 0, 0, 0 };
 
     const int expectedNumberOfCubes = 73'483'200;
 
@@ -33,8 +35,8 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedPiecesTest) {
     std::vector<int8_t> ignoredCornersPerm {};
     std::vector<int8_t> lockedEdges { 0, 1, 2, 4, 6 };
     std::vector<int8_t> ignoredEdges {};
-    std::vector<int8_t> lockedCornersOrient { 0, 0, 0, 0, -1, -1 };
-    std::vector<int8_t> ignoredCornersOrient {};
+    cornersArray lockedCornersOrient { 0, 0, 0, 0, -1, -1 };
+    cornersArray ignoredCornersOrient { 0, 0, 0, 0, 0, 0 };
 
     generator.init (lockedEdges, ignoredEdges,
                     lockedCornersPerm, ignoredCornersPerm,
@@ -124,8 +126,8 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithIgnoredPiecesTest) {
     std::vector<int8_t> ignoredCornersPerm { 0, 1, 2, 3, 4 };
     std::vector<int8_t> lockedEdges { };
     std::vector<int8_t> ignoredEdges { 0, 2, 3, 4, 5, 6 };
-    std::vector<int8_t> lockedCornersOrient { };
-    std::vector<int8_t> ignoredCornersOrient { 1, 1, 1, 1, 1, 1 };
+    cornersArray lockedCornersOrient { -1, -1, -1, -1, -1, -1 };
+    cornersArray ignoredCornersOrient { 1, 1, 1, 1, 1, 1 };
 
     generator.init( lockedEdges, ignoredEdges,
                     lockedCornersPerm, ignoredCornersPerm,
@@ -195,8 +197,8 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedAndIgnoredPiecesTest) {
     std::vector<int8_t> ignoredCornersPerm { 1, 2, 5,};
     std::vector<int8_t> lockedEdges { 0 };
     std::vector<int8_t> ignoredEdges { 1, 2, 3, 4, 5, 6 };
-    std::vector<int8_t> lockedCornersOrient { };
-    std::vector<int8_t> ignoredCornersOrient { 1, 1, 1, 1, 0, 0 };
+    cornersArray lockedCornersOrient { -1, -1, -1, -1, -1, -1 };
+    cornersArray ignoredCornersOrient { 1, 1, 1, 1, 0, 0 };
 
     generator.init( lockedEdges, ignoredEdges,
                     lockedCornersPerm, ignoredCornersPerm,

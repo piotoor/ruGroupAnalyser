@@ -62,6 +62,9 @@ class ruBaseCube {
     public:
         static inline const uint64_t allCornersMask = UINT64_MAX;
         static inline const uint32_t allEdgesMask = UINT32_MAX;
+
+        static inline const uint8_t noOfCorners = 6;
+        static inline const uint8_t noOfEdges = 7;
 };
 
 class ruCube: public ruBaseCube

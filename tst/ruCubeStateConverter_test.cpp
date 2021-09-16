@@ -4,10 +4,11 @@
 #include <iostream>
 #include "ruCube.h"
 
+using cornersArray = std::array<int8_t, 6>;
 
 TEST(ruCubeStateConverterTest, convertvectCornersToIntCornersTest) {
     ruCubeStateConverter conv;
-    const std::vector<std::vector<int8_t>> cornersOrient = {
+    const std::vector<cornersArray> cornersOrient = {
         { 0, 0, 0, 0, 0, 0 },
         { 1, 1, 1, 1, 1, 1 },
         { 0, 1, 0, 1, 0, 1 },
@@ -83,7 +84,7 @@ TEST(ruCubeStateConverterTest, convertvectEdgesToIntEdgesTest) {
 TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
     ruCubeStateConverter conv;
 
-    const std::vector<std::vector<int8_t>> cornersOrient = {
+    const std::vector<cornersArray> cornersOrient = {
         {  0,  0,  0,  0,  0,  0 },
         { -1,  1,  1,  1,  1, -1 },
         { -1,  1,  1,  1,  1, -1 },
@@ -2540,7 +2541,7 @@ TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersTest) {
 
 TEST(ruCubeStateConverterTest, convertVectCornersOrientToLexIndexCornersOrientTest) {
     ruCubeStateConverter conv;
-    const std::vector<std::vector<int8_t>> cornersOrient = {
+    const std::vector<cornersArray> cornersOrient = {
         { 0, 0, 0, 0, 0, 0 },
         { 1, 1, 1, 1, 1, 1 },
         { 0, 1, 0, 1, 0, 1 },

@@ -1,8 +1,12 @@
 #ifndef ORIENTATIONGENERATOR_H
 #define ORIENTATIONGENERATOR_H
 
+#include "ruCube.h"
 #include <vector>
+#include <array>
 #include <cstdint>
+
+using cornersArray = std::array<int8_t, 6>;
 
 class orientationGenerator
 {
@@ -11,16 +15,16 @@ class orientationGenerator
         explicit orientationGenerator(const orientationGenerator &other) = delete;
         orientationGenerator& operator=(const orientationGenerator &other) = delete;
         virtual ~orientationGenerator();
-        std::vector<std::vector<int8_t>> generateOrientations(int8_t n, const std::vector<int8_t> &locked = {}, const std::vector<int8_t> &ignored = {});
+        std::vector<cornersArray> generateOrientations(const cornersArray &locked = { -1, -1, -1, -1, -1, -1 }, const cornersArray &ignored = { 0, 0, 0, 0, 0, 0 });
 
     protected:
 
     private:
-        void dfs(uint8_t depth, uint8_t maxDepth, const std::vector<int8_t> &locked = {}, const std::vector<int8_t> &ignored = {});
-        void cleanup(uint8_t n);
+        void dfs(uint8_t depth, uint8_t maxDepth, const cornersArray &locked = { -1, -1, -1, -1, -1, -1 }, const cornersArray &ignored = { 0, 0, 0, 0, 0, 0 });
+        void cleanup();
 
-        std::vector<std::vector<int8_t>> ans;
-        std::vector<int8_t> curr;
+        std::vector<cornersArray> ans;
+        cornersArray curr;
         int8_t currSum = 0;
         bool hasIgnoredPiece = false;
 };

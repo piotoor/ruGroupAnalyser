@@ -1,10 +1,14 @@
 #ifndef RUCUBESTATECONVERTER_H
 #define RUCUBESTATECONVERTER_H
 
-#include <cstdint>
+
+
 #include <vector>
 #include <array>
 #include <bitset>
+#include "ruCube.h"
+
+using cornersArray = std::array<int8_t, 6>;
 
 class ruCubeStateConverter
 {
@@ -13,7 +17,7 @@ class ruCubeStateConverter
         explicit ruCubeStateConverter(const ruCubeStateConverter &other) = delete;
         ruCubeStateConverter& operator=(const ruCubeStateConverter &other) = delete;
         virtual ~ruCubeStateConverter();
-        uint64_t vectCornersToIntCorners(const std::vector<int8_t> &perm, const std::vector<int8_t> &orient) const;
+        uint64_t vectCornersToIntCorners(const std::vector<int8_t> &perm, const cornersArray &orient) const;
         uint32_t vectEdgesToIntEdges(const std::vector<int8_t> &perm) const;
         uint16_t intEdgesToLexIndexEdges(const uint32_t edges);
         uint16_t intCornersToLexIndexCornersPerm(const uint64_t corners);
@@ -24,7 +28,7 @@ class ruCubeStateConverter
 
         uint16_t vectEdgesPermToLexIndexEdgesPerm(const std::vector<int8_t> &perm);
         uint16_t vectCornersPermToLexIndexCornersPerm(const std::vector<int8_t> &perm);
-        uint16_t vectCornersOrientToLexIndexCornersOrient(const std::vector<int8_t> &orient);
+        uint16_t vectCornersOrientToLexIndexCornersOrient(const cornersArray &orient);
 
     private:
         uint16_t intPermToLexIndexPerm(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces);
