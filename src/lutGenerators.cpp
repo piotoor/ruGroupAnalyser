@@ -293,7 +293,7 @@ namespace lutGenerators {
     }
 
 
-    void permutationValidityDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, noOfCornersPermutations> &pruningTable) {
+    void permutationValidityDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations> &pruningTable) {
         if (depth <= maxDepth) {
             for (int8_t i = 0; i < 6; ++i) {
                 if (i / 3 == prevMove / 3) {
@@ -311,13 +311,13 @@ namespace lutGenerators {
         }
     }
 
-    std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, noOfCornersPermutations> generatePermutationValidityTable() {
+    std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations> generatePermutationValidityTable() {
         std::cout << std::setw(48) << std::left << "Generating permutation validity table..." << std::flush;
         ruCubeSimpleBenchmarkTimer bt;
 
-        std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, noOfCornersPermutations> ans {};
+        std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations> ans {};
         for (auto &row: ans) {
-            row.fill(false);
+            row.reset();
         }
 
         ruCube cube;

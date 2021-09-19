@@ -213,7 +213,7 @@ std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerat
 std::array<int8_t, lutGenerators::noOfEdgesPermutations>                                                        ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
 std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>  ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
 std::vector<std::vector<std::vector<int8_t>>>  ruLutCube::fullCubePruningTable = lutGenerators::generateFullCubePruningTable();
-std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>    ruLutCube::permutationValidityTable = lutGenerators::generatePermutationValidityTable();
+std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>    ruLutCube::permutationValidityTable = lutGenerators::generatePermutationValidityTable();
 
 ruLutCube::ruLutCube() {
     reset();

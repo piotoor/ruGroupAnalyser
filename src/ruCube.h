@@ -223,7 +223,9 @@ class ruLutCube: public ruBaseCube {
         static std::array<int8_t, lutGenerators::noOfEdgesPermutations>                                                            edgesPermPruningTable;
         static std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>      cornersPruningTable;
         static std::vector<std::vector<std::vector<int8_t>>> fullCubePruningTable;
-        static std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
+        //static std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
+        static std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
+
 
     public:
         static inline const uint16_t solvedLexIndexEdgesPerm = 0;
