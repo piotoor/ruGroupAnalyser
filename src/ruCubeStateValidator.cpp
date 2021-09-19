@@ -11,12 +11,12 @@ ruCubeStateValidator::ruCubeStateValidator() {
 ruCubeStateValidator::~ruCubeStateValidator() {
 }
 
-bool ruCubeStateValidator::isVectCornersValid(const cornersArray& orient, const std::vector<int8_t>& perm) {
+bool ruCubeStateValidator::isVectCornersValid(const cornersArray& orient, const cornersArray& perm) {
     return isVectCornersOrientValid(orient) and size(perm) == 6 and isPermutationValid(perm);
 }
 
-bool ruCubeStateValidator::isVectEdgesValid(const std::vector<int8_t>& perm) {
-    return size(perm) == 7 and isPermutationValid(perm);
+bool ruCubeStateValidator::isVectEdgesValid(const edgesArray& perm) {
+    return isPermutationValid(perm);
 }
 
 bool ruCubeStateValidator::isVectCornersOrientValid(const cornersArray &orient) {
@@ -41,14 +41,14 @@ bool ruCubeStateValidator::isVectCornersOrientValid(const cornersArray &orient) 
     return true;
 }
 
-bool ruCubeStateValidator::isVectCornersPermValid(const std::vector<int8_t> &perm) {
-    return size(perm) == 6 and isPermutationValid(perm);
+bool ruCubeStateValidator::isVectCornersPermValid(const cornersArray &perm) {
+    return isPermutationValid(perm);
 }
 
-bool ruCubeStateValidator::isPermutationValid(const std::vector<int8_t>& perm) {
-    if (size(perm) == 0) {
-        return false;
-    }
+template <typename T>
+bool ruCubeStateValidator::isPermutationValid(const T &perm) {
+//    static_assert(!(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>),
+//                  "Only cornersArray and edgesArray are allowed.");
 
     const auto &[l, h] = std::minmax_element(begin(perm), end(perm));
     if (*l < -1 or static_cast<int8_t>(*h) >= (uint8_t)size(perm)) {
@@ -56,8 +56,8 @@ bool ruCubeStateValidator::isPermutationValid(const std::vector<int8_t>& perm) {
     }
 
     auto copyPerm = perm;
-    sort(begin(copyPerm), end(copyPerm));
-    auto adj = adjacent_find(begin(copyPerm), end(copyPerm));
+    std::sort(begin(copyPerm), end(copyPerm));
+    auto adj = std::adjacent_find(begin(copyPerm), end(copyPerm));
     if (adj != end(copyPerm) and *adj != -1) {
         return false;
     }
@@ -65,18 +65,21 @@ bool ruCubeStateValidator::isPermutationValid(const std::vector<int8_t>& perm) {
     return true;
 }
 
+template bool ruCubeStateValidator::isPermutationValid<cornersArray>(const cornersArray &perm);
+template bool ruCubeStateValidator::isPermutationValid<edgesArray>(const edgesArray &perm);
+
 bool ruCubeStateValidator::isVectCornersOrientSolveableQuick(const cornersArray& cornersOrient) {
     return cube.isCornersOrientationSolveable(converter.vectCornersOrientToLexIndexCornersOrient(cornersOrient));
 }
 
-bool ruCubeStateValidator::isVectCubePermSolveableQuick(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
+bool ruCubeStateValidator::isVectCubePermSolveableQuick(const cornersArray& cornersPerm, const edgesArray& edgesPerm) {
     return cube.isPermutationSolveable(converter.vectCornersPermToLexIndexCornersPerm(cornersPerm),
                                        converter.vectEdgesPermToLexIndexEdgesPerm(edgesPerm));
 }
 
 bool ruCubeStateValidator::isVectCubeStateSolveableQuick(   const cornersArray&cornersOrient,
-                                                            const std::vector<int8_t> &cornersPerm,
-                                                            const std::vector<int8_t> &edgesPerm) {
+                                                            const cornersArray &cornersPerm,
+                                                            const edgesArray &edgesPerm) {
     return cube.isCubeSolveable(converter.vectEdgesPermToLexIndexEdgesPerm(edgesPerm),
                                 converter.vectCornersPermToLexIndexCornersPerm(cornersPerm),
                                 converter.vectCornersOrientToLexIndexCornersOrient(cornersOrient));
@@ -87,12 +90,12 @@ bool ruCubeStateValidator::isVectCornersOrientSolveableFull(const cornersArray& 
     return isVectCornersOrientValid(cornersOrient) and isVectCornersOrientSolveableQuick(cornersOrient);
 }
 
-bool ruCubeStateValidator::isVectCubePermSolveableFull(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
+bool ruCubeStateValidator::isVectCubePermSolveableFull(const cornersArray& cornersPerm, const edgesArray& edgesPerm) {
     return isVectCornersPermValid(cornersPerm) and isVectEdgesValid(edgesPerm) and isVectCubePermSolveableQuick(cornersPerm, edgesPerm);
 }
 
 bool ruCubeStateValidator::isVectCubeStateSolveableFull(const cornersArray &cornersOrient,
-                                                        const std::vector<int8_t> &cornersPerm,
-                                                        const std::vector<int8_t> &edgesPerm) {
+                                                        const cornersArray &cornersPerm,
+                                                        const edgesArray &edgesPerm) {
     return isVectCornersOrientSolveableFull(cornersOrient) and isVectCubePermSolveableFull(cornersPerm, edgesPerm);
 }

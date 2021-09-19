@@ -4,6 +4,8 @@
 #include <numeric>
 #include <cmath>
 #include <iterator>
+#include <type_traits>
+#include <string>
 
 ruCubeStateConverter::ruCubeStateConverter() {
 
@@ -13,7 +15,7 @@ ruCubeStateConverter::~ruCubeStateConverter() {
 
 }
 
-uint64_t ruCubeStateConverter::vectCornersToIntCorners(const std::vector<int8_t>& perm, const cornersArray& orient) const {
+uint64_t ruCubeStateConverter::vectCornersToIntCorners(const cornersArray& perm, const cornersArray& orient) const {
     uint64_t ans = 0;
 
     std::set<int8_t> availPerm { 0, 1, 2, 3, 4, 5 };
@@ -58,7 +60,7 @@ uint64_t ruCubeStateConverter::vectCornersToIntCorners(const std::vector<int8_t>
 }
 
 #include <iostream>
-uint32_t ruCubeStateConverter::vectEdgesToIntEdges(const std::vector<int8_t>& perm) const {
+uint32_t ruCubeStateConverter::vectEdgesToIntEdges(const edgesArray& perm) const {
     uint32_t ans = 0;
     std::set<int8_t> availPerm { 0, 1, 2, 3, 4, 5, 6 };
     for (const auto &x: perm) {
@@ -171,7 +173,14 @@ uint64_t ruCubeStateConverter::lexIndexCornersOrientToIntCornersOrient(uint16_t 
     return ans;
 }
 
-uint16_t ruCubeStateConverter::vectPermToLexIndexPerm(const std::vector<int8_t> &perm) {
+
+template <typename T>
+uint16_t ruCubeStateConverter::vectPermToLexIndexPerm(const T &perm) {
+//    bool x = T::nothing;
+//    static_assert(!(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>),
+//    //static_assert(!(std::is_same_v<T, cornersArray> or std::is_same_v<T, edgesArray> or std::is_same_v<T, const cornersArray> or std::is_same_v<T, const edgesArray>),
+//                  "Only cornersArray and edgesArray are allowed.");
+
     lehmer.fill(0);
     visited.reset();
     uint16_t ans = 0;
@@ -186,12 +195,15 @@ uint16_t ruCubeStateConverter::vectPermToLexIndexPerm(const std::vector<int8_t> 
     return ans;
 }
 
-uint16_t ruCubeStateConverter::vectEdgesPermToLexIndexEdgesPerm(const std::vector<int8_t> &perm) {
-    return vectPermToLexIndexPerm(perm);
+template uint16_t ruCubeStateConverter::vectPermToLexIndexPerm<cornersArray>(const cornersArray &perm);
+template uint16_t ruCubeStateConverter::vectPermToLexIndexPerm<edgesArray>(const edgesArray &perm);
+
+uint16_t ruCubeStateConverter::vectEdgesPermToLexIndexEdgesPerm(const edgesArray &perm) {
+    return vectPermToLexIndexPerm<edgesArray>(perm);
 }
 
-uint16_t ruCubeStateConverter::vectCornersPermToLexIndexCornersPerm(const std::vector<int8_t> &perm) {
-    return vectPermToLexIndexPerm(perm);
+uint16_t ruCubeStateConverter::vectCornersPermToLexIndexCornersPerm(const cornersArray &perm) {
+    return vectPermToLexIndexPerm<cornersArray>(perm);
 }
 
 uint16_t ruCubeStateConverter::vectCornersOrientToLexIndexCornersOrient(const cornersArray &orient) {

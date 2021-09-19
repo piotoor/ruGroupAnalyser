@@ -5,6 +5,7 @@
 #include <iterator>
 
 using cornersArray = std::array<int8_t, 6>;
+using edgesArray = std::array<int8_t, 7>;
 
 TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillNoGapsTest) {
     ruCubeIgnoredPiecesGapFiller filler;
@@ -74,7 +75,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillWithGapsTest
 TEST(ruCubeIgnoredPiecesGapFiller, permutationIgnoredGapsFillNextTest) {
     ruCubeIgnoredPiecesGapFiller filler;
 
-    std::vector<std::tuple<std::vector<int8_t>, std::vector<int8_t>>> permutations {
+    std::vector<std::tuple<cornersArray, edgesArray>> permutations {
         { { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
         { { 5, 4, 3, 2, 1, 0 }, { 0, 1, 2, 3, 4, 5, 6 } },
         { { 0, 1, 2, 3, 4, 5 }, { 6, 5, 4, 3, 2, 1, 0 } },
@@ -91,7 +92,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, permutationIgnoredGapsFillNextTest) {
         { { -1, -1,  2,  3,  4, -1 }, { -1, -1,  2,  3,  4,  5, -1 } },
     };
 
-    const std::vector<std::vector<std::tuple<std::vector<int8_t>, std::vector<int8_t>>>> expectedPermutations {
+    const std::vector<std::vector<std::tuple<cornersArray, edgesArray>>> expectedPermutations {
         {
             {{ 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 }}
         },

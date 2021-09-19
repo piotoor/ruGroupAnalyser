@@ -54,7 +54,7 @@ void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillCleanup() {
     missingEdgesBits.reset();
 }
 
-void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm) {
+void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(const cornersArray& cornersPerm, const edgesArray& edgesPerm) {
     permutationIgnoredGapsFillCleanup();
 
     for (uint8_t i = 0; i < ruBaseCube::noOfCorners; ++i) {
@@ -87,7 +87,7 @@ void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(const std::vec
 
 }
 
-bool ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillNext(std::vector<int8_t>& cornersPerm, std::vector<int8_t>& edgesPerm) {
+bool ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillNext(cornersArray& cornersPerm, edgesArray& edgesPerm) {
     int validOutput = false;
     if (hasNextEdgesPerm) {
         for (uint8_t i = 0; i < size(missingCorners); ++i) {

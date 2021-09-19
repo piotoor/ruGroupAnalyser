@@ -65,7 +65,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedPiecesTest) {
     lockedEdges = { 0, 1, 2, 4 };    // 00123456 00123465 00125436 00125463 00126435 00126453
     ignoredEdges = {};
     lockedCornersOrient = { -1, 0, 0, 0, -1, -1 };  // 000000 000012 000021 100002 100011 100020 200001 200010 200022
-    ignoredCornersOrient = {};
+    ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
 
     generator.init (lockedEdges, ignoredEdges,
                     lockedCornersPerm, ignoredCornersPerm,

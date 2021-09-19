@@ -9,6 +9,7 @@
 #include "ruCube.h"
 
 using cornersArray = std::array<int8_t, 6>;
+using edgesArray = std::array<int8_t, 7>;
 
 class ruCubeStateConverter
 {
@@ -17,8 +18,8 @@ class ruCubeStateConverter
         explicit ruCubeStateConverter(const ruCubeStateConverter &other) = delete;
         ruCubeStateConverter& operator=(const ruCubeStateConverter &other) = delete;
         virtual ~ruCubeStateConverter();
-        uint64_t vectCornersToIntCorners(const std::vector<int8_t> &perm, const cornersArray &orient) const;
-        uint32_t vectEdgesToIntEdges(const std::vector<int8_t> &perm) const;
+        uint64_t vectCornersToIntCorners(const cornersArray &perm, const cornersArray &orient) const;
+        uint32_t vectEdgesToIntEdges(const edgesArray &perm) const;
         uint16_t intEdgesToLexIndexEdges(const uint32_t edges);
         uint16_t intCornersToLexIndexCornersPerm(const uint64_t corners);
         uint16_t intCornersToLexIndexCornersOrient(const uint64_t corners);
@@ -26,13 +27,15 @@ class ruCubeStateConverter
         uint32_t lexIndexEdgesToIntEdges(uint16_t lexIndexEdges);
         uint64_t lexIndexCornersToIntCorners(uint16_t lexIndexPerm, uint16_t lexIndexOrient);
 
-        uint16_t vectEdgesPermToLexIndexEdgesPerm(const std::vector<int8_t> &perm);
-        uint16_t vectCornersPermToLexIndexCornersPerm(const std::vector<int8_t> &perm);
+        uint16_t vectEdgesPermToLexIndexEdgesPerm(const edgesArray &perm);
+        uint16_t vectCornersPermToLexIndexCornersPerm(const cornersArray &perm);
         uint16_t vectCornersOrientToLexIndexCornersOrient(const cornersArray &orient);
 
     private:
         uint16_t intPermToLexIndexPerm(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces);
-        uint16_t vectPermToLexIndexPerm(const std::vector<int8_t> &perm);
+
+        template <typename T>
+        uint16_t vectPermToLexIndexPerm(const T &perm);
         void lexIndexPermToArrayPermIntermediate(uint16_t lexPerm, uint8_t numOfPieces);
         uint64_t lexIndexCornersOrientToIntCornersOrient(uint16_t lexIndexOrient);
 

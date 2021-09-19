@@ -5,6 +5,7 @@
 #include "ruCube.h"
 
 using cornersArray = std::array<int8_t, 6>;
+using edgesArray = std::array<int8_t, 7>;
 
 TEST(ruCubeStateConverterTest, convertvectCornersToIntCornersTest) {
     ruCubeStateConverter conv;
@@ -22,7 +23,7 @@ TEST(ruCubeStateConverterTest, convertvectCornersToIntCornersTest) {
         { 2, 1, 1, 0, 1, 1 },
     };
 
-    const std::vector<std::vector<int8_t>> cornersPerm = {
+    const std::vector<cornersArray> cornersPerm = {
         { 0, 1, 2, 3, 4, 5 },
         { 0, 1, 2, 3, 4, 5 },
         { 0, 1, 2, 3, 4, 5 },
@@ -59,7 +60,7 @@ TEST(ruCubeStateConverterTest, convertvectCornersToIntCornersTest) {
 TEST(ruCubeStateConverterTest, convertvectEdgesToIntEdgesTest) {
     ruCubeStateConverter conv;
 
-    const std::vector<std::vector<int8_t>> edgesPerm = {
+    const std::vector<edgesArray> edgesPerm = {
         { 0, 1, 2, 3, 4, 5, 6 },
         { 6, 5, 4, 3, 2, 1, 0 },
         { 1, 3, 0, 2, 4, 5, 6 },
@@ -95,7 +96,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
         {  2,  2,  2,  1,  1, -1 },
         {  2,  2,  2,  1,  1,  1 },
     };
-    const std::vector<std::vector<int8_t>> cornersPerm = {
+    const std::vector<cornersArray> cornersPerm = {
         {  0,  1,  2,  3, -1, -1 },
         {  0,  1,  2,  3,  4,  5 },
         {  0, -1, -1,  3,  4,  5 },
@@ -129,7 +130,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
 TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
     ruCubeStateConverter conv;
 
-    const std::vector<std::vector<int8_t>> edgesPerm = {
+    const std::vector<edgesArray> edgesPerm = {
         {  0,  1,  2,  3,  4,  5, -1 },
         {  6,  5, -1,  3,  2,  1,  0 },
         {  6,  5, -1, -1, -1, -1,  0 },
@@ -2577,7 +2578,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersOrientToLexIndexCornersOrientTe
 
 TEST(ruCubeStateConverterTest, convertVectCornersPermToLexIndexCornersPermTest) {
     ruCubeStateConverter conv;
-    const std::vector<std::vector<int8_t>> cornersPerm = {
+    const std::vector<cornersArray> cornersPerm = {
         { 0, 1, 2, 3, 4, 5 },
         { 0, 1, 2, 3, 5, 4 },
         { 0, 1, 2, 4, 3, 5 },
@@ -2771,7 +2772,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersPermToLexIndexCornersPermTest) 
 
 TEST(ruCubeStateConverterTest, convertVectEdgesPermToLexIndexEdgesPermTest) {
     ruCubeStateConverter conv;
-    const std::vector<std::vector<int8_t>> edgesPerm = {
+    const std::vector<edgesArray> edgesPerm = {
         { 0, 1, 2, 3, 4, 5, 6 },
         { 0, 1, 2, 3, 4, 6, 5 },
         { 0, 1, 2, 3, 5, 4, 6 },

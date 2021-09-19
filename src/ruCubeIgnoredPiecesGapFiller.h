@@ -7,6 +7,7 @@
 #include <vector>
 
 using cornersArray = std::array<int8_t, 6>;
+using edgesArray = std::array<int8_t, 7>;
 
 class ruCubeIgnoredPiecesGapFiller
 {
@@ -14,8 +15,8 @@ class ruCubeIgnoredPiecesGapFiller
         ruCubeIgnoredPiecesGapFiller();
         virtual ~ruCubeIgnoredPiecesGapFiller();
         bool cornersOrientationIgnoredGapsFill(cornersArray &cornersOrient);
-        bool permutationIgnoredGapsFillNext(std::vector<int8_t>& cornersPerm, std::vector<int8_t>& edgesPerm);
-        void permutationIgnoredGapsFillInit(const std::vector<int8_t>& cornersPerm, const std::vector<int8_t>& edgesPerm);
+        bool permutationIgnoredGapsFillNext(cornersArray& cornersPerm, edgesArray& edgesPerm);
+        void permutationIgnoredGapsFillInit(const cornersArray& cornersPerm, const edgesArray& edgesPerm);
 
     private:
         void permutationIgnoredGapsFillCleanup();
