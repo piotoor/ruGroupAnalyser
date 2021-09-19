@@ -176,10 +176,8 @@ uint64_t ruCubeStateConverter::lexIndexCornersOrientToIntCornersOrient(uint16_t 
 
 template <typename T>
 uint16_t ruCubeStateConverter::vectPermToLexIndexPerm(const T &perm) {
-//    bool x = T::nothing;
-//    static_assert(!(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>),
-//    //static_assert(!(std::is_same_v<T, cornersArray> or std::is_same_v<T, edgesArray> or std::is_same_v<T, const cornersArray> or std::is_same_v<T, const edgesArray>),
-//                  "Only cornersArray and edgesArray are allowed.");
+    static_assert(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>,
+                  "Only cornersArray and edgesArray are allowed.");
 
     lehmer.fill(0);
     visited.reset();

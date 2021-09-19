@@ -13,8 +13,8 @@ using edgesArray = std::array<int8_t, 7>;
 template <class T>
 class permutationGenerator
 {
-//    static_assert(!(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>),
-//                  "Only cornersArray and edgesArray are allowed.");
+    static_assert(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>,
+                  "Only cornersArray and edgesArray are allowed.");
     public:
         permutationGenerator();
         explicit permutationGenerator(const permutationGenerator &other) = delete;

@@ -47,8 +47,8 @@ bool ruCubeStateValidator::isVectCornersPermValid(const cornersArray &perm) {
 
 template <typename T>
 bool ruCubeStateValidator::isPermutationValid(const T &perm) {
-//    static_assert(!(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>),
-//                  "Only cornersArray and edgesArray are allowed.");
+    static_assert(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>,
+                  "Only cornersArray and edgesArray are allowed.");
 
     const auto &[l, h] = std::minmax_element(begin(perm), end(perm));
     if (*l < -1 or static_cast<int8_t>(*h) >= (uint8_t)size(perm)) {
