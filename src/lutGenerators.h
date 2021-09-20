@@ -84,7 +84,7 @@ namespace lutGenerators {
     std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> generateCornersPruningTable();
 
     #ifdef DEBUG
-        inline static const uint8_t maxFullCubePruningDepth = 14;
+        inline static const uint8_t maxFullCubePruningDepth = 13;
     #else
         inline static const uint8_t maxFullCubePruningDepth = 17;
     #endif
