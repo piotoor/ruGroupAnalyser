@@ -3,30 +3,35 @@
 #include <iterator>
 #include <numeric>
 #include <iostream>
-permutationGenerator::permutationGenerator() {
+
+
+template <class T>
+permutationGenerator<T>::permutationGenerator() {
     //ctor
 }
 
-permutationGenerator::~permutationGenerator() {
+template <class T>
+permutationGenerator<T>::~permutationGenerator() {
     //dtor
 }
 
-std::vector<std::vector<int8_t>> permutationGenerator::generatePermutations(int8_t n, const std::vector<int8_t> &locked, const std::vector<int8_t> &ignored) {
-    cleanup(n);
+template <class T>
+std::vector<T> permutationGenerator<T>::generatePermutations(const std::vector<int8_t> &locked, const std::vector<int8_t> &ignored) {
+    cleanup();
 
     for (const auto &x: ignored) {
         if (size(pieces) > static_cast<uint8_t>(x)) {
-            pieces.insert(-1);
-            pieces.erase(x);
+            pieces[x] = -1;
         }
     }
 
+    sort(begin(pieces), end(pieces));
     if (!locked.empty()) {
         std::set_difference( begin(pieces),
                         end(pieces),
                         begin(locked),
                         end(locked),
-                        inserter(permuteablePieces, permuteablePieces.end()));
+                        back_inserter(permuteablePieces));
 
     } else {
         permuteablePieces = pieces;
@@ -36,24 +41,36 @@ std::vector<std::vector<int8_t>> permutationGenerator::generatePermutations(int8
     return ans;
 }
 
-void permutationGenerator::cleanup(int8_t n) {
-    pieces.clear();
+template <class T>
+void permutationGenerator<T>::cleanup() {
     permuteablePieces.clear();
     ans.clear();
+    pieces.resize(size(tmp));
 
-    for (int i = 0; i < n; ++i) {
-        pieces.insert(i);
+    std::iota(begin(pieces),
+              end(pieces),
+              0);
+
+    tmp.fill(-2);
+}
+
+template <class T>
+void permutationGenerator<T>::generateAns(const std::vector<int8_t> &locked) {
+    for (const auto &x: locked) {
+        tmp[x] = x;
     }
-}
 
-void permutationGenerator::generateAns(const std::vector<int8_t> &locked) {
-    std::vector<int8_t> pieces (begin(permuteablePieces), end(permuteablePieces));
     do {
-        ans.push_back(pieces);
-        for (const auto &x: locked) {
-            ans.back().insert(ans.back().begin() + x, x);
+        ans.push_back(tmp);
+        for (int i = 0, k = 0; i < size(ans.back()); ++i) {
+            if (ans.back()[i] == -2) {
+                ans.back()[i] = permuteablePieces[k++];
+            }
         }
-    } while (next_permutation(begin(pieces),
-                              end(pieces)));
+
+    } while (std::next_permutation( begin(permuteablePieces),
+                                    end(permuteablePieces)));
 }
 
+template class permutationGenerator<cornersArray>;
+template class permutationGenerator<edgesArray>;

@@ -36,9 +36,6 @@ jobs:
               tree
               make all
 
-    - name: Install valgrind
-      run: sudo apt install -y valgrind
-
     - name: Run unit tests
       working-directory: ${{github.workspace}}/build/debug
-      run: valgrind --leak-check=full --track-origins=yes --verbose ./ruGroupAnalyser_tst --gtest_filter=*.*-*ruCubeSolverVsRuLutCubeSolver*
+      run: ./ruGroupAnalyser_tst --gtest_filter=*.*-*ruCubeSolverVsRuLutCubeSolver*

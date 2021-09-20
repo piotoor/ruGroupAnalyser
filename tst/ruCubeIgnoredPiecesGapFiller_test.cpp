@@ -4,10 +4,13 @@
 #include <iostream>
 #include <iterator>
 
+using cornersArray = std::array<int8_t, 6>;
+using edgesArray = std::array<int8_t, 7>;
+
 TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillNoGapsTest) {
     ruCubeIgnoredPiecesGapFiller filler;
 
-    const std::vector<std::vector<int8_t>> cornersOrient = {
+    const std::vector<cornersArray> cornersOrient = {
         { 0, 0, 0, 0, 0, 0 },
         { 1, 1, 1, 1, 1, 1 },
         { 0, 1, 0, 1, 0, 1 },
@@ -21,7 +24,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillNoGapsTest) 
         { 2, 1, 1, 0, 1, 1 },
     };
 
-    const std::vector<std::vector<int8_t>> expectedCornersOrient = cornersOrient;
+    const std::vector<cornersArray> expectedCornersOrient = cornersOrient;
 
     for (uint8_t i = 0; i < size(cornersOrient); ++i) {
         auto orient = cornersOrient[i];
@@ -33,7 +36,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillNoGapsTest) 
 TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillWithGapsTest) {
     ruCubeIgnoredPiecesGapFiller filler;
 
-    std::vector<std::vector<int8_t>> cornersOrient = {
+    std::vector<cornersArray> cornersOrient = {
         {  0,  0, -1,  0,  0,  0 },
         { -1, -1,  1,  1,  1,  1 },
         {  0, -1,  0, -1,  0, -1 },
@@ -48,7 +51,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillWithGapsTest
         { -1, -1, -1, -1, -1, -1 },
     };
 
-    const std::vector<std::vector<int8_t>> expectedCornersOrient = {
+    const std::vector<cornersArray> expectedCornersOrient = {
         {  0,  0,  0,  0,  0,  0 },
         {  2,  0,  1,  1,  1,  1 },
         {  0,  0,  0,  0,  0,  0 },
@@ -72,7 +75,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillWithGapsTest
 TEST(ruCubeIgnoredPiecesGapFiller, permutationIgnoredGapsFillNextTest) {
     ruCubeIgnoredPiecesGapFiller filler;
 
-    std::vector<std::tuple<std::vector<int8_t>, std::vector<int8_t>>> permutations {
+    std::vector<std::tuple<cornersArray, edgesArray>> permutations {
         { { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
         { { 5, 4, 3, 2, 1, 0 }, { 0, 1, 2, 3, 4, 5, 6 } },
         { { 0, 1, 2, 3, 4, 5 }, { 6, 5, 4, 3, 2, 1, 0 } },
@@ -89,7 +92,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, permutationIgnoredGapsFillNextTest) {
         { { -1, -1,  2,  3,  4, -1 }, { -1, -1,  2,  3,  4,  5, -1 } },
     };
 
-    const std::vector<std::vector<std::tuple<std::vector<int8_t>, std::vector<int8_t>>>> expectedPermutations {
+    const std::vector<std::vector<std::tuple<cornersArray, edgesArray>>> expectedPermutations {
         {
             {{ 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 }}
         },

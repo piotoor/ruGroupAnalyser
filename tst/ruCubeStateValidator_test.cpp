@@ -1,11 +1,13 @@
 #include "gtest/gtest.h"
 #include "ruCubeStateValidator.h"
 
+using cornersArray = std::array<int8_t, 6>;
+using edgesArray = std::array<int8_t, 7>;
 
 TEST(ruCubeStateValidatorTest, isVectEdgesValidTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::vector<int8_t>> permutations {
+    const std::vector<edgesArray> permutations {
         { 0, 1, 2, 3, 4, 5, 6, },
         { 0, 1, 2, 3, 4, 6, 5, },
         { 0, 1, 2, 3, 5, 4, 6, },
@@ -122,18 +124,10 @@ TEST(ruCubeStateValidatorTest, isVectEdgesValidTest) {
 TEST(ruCubeStateValidatorTest, isVectEdgesValidNegativeTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::vector<int8_t>> permutations {
-        { },
-        { -1 },
-        { 0 },
-        { 0, 1 },
-        { 0, 1, 2 },
-        { 0, 1, 2, 3 },
-        { 0, 1, 2, 3, 4 },
-        { 0, 1, 2, 3, 4, 5 },
-        { 0, 1, 2, 3, 4, 5, 6, 7 },
+    const std::vector<edgesArray> permutations {
         { 0, 1, 2, 3, 4, 4, 5 },
         { 0, 1, 2, 3, 4, 5, 7 },
+        { 0, 3, 2, 3, 4, 5, 7 },
     };
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(permutations), false);
@@ -146,7 +140,7 @@ TEST(ruCubeStateValidatorTest, isVectEdgesValidNegativeTest) {
 TEST(ruCubeStateValidatorTest, isVectCornersPermValidTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::vector<int8_t>> permutations {
+    const std::vector<cornersArray> permutations {
         { 0, 1, 2, 3, 4, 5, },
         { 0, 1, 2, 3, 5, 4, },
         { 0, 1, 2, 4, 3, 5, },
@@ -264,18 +258,11 @@ TEST(ruCubeStateValidatorTest, isVectCornersPermValidTest) {
 TEST(ruCubeStateValidatorTest, isVectCornersPermValidNegativeTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::vector<int8_t>> permutations {
-        { },
-        { -1 },
-        { 0 },
-        { 0, 1 },
-        { 0, 1, 2 },
-        { 0, 1, 2, 3 },
-        { 0, 1, 2, 3, 4 },
-        { 0, 1, 2, 3, 4, 5, 6 },
-        { 0, 1, 2, 3, 4, 5, 6, 7 },
-        { 0, 1, 2, 3, 4, 4, 5 },
+    const std::vector<cornersArray> permutations {
         { 0, 1, 2, 3, 4, 7 },
+        { 0, 1, 4, 3, 4, 7 },
+        { 7, 1, 2, 3, 4, 7 },
+        { 1, 1, 1, 1, 1, 1 },
     };
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(permutations), false);
@@ -288,7 +275,7 @@ TEST(ruCubeStateValidatorTest, isVectCornersPermValidNegativeTest) {
 TEST(ruCubeStateValidatorTest, isVectCornersOrientValidTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::vector<int8_t>> orientations {
+    const std::vector<cornersArray> orientations {
         { 0, 0, 0, 0, 0, 0 },
         { 0, 0, 0, 0, 1, 2 },
         { 0, 0, 1, 2, 1, 2 },
@@ -326,16 +313,14 @@ TEST(ruCubeStateValidatorTest, isVectCornersOrientValidTest) {
 TEST(ruCubeStateValidatorTest, isVectCornersOrientValidNegativeTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::vector<int8_t>> orientations {
+    const std::vector<cornersArray> orientations {
         { 1, 0, 0, 0, 0, 0 },
         { 1, 1, 1, 1, 0, 0 },
         { 1, 2, 0, 0, 0, 2 },
         { 0, 0, 0, 4, 0, 0 },
         { 0, 0, 0, 3, 0, 0 },
-        {  },
-        { 3 },
-        { 1, 2 },
-        { 1, 2, 1, 2, 1, 2, 1, 2 },
+        { 0, 0, 0, 3, 1, 0 },
+        { 9, 0, 0, 3, 0, 0 },
     };
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(orientations), false);
@@ -348,7 +333,7 @@ TEST(ruCubeStateValidatorTest, isVectCornersOrientValidNegativeTest) {
 TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::tuple<std::vector<int8_t>, std::vector<int8_t>, std::vector<int8_t>>> cubeStates {
+    const std::vector<std::tuple<cornersArray, cornersArray, edgesArray>> cubeStates {
         { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
         { { 1, 2, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
         { { 1, 2, 1, 2, 1, 2 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
@@ -374,7 +359,7 @@ TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableTest) {
 TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableNegativeTest) {
     ruCubeStateValidator validator;
 
-    const std::vector<std::tuple<std::vector<int8_t>, std::vector<int8_t>, std::vector<int8_t>>> cubeStates {
+    const std::vector<std::tuple<cornersArray, cornersArray, edgesArray>> cubeStates {
         { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 5, 4 }, { 0, 1, 2, 3, 4, 5, 6 } },
         { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 1, 0, 2, 3, 4, 5, 6 } },
         { { 1, 1, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },

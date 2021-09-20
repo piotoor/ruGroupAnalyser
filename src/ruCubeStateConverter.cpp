@@ -2,8 +2,9 @@
 
 #include <set>
 #include <numeric>
-#include <cmath>
 #include <iterator>
+#include <type_traits>
+#include <string>
 
 ruCubeStateConverter::ruCubeStateConverter() {
 
@@ -13,7 +14,7 @@ ruCubeStateConverter::~ruCubeStateConverter() {
 
 }
 
-uint64_t ruCubeStateConverter::vectCornersToIntCorners(const std::vector<int8_t>& perm, const std::vector<int8_t>& orient) const {
+uint64_t ruCubeStateConverter::vectCornersToIntCorners(const cornersArray& perm, const cornersArray& orient) const {
     uint64_t ans = 0;
 
     std::set<int8_t> availPerm { 0, 1, 2, 3, 4, 5 };
@@ -58,7 +59,7 @@ uint64_t ruCubeStateConverter::vectCornersToIntCorners(const std::vector<int8_t>
 }
 
 #include <iostream>
-uint32_t ruCubeStateConverter::vectEdgesToIntEdges(const std::vector<int8_t>& perm) const {
+uint32_t ruCubeStateConverter::vectEdgesToIntEdges(const edgesArray& perm) const {
     uint32_t ans = 0;
     std::set<int8_t> availPerm { 0, 1, 2, 3, 4, 5, 6 };
     for (const auto &x: perm) {
@@ -83,7 +84,6 @@ uint16_t ruCubeStateConverter::intEdgesToLexIndexEdges(const uint32_t edges) {
 }
 
 uint16_t ruCubeStateConverter::intPermToLexIndexPerm(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces) {
-    lehmer.fill(0);
     visited.reset();
     uint16_t ans = 0;
 
@@ -92,8 +92,8 @@ uint16_t ruCubeStateConverter::intPermToLexIndexPerm(const uint64_t perm, uint8_
         uint8_t curr = ((perm & (7UL << shift)) >> shift);
         visited[curr] = 1;
 
-        lehmer[i] = curr - (visited << (maxNumOfPieces - curr)).count();
-        ans += lehmer[i] * factLookup[numOfPieces - 1 - i];
+        int lehmer = curr - (visited << (maxNumOfPieces - curr)).count();
+        ans += lehmer * factLookup[numOfPieces - 1 - i];
     }
 
     return ans;
@@ -109,7 +109,7 @@ uint16_t ruCubeStateConverter::intCornersToLexIndexCornersOrient(const uint64_t 
     for (int8_t i = numOfCorners - 1; i >= 0; --i) {
         uint8_t shift = shiftBaseCornersOrient - i * pieceSizeCorners;
         uint8_t curr = ((corners & (7UL << shift)) >> shift) / 2;
-        ans += curr * static_cast<uint16_t>(pow(3.0, static_cast<double>(numOfCorners - 1 - i)));
+        ans += curr * powersOf3[numOfCorners - 1 - i];
     }
 
     return ans;
@@ -171,34 +171,41 @@ uint64_t ruCubeStateConverter::lexIndexCornersOrientToIntCornersOrient(uint16_t 
     return ans;
 }
 
-uint16_t ruCubeStateConverter::vectPermToLexIndexPerm(const std::vector<int8_t> &perm) {
-    lehmer.fill(0);
+
+template <typename T>
+uint16_t ruCubeStateConverter::vectPermToLexIndexPerm(const T &perm) {
+    static_assert(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>,
+                  "Only cornersArray and edgesArray are allowed.");
+
     visited.reset();
     uint16_t ans = 0;
 
     for (uint8_t i = 0; i < size(perm); ++i) {
         visited[perm[i]] = 1;
 
-        lehmer[i] = perm[i] - (visited << (maxNumOfPieces - perm[i])).count();
-        ans += lehmer[i] * factLookup[size(perm) - 1 - i];
+        int lehmer = perm[i] - (visited << (maxNumOfPieces - perm[i])).count();
+        ans += lehmer * factLookup[size(perm) - 1 - i];
     }
 
     return ans;
 }
 
-uint16_t ruCubeStateConverter::vectEdgesPermToLexIndexEdgesPerm(const std::vector<int8_t> &perm) {
-    return vectPermToLexIndexPerm(perm);
+template uint16_t ruCubeStateConverter::vectPermToLexIndexPerm<cornersArray>(const cornersArray &perm);
+template uint16_t ruCubeStateConverter::vectPermToLexIndexPerm<edgesArray>(const edgesArray &perm);
+
+uint16_t ruCubeStateConverter::vectEdgesPermToLexIndexEdgesPerm(const edgesArray &perm) {
+    return vectPermToLexIndexPerm<edgesArray>(perm);
 }
 
-uint16_t ruCubeStateConverter::vectCornersPermToLexIndexCornersPerm(const std::vector<int8_t> &perm) {
-    return vectPermToLexIndexPerm(perm);
+uint16_t ruCubeStateConverter::vectCornersPermToLexIndexCornersPerm(const cornersArray &perm) {
+    return vectPermToLexIndexPerm<cornersArray>(perm);
 }
 
-uint16_t ruCubeStateConverter::vectCornersOrientToLexIndexCornersOrient(const std::vector<int8_t> &orient) {
+uint16_t ruCubeStateConverter::vectCornersOrientToLexIndexCornersOrient(const cornersArray &orient) {
     uint16_t ans = 0;
 
-    for (uint8_t i = 0; i < size(orient); ++i) {
-        ans += orient[i] * static_cast<uint16_t>(pow(3.0, static_cast<double>(numOfCorners - 1 - i)));
+    for (uint8_t i = 0; i < numOfCorners; ++i) {
+        ans += orient[i] * powersOf3[numOfCorners - 1 - i];
     }
 
     return ans;

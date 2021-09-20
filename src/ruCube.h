@@ -62,6 +62,9 @@ class ruBaseCube {
     public:
         static inline const uint64_t allCornersMask = UINT64_MAX;
         static inline const uint32_t allEdgesMask = UINT32_MAX;
+
+        static inline const uint8_t noOfCorners = 6;
+        static inline const uint8_t noOfEdges = 7;
 };
 
 class ruCube: public ruBaseCube
@@ -220,7 +223,9 @@ class ruLutCube: public ruBaseCube {
         static std::array<int8_t, lutGenerators::noOfEdgesPermutations>                                                            edgesPermPruningTable;
         static std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>      cornersPruningTable;
         static std::vector<std::vector<std::vector<int8_t>>> fullCubePruningTable;
-        static std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
+        //static std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
+        static std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
+
 
     public:
         static inline const uint16_t solvedLexIndexEdgesPerm = 0;

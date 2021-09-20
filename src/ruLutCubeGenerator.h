@@ -6,6 +6,9 @@
 #include "ruCube.h"
 #include "ruCubeIgnoredPiecesGapFiller.h"
 
+using cornersArray = std::array<int8_t, 6>;
+using edgesArray = std::array<int8_t, 7>;
+
 class ruLutCubeGenerator
 {
     public:
@@ -13,7 +16,7 @@ class ruLutCubeGenerator
         virtual ~ruLutCubeGenerator();
         void init( const std::vector<int8_t> &lockedEdges = {}, const std::vector<int8_t> &ignoredEdges = {},
                                 const std::vector<int8_t> &lockedCornersPerm = {}, const std::vector<int8_t> &ignoredCornersPerm = {},
-                                const std::vector<int8_t> &lockedCornersOrient = {}, const std::vector<int8_t> &ignoredCornersOrient = {});
+                                const cornersArray &lockedCornersOrient = { -1, -1, -1, -1, -1, -1 }, const cornersArray &ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 });
 
         ruLutCube next();
         bool hasNext();
@@ -22,15 +25,16 @@ class ruLutCubeGenerator
         void generateNextCube();
 
 
-        permutationGenerator permGen;
+        permutationGenerator<edgesArray> edgesPermGen;
+        permutationGenerator<cornersArray> cornersPermGen;
         orientationGenerator orientGen;
         ruCubeStateConverter converter;
         ruCubeStateValidator validator;
         ruCubeIgnoredPiecesGapFiller filler;
 
-        std::vector<std::vector<int8_t>> cornersOrientations;
-        std::vector<std::vector<int8_t>> cornersPermutations;
-        std::vector<std::vector<int8_t>> edgesPermutations;
+        std::vector<cornersArray> cornersOrientations;
+        std::vector<cornersArray> cornersPermutations;
+        std::vector<edgesArray> edgesPermutations;
         uint16_t lexIndexCornersPerm ;
         uint16_t lexIndexEdgesPerm;
         uint16_t lexIndexCornersOrient;
