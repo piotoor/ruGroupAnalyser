@@ -50,7 +50,6 @@ class ruCubeStateConverter
         static inline const uint8_t shiftBaseCornersOrient = 33;
 
         std::bitset<maxNumOfPieces> visited;
-        std::array<uint8_t, maxNumOfPieces> lehmer;
         std::array<uint8_t, maxNumOfPieces> perm;
 
         static constexpr std::array<uint16_t, maxNumOfPieces> factLookup = {

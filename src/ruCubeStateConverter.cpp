@@ -85,7 +85,6 @@ uint16_t ruCubeStateConverter::intEdgesToLexIndexEdges(const uint32_t edges) {
 }
 
 uint16_t ruCubeStateConverter::intPermToLexIndexPerm(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces) {
-    lehmer.fill(0);
     visited.reset();
     uint16_t ans = 0;
 
@@ -94,8 +93,8 @@ uint16_t ruCubeStateConverter::intPermToLexIndexPerm(const uint64_t perm, uint8_
         uint8_t curr = ((perm & (7UL << shift)) >> shift);
         visited[curr] = 1;
 
-        lehmer[i] = curr - (visited << (maxNumOfPieces - curr)).count();
-        ans += lehmer[i] * factLookup[numOfPieces - 1 - i];
+        int lehmer = curr - (visited << (maxNumOfPieces - curr)).count();
+        ans += lehmer * factLookup[numOfPieces - 1 - i];
     }
 
     return ans;
@@ -179,15 +178,14 @@ uint16_t ruCubeStateConverter::vectPermToLexIndexPerm(const T &perm) {
     static_assert(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>,
                   "Only cornersArray and edgesArray are allowed.");
 
-    lehmer.fill(0);
     visited.reset();
     uint16_t ans = 0;
 
     for (uint8_t i = 0; i < size(perm); ++i) {
         visited[perm[i]] = 1;
 
-        lehmer[i] = perm[i] - (visited << (maxNumOfPieces - perm[i])).count();
-        ans += lehmer[i] * factLookup[size(perm) - 1 - i];
+        int lehmer = perm[i] - (visited << (maxNumOfPieces - perm[i])).count();
+        ans += lehmer * factLookup[size(perm) - 1 - i];
     }
 
     return ans;
