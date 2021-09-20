@@ -56,6 +56,10 @@ class ruCubeStateConverter
             1, 1, 2, 6, 24, 120, 720
         };
 
+        static constexpr std::array<uint16_t, maxNumOfPieces> powersOf3 = {
+            1, 3, 9, 27, 81, 243, 729
+        };
+
 };
 
 #endif // RUCUBESTATECONVERTER_H

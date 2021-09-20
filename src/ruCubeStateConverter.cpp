@@ -2,7 +2,6 @@
 
 #include <set>
 #include <numeric>
-#include <cmath>
 #include <iterator>
 #include <type_traits>
 #include <string>
@@ -110,7 +109,7 @@ uint16_t ruCubeStateConverter::intCornersToLexIndexCornersOrient(const uint64_t 
     for (int8_t i = numOfCorners - 1; i >= 0; --i) {
         uint8_t shift = shiftBaseCornersOrient - i * pieceSizeCorners;
         uint8_t curr = ((corners & (7UL << shift)) >> shift) / 2;
-        ans += curr * static_cast<uint16_t>(pow(3.0, static_cast<double>(numOfCorners - 1 - i)));
+        ans += curr * powersOf3[numOfCorners - 1 - i];
     }
 
     return ans;
@@ -205,8 +204,8 @@ uint16_t ruCubeStateConverter::vectCornersPermToLexIndexCornersPerm(const corner
 uint16_t ruCubeStateConverter::vectCornersOrientToLexIndexCornersOrient(const cornersArray &orient) {
     uint16_t ans = 0;
 
-    for (uint8_t i = 0; i < size(orient); ++i) {
-        ans += orient[i] * static_cast<uint16_t>(pow(3.0, static_cast<double>(numOfCorners - 1 - i)));
+    for (uint8_t i = 0; i < numOfCorners; ++i) {
+        ans += orient[i] * powersOf3[numOfCorners - 1 - i];
     }
 
     return ans;
