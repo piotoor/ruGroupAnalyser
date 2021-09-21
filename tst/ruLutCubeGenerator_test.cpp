@@ -221,12 +221,9 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedAndIgnoredPiecesTest) {
     ruCubeStateConverter converter;
 
     for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
-    //while (generator.hasNext()) {
         const auto &[corners, edges] = expectedCubes[i];
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
-//        std::cout << std::oct << converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()) << " "
-//                    << converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()) << std::endl;
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
         ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
     }
