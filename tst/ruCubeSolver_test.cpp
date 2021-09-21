@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "ruCubeSolver.h"
 #include "ruCubeFactory.h"
+#include "ruLutCubeGenerator.h"
 #include <chrono>
 #include <vector>
 #include <sstream>
@@ -375,4 +376,35 @@ TEST(ruCubeSolverTest, multipleScramblesSolutionsAsStringsTest) {
             std::cout << "DONE" << std::endl;
         }
     }
+}
+
+TEST(ruCubeSolverTest, allRUStatesNoFixedNoIgnoredPiecesGenerateAndSolveTest) {
+    ruLutCubeGenerator generator;
+    std::vector<int8_t> lockedCornersPerm { };
+    std::vector<int8_t> ignoredCornersPerm { };
+    std::vector<int8_t> lockedEdges { };
+    std::vector<int8_t> ignoredEdges { };
+    cornersArray lockedCornersOrient { -1, -1, -1, -1, -1, -1 };
+    cornersArray ignoredCornersOrient { 0, 0, 0, 0, 0, 0 };
+
+    const int expectedNumberOfCubes = 73'483'200;
+
+    generator.init (lockedEdges, ignoredEdges,
+                    lockedCornersPerm, ignoredCornersPerm,
+                    lockedCornersOrient, ignoredCornersOrient);
+
+    int i = 0;
+    ruCubeSolver solver;
+    for (; i < expectedNumberOfCubes; ++i ) {
+        ASSERT_TRUE(generator.hasNext());
+        auto cube = generator.next();
+        solver.solve(&cube);
+        auto sols = solver.getSolutionsAsVectors();
+        ASSERT_FALSE(sols.empty());
+        if (i % 10000000 == 0) {
+            std::cout << "Cubes solved: " << (int) i << std::endl;
+        }
+    }
+    std::cout << "Cubes solved: " << (int) i << std::endl;
+    ASSERT_FALSE(generator.hasNext());
 }
