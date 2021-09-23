@@ -1,3 +1,6 @@
 [submodule "lib/googletest"]
 	path = lib/googletest
 	url = https://github.com/google/googletest.git
+[submodule "lib/arg-parser"]
+	path = lib/arg-parser
+	url = https://github.com/stypox/arg-parser
