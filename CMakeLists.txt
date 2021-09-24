@@ -24,6 +24,7 @@ endif()
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 include_directories(src)
 include_directories(lib/googletest/googletest/include)
+include_directories(lib/arg-parser/include)
 
 add_subdirectory(src)
 add_subdirectory(tst)
