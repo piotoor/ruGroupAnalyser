@@ -3,6 +3,7 @@
 
 #include "ruCubeSimpleBenchmarkTimer.h"
 #include <algorithm>
+#include <fstream>
 
 namespace lutGenerators {
     std::array<std::array<uint16_t, noOfTurns>, noOfEdgesPermutations> generateEdgesPermMoveMap () {
@@ -278,17 +279,55 @@ namespace lutGenerators {
     }
 
     std::vector<std::vector<std::vector<int8_t>>> generateFullCubePruningTable() {
-        std::cout << std::setw(48) << std::left << std::string("Generating full cube pruning table (") + std::to_string((int)maxFullCubePruningDepth) + ")..." << std::flush;
-        ruCubeSimpleBenchmarkTimer bt;
-
         std::vector<std::vector<std::vector<int8_t>>> ans (noOfCornersPermutations, std::vector(noOfCornersOrientations, std::vector<int8_t>(noOfEdgesPermutations, -1)));
+        std::ifstream f;
 
-        ruCube cube;
-        ruCubeStateConverter converter;
-        ans[0][0][0] = 0;
-        fullCubePruningDfs(cube, converter, 1, maxFullCubePruningDepth, -6, ans);
+        #ifndef DEBUG
+            f.open("fullCubePruningTable.pru");
+        #endif
 
-        std::cout << "DONE ";
+        if (f.good()) {
+            std::cout << std::setw(48) << std::left << std::string("Loading full cube pruning table (") + std::to_string((int)maxFullCubePruningDepth) + ")..." << std::flush;
+            ruCubeSimpleBenchmarkTimer bt;
+            for (uint16_t cp = 0; cp < lutGenerators::noOfCornersPermutations; ++cp) {
+                for (uint16_t co = 0; co < lutGenerators::noOfCornersOrientations; co += 3) {
+                    f.read((char*)(ans[cp][co].data()), lutGenerators::noOfEdgesPermutations);
+                    f.read((char*)(ans[cp][co + 1].data()), lutGenerators::noOfEdgesPermutations);
+                    f.read((char*)(ans[cp][co + 2].data()), lutGenerators::noOfEdgesPermutations);
+                }
+            }
+            f.close();
+            std::cout << "DONE ";
+        } else {
+            f.close();
+            {
+                std::cout << std::setw(48) << std::left << std::string("Generating full cube pruning table (") + std::to_string((int)maxFullCubePruningDepth) + ")..." << std::flush;
+                ruCubeSimpleBenchmarkTimer bt;
+
+                ruCube cube;
+                ruCubeStateConverter converter;
+                ans[0][0][0] = 0;
+                fullCubePruningDfs(cube, converter, 1, maxFullCubePruningDepth, -6, ans);
+
+                std::cout << "DONE ";
+            }
+            #ifndef DEBUG
+            {
+                std::cout << std::setw(48) << std::left << std::string("Saving full cube pruning table (") + std::to_string((int)maxFullCubePruningDepth) + ")..." << std::flush;
+                ruCubeSimpleBenchmarkTimer bt;
+                std::ofstream f("fullCubePruningTable.pru");
+                if (f.good()) {
+                    for (uint16_t cp = 0; cp < lutGenerators::noOfCornersPermutations; ++cp) {
+                        for (uint16_t co = 0; co < lutGenerators::noOfCornersOrientations; ++co) {
+                            f.write(reinterpret_cast<char*>(ans[cp][co].data()), lutGenerators::noOfEdgesPermutations);
+                        }
+                    }
+                }
+                f.close();
+                std::cout << "DONE ";
+            }
+            #endif
+        }
         return ans;
     }
 
