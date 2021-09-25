@@ -241,18 +241,48 @@ namespace lutGenerators {
     }
 
     std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> generateCornersPruningTable() {
-        std::cout << std::setw(48) << std::left << "Generating corners pruning table..." << std::flush;
-        ruCubeSimpleBenchmarkTimer bt;
-
+        std::ifstream f("cornersPruningTable.pru");
         std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> ans {};
-        for (auto &row: ans) {
-            row.fill(-1);
+        if (f.good()) {
+            std::cout << std::setw(48) << std::left << "Loading corners pruning table..." << std::flush;
+            ruCubeSimpleBenchmarkTimer bt;
+
+            if (f.good()) {
+                for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
+                    f.read((char*)ans[i].data(), lutGenerators::noOfCornersOrientations);
+                }
+            }
+            std::cout << "DONE ";
+        } else {
+            f.close();
+            {
+                std::cout << std::setw(48) << std::left << "Generating corners pruning table..." << std::flush;
+                ruCubeSimpleBenchmarkTimer bt;
+                for (auto &row: ans) {
+                    row.fill(-1);
+                }
+
+                ruCube cube;
+                ruCubeStateConverter converter;
+                ans[0][0] = 0;
+                cornersPruningDfs(cube, converter, 1, maxCornersPruningDepth, -6, ans);
+
+                std::cout << "DONE ";
+            }
+            {
+                std::cout << std::setw(48) << std::left << "Saving corners pruning table..." << std::flush;
+                ruCubeSimpleBenchmarkTimer bt;
+                std::ofstream f("cornersPruningTable.pru");
+                if (f.good()) {
+                    for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
+                        f.write((char*)ans[i].data(), lutGenerators::noOfCornersOrientations);
+                    }
+                }
+                f.close();
+                std::cout << "DONE ";
+            }
         }
-        ruCube cube;
-        ruCubeStateConverter converter;
-        ans[0][0] = 0;
-        cornersPruningDfs(cube, converter, 1, maxCornersPruningDepth, -6, ans);
-        std::cout << "DONE ";
+
         return ans;
     }
 
