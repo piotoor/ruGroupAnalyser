@@ -320,10 +320,8 @@ namespace lutGenerators {
             std::cout << std::setw(48) << std::left << std::string("Loading full cube pruning table (") + std::to_string((int)maxFullCubePruningDepth) + ")..." << std::flush;
             ruCubeSimpleBenchmarkTimer bt;
             for (uint16_t cp = 0; cp < lutGenerators::noOfCornersPermutations; ++cp) {
-                for (uint16_t co = 0; co < lutGenerators::noOfCornersOrientations; co += 3) {
+                for (uint16_t co = 0; co < lutGenerators::noOfCornersOrientations; ++co ) {
                     f.read((char*)(ans[cp][co].data()), lutGenerators::noOfEdgesPermutations);
-                    f.read((char*)(ans[cp][co + 1].data()), lutGenerators::noOfEdgesPermutations);
-                    f.read((char*)(ans[cp][co + 2].data()), lutGenerators::noOfEdgesPermutations);
                 }
             }
             f.close();
