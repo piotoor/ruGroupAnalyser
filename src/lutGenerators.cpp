@@ -351,19 +351,51 @@ namespace lutGenerators {
     }
 
     std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations> generatePermutationValidityTable() {
-        std::cout << std::setw(48) << std::left << "Generating permutation validity table..." << std::flush;
-        ruCubeSimpleBenchmarkTimer bt;
-
         std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations> ans {};
-        for (auto &row: ans) {
-            row.reset();
+        std::ifstream f("permutationValidityTable.pru");
+
+        if (f.good()) {
+            std::cout << std::setw(48) << std::left << "Loading permutation validity table..." << std::flush;
+            ruCubeSimpleBenchmarkTimer bt;
+            char buff[lutGenerators::noOfEdgesPermutations];
+
+            for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
+
+                f.read(buff, lutGenerators::noOfEdgesPermutations);
+                ans[i] = std::bitset<lutGenerators::noOfEdgesPermutations>(std::string(buff));
+            }
+
+            std::cout << "DONE ";
+        } else {
+            f.close();
+            {
+                std::cout << std::setw(48) << std::left << "Generating permutation validity table..." << std::flush;
+                ruCubeSimpleBenchmarkTimer bt;
+                for (auto &row: ans) {
+                    row.reset();
+                }
+
+                ruCube cube;
+                ruCubeStateConverter converter;
+                ans[0][0] = true;
+                permutationValidityDfs(cube, converter, 1, maxPermutationValidityDepth, -6, ans);
+
+                std::cout << "DONE ";
+            }
+            {
+                std::cout << std::setw(48) << std::left << "Saving permutation validity table..." << std::flush;
+                ruCubeSimpleBenchmarkTimer bt;
+                std::ofstream f("permutationValidityTable.pru");
+                if (f.good()) {
+                    for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
+                        f.write(ans[i].to_string().c_str(), lutGenerators::noOfEdgesPermutations);
+                    }
+                }
+                f.close();
+                std::cout << "DONE ";
+            }
         }
 
-        ruCube cube;
-        ruCubeStateConverter converter;
-        ans[0][0] = true;
-        permutationValidityDfs(cube, converter, 1, maxPermutationValidityDepth, -6, ans);
-        std::cout << "DONE ";
         return ans;
     }
 }
