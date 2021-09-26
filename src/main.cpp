@@ -4,6 +4,8 @@
 #include "ruCubeScrambleParser.h"
 #include "ruCube.h"
 #include "ruCubeSolver.h"
+#include "ruCubeSingleSolveHandler.h"
+#include "ruCubeSimpleBenchmarkTimer.h"
 
 enum class solvingMode {
     SINGLE_SOLVE_STATE,
@@ -93,15 +95,12 @@ int main(int argc, char const* argv[]) {
 
     if (mode.first == solvingMode::SINGLE_SOLVE_SCRAMBLE) {
         auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(mode.second);
-        ruLutCube cube;
-        cube.scramble(scramble);
-        ruCubeSolver solver(minLength, maxLength, maxNumOfSolutions);
-        solver.solve(&cube);
-        auto solutions = solver.getSolutionsAsStrings();
+        ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, true, false, false);
+        ruCubeSimpleBenchmarkTimer bt;
+        solveHandler.solve(scramble);
 
-        for (const auto &sol: solutions) {
-            std::cout << sol << std::endl;
-        }
+        std::cout << solveHandler.getReport();
+        std::cout << "Total time: ";
 
     } else if (mode.first == solvingMode::SINGLE_SOLVE_STATE) {
         std::cout << "Mode currently unavailable." << std::endl;
