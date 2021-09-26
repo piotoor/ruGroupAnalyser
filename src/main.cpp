@@ -68,7 +68,7 @@ int main(int argc, char const* argv[]) {
                 [] (int value){
                     return value >= 0 and value <= 20;
                 }},
-            stypox::Option { "maxLength", minLength, stypox::args("-h=", "--max-length="), "max solution length (0-20; default=20)",
+            stypox::Option { "maxLength", maxLength, stypox::args("-h=", "--max-length="), "max solution length (0-20; default=20)",
                 false,
                 [] (int value){
                     return value >= 0 and value <= 20;
