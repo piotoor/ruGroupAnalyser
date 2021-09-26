@@ -9,4 +9,4 @@ set(CMAKE_THREAD_PREFER_PTHREAD TRUE)
 set(THREADS_PREFER_PTHREAD_FLAG TRUE)
 find_package(Threads REQUIRED)
 
-target_link_libraries(${BINARY}_run Threads::Threads)
+target_link_libraries(${BINARY}_run Threads::Threads -static-libgcc -static-libstdc++)

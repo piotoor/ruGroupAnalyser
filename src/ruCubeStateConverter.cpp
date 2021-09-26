@@ -89,7 +89,7 @@ uint16_t ruCubeStateConverter::intPermToLexIndexPerm(const uint64_t perm, uint8_
 
     for (uint8_t i = 0; i < numOfPieces; ++i) {
         uint8_t shift = shiftBase - i * pieceSize;
-        uint8_t curr = ((perm & (7UL << shift)) >> shift);
+        uint8_t curr = ((perm & (uint64_t(7) << shift)) >> shift);
         visited[curr] = 1;
 
         int lehmer = curr - (visited << (maxNumOfPieces - curr)).count();
@@ -108,7 +108,7 @@ uint16_t ruCubeStateConverter::intCornersToLexIndexCornersOrient(const uint64_t 
 
     for (int8_t i = numOfCorners - 1; i >= 0; --i) {
         uint8_t shift = shiftBaseCornersOrient - i * pieceSizeCorners;
-        uint8_t curr = ((corners & (7UL << shift)) >> shift) / 2;
+        uint8_t curr = ((corners & (uint64_t(7) << shift)) >> shift) / 2;
         ans += curr * powersOf3[numOfCorners - 1 - i];
     }
 
@@ -163,7 +163,7 @@ uint64_t ruCubeStateConverter::lexIndexCornersOrientToIntCornersOrient(uint16_t 
     uint64_t shift = 3;
 
     for (int8_t i = 0; i < numOfCorners; ++i) {
-        ans |= static_cast<uint64_t>(1 << (lexIndexOrient % 3)) << shift;
+        ans |= static_cast<uint64_t>(static_cast<uint64_t>(1) << (lexIndexOrient % 3)) << shift;
         shift += pieceSizeCorners;
         lexIndexOrient /= 3;
     }

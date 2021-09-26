@@ -269,7 +269,7 @@ bool ruLutCube::isSolvedEdges(uint32_t edgesMask) const {
 bool ruLutCube::isSolvedCorners(uint64_t cornersMask) const {
     uint32_t cornersPermMask    = cornersMask & 0xFFFFFFFF;
     uint32_t cornersOrientMask  = (cornersMask >> (sizeof(uint32_t) * 8)) & 0xFFFFFFFF;
-    return ((cornersPermSolvedTable[cornersPerm].to_ulong() & cornersPermMask) == (lutGenerators::cornersPermSolvedBitMask & cornersPermMask)) and ((cornersOrientSolvedTable[cornersOrient].to_ulong() & cornersOrientMask) == (lutGenerators::cornersOrientSolvedBitMask & cornersOrientMask));
+    return ((cornersPermSolvedTable[cornersPerm].to_ullong() & cornersPermMask) == (lutGenerators::cornersPermSolvedBitMask & cornersPermMask)) and ((cornersOrientSolvedTable[cornersOrient].to_ulong() & cornersOrientMask) == (lutGenerators::cornersOrientSolvedBitMask & cornersOrientMask));
 }
 
 bool ruLutCube::isInDomino() const {
