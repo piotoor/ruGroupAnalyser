@@ -1,5 +1,6 @@
 #include "ruCubeSingleSolveHandler.h"
 #include <iomanip>
+#include <cmath>
 
 ruCubeSingleSolveHandler::ruCubeSingleSolveHandler(   uint8_t minLength,
                                                         uint8_t maxLength,
@@ -53,9 +54,23 @@ std::string ruCubeSingleSolveHandler::getReport() {
             }
         }
         if (lineNumbers) {
-            report << std::setw(4) << i + 1;
+            report << std::setw(log(size(solutionsVect))) << std::left << i + 1 << " ";
         }
-        report << solutionsStr[i] << std::endl;
+
+
+        if (fixedWidthMoves) {
+            std::string solution;
+            for (const auto &x: solutionsStr[i]) {
+
+                if (!solution.empty() and x == ' ' and isalpha(solution.back())) {
+                    solution += ' ';
+                }
+                solution += x;
+            }
+            report << solution << std::endl;
+        } else {
+            report << solutionsStr[i] << std::endl;
+        }
     }
     if (headers) {
         report << "\nSolutions found: " << std::to_string(size(solutionsVect)) << std::endl;

@@ -17,10 +17,12 @@ int main(int argc, char const* argv[]) {
     bool help = false;
     bool usage = false;
     std::pair<solvingMode, std::string> mode;
-    bool bareOutputFormat = false;
     uint8_t minLength = 0;
     uint8_t maxLength = 20;
     int maxNumOfSolutions = 1;
+    bool headers = false;
+    bool lineNumbers = false;
+    bool fixedWidthMoves = false;
 
     stypox::ArgParser p {
         std::make_tuple(
@@ -74,8 +76,10 @@ int main(int argc, char const* argv[]) {
                     return value >= 0 and value <= 20;
                 }},
 
-            stypox::HelpSection { "\nOther options:" },
-            stypox::SwitchOption { "bareOutputFormat", bareOutputFormat, stypox::args("-b", "--bare-output"), "bare output format" }
+            stypox::HelpSection { "\nOutput options:" },
+            stypox::SwitchOption { "headers", headers, stypox::args("-H", "--headers"), "headers in solve report" },
+            stypox::SwitchOption { "lineNumbers", lineNumbers, stypox::args("-L", "--line-numbers"), "line numbers in solve report" },
+            stypox::SwitchOption { "fixedWidthMoves", fixedWidthMoves, stypox::args("-F", "--fixed-width"), "fixed width moves in solve report" }
         ),
         "ruGroupAnalyser"
     };
@@ -95,7 +99,7 @@ int main(int argc, char const* argv[]) {
 
     if (mode.first == solvingMode::SINGLE_SOLVE_SCRAMBLE) {
         auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(mode.second);
-        ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, true, false, false);
+        ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves);
         ruCubeSimpleBenchmarkTimer bt;
         solveHandler.solve(scramble);
 
