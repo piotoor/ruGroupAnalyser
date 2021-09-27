@@ -227,6 +227,210 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedAndIgnoredPiecesTest) {
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
         ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
     }
+    ASSERT_FALSE(generator.hasNext());
+}
+
+TEST(ruLutCubeGeneratorTest, generateCubesLastF2LPairTest) {
+    ruLutCubeGenerator generator;
+    std::vector<int8_t> lockedCornersPerm = { 4 };
+    std::vector<int8_t> ignoredCornersPerm = { 0, 1, 2, 3 };
+    std::vector<int8_t> lockedEdges = { 4, 5 };
+    std::vector<int8_t> ignoredEdges = { 0, 1, 2, 3 };
+    cornersArray lockedCornersOrient = { -1, -1, -1, -1, 0, -1 };
+    cornersArray ignoredCornersOrient = { 1, 1, 1, 1, 0, 0 };
+
+    generator.init( lockedEdges, ignoredEdges,
+                    lockedCornersPerm, ignoredCornersPerm,
+                    lockedCornersOrient, ignoredCornersOrient);
+
+    std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes = {
+        { 0101112131415, 00123456 },
+        { 0401112131425, 00123456 },
+        { 0201112131445, 00123456 },
+        { 0101112131415, 00136452 },
+        { 0401112131425, 00136452 },
+        { 0201112131445, 00136452 },
+        { 0101112131415, 00162453 },
+        { 0401112131425, 00162453 },
+        { 0201112131445, 00162453 },
+        { 0101112131415, 00613452 },
+        { 0401112131425, 00613452 },
+        { 0201112131445, 00613452 },
+        { 0101112131415, 06012453 },
+        { 0401112131425, 06012453 },
+        { 0201112131445, 06012453 },
+        { 0101211151413, 00123456 },
+        { 0401211251413, 00123456 },
+        { 0201211451413, 00123456 },
+        { 0101211151413, 00136452 },
+        { 0401211251413, 00136452 },
+        { 0201211451413, 00136452 },
+        { 0101211151413, 00162453 },
+        { 0401211251413, 00162453 },
+        { 0201211451413, 00162453 },
+        { 0101211151413, 00613452 },
+        { 0401211251413, 00613452 },
+        { 0201211451413, 00613452 },
+        { 0101211151413, 06012453 },
+        { 0401211251413, 06012453 },
+        { 0201211451413, 06012453 },
+        { 0111015131412, 00123456 },
+        { 0114025131412, 00123456 },
+        { 0112045131412, 00123456 },
+        { 0111015131412, 00136452 },
+        { 0114025131412, 00136452 },
+        { 0112045131412, 00136452 },
+        { 0111015131412, 00162453 },
+        { 0114025131412, 00162453 },
+        { 0112045131412, 00162453 },
+        { 0111015131412, 00613452 },
+        { 0114025131412, 00613452 },
+        { 0112045131412, 00613452 },
+        { 0111015131412, 06012453 },
+        { 0114025131412, 06012453 },
+        { 0112045131412, 06012453 },
+        { 0111510121413, 00123456 },
+        { 0112540121413, 00123456 },
+        { 0114520121413, 00123456 },
+        { 0111510121413, 00136452 },
+        { 0112540121413, 00136452 },
+        { 0114520121413, 00136452 },
+        { 0111510121413, 00162453 },
+        { 0112540121413, 00162453 },
+        { 0114520121413, 00162453 },
+        { 0111510121413, 00613452 },
+        { 0112540121413, 00613452 },
+        { 0114520121413, 00613452 },
+        { 0111510121413, 06012453 },
+        { 0112540121413, 06012453 },
+        { 0114520121413, 06012453 },
+        { 0151113121410, 00123456 },
+        { 0251113121440, 00123456 },
+        { 0451113121420, 00123456 },
+        { 0151113121410, 00136452 },
+        { 0251113121440, 00136452 },
+        { 0451113121420, 00136452 },
+        { 0151113121410, 00162453 },
+        { 0251113121440, 00162453 },
+        { 0451113121420, 00162453 },
+        { 0151113121410, 00613452 },
+        { 0251113121440, 00613452 },
+        { 0451113121420, 00613452 },
+        { 0151113121410, 06012453 },
+        { 0251113121440, 06012453 },
+        { 0451113121420, 06012453 }
+    };
+
+    ruCubeStateConverter converter;
+
+    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+        const auto &[corners, edges] = expectedCubes[i];
+        ASSERT_TRUE(generator.hasNext());
+        auto ruLutCube = generator.next();
+        ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+    }
 
     ASSERT_FALSE(generator.hasNext());
 }
+
+TEST(ruLutCubeGeneratorTest, generateCubesLLEdgesTest) {
+    ruLutCubeGenerator generator;
+    std::vector<int8_t> lockedCornersPerm = { 0, 1, 2, 3, 4, 5 };
+    std::vector<int8_t> ignoredCornersPerm = { };
+    std::vector<int8_t> lockedEdges = { 4, 5, 6 };
+    std::vector<int8_t> ignoredEdges = { };
+    cornersArray lockedCornersOrient = { 0, 0, 0, 0, 0, 0 };
+    cornersArray ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
+
+    generator.init( lockedEdges, ignoredEdges,
+                    lockedCornersPerm, ignoredCornersPerm,
+                    lockedCornersOrient, ignoredCornersOrient);
+
+    std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes = {
+        { 0101112131415, 00123456 },
+        { 0101112131415, 00231456 },
+        { 0101112131415, 00312456 },
+
+        { 0101112131415, 01032456 },
+        { 0101112131415, 01203456 },
+        { 0101112131415, 01320456 },
+
+        { 0101112131415, 02013456 },
+        { 0101112131415, 02130456 },
+        { 0101112131415, 02301456 },
+
+        { 0101112131415, 03021456 },
+        { 0101112131415, 03102456 },
+        { 0101112131415, 03210456 },
+    };
+
+    ruCubeStateConverter converter;
+
+    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+        const auto &[corners, edges] = expectedCubes[i];
+        ASSERT_TRUE(generator.hasNext());
+        auto ruLutCube = generator.next();
+        ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+    }
+
+    ASSERT_FALSE(generator.hasNext());
+}
+
+TEST(ruLutCubeGeneratorTest, generateCubesLLCornersOrientationTest) {
+    ruLutCubeGenerator generator;
+    std::vector<int8_t> lockedCornersPerm = { 0, 1, 2, 3, 4, 5 };
+    std::vector<int8_t> ignoredCornersPerm = { };
+    std::vector<int8_t> lockedEdges = { 0, 1, 2, 3, 4, 5, 6 };
+    std::vector<int8_t> ignoredEdges = { };
+    cornersArray lockedCornersOrient = { -1, -1, -1, -1, 0, 0 };
+    cornersArray ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
+
+    generator.init( lockedEdges, ignoredEdges,
+                    lockedCornersPerm, ignoredCornersPerm,
+                    lockedCornersOrient, ignoredCornersOrient);
+
+    std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes = {
+        { 0101112131415, 0123456 },
+        { 0101122431415, 0123456 },
+        { 0101142231415, 0123456 },
+        { 0102112431415, 0123456 },
+        { 0102122231415, 0123456 },
+        { 0102142131415, 0123456 },
+        { 0104112231415, 0123456 },
+        { 0104122131415, 0123456 },
+        { 0104142431415, 0123456 },
+        { 0201112431415, 0123456 },
+        { 0201122231415, 0123456 },
+        { 0201142131415, 0123456 },
+        { 0202112231415, 0123456 },
+        { 0202122131415, 0123456 },
+        { 0202142431415, 0123456 },
+        { 0204112131415, 0123456 },
+        { 0204122431415, 0123456 },
+        { 0204142231415, 0123456 },
+        { 0401112231415, 0123456 },
+        { 0401122131415, 0123456 },
+        { 0401142431415, 0123456 },
+        { 0402112131415, 0123456 },
+        { 0402122431415, 0123456 },
+        { 0402142231415, 0123456 },
+        { 0404112431415, 0123456 },
+        { 0404122231415, 0123456 },
+        { 0404142131415, 0123456 },
+    };
+
+    ruCubeStateConverter converter;
+
+    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+        const auto &[corners, edges] = expectedCubes[i];
+        ASSERT_TRUE(generator.hasNext());
+        auto ruLutCube = generator.next();
+        ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+    }
+
+    ASSERT_FALSE(generator.hasNext());
+}
+

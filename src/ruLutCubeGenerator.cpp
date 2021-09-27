@@ -52,7 +52,12 @@ void ruLutCubeGenerator::generateNextCube() {
 
         if (found) {
             hasNextCube = true;
-            lexIndexCornersOrient = converter.vectCornersOrientToLexIndexCornersOrient(cornersOrientations[coIndex]);
+
+            cornersArray cornersOrientationPermuted;
+            for (uint8_t i = 0; i < size(cornersOrientationPermuted); ++i) {
+                cornersOrientationPermuted[i] = cornersOrientations[coIndex][cornersPermutations[cpIndex][i]];
+            }
+            lexIndexCornersOrient = converter.vectCornersOrientToLexIndexCornersOrient(cornersOrientationPermuted);
 
             coIndex++;
             if (coIndex == cornersOrientations.size()) {
