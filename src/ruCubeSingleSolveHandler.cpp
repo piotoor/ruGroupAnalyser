@@ -54,7 +54,7 @@ std::string ruCubeSingleSolveHandler::getReport() {
             }
         }
         if (lineNumbers) {
-            report << std::setw(log(size(solutionsVect))) << std::left << i + 1 << " ";
+            report << std::setw(log(size(solutionsVect)) + 1) << std::left << std::to_string(i + 1) + "." << " ";
         }
 
 
