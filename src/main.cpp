@@ -10,7 +10,8 @@
 enum class solvingMode {
     SINGLE_SOLVE_STATE,
     SINGLE_SOLVE_SCRAMBLE,
-    GENERATOR
+    GENERATOR,
+    ANALYSIS
 };
 
 int main(int argc, char const* argv[]) {
@@ -109,6 +110,8 @@ int main(int argc, char const* argv[]) {
     } else if (mode.first == solvingMode::SINGLE_SOLVE_STATE) {
         std::cout << "Mode currently unavailable." << std::endl;
     } else if (mode.first == solvingMode::GENERATOR ){
+        std::cout << "Mode currently unavailable." << std::endl;
+    } else if (mode.first == solvingMode::ANALYSIS ){
         std::cout << "Mode currently unavailable." << std::endl;
     }
 
