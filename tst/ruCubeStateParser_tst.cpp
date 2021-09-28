@@ -44,12 +44,12 @@ TEST(ruCubeStateParserTest, negativeTest) {
     };
 
     std::vector<std::string> expectedExceptions {
-        "ruCubeStateException: Parsing exception. Invalid cube state definition. Wrong number of sections.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition. Wrong number of sections.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition. Wrong corners format.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition. Wrong corners format.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition. Wrong edges format.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition. Wrong edges format."
+        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+        "ruCubeStateException: Parsing exception. Invalid cube state definition."
     };
 
     uint8_t i = 0;
