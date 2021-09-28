@@ -101,11 +101,9 @@ int main(int argc, char const* argv[]) {
     if (mode.first == solvingMode::SINGLE_SOLVE_SCRAMBLE) {
         auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(mode.second);
         ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves);
-        ruCubeSimpleBenchmarkTimer bt;
         solveHandler.solve(scramble);
 
         std::cout << solveHandler.getReport();
-        std::cout << "Total time: ";
 
     } else if (mode.first == solvingMode::SINGLE_SOLVE_STATE) {
         std::cout << "Mode currently unavailable." << std::endl;

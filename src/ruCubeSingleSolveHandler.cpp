@@ -32,12 +32,16 @@ void ruCubeSingleSolveHandler::configure(  uint8_t minLength,
 }
 
 void ruCubeSingleSolveHandler::solve(std::vector<uint8_t> scramble) {
+    ruCubeSimpleBenchmarkTimer bt(false, false);
     ruLutCube cube;
     cube.scramble(scramble);
     solver.solve(&cube);
+    elapsedTime = bt.getElapsedTime();
 }
 void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
+    ruCubeSimpleBenchmarkTimer bt(false, false);
     solver.solve(&cube);
+    elapsedTime = bt.getElapsedTime();
 }
 
 std::string ruCubeSingleSolveHandler::getReport() {
@@ -74,6 +78,7 @@ std::string ruCubeSingleSolveHandler::getReport() {
     }
     if (headers) {
         report << "\nSolutions found: " << std::to_string(size(solutionsVect)) << std::endl;
+        report << "Solving time: " << elapsedTime.count() << "ms" << std::endl;
     }
 
     return report.str();

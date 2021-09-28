@@ -4,6 +4,7 @@
 #include "ruCube.h"
 #include "ruCubeSolver.h"
 #include <sstream>
+#include "ruCubeSimpleBenchmarkTimer.h"
 
 class ruCubeSingleSolveHandler
 {
@@ -36,6 +37,7 @@ class ruCubeSingleSolveHandler
         bool headers;
         bool lineNumbers;
         bool fixedWidthMoves;
+        std::chrono::milliseconds elapsedTime;
 };
 
 #endif // RUGROUPSINGLESOLVEHANDLER_H
