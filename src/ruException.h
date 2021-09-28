@@ -35,5 +35,11 @@ class ruCubeFactoryException: public ruException {
         std::string what() const noexcept override;
 };
 
-#endif // RUEXCEPTION_H
+class ruCubeSolvedMaskException: public ruException {
+    public:
+        ruCubeSolvedMaskException(const std::string& msg = "Invalid cube solved mask");
+        virtual ~ruCubeSolvedMaskException();
+        std::string what() const noexcept override;
+};
 
+#endif // RUEXCEPTION_H

@@ -42,3 +42,15 @@ ruCubeFactoryException::~ruCubeFactoryException() {
 std::string ruCubeFactoryException::what() const noexcept {
     return std::string("ruCubeFactoryException: " + msg);
 }
+
+
+ruCubeSolvedMaskException::ruCubeSolvedMaskException(const std::string& msg): ruException(msg) {
+
+}
+
+ruCubeSolvedMaskException::~ruCubeSolvedMaskException() {
+}
+
+std::string ruCubeSolvedMaskException::what() const noexcept {
+    return std::string("ruCubeSolvedMaskException: " + msg);
+}
