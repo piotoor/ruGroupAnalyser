@@ -12,7 +12,7 @@ ruCubeStateValidator::~ruCubeStateValidator() {
 }
 
 bool ruCubeStateValidator::isVectCornersValid(const cornersArray& orient, const cornersArray& perm) {
-    return isVectCornersOrientValid(orient) and size(perm) == 6 and isPermutationValid(perm);
+    return isVectCornersOrientValid(orient) and isPermutationValid(perm);
 }
 
 bool ruCubeStateValidator::isVectEdgesValid(const edgesArray& perm) {
