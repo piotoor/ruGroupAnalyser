@@ -22,6 +22,13 @@ namespace lutGenerators {
     inline static const uint16_t noOfEdgesPermSolvedStates = 15;
     inline static const uint32_t edgesSolvedBitmask = 0x7FFF;
     enum class edgesPermSolvedState {
+        FR,
+        DR,
+        BR,
+        UR,
+        UB,
+        UL,
+        UF,
         allEdges,
         f2lEdgesInRSolved,
         f2lEdgesInUSolved,
@@ -30,50 +37,40 @@ namespace lutGenerators {
         mEdgesInM,
         eEdgesInE,
         sEdgesInS,
-
-        UF,
-        UL,
-        UB,
-        UR,
-        BR,
-        DR,
-        FR,
     };
     std::array<std::bitset<noOfEdgesPermSolvedStates>, noOfEdgesPermutations> generateEdgesPermSolvedTable ();
 
     inline static const uint16_t noOfCornersPermSolvedStates = 11;
     inline static const uint64_t cornersPermSolvedBitMask = 0x7FF;
     enum class cornersPermSolvedState {
+        DFR,
+        DRB,
+        UBR,
+        ULB,
+        UFL,
+        URF,
         allCorners,
         f2lCornersInRSolved,
         f2lCornersInUSolved,
         llCornersInRSolved,
         llCornersInUSolved,
-
-        URF,
-        UFL,
-        ULB,
-        UBR,
-        DRB,
-        DFR,
     };
     std::array<std::bitset<noOfCornersPermSolvedStates>, noOfCornersPermutations> generateCornersPermSolvedTable ();
 
     inline static const uint16_t noOfCornersOrientSolvedStates = 11;
     inline static const uint64_t cornersOrientSolvedBitMask = 0x7FF;
     enum class cornersOrientSolvedState {
+        DFR,
+        DRB,
+        UBR,
+        ULB,
+        UFL,
+        URF,
         allCorners,
         f2lCornersInROriented,
         f2lCornersInUOriented,
         llCornersInROriented,
         llCornersInUOriented,
-
-        URF,
-        UFL,
-        ULB,
-        UBR,
-        DRB,
-        DFR,
     };
     std::array<std::bitset<noOfCornersOrientSolvedStates>, noOfCornersOrientations> generateCornersOrientSolvedTable ();
 

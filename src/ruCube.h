@@ -232,8 +232,8 @@ class ruLutCube: public ruBaseCube {
         static inline const uint16_t solvedLexIndexCornersPerm = 0;
         static inline const uint16_t solvedLexIndexCornersOrient = 0;
 
-        static inline const uint64_t allCornersOrientMask = 0x0000000100000000;
-        static inline const uint64_t allCornersPermMask = 0x0000000000000001;
+        static inline const uint64_t allCornersOrientMask = 0x0000004000000000;
+        static inline const uint64_t allCornersPermMask = 0x0000000000000040;
 
         static inline const uint64_t setCornersPermMask     = 0x0000FFFF;
         static inline const uint64_t setCornersOrientMask   = 0xFFFF0000;
