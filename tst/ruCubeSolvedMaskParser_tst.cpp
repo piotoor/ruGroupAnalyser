@@ -7,7 +7,7 @@
 // co, cp, ep
 using ruCubeSolvedMaskPair = std::pair<uint64_t, uint32_t>;
 
-TEST(ruCubeSolvedMaskParserTest, correctMasksTest) {
+TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntCorrectMasksTest) {
     std::vector<std::string> masksStr {
         "FA32FAFA;0345FBCD;FFCA4520",
         "FA32FAFA;0345FBCD;FFCA4520",
@@ -37,7 +37,7 @@ TEST(ruCubeSolvedMaskParserTest, correctMasksTest) {
     }
 }
 
-TEST(ruCubeSolvedMaskParserTest, negativeTest) {
+TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntNegativeTest) {
     std::vector<std::string> masksStr {
         "GA32FAFA;0345FBCD;FFCA4520",
         "FFA32FAFA;0345FBCD;FFCA452",
@@ -71,4 +71,33 @@ TEST(ruCubeSolvedMaskParserTest, negativeTest) {
         ASSERT_EQ(expectedExceptions[i], exceptionMessage);
     }
     ASSERT_EQ(size(expectedExceptions), i);
+}
+
+
+TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntSimpleCorrectMasksTest) {
+    std::vector<std::string> masksStr {
+        "111111111111;1111111",
+        "000000000000;0000000",
+        "111111111111;0000000",
+        "000000000000;1111111",
+        "101010101010;1010101",
+        "010101010101;0101010",
+        "000001010101;1101110",
+    };
+
+    std::vector<ruCubeSolvedMaskPair> expectedMasks {
+        { 0x0000003F'0000003F, 0x0000007F },
+        { 0x00000000'00000000, 0x00000000 },
+        { 0x0000003F'0000003F, 0x00000000 },
+        { 0x00000000'00000000, 0x0000007F },
+
+        { 0x0000003F'00000000, 0x00000055 },
+        { 0x00000000'0000003F, 0x0000002A },
+        { 0x00000000'0000000F, 0x0000006E },
+    };
+
+    for (uint8_t i = 0; i < size(expectedMasks); ++i) {
+        auto masks = ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masksStr[i]);
+        ASSERT_EQ(expectedMasks[i], masks);
+    }
 }
