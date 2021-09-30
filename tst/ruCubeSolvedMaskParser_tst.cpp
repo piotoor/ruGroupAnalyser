@@ -31,7 +31,8 @@ TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntCorrectMasksTest) {
     };
 
     for (uint8_t i = 0; i < size(expectedMasks); ++i) {
-        auto masks = ruCubeSolvedMaskParser::stringSolvedMaskToInt(masksStr[i]);
+        ruCubeSolvedMaskPair masks;
+        ASSERT_NO_THROW(masks = ruCubeSolvedMaskParser::stringSolvedMaskToInt(masksStr[i]));
         ASSERT_EQ(expectedMasks[i], masks);
 
     }
@@ -88,7 +89,8 @@ TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntSimpleCorrectMasksTest) {
     };
 
     for (uint8_t i = 0; i < size(expectedMasks); ++i) {
-        auto masks = ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masksStr[i]);
+        ruCubeSolvedMaskPair masks;
+        ASSERT_NO_THROW(masks = ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masksStr[i]));
         ASSERT_EQ(expectedMasks[i], masks);
     }
 }
