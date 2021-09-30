@@ -42,6 +42,7 @@ void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
 }
 
 std::string ruCubeSingleSolveHandler::getReport() {
+    report.str( std::string() );
     report.clear();
 
     int currLength = -1;
@@ -49,7 +50,10 @@ std::string ruCubeSingleSolveHandler::getReport() {
         if (size(solutionsVect[i]) != currLength) {
             currLength = size(solutionsVect[i]);
             if (headers) {
-                report << "\nSolutions of length " << std::setw(2) << std::to_string(currLength) << "..." << std::endl;
+                if (currLength != -1) {
+                    report << "\n";
+                }
+                report << "Solutions of length " << std::setw(2) << std::to_string(currLength) << "..." << std::endl;
             }
         }
         if (lineNumbers) {
