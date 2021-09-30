@@ -36,7 +36,8 @@ TEST(ruCubeSingleSolveHandlerTest, getReportMaxNumOfSolutionsMinLengthMaxLengthT
 
     std::vector<std::string> scrambles {
         "R",
-        "R U R' U R U2 R'"
+        "R U R' U R U2 R'",
+        "R U2 R' U' R U' R2 U2 R U R' U R"
     };
 
     std::vector<std::string> expectedReports {
@@ -44,7 +45,10 @@ TEST(ruCubeSingleSolveHandlerTest, getReportMaxNumOfSolutionsMinLengthMaxLengthT
         "U2 R2 U2 R2 U2 R2 U2 R2 U2 R2 U2 R\n",
 
         "R U2 R' U' R U' R'\n"
-        "R2 U2 R' U2 R' U R U2 R U2 R' U R'\n"
+        "R2 U2 R' U2 R' U R U2 R U2 R' U R'\n",
+
+        "R' U' R U' R' U2 R2 U R' U R U2 R'\n"
+        "R U2 R' U2 R2 U R' U R U2 R2 U' R U R'\n"
     };
 
     for (uint8_t i = 0; i < size(scrambles); ++i) {
@@ -52,5 +56,34 @@ TEST(ruCubeSingleSolveHandlerTest, getReportMaxNumOfSolutionsMinLengthMaxLengthT
         handler.solve(cube);
         ASSERT_EQ(expectedReports[i], handler.getReport());
     }
+// -----------------------------------------------------------------
+    handler.configure(1, 13, 3);
+
+    scrambles = {
+        "R2 U2 R2 U2 R2 U2",
+        "R' U R' U' R' U' R' U R U R2",
+        "R2 U2 R2 U2 R2 U R2 U2 R2 U2 R2 U'"
+    };
+
+    expectedReports = {
+        "R2 U2 R2 U2 R2 U2\n"
+        "U2 R2 U2 R2 U2 R2\n"
+        "R U2 R2 U R2 U2 R2 U2 R2 U' R2 U2 R\n",
+
+        "R2 U' R' U' R U R U R U' R\n"
+        "R U2 R U R U R U' R' U' R' U R'\n"
+        "U R U2 R U R U R2 U' R' U' R2 U'\n",
+
+        "R2 U2 R U2 R2 U2 R2 U2 R U2 R2\n"
+        "R2 U2 R' U2 R2 U2 R2 U2 R' U2 R2\n"
+        "R2 U2 R2 U2 R2 U R2 U2 R2 U2 R2 U'\n"
+    };
+
+    for (uint8_t i = 0; i < size(scrambles); ++i) {
+        auto cube = parser.getCubeFromScramble(scrambles[i]);
+        handler.solve(cube);
+        ASSERT_EQ(expectedReports[i], handler.getReport());
+    }
+// -----------------------------------------------------------------
 }
 
