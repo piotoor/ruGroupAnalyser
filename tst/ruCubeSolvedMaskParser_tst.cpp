@@ -92,3 +92,30 @@ TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntSimpleCorrectMasksTest) {
         ASSERT_EQ(expectedMasks[i], masks);
     }
 }
+
+TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntSimpleCorrectMasksNegativeTest) {
+    std::vector<std::string> masksStr {
+        "111111111111;1111211",
+        "000200000000;0000000",
+        "111111211111;0002000",
+        "0000;0000000;1111111",
+        "1001010101010;1010101",
+        "0f0101010101;01010100",
+        "",
+    };
+
+    std::string expectedException = "ruCubeSolvedMaskException: Parsing exception. Invalid cube solved mask definition.";
+
+    uint8_t i = 0;
+    for (; i < size(masksStr); ++i) {
+        std::string exceptionMessage;
+        try {
+            auto masks = ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masksStr[i]);
+        } catch (const ruCubeSolvedMaskException &e) {
+            exceptionMessage = e.what();
+        }
+        ASSERT_EQ(expectedException, exceptionMessage);
+    }
+    ASSERT_EQ(size(masksStr), i);
+}
+

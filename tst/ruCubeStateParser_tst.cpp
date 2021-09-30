@@ -41,6 +41,7 @@ TEST(ruCubeStateParserTest, negativeTest) {
         "0001020304305;0123546",
         "102112032405;0323546423423",
         "102112032405;0323547",
+        ""
     };
 
     std::string expectedException = "ruCubeStateException: Parsing exception. Invalid cube state definition.";
