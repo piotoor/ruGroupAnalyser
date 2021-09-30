@@ -32,15 +32,17 @@ void ruCubeSingleSolveHandler::configure(  uint8_t minLength,
 }
 
 void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
+    solutionsStr.clear();
+    solutionsVect.clear();
     ruCubeSimpleBenchmarkTimer bt(false, false);
     solver.solve(&cube);
     elapsedTime = bt.getElapsedTime();
+    solutionsVect = solver.getSolutionsAsVectors();
+    solutionsStr = solver.getSolutionsAsStrings();
 }
 
 std::string ruCubeSingleSolveHandler::getReport() {
     report.clear();
-    auto solutionsVect = solver.getSolutionsAsVectors();
-    auto solutionsStr = solver.getSolutionsAsStrings();
 
     int currLength = -1;
     for (size_t i = 0; i < size(solutionsVect); ++i) {
@@ -75,4 +77,11 @@ std::string ruCubeSingleSolveHandler::getReport() {
     }
 
     return report.str();
+}
+
+std::vector<std::vector<uint8_t>> ruCubeSingleSolveHandler::getSolutionsAsVectors() {
+    return solutionsVect;
+}
+std::vector<std::string> ruCubeSingleSolveHandler::getSolutionsAsStrings() {
+    return solutionsStr;
 }

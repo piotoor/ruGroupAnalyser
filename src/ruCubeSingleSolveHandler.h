@@ -30,6 +30,9 @@ class ruCubeSingleSolveHandler
         void solve(ruLutCube cube);
         std::string getReport();
 
+        std::vector<std::vector<uint8_t>> getSolutionsAsVectors();
+        std::vector<std::string> getSolutionsAsStrings();
+
     private:
         ruCubeSolver solver;
         std::stringstream report;
@@ -37,6 +40,8 @@ class ruCubeSingleSolveHandler
         bool lineNumbers;
         bool fixedWidthMoves;
         std::chrono::milliseconds elapsedTime;
+        std::vector<std::vector<uint8_t>> solutionsVect;
+        std::vector<std::string> solutionsStr;
 };
 
 #endif // RUGROUPSINGLESOLVEHANDLER_H
