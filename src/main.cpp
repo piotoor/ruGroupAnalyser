@@ -6,6 +6,7 @@
 #include "ruCubeSolver.h"
 #include "ruCubeSingleSolveHandler.h"
 #include "ruCubeSimpleBenchmarkTimer.h"
+#include "ruCubeSingleSolveInputParser.h"
 
 enum class solvingMode {
     SINGLE_SOLVE_STATE,
@@ -37,7 +38,7 @@ int main(int argc, char const* argv[]) {
                     try {
                         size_t semicolonIndex = str.find_first_of(";");
                         if (semicolonIndex == std::string::npos)
-                            throw std::runtime_error{""};
+                            throw std::runtime_error{"Invalid format"};
                         solvingMode mode = solvingMode::SINGLE_SOLVE_SCRAMBLE;
 
                         std::string_view modeStr = str.substr(0, semicolonIndex);
@@ -99,14 +100,24 @@ int main(int argc, char const* argv[]) {
     p.validate();
 
     if (mode.first == solvingMode::SINGLE_SOLVE_SCRAMBLE) {
-        auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(mode.second);
+        ruCubeSingleSolveInputParser parser;
+        auto cube = parser.getCubeFromScramble(mode.second);
+        //auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(mode.second);
         ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves);
-        solveHandler.solve(scramble);
+        //solveHandler.solve(scramble);
+        solveHandler.solve(cube);
 
         std::cout << solveHandler.getReport();
 
     } else if (mode.first == solvingMode::SINGLE_SOLVE_STATE) {
-        std::cout << "Mode currently unavailable." << std::endl;
+        ruCubeSingleSolveInputParser parser;
+        auto cube = parser.getCubeFromState(mode.second);
+
+        ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves);
+        solveHandler.solve(cube);
+
+        std::cout << solveHandler.getReport();
+
     } else if (mode.first == solvingMode::GENERATOR ){
         std::cout << "Mode currently unavailable." << std::endl;
     } else if (mode.first == solvingMode::ANALYSIS ){
