@@ -48,11 +48,12 @@ std::string ruCubeSingleSolveHandler::getReport() {
     int currLength = -1;
     for (size_t i = 0; i < size(solutionsVect); ++i) {
         if (size(solutionsVect[i]) != currLength) {
+            if (currLength != -1 and headers) {
+                    report << "\n";
+            }
             currLength = size(solutionsVect[i]);
             if (headers) {
-                if (currLength != -1) {
-                    report << "\n";
-                }
+
                 report << "Solutions of length " << std::setw(2) << std::to_string(currLength) << "..." << std::endl;
             }
         }
