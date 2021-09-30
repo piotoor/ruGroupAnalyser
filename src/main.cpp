@@ -102,9 +102,7 @@ int main(int argc, char const* argv[]) {
     if (mode.first == solvingMode::SINGLE_SOLVE_SCRAMBLE) {
         ruCubeSingleSolveInputParser parser;
         auto cube = parser.getCubeFromScramble(mode.second);
-        //auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(mode.second);
         ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves);
-        //solveHandler.solve(scramble);
         solveHandler.solve(cube);
 
         std::cout << solveHandler.getReport();
@@ -112,7 +110,6 @@ int main(int argc, char const* argv[]) {
     } else if (mode.first == solvingMode::SINGLE_SOLVE_STATE) {
         ruCubeSingleSolveInputParser parser;
         auto cube = parser.getCubeFromState(mode.second);
-
         ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves);
         solveHandler.solve(cube);
 
