@@ -27,7 +27,8 @@ TEST(ruCubeStateParserTest, correctStatesTest) {
     };
 
     for (uint8_t i = 0; i < size(expectedVectStates); ++i) {
-        auto vectState = ruCubeStateParser::stringStateToVect(cubeStatesStr[i]);
+        ruCubeStateVect vectState;
+        ASSERT_NO_THROW(vectState = ruCubeStateParser::stringStateToVect(cubeStatesStr[i]));
         ASSERT_EQ(expectedVectStates[i], vectState);
 
     }
