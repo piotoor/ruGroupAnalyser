@@ -31,13 +31,6 @@ void ruCubeSingleSolveHandler::configure(  uint8_t minLength,
     this->fixedWidthMoves = fixedWidthMoves;
 }
 
-void ruCubeSingleSolveHandler::solve(std::vector<uint8_t> scramble) {
-    ruCubeSimpleBenchmarkTimer bt(false, false);
-    ruLutCube cube;
-    cube.scramble(scramble);
-    solver.solve(&cube);
-    elapsedTime = bt.getElapsedTime();
-}
 void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
     ruCubeSimpleBenchmarkTimer bt(false, false);
     solver.solve(&cube);

@@ -27,7 +27,6 @@ class ruCubeSingleSolveHandler
                         uint32_t edgesMask,
                         uint64_t cornersMask);
 
-        void solve(std::vector<uint8_t> scramble);
         void solve(ruLutCube cube);
         std::string getReport();
 
