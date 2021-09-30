@@ -236,6 +236,12 @@ ruLutCube& ruLutCube::operator=(const ruLutCube& other) {
     return *this;
 }
 
+bool ruLutCube::operator==(const ruLutCube &other) const {
+    return  edgesPerm == other.edgesPerm and
+            cornersPerm == other.cornersPerm and
+            cornersOrient == other.cornersOrient;
+}
+
 uint32_t ruLutCube::getEdges() const {
     return this->edgesPerm;
 }

@@ -173,6 +173,7 @@ class ruLutCube: public ruBaseCube {
         ruLutCube(const ruLutCube& other) = default;
         ~ruLutCube();
         ruLutCube& operator=(const ruLutCube& other);
+        bool operator==(const ruLutCube &other) const;
 
         uint32_t getEdges() const override;
         uint64_t getCorners() const override;
