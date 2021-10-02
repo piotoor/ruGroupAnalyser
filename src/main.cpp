@@ -59,7 +59,7 @@ int main(int argc, char const* argv[]) {
 
                             return std::pair<solvingMode, std::string>{mode, args};
                         } catch (...) {
-                            throw std::runtime_error{"Invalid cube state format" + std::string{str}};
+                            throw std::runtime_error{"Invalid cube state format: " + std::string{str}};
                         }
                 },
                 true },
