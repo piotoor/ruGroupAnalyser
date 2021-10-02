@@ -1,5 +1,6 @@
 #include "gtest/gtest.h"
 #include "ruCubeScrambleParser.h"
+#include "ruException.h"
 
 
 TEST(ruCubeScrambleParserTest, vectorScrambleToStringScrambleTest) {
@@ -90,7 +91,8 @@ TEST(ruCubeScrambleParserTest, stringScrambleToVectorScrambleCleanInputTest) {
     };
 
     for (uint8_t i = 0; i < size(scrambles); ++i) {
-        auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(scrambles[i]);
+        std::vector<uint8_t> scramble;
+        ASSERT_NO_THROW(scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(scrambles[i]));
         ASSERT_EQ(expectedScrambles[i], scramble);
     }
 }
@@ -108,20 +110,15 @@ TEST(ruCubeScrambleParserTest, stringScrambleToVectorScrambleInvalidInputTest) {
         "R U R U R U R'YUI H      U' R2vbnnbvnbvnbvnvb%^^%%^5645665^%%$#$#234#24 U2 R2 U2 R U' R22 U2 R3 U1 R2 U'"
     };
 
-    std::vector<std::vector<uint8_t>> expectedScrambles {
-        { R, R2, Ri, U, U2, Ui },
-        { R },
-        { R2 },
-        { Ri },
-        { U },
-        { U2 },
-        { Ui },
-        { Ri, U },
-        { R, U, R, U, R, U, Ri, U, Ui, R2, U2, R2, U2, R, Ui, R2, U2, R, U, R2, Ui }
-    };
-
-    for (uint8_t i = 0; i < size(scrambles); ++i) {
-        auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(scrambles[i]);
-        ASSERT_EQ(expectedScrambles[i], scramble);
+    std::string expectedException = "ruCubeScrambleException: Parsing exception. Invalid scramble.";
+    uint8_t i = 0;
+    for (; i < size(scrambles); ++i) {
+        try {
+            auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(scrambles[i]);
+        } catch (const ruCubeScrambleException &e) {
+            ASSERT_EQ(expectedException, e.what());
+        }
     }
+    ASSERT_EQ(size(scrambles), i);
+
 }

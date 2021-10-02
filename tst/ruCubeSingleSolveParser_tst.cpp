@@ -77,46 +77,17 @@ TEST(ruCubeSingleSolveInputParserTest, getCubeFromScrambleNegativeTest) {
         "R U-( R' U R U2 R') U2"
     };
 
-    ruCubeStateConverter c;
-    std::vector<ruLutCube> expectedCubes = {
-        ruLutCube(),
-        ruLutCube(),
-        ruLutCube(),
-        ruLutCube(c.intEdgesToLexIndexEdges(00126345),
-                  c.intCornersToLexIndexCornersPerm(0251112402344),
-                  c.intCornersToLexIndexCornersOrient(0251112402344)),
-        ruLutCube(c.intEdgesToLexIndexEdges(00124563),
-                  c.intCornersToLexIndexCornersPerm(0231112442540),
-                  c.intCornersToLexIndexCornersOrient(0231112442540)),
-        ruLutCube(c.intEdgesToLexIndexEdges(00125634),
-                  c.intCornersToLexIndexCornersPerm(0141112151013),
-                  c.intCornersToLexIndexCornersOrient(0141112151013)),
-        ruLutCube(c.intEdgesToLexIndexEdges(03012456),
-                  c.intCornersToLexIndexCornersPerm(0131011121415),
-                  c.intCornersToLexIndexCornersOrient(0131011121415)),
-        ruLutCube(c.intEdgesToLexIndexEdges(01230456),
-                  c.intCornersToLexIndexCornersPerm(0111213101415),
-                  c.intCornersToLexIndexCornersOrient(0111213101415)),
-        ruLutCube(c.intEdgesToLexIndexEdges(02301456),
-                  c.intCornersToLexIndexCornersPerm(0121310111415),
-                  c.intCornersToLexIndexCornersOrient(0121310111415)),
-        ruLutCube(c.intEdgesToLexIndexEdges(02103654),
-                  c.intCornersToLexIndexCornersPerm(0101112131415),
-                  c.intCornersToLexIndexCornersOrient(0101112131415)),
-        ruLutCube(c.intEdgesToLexIndexEdges(06403125),
-                  c.intCornersToLexIndexCornersPerm(0224543202144),
-                  c.intCornersToLexIndexCornersOrient(0224543202144)),
-        ruLutCube(c.intEdgesToLexIndexEdges(03102456),
-                  c.intCornersToLexIndexCornersPerm(0401142431415),
-                  c.intCornersToLexIndexCornersOrient(0401142431415)),
-    };
-
+    std::string expectedException = "ruCubeScrambleException: Parsing exception. Invalid scramble.";
     ruCubeSingleSolveInputParser parser;
-    for (uint8_t i = 0; i < size(scrambles); ++i) {
-        ruLutCube cube;
-        ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
-        ASSERT_EQ(expectedCubes[i], cube);
+    uint8_t i = 0;
+    for (; i < size(scrambles); ++i) {
+        try {
+            auto cube = parser.getCubeFromScramble(scrambles[i]);
+        } catch (const ruCubeScrambleException &e) {
+            ASSERT_EQ(expectedException, e.what());
+        }
     }
+    ASSERT_EQ(size(scrambles), i);
 }
 
 TEST(ruCubeSingleSolveInputParserTest, getCubeFromStateTest) {

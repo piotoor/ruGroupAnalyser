@@ -54,3 +54,16 @@ ruCubeSolvedMaskException::~ruCubeSolvedMaskException() {
 std::string ruCubeSolvedMaskException::what() const noexcept {
     return std::string("ruCubeSolvedMaskException: " + msg);
 }
+
+
+
+ruCubeScrambleException::ruCubeScrambleException(const std::string& msg): ruException(msg) {
+
+}
+
+ruCubeScrambleException::~ruCubeScrambleException() {
+}
+
+std::string ruCubeScrambleException::what() const noexcept {
+    return std::string("ruCubeScrambleException: " + msg);
+}

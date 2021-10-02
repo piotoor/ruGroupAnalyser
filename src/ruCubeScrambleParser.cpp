@@ -4,10 +4,14 @@
 #include <string>
 #include <cctype>
 #include <algorithm>
+#include "ruException.h"
 
 namespace ruCubeScrambleParser {
 
     std::string vectorScrambleToStringScramble(const std::vector<uint8_t> &moves) {
+        if (moves.empty()) {
+            return "";
+        }
         return std::accumulate( begin(moves),
                                 end(moves),
                                 std::string(""),
@@ -18,6 +22,11 @@ namespace ruCubeScrambleParser {
 
     std::vector<uint8_t> stringScrambleToVectorScramble(const std::string &moves) {
         std::vector<uint8_t> ans;
+        std::regex scrambleValidator("^([RU][[:space:]]*['2]?[[:space:]]*)*$");
+        if (not std::regex_match (moves, scrambleValidator)) {
+            throw ruCubeScrambleException("Parsing exception. Invalid scramble.");
+        }
+
         std::regex r("[RU][[:space:]]*['2]?");
         auto moves_begin = std::sregex_iterator(moves.begin(), moves.end(), r);
         auto moves_end = std::sregex_iterator();

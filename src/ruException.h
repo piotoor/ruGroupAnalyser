@@ -42,4 +42,11 @@ class ruCubeSolvedMaskException: public ruException {
         std::string what() const noexcept override;
 };
 
+class ruCubeScrambleException: public ruException {
+    public:
+        ruCubeScrambleException(const std::string& msg = "Invalid scramble");
+        virtual ~ruCubeScrambleException();
+        std::string what() const noexcept override;
+};
+
 #endif // RUEXCEPTION_H

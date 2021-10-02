@@ -24,7 +24,8 @@ TEST(ruCubeSingleSolveHandlerTest, getReportDefaultTest) {
     };
 
     for (uint8_t i = 0; i < size(scrambles); ++i) {
-        auto cube = parser.getCubeFromScramble(scrambles[i]);
+        ruLutCube cube;
+        ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
         ASSERT_EQ(expectedReports[i], handler.getReport());
     }
@@ -52,7 +53,8 @@ TEST(ruCubeSingleSolveHandlerTest, getReportMaxNumOfSolutionsMinLengthMaxLengthT
     };
 
     for (uint8_t i = 0; i < size(scrambles); ++i) {
-        auto cube = parser.getCubeFromScramble(scrambles[i]);
+        ruLutCube cube;
+        ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
         ASSERT_EQ(expectedReports[i], handler.getReport());
     }
@@ -80,7 +82,8 @@ TEST(ruCubeSingleSolveHandlerTest, getReportMaxNumOfSolutionsMinLengthMaxLengthT
     };
 
     for (uint8_t i = 0; i < size(scrambles); ++i) {
-        auto cube = parser.getCubeFromScramble(scrambles[i]);
+        ruLutCube cube;
+        ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
         ASSERT_EQ(expectedReports[i], handler.getReport());
     }
