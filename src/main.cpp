@@ -8,6 +8,7 @@
 #include "ruCubeSimpleBenchmarkTimer.h"
 #include "ruCubeSingleSolveInputParser.h"
 #include "ruException.h"
+#include "ruCubeSolvedMaskParser.h"
 #include <cstdlib>
 
 enum class solvingMode {
@@ -27,6 +28,7 @@ int main(int argc, char const* argv[]) {
     bool headers = false;
     bool lineNumbers = false;
     bool fixedWidthMoves = false;
+    std::pair<uint64_t, uint32_t> solvedMask = std::make_pair(ruBaseCube::allCornersMask, ruBaseCube::allEdgesMask);
 
     try {
         stypox::ArgParser p {
@@ -80,6 +82,15 @@ int main(int argc, char const* argv[]) {
                     [] (int value){
                         return value >= 0 and value <= 20;
                     }},
+                stypox::ManualOption { "solvedMask", solvedMask, stypox::args("-s=", "--solved-mask="), "solved mask (format: \"001101010101;1010011\")",
+                    [] (const std::string_view& str) {
+                        try {
+                            return ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(std::string{str});
+                        } catch (const ruCubeSolvedMaskException &e) {
+                            throw std::runtime_error{e.what()};
+                        }
+                },
+                false },
 
                 stypox::HelpSection { "\nOutput options:" },
                 stypox::SwitchOption { "headers", headers, stypox::args("-H", "--headers"), "headers and footers" },
@@ -113,7 +124,8 @@ int main(int argc, char const* argv[]) {
         ruCubeSingleSolveInputParser parser;
         try {
             auto cube = parser.getCubeFromScramble(mode.second);
-            ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves);
+            auto [cornersMask, edgesMask] = solvedMask;
+            ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves, edgesMask, cornersMask);
             solveHandler.solve(cube);
 
             std::cout << solveHandler.getReport();
@@ -126,7 +138,8 @@ int main(int argc, char const* argv[]) {
         ruCubeSingleSolveInputParser parser;
         try {
             auto cube = parser.getCubeFromState(mode.second);
-            ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves);
+            auto [cornersMask, edgesMask] = solvedMask;
+            ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves, edgesMask, cornersMask);
             solveHandler.solve(cube);
 
             std::cout << solveHandler.getReport();
