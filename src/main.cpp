@@ -131,7 +131,7 @@ int main(int argc, char const* argv[]) {
 
             std::cout << solveHandler.getReport();
         } catch (const ruCubeStateException& e) {
-            throw std::runtime_error{e.what()};
+            std::cout << e.what() << std::endl;
             return EXIT_FAILURE;
         }
 
