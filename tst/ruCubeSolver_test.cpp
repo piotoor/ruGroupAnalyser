@@ -420,7 +420,7 @@ TEST(ruCubeSolverTest, customRuLutCubeEdgesMaskTest) {
           "R2",
           "R2",
           "R2",
-          "R2",
+          "R",
           "U2 R"
         },
 
