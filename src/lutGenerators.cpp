@@ -203,8 +203,14 @@ namespace lutGenerators {
                 }
 
                 cube.turn(i);
-                uint32_t edgesPerm = cube.getEdges();
-                uint32_t partialPerm = 0;
+                uint32_t partialPerm = cube.getEdges();
+                for (uint8_t i = 0; i < ruCube::noOfEdges; ++i) {
+                    int curr = ((07 << i * 3) & partialPerm) >> i * 3;
+                    if (partInd & (1 << (7 - curr - 1))) {
+                        partialPerm |= (07 << i * 3);
+                    }
+                }
+
                 if (pruningTable[partInd].find(partialPerm) == pruningTable[partInd].end()) {
                     pruningTable[partInd][partialPerm] = depth;
                     partialPermOwners[partInd].insert(conv.intEdgesToLexIndexEdges(cube.getEdges()));
@@ -237,7 +243,12 @@ namespace lutGenerators {
 
         for (uint8_t partInd = 0; partInd < noOfPartialEdgesPermCases; ++partInd) {
             edgesPartialPermPruningDfs(cube, converter, 1, maxEdgesPermPruningDepth, -6, partInd, edgesPartialPermPruningTable, partialPermOwners);
+            for (const auto &x: partialPermOwners[partInd]) {
+                ans[x][partInd] = edgesPartialPermPruningTable[partInd][x];
+            }
         }
+
+
         std::cout << "DONE ";
         return ans;
     }

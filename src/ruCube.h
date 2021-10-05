@@ -44,7 +44,7 @@ class ruBaseCube {
         void scramble(std::vector<uint8_t> moves);
         void inverseScramble(std::vector<uint8_t> moves);
 
-        virtual bool isPruningPossible(uint8_t remainingMoves) const = 0;
+        virtual bool isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask) const = 0;
 
     protected:
         virtual void R() = 0;
@@ -62,6 +62,8 @@ class ruBaseCube {
     public:
         static inline const uint64_t allCornersMask = UINT64_MAX;
         static inline const uint32_t allEdgesMask = UINT32_MAX;
+        static inline const uint64_t noCornersMask = 0;
+        static inline const uint32_t noEdgesMask = 0;
 
         static inline const uint8_t noOfCorners = 6;
         static inline const uint8_t noOfEdges = 7;
@@ -92,7 +94,7 @@ class ruCube: public ruBaseCube
 
         void reset() override;
 
-        bool isPruningPossible(uint8_t remainingMoves) const override;
+        bool isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask) const override;
 
     protected:
         void R() override;
@@ -199,7 +201,7 @@ class ruLutCube: public ruBaseCube {
         static bool isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient);
         void reset() override;
 
-        bool isPruningPossible(uint8_t remainingMoves) const override;
+        bool isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask) const override;
 
     protected:
         void R() override;

@@ -376,3 +376,125 @@ TEST(ruCubeSolverTest, multipleScramblesSolutionsAsStringsTest) {
         }
     }
 }
+
+TEST(ruCubeSolverTest, customRuLutCubeEdgesMaskTest) {
+    std::vector<std::vector<uint8_t>> scrambles {
+        {  },
+        { R },
+        { R2 },
+        { Ri },
+        { R2, U },
+        { R2, U2 },
+        { R2, Ui },
+        { R2, U2, R, U, Ri, Ui },
+        { R2, U, R, Ui, Ri, Ui },
+    };
+
+    std::vector<std::vector<std::string>> expectedSolutionsStrings {
+        { "",
+          "R'",
+          "R2",
+          "R",
+          "R2",
+          "R2",
+          "R2",
+          "R2",
+          "R2"
+        },
+
+        { "",
+          "R'",
+          "R2",
+          "R",
+          "U' R2",
+          "U2 R2",
+          "U R2",
+          "U2 R2",
+          "R'"
+        },
+
+        { "",
+          "R'",
+          "R2",
+          "R",
+          "R2",
+          "R2",
+          "R2",
+          "R2",
+          "U2 R"
+        },
+
+        { "",
+          "R'",
+          "R2",
+          "R",
+          "R2",
+          "R2",
+          "R2",
+          "R2",
+          "R2"
+        },
+
+        { "",
+          "",
+          "",
+          "",
+          "U'",
+          "U2",
+          "U",
+          "U2",
+          ""
+        },
+
+        { "",
+          "",
+          "",
+          "",
+          "U'",
+          "U2",
+          "U",
+          "U'",
+          "U"
+        },
+
+        { "",
+          "",
+          "",
+          "",
+          "U'",
+          "U2",
+          "U",
+          "R U",
+          "U"
+        },
+
+    };
+
+    std::vector<uint32_t> edgesMasks {
+        0b0000001,
+        0b0000010,
+        0b0000100,
+        0b0001000,
+        0b0010000,
+        0b0100000,
+        0b1000000,
+    };
+
+    ruLutCube cube;
+    ruCubeSolver solver;
+    const uint8_t minLength = 0;
+    const uint8_t maxLength = 20;
+    const uint8_t maxNoOfSols = 1;
+
+    for (uint8_t maskInd = 0; maskInd < size(edgesMasks); ++maskInd) {
+        solver.configure(minLength, maxLength, maxNoOfSols, edgesMasks[maskInd], ruLutCube::noCornersMask);
+        for (uint8_t i = 0; i < size(scrambles); ++i) {
+            cube.reset();
+            cube.scramble(scrambles[i]);
+            solver.solve(&cube);
+            auto solution = solver.getSolutionsAsStrings()[0];
+            ASSERT_EQ(expectedSolutionsStrings[maskInd][i], solution);
+        }
+
+    }
+}

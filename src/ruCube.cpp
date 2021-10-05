@@ -198,8 +198,8 @@ void ruCube::Ui() {
 	corners = (corners & 07777) | ((corners & 0007777770000) << 6) | ((corners & 0770000000000) >> 18);
 }
 
-bool ruCube::isPruningPossible(uint8_t remainingMoves) const {
-    return remainingMoves and 0;
+bool ruCube::isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask) const {
+    return remainingMoves and edgesPermMask and 0;
 }
 
 std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfEdgesPermutations>    ruLutCube::edgesPermMoveMap     = lutGenerators::generateEdgesPermMoveMap();
@@ -304,10 +304,12 @@ void ruLutCube::reset() {
     this->cornersOrient = solvedLexIndexCornersOrient;
 }
 
-bool ruLutCube::isPruningPossible(uint8_t remainingMoves) const {
-    return  //this->edgesPermPruningTable[this->edgesPerm] > remainingMoves or
-            //this->cornersPruningTable[this->cornersPerm][this->cornersOrient] > remainingMoves or
-            this->fullCubePruningTable[this->cornersPerm][this->cornersOrient][this->edgesPerm] > remainingMoves;
+bool ruLutCube::isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask) const {
+    if (edgesPermMask != ruLutCube::allEdgesMask) {
+        return this->edgesPermPruningTable[this->edgesPerm][static_cast<uint8_t>(edgesPermMask & 0xF)] > remainingMoves;
+    } else {
+        return this->fullCubePruningTable[this->cornersPerm][this->cornersOrient][this->edgesPerm] > remainingMoves;
+    }
 }
 
 void ruLutCube::R() {
