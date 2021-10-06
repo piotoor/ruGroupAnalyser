@@ -195,7 +195,7 @@ namespace lutGenerators {
                                     uint8_t maxDepth,
                                     int8_t prevMove,
                                     uint8_t partInd,
-                                    std::array<std::unordered_map<uint32_t, uint8_t>, noOfPartialEdgesPermCases> &pruningTable,
+                                    std::unordered_map<uint32_t, uint8_t> &pruningTable,
                                     std::unordered_map<uint32_t, std::unordered_set<uint32_t>> &partialPermOwners) {
         if (depth <= maxDepth) {
             for (int8_t i = 0; i < 6; ++i) {
@@ -213,12 +213,12 @@ namespace lutGenerators {
                 }
 
                 partialPermOwners[partialPerm].insert(conv.intEdgesToLexIndexEdges(cube.getEdges()));
-                if (pruningTable[partInd].find(partialPerm) == pruningTable[partInd].end()) {
-                    pruningTable[partInd][partialPerm] = depth;
+                if (pruningTable.find(partialPerm) == pruningTable.end()) {
+                    pruningTable[partialPerm] = depth;
 
                 } else {
-                    if (depth < pruningTable[partInd][partialPerm]) {
-                        pruningTable[partInd][partialPerm] = depth;
+                    if (depth < pruningTable[partialPerm]) {
+                        pruningTable[partialPerm] = depth;
                     }
                 }
 
@@ -253,7 +253,7 @@ namespace lutGenerators {
                 ruCubeStateConverter converter;
                 ans[0].fill(0);
 
-                std::array<std::unordered_map<uint32_t, uint8_t>, noOfPartialEdgesPermCases> edgesPartialPermPruningTable;
+                std::unordered_map<uint32_t, uint8_t> edgesPartialPermPruningTable;
                 std::unordered_map<uint32_t, std::unordered_set<uint32_t>> partialPermOwners;
 
                 for (uint8_t partInd = 0; partInd < noOfPartialEdgesPermCases; ++partInd) {
@@ -261,7 +261,7 @@ namespace lutGenerators {
                     edgesPartialPermPruningDfs(cube, converter, 1, maxEdgesPermPruningDepth, -6, partInd, edgesPartialPermPruningTable, partialPermOwners);
                     for (const auto &[partial, perms]: partialPermOwners) {
                         for (const auto &perm: perms) {
-                            ans[perm][partInd] = edgesPartialPermPruningTable[partInd][partial];// can be 1D and cleared every iter.
+                            ans[perm][partInd] = edgesPartialPermPruningTable[partial];// can be 1D and cleared every iter.
                         }
                     }
                 }
