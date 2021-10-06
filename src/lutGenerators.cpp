@@ -261,7 +261,7 @@ namespace lutGenerators {
                     edgesPartialPermPruningDfs(cube, converter, 1, maxEdgesPermPruningDepth, -6, partInd, edgesPartialPermPruningTable, partialPermOwners);
                     for (const auto &[partial, perms]: partialPermOwners) {
                         for (const auto &perm: perms) {
-                            ans[perm][partInd] = edgesPartialPermPruningTable[partial];// can be 1D and cleared every iter.
+                            ans[perm][partInd] = edgesPartialPermPruningTable[partial];
                         }
                     }
                 }
