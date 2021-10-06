@@ -204,13 +204,7 @@ namespace lutGenerators {
                 }
 
                 cube.turn(i);
-                uint32_t partialPerm = cube.getEdges();
-                for (uint8_t i = 0; i < ruCube::noOfEdges; ++i) {
-                    int curr = ((07 << i * 3) & partialPerm) >> i * 3;
-                    if ((partInd & (1 << (7 - curr - 1))) == 0) {
-                        partialPerm |= (07 << i * 3);
-                    }
-                }
+                uint32_t partialPerm = cube.getPartialEdges(partInd);
 
                 partialPermOwners[partialPerm].insert(conv.intEdgesToLexIndexEdges(cube.getEdges()));
                 if (pruningTable.find(partialPerm) == pruningTable.end()) {

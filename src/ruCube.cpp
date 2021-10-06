@@ -87,6 +87,19 @@ void ruCube::setCube(uint32_t edges, uint64_t corners) {
     setCorners(corners);
 }
 
+uint32_t ruCube::getPartialEdges(uint8_t mask) const {
+    uint32_t partialPerm = getEdges();
+
+    for (uint8_t i = 0; i < ruCube::noOfEdges; ++i) {
+        int curr = ((07 << i * 3) & partialPerm) >> i * 3;
+        if ((mask & (1 << (7 - curr - 1))) == 0) {
+            partialPerm |= (07 << i * 3);
+        }
+    }
+
+    return partialPerm;
+}
+
 bool ruCube::isSolved(uint32_t edgesMask, uint64_t cornersMask) const {
     return isSolvedEdges(edgesMask) && isSolvedCorners(cornersMask);
 }

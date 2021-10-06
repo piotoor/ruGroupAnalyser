@@ -82,6 +82,7 @@ class ruCube: public ruBaseCube
         void setEdges(uint32_t edges) override;
         void setCorners(uint64_t corners) override;
         void setCube(uint32_t edges, uint64_t corners) override;
+        uint32_t getPartialEdges(uint8_t mask) const;
 
         bool isSolved(uint32_t edgesMask = ruCube::solvedEdges, uint64_t cornersMask = ruCube::solvedCorners) const override;
         bool isSolvedEdges(uint32_t edgesMask) const override;

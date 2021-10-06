@@ -377,3 +377,64 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
     }
 
 }
+
+TEST(ruCubeTest, getPartialEdgesTest) {
+    const std::vector<uint32_t> edgesMasks {
+        0b0000001,
+        0b0000010,
+        0b0000100,
+        0b0001000,
+        0b0010000,
+        0b0100000,
+        0b1000000,
+
+        0b1111111,
+
+        0b0000111,
+
+        0b0001111,
+        0b1111000,
+    };
+
+    const std::vector<uint32_t> intEdges {
+        00123456,
+        06543210,
+    };
+
+
+    const std::vector<std::vector<uint32_t>> expectedPartialEdges {
+        {   07777776,
+            07777757,
+            07777477,
+            07773777,
+            07727777,
+            07177777,
+            00777777,
+
+            00123456,
+            07777456,
+            07773456,
+            00123777    },
+
+        {   06777777,
+            07577777,
+            07747777,
+            07773777,
+            07777277,
+            07777717,
+            07777770,
+
+            06543210,
+            06547777,
+            06543777,
+            07773210    },
+    };
+
+    ruCube cube;
+    for (uint8_t i = 0; i < size(expectedPartialEdges); ++i) {
+        for (uint8_t j = 0; j < size(edgesMasks); ++j) {
+            cube.setEdges(intEdges[i]);
+            ASSERT_EQ(expectedPartialEdges[i][j], cube.getPartialEdges(edgesMasks[j]));
+        }
+    }
+}
