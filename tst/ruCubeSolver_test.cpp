@@ -468,6 +468,28 @@ TEST(ruCubeSolverTest, customRuLutCubeEdgesMaskTest) {
           "U"
         },
 
+        { "",
+          "R'",
+          "R2",
+          "R",
+          "U' R2",
+          "U2 R2",
+          "U R2",
+          "U R U' R' U2 R2",
+          "U R U R' U' R2"
+        },
+
+        { "",
+          "R'",
+          "R2",
+          "R",
+          "U' R2",
+          "U2 R2",
+          "U R2",
+          "U2 R U2 R",
+          "R U2 R' U2 R2"
+        },
+
     };
 
     std::vector<uint32_t> edgesMasks {
@@ -478,6 +500,10 @@ TEST(ruCubeSolverTest, customRuLutCubeEdgesMaskTest) {
         0b0010000,
         0b0100000,
         0b1000000,
+
+        0b1111111,
+
+        0b0000111
     };
 
     ruLutCube cube;
