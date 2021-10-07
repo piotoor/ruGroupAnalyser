@@ -44,7 +44,7 @@ class ruBaseCube {
         void scramble(std::vector<uint8_t> moves);
         void inverseScramble(std::vector<uint8_t> moves);
 
-        virtual bool isPruningPossible(uint8_t remainingMoves) const = 0;
+        virtual bool isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask) const = 0;
 
     protected:
         virtual void R() = 0;
@@ -62,6 +62,8 @@ class ruBaseCube {
     public:
         static inline const uint64_t allCornersMask = UINT64_MAX;
         static inline const uint32_t allEdgesMask = UINT32_MAX;
+        static inline const uint64_t noCornersMask = 0;
+        static inline const uint32_t noEdgesMask = 0;
 
         static inline const uint8_t noOfCorners = 6;
         static inline const uint8_t noOfEdges = 7;
@@ -80,6 +82,7 @@ class ruCube: public ruBaseCube
         void setEdges(uint32_t edges) override;
         void setCorners(uint64_t corners) override;
         void setCube(uint32_t edges, uint64_t corners) override;
+        uint32_t getPartialEdges(uint8_t mask) const;
 
         bool isSolved(uint32_t edgesMask = ruCube::solvedEdges, uint64_t cornersMask = ruCube::solvedCorners) const override;
         bool isSolvedEdges(uint32_t edgesMask) const override;
@@ -92,7 +95,7 @@ class ruCube: public ruBaseCube
 
         void reset() override;
 
-        bool isPruningPossible(uint8_t remainingMoves) const override;
+        bool isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask) const override;
 
     protected:
         void R() override;
@@ -199,7 +202,7 @@ class ruLutCube: public ruBaseCube {
         static bool isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient);
         void reset() override;
 
-        bool isPruningPossible(uint8_t remainingMoves) const override;
+        bool isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask) const override;
 
     protected:
         void R() override;
@@ -221,7 +224,7 @@ class ruLutCube: public ruBaseCube {
         static std::array<std::bitset<lutGenerators::noOfCornersPermSolvedStates>, lutGenerators::noOfCornersPermutations>      cornersPermSolvedTable;
         static std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerators::noOfCornersOrientations>    cornersOrientSolvedTable;
 
-        static std::array<int8_t, lutGenerators::noOfEdgesPermutations>                                                            edgesPermPruningTable;
+        static std::array<std::array<uint8_t, lutGenerators::noOfPartialEdgesPermCases>, lutGenerators::noOfEdgesPermutations>  edgesPermPruningTable;
         static std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>      cornersPruningTable;
         static std::vector<std::vector<std::vector<int8_t>>> fullCubePruningTable;
         //static std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
