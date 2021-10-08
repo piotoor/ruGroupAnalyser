@@ -4,19 +4,10 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
-option(BUILD_TEST "Build the unit tests" ON)
+option(BUILD_TEST "Build the unit tests" OFF)
 
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/debug)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/release)
-
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    set(CMAKE_C_COMPILER /usr/bin/x86_64-linux-gnu-gcc-9)
-    set(CMAKE_CXX_COMPILER /usr/bin/x86_64-linux-gnu-g++-9)
-
-elseif(${CMAKE_SYSTEM_NAME} MATCHES "Windows")
-    set(CMAKE_C_COMPILER /usr/bin/x86_64-w64-mingw32-gcc)
-    set(CMAKE_CXX_COMPILER /usr/bin/x86_64-w64-mingw32-g++)
-endif()
 
 project(ruGroupAnalyser)
 set(CMAKE_CXX_STANDARD 17)
@@ -37,7 +28,7 @@ endif()
 set(CMAKE_EXE_LINKER_FLAGS " -static")
 
 
-if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
+if(CMAKE_WIN_COMPILATION)
     if(CMAKE_BUILD_TYPE STREQUAL Debug AND BUILD_TEST)
         set(
             MEMCHECK_SCRIPTS
