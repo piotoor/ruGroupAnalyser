@@ -4,6 +4,8 @@ if(NOT CMAKE_BUILD_TYPE)
   set(CMAKE_BUILD_TYPE Release)
 endif()
 
+option(BUILD_TEST "Build the unit tests" ON)
+
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG ${CMAKE_BINARY_DIR}/debug)
 set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/release)
 
@@ -26,14 +28,17 @@ include_directories(lib/googletest/googletest/include)
 include_directories(lib/arg-parser/include)
 
 add_subdirectory(src)
-add_subdirectory(tst)
-add_subdirectory(lib/googletest)
+
+if(BUILD_TEST)
+    add_subdirectory(tst)
+    add_subdirectory(lib/googletest)
+endif()
 
 set(CMAKE_EXE_LINKER_FLAGS " -static")
 
 
 if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
-    if(CMAKE_BUILD_TYPE STREQUAL Debug)
+    if(CMAKE_BUILD_TYPE STREQUAL Debug AND BUILD_TEST)
         set(
             MEMCHECK_SCRIPTS
             runWithMemcheck.sh
@@ -63,7 +68,7 @@ if(${CMAKE_SYSTEM_NAME} MATCHES "Linux")
             "${CMAKE_RUNTIME_OUTPUT_DIRECTORY_DEBUG}/tmp"
         )
 
-    elseif(CMAKE_BUILD_TYPE STREQUAL Release)
+    elseif(CMAKE_BUILD_TYPE STREQUAL Release AND BUILD_TEST)
         set(
             CALLGRIND_SCRIPTS
             parseCallgrind.sh
