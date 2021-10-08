@@ -15,14 +15,13 @@ set(CMAKE_CXX_FLAGS "-Wall -Wextra")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -DDEBUG")
 include_directories(src)
-include_directories(lib/googletest/googletest/include)
 include_directories(lib/arg-parser/include)
-
 add_subdirectory(src)
 
 if(BUILD_TEST)
     add_subdirectory(tst)
     add_subdirectory(lib/googletest)
+    include_directories(lib/googletest/googletest/include)
 endif()
 
 set(CMAKE_EXE_LINKER_FLAGS " -static")
