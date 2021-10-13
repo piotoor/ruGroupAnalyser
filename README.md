@@ -21,7 +21,14 @@
 ## General info
 This is not a regular Rubik's Cube solver. This application deals with a very specific subset of states, called RU group. Without resorting to math, the RU group can be described as a subset of states
 achievable by scrambling a solved cube using only R, R2, R', U, U2, U' moves. It appears as a substep of various Rubik's cube solving systems, like the one I use in Fewest Moves event: Tsai Method.
-The application operates in one of the three modes: [single cube solve](#single-cube-solve), [generator](#cube-generator) and [solution analyser](#solution-analyser), described in more details below.
+The application operates in one of the three modes:
+
+* [single cube solve](#single-cube-solve)
+
+* [generator](#cube-generator)
+
+* [solution analyser](#solution-analyser)
+
 
 ### Single cube solve
 In this mode a single cube is solved.
@@ -57,13 +64,13 @@ Only three corner orientations are possible:
 
 0 - oriented\
 1 - needs 1 clockwise rotation\
-2 - needs 2 clockwise rotations\
+2 - needs 2 clockwise rotations
 
 The application expects corners permutation (CP) and corners orientation (CO) specified as a single sequence of the following format:
 
 CO<sub>0</sub>CP<sub>0</sub>CO<sub>1</sub>CP<sub>1</sub>...CO<sub>5</sub>CP<sub>5</sub>
 
-And finally, the entire cube state should be defined like so:
+And finally, the entire cube state should be defined like this:
 
 CO<sub>0</sub>CP<sub>0</sub>CO<sub>1</sub>CP<sub>1</sub>...CO<sub>5</sub>CP<sub>5</sub>;EP<sub>0</sub>EP<sub>1</sub>...EP<sub>6</sub>
 
