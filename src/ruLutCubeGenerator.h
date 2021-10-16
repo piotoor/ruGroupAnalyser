@@ -9,14 +9,21 @@
 using cornersArray = std::array<int8_t, 6>;
 using edgesArray = std::array<int8_t, 7>;
 
+struct generatorParameters {
+    std::vector<int8_t> lockedEdges = {};
+    std::vector<int8_t> ignoredEdges = {};
+    std::vector<int8_t> lockedCornersPerm = {};
+    std::vector<int8_t> ignoredCornersPerm = {};
+    cornersArray lockedCornersOrient = { -1, -1, -1, -1, -1, -1 };
+    cornersArray ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
+};
+
 class ruLutCubeGenerator
 {
     public:
         ruLutCubeGenerator();
         virtual ~ruLutCubeGenerator();
-        void init( const std::vector<int8_t> &lockedEdges = {}, const std::vector<int8_t> &ignoredEdges = {},
-                                const std::vector<int8_t> &lockedCornersPerm = {}, const std::vector<int8_t> &ignoredCornersPerm = {},
-                                const cornersArray &lockedCornersOrient = { -1, -1, -1, -1, -1, -1 }, const cornersArray &ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 });
+        void init(const generatorParameters &params = generatorParameters());
 
         ruLutCube next();
         bool hasNext();

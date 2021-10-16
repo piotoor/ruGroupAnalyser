@@ -10,12 +10,10 @@ ruLutCubeGenerator::~ruLutCubeGenerator() {
 
 }
 
-void ruLutCubeGenerator::init(  const std::vector<int8_t> &lockedEdges, const std::vector<int8_t> &ignoredEdges,
-                                const std::vector<int8_t> &lockedCornersPerm, const std::vector<int8_t> &ignoredCornersPerm,
-                                const cornersArray &lockedCornersOrient, const cornersArray &ignoredCornersOrient) {
-    cornersOrientations =  orientGen.generateOrientations(lockedCornersOrient, ignoredCornersOrient);
-    cornersPermutations =  cornersPermGen.generatePermutations(lockedCornersPerm, ignoredCornersPerm);
-    edgesPermutations =    edgesPermGen.generatePermutations(lockedEdges, ignoredEdges);
+void ruLutCubeGenerator::init(const generatorParameters &params) {
+    cornersOrientations =  orientGen.generateOrientations(params.lockedCornersOrient, params.ignoredCornersOrient);
+    cornersPermutations =  cornersPermGen.generatePermutations(params.lockedCornersPerm, params.ignoredCornersPerm);
+    edgesPermutations =    edgesPermGen.generatePermutations(params.lockedEdges, params.ignoredEdges);
 
     std::transform(begin(cornersOrientations),
                    end(cornersOrientations),
