@@ -6,18 +6,12 @@ using cornersArray = std::array<int8_t, 6>;
 
 TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesTest) {
     ruLutCubeGenerator generator;
-    std::vector<int8_t> lockedCornersPerm { };
-    std::vector<int8_t> ignoredCornersPerm { };
-    std::vector<int8_t> lockedEdges { };
-    std::vector<int8_t> ignoredEdges { };
-    cornersArray lockedCornersOrient { -1, -1, -1, -1, -1, -1 };
-    cornersArray ignoredCornersOrient { 0, 0, 0, 0, 0, 0 };
+
+    generatorParameters params;
 
     const int expectedNumberOfCubes = 73'483'200;
 
-    generator.init (lockedEdges, ignoredEdges,
-                    lockedCornersPerm, ignoredCornersPerm,
-                    lockedCornersOrient, ignoredCornersOrient);
+    generator.init (params);
 
     int i = 0;
     for (; i < expectedNumberOfCubes; ++i ) {
@@ -31,16 +25,16 @@ TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesTest) {
 
 TEST(ruLutCubeGeneratorTest, generateCubesWithLockedPiecesTest) {
     ruLutCubeGenerator generator;
-    std::vector<int8_t> lockedCornersPerm { 0, 2, 4, 5 };
-    std::vector<int8_t> ignoredCornersPerm {};
-    std::vector<int8_t> lockedEdges { 0, 1, 2, 4, 6 };
-    std::vector<int8_t> ignoredEdges {};
-    cornersArray lockedCornersOrient { 0, 0, 0, 0, -1, -1 };
-    cornersArray ignoredCornersOrient { 0, 0, 0, 0, 0, 0 };
 
-    generator.init (lockedEdges, ignoredEdges,
-                    lockedCornersPerm, ignoredCornersPerm,
-                    lockedCornersOrient, ignoredCornersOrient);
+    generatorParameters params;
+    params.lockedCornersPerm = { 0, 2, 4, 5 };
+    params.ignoredCornersPerm = {};
+    params.lockedEdges = { 0, 1, 2, 4, 6 };
+    params.ignoredEdges = {};
+    params.lockedCornersOrient = { 0, 0, 0, 0, -1, -1 };
+    params.ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
+
+    generator.init (params);
 
     std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes {
         { 0101112131415, 00123456 },
@@ -59,17 +53,15 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedPiecesTest) {
     }
     ASSERT_FALSE(generator.hasNext());
 
-    lockedCornersPerm = { 0, 1, 2, 3 };    // 012345 012354
-    ignoredCornersPerm = {};
+    params.lockedCornersPerm = { 0, 1, 2, 3 };    // 012345 012354
+    params.ignoredCornersPerm = {};
 
-    lockedEdges = { 0, 1, 2, 4 };    // 00123456 00123465 00125436 00125463 00126435 00126453
-    ignoredEdges = {};
-    lockedCornersOrient = { -1, 0, 0, 0, -1, -1 };  // 000000 000012 000021 100002 100011 100020 200001 200010 200022
-    ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
+    params.lockedEdges = { 0, 1, 2, 4 };    // 00123456 00123465 00125436 00125463 00126435 00126453
+    params.ignoredEdges = {};
+    params.lockedCornersOrient = { -1, 0, 0, 0, -1, -1 };  // 000000 000012 000021 100002 100011 100020 200001 200010 200022
+    params.ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
 
-    generator.init (lockedEdges, ignoredEdges,
-                    lockedCornersPerm, ignoredCornersPerm,
-                    lockedCornersOrient, ignoredCornersOrient);
+    generator.init (params);
 
     expectedCubes = {
         { 0101112131415, 00123456 },
@@ -122,16 +114,16 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedPiecesTest) {
 
 TEST(ruLutCubeGeneratorTest, generateCubesWithIgnoredPiecesTest) {
     ruLutCubeGenerator generator;
-    std::vector<int8_t> lockedCornersPerm { };
-    std::vector<int8_t> ignoredCornersPerm { 0, 1, 2, 3, 4 };
-    std::vector<int8_t> lockedEdges { };
-    std::vector<int8_t> ignoredEdges { 0, 2, 3, 4, 5, 6 };
-    cornersArray lockedCornersOrient { -1, -1, -1, -1, -1, -1 };
-    cornersArray ignoredCornersOrient { 1, 1, 1, 1, 1, 1 };
 
-    generator.init( lockedEdges, ignoredEdges,
-                    lockedCornersPerm, ignoredCornersPerm,
-                    lockedCornersOrient, ignoredCornersOrient);
+    generatorParameters params;
+    params.lockedCornersPerm = { };
+    params.ignoredCornersPerm = { 0, 1, 2, 3, 4 };
+    params.lockedEdges = { };
+    params.ignoredEdges = { 0, 2, 3, 4, 5, 6 };
+    params.lockedCornersOrient = { -1, -1, -1, -1, -1, -1 };
+    params.ignoredCornersOrient = { 1, 1, 1, 1, 1, 1 };
+
+    generator.init(params);
 
     std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes {
         { 0101112131415, 00234651 },
@@ -193,16 +185,16 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithIgnoredPiecesTest) {
 
 TEST(ruLutCubeGeneratorTest, generateCubesWithLockedAndIgnoredPiecesTest) {
     ruLutCubeGenerator generator;
-    std::vector<int8_t> lockedCornersPerm { 0, 3, 4 };
-    std::vector<int8_t> ignoredCornersPerm { 1, 2, 5,};
-    std::vector<int8_t> lockedEdges { 0 };
-    std::vector<int8_t> ignoredEdges { 1, 2, 3, 4, 5, 6 };
-    cornersArray lockedCornersOrient { -1, -1, -1, -1, -1, -1 };
-    cornersArray ignoredCornersOrient { 1, 1, 1, 1, 0, 0 };
 
-    generator.init( lockedEdges, ignoredEdges,
-                    lockedCornersPerm, ignoredCornersPerm,
-                    lockedCornersOrient, ignoredCornersOrient);
+    generatorParameters params;
+    params.lockedCornersPerm = { 0, 3, 4 };
+    params.ignoredCornersPerm = { 1, 2, 5,};
+    params.lockedEdges = { 0 };
+    params.ignoredEdges = { 1, 2, 3, 4, 5, 6 };
+    params.lockedCornersOrient = { -1, -1, -1, -1, -1, -1 };
+    params.ignoredCornersOrient = { 1, 1, 1, 1, 0, 0 };
+
+    generator.init(params);
 
     std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes {
         { 0101112131415, 00123456 },
@@ -232,16 +224,16 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedAndIgnoredPiecesTest) {
 
 TEST(ruLutCubeGeneratorTest, generateCubesLastF2LPairTest) {
     ruLutCubeGenerator generator;
-    std::vector<int8_t> lockedCornersPerm = { 4 };
-    std::vector<int8_t> ignoredCornersPerm = { 0, 1, 2, 3 };
-    std::vector<int8_t> lockedEdges = { 4, 5 };
-    std::vector<int8_t> ignoredEdges = { 0, 1, 2, 3 };
-    cornersArray lockedCornersOrient = { -1, -1, -1, -1, 0, -1 };
-    cornersArray ignoredCornersOrient = { 1, 1, 1, 1, 0, 0 };
 
-    generator.init( lockedEdges, ignoredEdges,
-                    lockedCornersPerm, ignoredCornersPerm,
-                    lockedCornersOrient, ignoredCornersOrient);
+    generatorParameters params;
+    params.lockedCornersPerm = { 4 };
+    params.ignoredCornersPerm = { 0, 1, 2, 3 };
+    params.lockedEdges = { 4, 5 };
+    params.ignoredEdges = { 0, 1, 2, 3 };
+    params.lockedCornersOrient = { -1, -1, -1, -1, 0, -1 };
+    params.ignoredCornersOrient = { 1, 1, 1, 1, 0, 0 };
+
+    generator.init(params);
 
     std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes = {
         { 0101112131415, 00123456 },
@@ -336,16 +328,16 @@ TEST(ruLutCubeGeneratorTest, generateCubesLastF2LPairTest) {
 
 TEST(ruLutCubeGeneratorTest, generateCubesLLEdgesTest) {
     ruLutCubeGenerator generator;
-    std::vector<int8_t> lockedCornersPerm = { 0, 1, 2, 3, 4, 5 };
-    std::vector<int8_t> ignoredCornersPerm = { };
-    std::vector<int8_t> lockedEdges = { 4, 5, 6 };
-    std::vector<int8_t> ignoredEdges = { };
-    cornersArray lockedCornersOrient = { 0, 0, 0, 0, 0, 0 };
-    cornersArray ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
 
-    generator.init( lockedEdges, ignoredEdges,
-                    lockedCornersPerm, ignoredCornersPerm,
-                    lockedCornersOrient, ignoredCornersOrient);
+    generatorParameters params;
+    params.lockedCornersPerm = { 0, 1, 2, 3, 4, 5 };
+    params.ignoredCornersPerm = { };
+    params.lockedEdges = { 4, 5, 6 };
+    params.ignoredEdges = { };
+    params.lockedCornersOrient = { 0, 0, 0, 0, 0, 0 };
+    params.ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
+
+    generator.init(params);
 
     std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes = {
         { 0101112131415, 00123456 },
@@ -380,16 +372,16 @@ TEST(ruLutCubeGeneratorTest, generateCubesLLEdgesTest) {
 
 TEST(ruLutCubeGeneratorTest, generateCubesLLCornersOrientationTest) {
     ruLutCubeGenerator generator;
-    std::vector<int8_t> lockedCornersPerm = { 0, 1, 2, 3, 4, 5 };
-    std::vector<int8_t> ignoredCornersPerm = { };
-    std::vector<int8_t> lockedEdges = { 0, 1, 2, 3, 4, 5, 6 };
-    std::vector<int8_t> ignoredEdges = { };
-    cornersArray lockedCornersOrient = { -1, -1, -1, -1, 0, 0 };
-    cornersArray ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
 
-    generator.init( lockedEdges, ignoredEdges,
-                    lockedCornersPerm, ignoredCornersPerm,
-                    lockedCornersOrient, ignoredCornersOrient);
+    generatorParameters params;
+    params.lockedCornersPerm = { 0, 1, 2, 3, 4, 5 };
+    params.ignoredCornersPerm = { };
+    params.lockedEdges = { 0, 1, 2, 3, 4, 5, 6 };
+    params.ignoredEdges = { };
+    params.lockedCornersOrient = { -1, -1, -1, -1, 0, 0 };
+    params.ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
+
+    generator.init(params);
 
     std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes = {
         { 0101112131415, 0123456 },

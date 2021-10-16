@@ -2,6 +2,7 @@
 #include "permutationGenerator.h"
 
 #include <vector>
+#include <set>
 
 using cornersArray = std::array<int8_t, 6>;
 using edgesArray = std::array<int8_t, 7>;
@@ -1065,13 +1066,13 @@ TEST(permutationGeneratorTest, generateCornersPermutationsWithIgnoredPiecesTest)
          { 0, -1, -1, -1, -1, -1 }},
     };
 
-    const std::vector<std::vector<int8_t>> lockedPieces = {
+    const std::vector<std::set<int8_t>> lockedPieces = {
         { },
         { },
         { },
     };
 
-    const std::vector<std::vector<int8_t>> ignoredPieces = {
+    const std::vector<std::set<int8_t>> ignoredPieces = {
         { 3, 4, 5 },
         { 4, 5 },
         { 1, 2, 3, 4, 5 },
@@ -1104,7 +1105,7 @@ TEST(permutationGeneratorTest, generateCornersPermutationsWithLockedPiecesTest) 
          { 0, 1, 2, 5, 4, 3 }},
     };
 
-    const std::vector<std::vector<int8_t>> lockedPieces = {
+    const std::vector<std::set<int8_t>> lockedPieces = {
         { 0, 1, 2, 3, 4, 5 },
         { 5, 4, 3, 2, 1, 0 },
         { 0, 1, 2 },
@@ -1130,12 +1131,12 @@ TEST(permutationGeneratorTest, generateCornersPermutationsWithLockedAndIgnoredPi
          {  0,  1,  2,  3,  5, -1 }},
     };
 
-    const std::vector<std::vector<int8_t>> lockedPieces = {
+    const std::vector<std::set<int8_t>> lockedPieces = {
         { 0, 1, 2, 3 },
         { 0, 1, 2, 3 },
     };
 
-    const std::vector<std::vector<int8_t>> ignoredPieces = {
+    const std::vector<std::set<int8_t>> ignoredPieces = {
         { 4, 5 },
         { 4 },
     };
@@ -1415,13 +1416,13 @@ TEST(permutationGeneratorTest, generateEdgesPermutationsWithIgnoredPiecesTest) {
         { 0, -1, -1, -1, -1, -1, -1, }},
     };
 
-    const std::vector<std::vector<int8_t>> lockedPieces = {
+    const std::vector<std::set<int8_t>> lockedPieces = {
         { },
         { },
         { },
     };
 
-    const std::vector<std::vector<int8_t>> ignoredPieces = {
+    const std::vector<std::set<int8_t>> ignoredPieces = {
         { 3, 4, 5, 6 },
         { 0, 1, 2, 3, 4 },
         { 1, 2, 3, 4, 5, 6 },
@@ -1455,7 +1456,7 @@ TEST(permutationGeneratorTest, generateEdgesPermutationsWithLockedPiecesTest) {
          { 0, 1, 2, 6, 4, 5, 3 }},
     };
 
-    const std::vector<std::vector<int8_t>> lockedPieces = {
+    const std::vector<std::set<int8_t>> lockedPieces = {
         { 0, 1, 2, 3, 4, 5, 6 },
         { 6, 5, 4, 3, 2, 1, 0 },
         { 0, 1, 2, 3 },
@@ -1482,12 +1483,12 @@ TEST(permutationGeneratorTest, generateEdgesPermutationsWithLockedAndIgnoredPiec
 
     };
 
-    const std::vector<std::vector<int8_t>> lockedPieces = {
+    const std::vector<std::set<int8_t>> lockedPieces = {
         { 0, 1, 2, 3, 4 },
         { 0, 1, 2, 3, 5 },
     };
 
-    const std::vector<std::vector<int8_t>> ignoredPieces = {
+    const std::vector<std::set<int8_t>> ignoredPieces = {
         { 5, 6 },
         { 4 },
     };

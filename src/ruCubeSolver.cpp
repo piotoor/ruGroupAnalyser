@@ -3,8 +3,8 @@
 #include <algorithm>
 #include "ruCubeScrambleParser.h"
 
-ruCubeSolver::ruCubeSolver(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask, uint64_t cornersMask): cube(nullptr) {
-    configure(minLength, maxLength, maxNumOfSolutions, edgesMask, cornersMask);
+ruCubeSolver::ruCubeSolver(const solutionParameters &solParams, const solvedMasks &masks): cube(nullptr) {
+    configure(solParams, masks);
 }
 
 ruCubeSolver::~ruCubeSolver() {
@@ -12,12 +12,12 @@ ruCubeSolver::~ruCubeSolver() {
 }
 
 
-void ruCubeSolver::configure(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask, uint64_t cornersMask) {
-    this->minLength = minLength;
-    this->maxLength = maxLength;
-    this->maxNumOfSolutions = maxNumOfSolutions;
-    this->edgesMask = edgesMask;
-    this->cornersMask = cornersMask;
+void ruCubeSolver::configure(const solutionParameters &solParams, const solvedMasks &masks) {
+    this->minLength = solParams.minLength;
+    this->maxLength = solParams.maxLength;
+    this->maxNumOfSolutions = solParams.maxNumOfSolutions;
+    this->edgesMask = masks.edgesMask;
+    this->cornersMask = masks.cornersMask;
 }
 
 void ruCubeSolver::solve(ruBaseCube *cube) {

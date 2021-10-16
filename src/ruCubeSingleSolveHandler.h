@@ -6,26 +6,22 @@
 #include <sstream>
 #include "ruCubeSimpleBenchmarkTimer.h"
 
+struct solveReportFlags {
+    bool headers = false;
+    bool lineNumbers = false;
+    bool fixedWidthMoves = false;
+};
+
 class ruCubeSingleSolveHandler
 {
     public:
-        ruCubeSingleSolveHandler(  uint8_t minLength = 0,
-                                    uint8_t maxLength = 20,
-                                    uint8_t maxNumOfSolutions = 1,
-                                    bool headers = false,
-                                    bool lineNumbers = false,
-                                    bool fixedWidthMoves = false,
-                                    uint32_t edgesMask = ruBaseCube::allEdgesMask,
-                                    uint64_t cornersMask = ruBaseCube::allCornersMask);
+        ruCubeSingleSolveHandler(const solutionParameters &solParams = solutionParameters(),
+                                 const solvedMasks &masks = solvedMasks(),
+                                 const solveReportFlags &flags = solveReportFlags());
         virtual ~ruCubeSingleSolveHandler();
-        void configure( uint8_t minLength = 0,
-                        uint8_t maxLength = 20,
-                        uint8_t maxNumOfSolutions = 1,
-                        bool headers = false,
-                        bool lineNumbers = false,
-                        bool fixedWidthMoves = false ,
-                        uint32_t edgesMask = ruBaseCube::allEdgesMask,
-                        uint64_t cornersMask = ruBaseCube::allCornersMask);
+        void configure( const solutionParameters &solParams = solutionParameters(),
+                        const solvedMasks &masks = solvedMasks(),
+                        const solveReportFlags &flags = solveReportFlags());
 
         void solve(ruLutCube cube);
         std::string getReport();

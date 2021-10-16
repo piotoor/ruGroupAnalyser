@@ -2,14 +2,14 @@
 #include <iomanip>
 #include <cmath>
 
-ruCubeSingleSolveHandler::ruCubeSingleSolveHandler(   uint8_t minLength,
-                                                        uint8_t maxLength,
-                                                        uint8_t maxNumOfSolutions,
-                                                        bool headers,
-                                                        bool lineNumbers,
-                                                        bool fixedWidthMoves,
-                                                        uint32_t edgesMask,
-                                                        uint64_t cornersMask): solver(minLength, maxLength, maxNumOfSolutions, edgesMask, cornersMask), headers(headers), lineNumbers(lineNumbers), fixedWidthMoves(fixedWidthMoves) {
+ruCubeSingleSolveHandler::ruCubeSingleSolveHandler( const solutionParameters &solParams,
+                                                    const solvedMasks &masks,
+                                                    const solveReportFlags &flags):
+                                                        solver(solParams,
+                                                               masks),
+                                                        headers(flags.headers),
+                                                        lineNumbers(flags.lineNumbers),
+                                                        fixedWidthMoves(flags.fixedWidthMoves) {
 
 }
 
@@ -17,18 +17,13 @@ ruCubeSingleSolveHandler::~ruCubeSingleSolveHandler() {
 }
 
 
-void ruCubeSingleSolveHandler::configure(  uint8_t minLength,
-                                            uint8_t maxLength,
-                                            uint8_t maxNumOfSolutions,
-                                            bool headers,
-                                            bool lineNumbers,
-                                            bool fixedWidthMoves,
-                                            uint32_t edgesMask,
-                                            uint64_t cornersMask) {
-    solver.configure(minLength, maxLength, maxNumOfSolutions, edgesMask, cornersMask);
-    this->headers = headers;
-    this->lineNumbers = lineNumbers;
-    this->fixedWidthMoves = fixedWidthMoves;
+void ruCubeSingleSolveHandler::configure(   const solutionParameters &solParams,
+                                            const solvedMasks &masks,
+                                            const solveReportFlags &flags) {
+    solver.configure(solParams, masks);
+    this->headers = flags.headers;
+    this->lineNumbers = flags.lineNumbers;
+    this->fixedWidthMoves = flags.fixedWidthMoves;
 }
 
 void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
