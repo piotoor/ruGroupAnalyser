@@ -52,6 +52,7 @@ class ruCubeStateConverter
         std::bitset<maxNumOfPieces> visited;
         std::array<uint8_t, maxNumOfPieces> perm;
 
+    public:
         static constexpr std::array<uint16_t, maxNumOfPieces> factLookup = {
             1, 1, 2, 6, 24, 120, 720
         };
