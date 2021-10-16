@@ -16,7 +16,7 @@ permutationGenerator<T>::~permutationGenerator() {
 }
 
 template <class T>
-std::vector<T> permutationGenerator<T>::generatePermutations(const std::vector<int8_t> &locked, const std::vector<int8_t> &ignored) {
+std::vector<T> permutationGenerator<T>::generatePermutations(const std::set<int8_t> &locked, const std::set<int8_t> &ignored) {
     cleanup();
 
     for (const auto &x: ignored) {
@@ -55,7 +55,7 @@ void permutationGenerator<T>::cleanup() {
 }
 
 template <class T>
-void permutationGenerator<T>::generateAns(const std::vector<int8_t> &locked) {
+void permutationGenerator<T>::generateAns(const std::set<int8_t> &locked) {
     for (const auto &x: locked) {
         tmp[x] = x;
     }

@@ -10,10 +10,10 @@ using cornersArray = std::array<int8_t, 6>;
 using edgesArray = std::array<int8_t, 7>;
 
 struct generatorParameters {
-    std::vector<int8_t> lockedEdges = {};
-    std::vector<int8_t> ignoredEdges = {};
-    std::vector<int8_t> lockedCornersPerm = {};
-    std::vector<int8_t> ignoredCornersPerm = {};
+    std::set<int8_t> lockedEdges = {};
+    std::set<int8_t> ignoredEdges = {};
+    std::set<int8_t> lockedCornersPerm = {};
+    std::set<int8_t> ignoredCornersPerm = {};
     cornersArray lockedCornersOrient = { -1, -1, -1, -1, -1, -1 };
     cornersArray ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
 };

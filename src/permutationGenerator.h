@@ -21,11 +21,11 @@ class permutationGenerator
         permutationGenerator& operator=(const permutationGenerator &other) = delete;
         virtual ~permutationGenerator();
 
-        std::vector<T> generatePermutations(const std::vector<int8_t> &locked = {}, const std::vector<int8_t> &ignored = {});
+        std::vector<T> generatePermutations(const std::set<int8_t> &locked = {}, const std::set<int8_t> &ignored = {});
 
     private:
         void cleanup();
-        void generateAns(const std::vector<int8_t> &locked);
+        void generateAns(const std::set<int8_t> &locked);
         //std::multiset<int8_t> pieces;
         std::vector<int8_t> pieces;
         //std::multiset<int8_t> permuteablePieces;
