@@ -59,7 +59,13 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
     for (auto &cube: cubes) {
         cube->scramble({ R2, U2, R2, U2, R2, U2 });
 
-        ruCubeSolver solver (6, 6, 2);
+        solutionParameters params = {
+            6,
+            6,
+            2
+        };
+
+        ruCubeSolver solver (params);
         solver.solve(cube.get());
         auto solutions = solver.getSolutionsAsVectors();
         std::vector<std::vector<uint8_t>> expectedSolutions = {
@@ -77,7 +83,11 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
         cube->reset();
         cube->scramble({ R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U });
 
-        solver.configure(12, 14, 4);
+        params.minLength = 12;
+        params.maxLength = 14;
+        params.maxNumOfSolutions = 4;
+
+        solver.configure(params);
         solver.solve(cube.get());
         solutions = solver.getSolutionsAsVectors();
         expectedSolutions = {
@@ -97,7 +107,11 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
         cube->reset();
         cube->scramble({ R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U });
 
-        solver.configure(6, 10, 4);
+        params.minLength = 6;
+        params.maxLength = 10;
+        params.maxNumOfSolutions = 4;
+
+        solver.configure(params);
         solver.solve(cube.get());
         solutions = solver.getSolutionsAsVectors();
         expectedSolutions = {
@@ -113,7 +127,11 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
         cube->reset();
         cube->scramble({ R, U, Ri, U, R, U2, Ri });
 
-        solver.configure(6, 8, 1);
+        params.minLength = 6;
+        params.maxLength = 8;
+        params.maxNumOfSolutions = 1;
+
+        solver.configure(params);
         solver.solve(cube.get());
         solutions = solver.getSolutionsAsVectors();
         expectedSolutions = {
@@ -130,7 +148,11 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
         cube->reset();
         cube->scramble({ R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui });
 
-        solver.configure(12, 12, 2);
+        params.minLength = 12;
+        params.maxLength = 12;
+        params.maxNumOfSolutions = 2;
+
+        solver.configure(params);
         solver.solve(cube.get());
         solutions = solver.getSolutionsAsVectors();
         expectedSolutions = {
@@ -148,7 +170,11 @@ TEST(ruCubeSolverTest, customConfigurationSolveTest) {
         cube->reset();
         cube->scramble({ R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui });
 
-        solver.configure(12, 12, 200);
+        params.minLength = 12;
+        params.maxLength = 12;
+        params.maxNumOfSolutions = 200;
+
+        solver.configure(params);
         solver.solve(cube.get());
         solutions = solver.getSolutionsAsVectors();
         expectedSolutions = {
@@ -461,8 +487,12 @@ TEST(ruCubeSolverTest, customRuLutCubeEdgesMaskTest) {
     const uint8_t maxLength = 20;
     const uint8_t maxNoOfSols = 1;
 
+    solutionParameters params = { minLength, maxLength, maxNoOfSols };
+
+
     for (uint8_t maskInd = 0; maskInd < size(edgesMasks); ++maskInd) {
-        solver.configure(minLength, maxLength, maxNoOfSols, edgesMasks[maskInd], ruLutCube::noCornersMask);
+        solvedMasks masks = {edgesMasks[maskInd], ruLutCube::noCornersMask};
+        solver.configure(params, masks);
         for (uint8_t i = 0; i < size(scrambles); ++i) {
             cube.reset();
             cube.scramble(scrambles[i]);
@@ -618,8 +648,12 @@ TEST(ruCubeSolverTest, customRuLutCubeCornersMaskTest) {
     const uint8_t maxLength = 20;
     const uint8_t maxNoOfSols = 1;
 
+    solutionParameters params = { minLength, maxLength, maxNoOfSols };
+
     for (uint8_t maskInd = 0; maskInd < size(cornersMasks); ++maskInd) {
-        solver.configure(minLength, maxLength, maxNoOfSols, ruLutCube::noEdgesMask, cornersMasks[maskInd]);
+        solvedMasks masks = { ruLutCube::noEdgesMask, cornersMasks[maskInd] };
+        solver.configure(params, masks);
+
         for (uint8_t i = 0; i < size(scrambles); ++i) {
             cube.reset();
             cube.scramble(scrambles[i]);
@@ -727,9 +761,13 @@ TEST(ruCubeSolverTest, customRuLutCubeEdgesAndCornersMaskTest) {
     const uint8_t maxLength = 20;
     const uint8_t maxNoOfSols = 1;
 
+    solutionParameters params = { minLength, maxLength, maxNoOfSols };
+
     for (uint8_t maskInd = 0; maskInd < size(masks); ++maskInd) {
         auto &[edgesMask, cornersMask] = masks[maskInd];
-        solver.configure(minLength, maxLength, maxNoOfSols, edgesMask, cornersMask);
+        solvedMasks masks = {edgesMask, cornersMask};
+        solver.configure(params, masks);
+
         for (uint8_t i = 0; i < size(scrambles); ++i) {
             cube.reset();
             cube.scramble(scrambles[i]);
@@ -786,12 +824,16 @@ class ruCubeSolverPerformanceTest : public ::testing::Test {
             std::vector<uint32_t> edgesMasks {edgesMask, ruEdgesMask};
 
             for (auto &cube: cubes) {
-                uint8_t minLength = 0;
-                uint8_t maxLength = 20;
-                uint8_t maxNumOfSolutions = 1;
+                solutionParameters params = {
+                    0, 20, 1
+                };
 
+                solvedMasks masks = {
+                    edgesMasks[i],
+                    ruBaseCube::allCornersMask
+                };
 
-                ruCubeSolver solver(minLength, maxLength, maxNumOfSolutions, edgesMasks[i]);
+                ruCubeSolver solver(params, masks);
                 std::vector<std::vector<uint8_t>> solutions;
 
 

@@ -22,6 +22,11 @@ int main(int argc, char const* argv[]) {
     bool help = false;
     bool usage = false;
     std::pair<solvingMode, std::string> mode;
+
+    solutionParameters solParams;
+    solvedMasks masks;
+    solveReportFlags reportFlags;
+
     uint8_t minLength = 0;
     uint8_t maxLength = 20;
     int maxNumOfSolutions = 1;
@@ -125,7 +130,16 @@ int main(int argc, char const* argv[]) {
         try {
             auto cube = parser.getCubeFromScramble(mode.second);
             auto [cornersMask, edgesMask] = solvedMask;
-            ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves, edgesMask, cornersMask);
+            masks.cornersMask = cornersMask;
+            masks.edgesMask = edgesMask;
+            solParams.maxLength = maxLength;
+            solParams.minLength = minLength;
+            solParams.maxNumOfSolutions = maxNumOfSolutions;
+            reportFlags.fixedWidthMoves = fixedWidthMoves;
+            reportFlags.headers = headers;
+            reportFlags.lineNumbers = lineNumbers;
+
+            ruCubeSingleSolveHandler solveHandler(solParams, masks, reportFlags);
             solveHandler.solve(cube);
 
             std::cout << solveHandler.getReport();
@@ -139,7 +153,16 @@ int main(int argc, char const* argv[]) {
         try {
             auto cube = parser.getCubeFromState(mode.second);
             auto [cornersMask, edgesMask] = solvedMask;
-            ruCubeSingleSolveHandler solveHandler(minLength, maxLength, maxNumOfSolutions, headers, lineNumbers, fixedWidthMoves, edgesMask, cornersMask);
+            masks.cornersMask = cornersMask;
+            masks.edgesMask = edgesMask;
+            solParams.maxLength = maxLength;
+            solParams.minLength = minLength;
+            solParams.maxNumOfSolutions = maxNumOfSolutions;
+            reportFlags.fixedWidthMoves = fixedWidthMoves;
+            reportFlags.headers = headers;
+            reportFlags.lineNumbers = lineNumbers;
+
+            ruCubeSingleSolveHandler solveHandler(solParams, masks, reportFlags);
             solveHandler.solve(cube);
 
             std::cout << solveHandler.getReport();

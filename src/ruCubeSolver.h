@@ -5,15 +5,26 @@
 #include <vector>
 #include <string>
 
+struct solutionParameters {
+    uint8_t minLength = 0;
+    uint8_t maxLength = 20;
+    uint8_t maxNumOfSolutions = 1;
+};
+
+struct solvedMasks {
+    uint32_t edgesMask = ruBaseCube::allEdgesMask;
+    uint64_t cornersMask = ruBaseCube::allCornersMask;
+};
+
 class ruCubeSolver
 {
     public:
-        ruCubeSolver(uint8_t minLength = 0, uint8_t maxLength = 20, uint8_t maxNumOfSolutions = 1, uint32_t edgesMask = ruBaseCube::allEdgesMask, uint64_t cornersMask = ruBaseCube::allCornersMask);
+        ruCubeSolver(const solutionParameters &solParams = solutionParameters(), const solvedMasks &masks = solvedMasks());
         explicit ruCubeSolver(const ruCubeSolver &other) = delete;
         ruCubeSolver& operator=(const ruCubeSolver &other) = delete;
         virtual ~ruCubeSolver();
 
-        void configure(uint8_t minLength, uint8_t maxLength, uint8_t maxNumOfSolutions, uint32_t edgesMask = ruBaseCube::allEdgesMask, uint64_t cornersMask = ruBaseCube::allCornersMask);
+        void configure(const solutionParameters &solParams = solutionParameters(), const solvedMasks &masks = solvedMasks());
         void solve(ruBaseCube *cube);
         std::vector<std::string> getSolutionsAsStrings() const;
         std::vector<std::vector<uint8_t>> getSolutionsAsVectors() const;

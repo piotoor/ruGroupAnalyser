@@ -32,7 +32,10 @@ TEST(ruCubeSingleSolveHandlerTest, getReportDefaultTest) {
 }
 
 TEST(ruCubeSingleSolveHandlerTest, getReportMaxNumOfSolutionsMinLengthMaxLengthTest) {
-    ruCubeSingleSolveHandler handler(5, 15, 2);
+    solutionParameters params = {
+        5, 15, 2
+    };
+    ruCubeSingleSolveHandler handler(params);
     ruCubeSingleSolveInputParser parser;
 
     std::vector<std::string> scrambles {
@@ -59,7 +62,12 @@ TEST(ruCubeSingleSolveHandlerTest, getReportMaxNumOfSolutionsMinLengthMaxLengthT
         ASSERT_EQ(expectedReports[i], handler.getReport());
     }
 // -----------------------------------------------------------------
-    handler.configure(1, 13, 3);
+
+    params.minLength = 1;
+    params.maxLength = 13;
+    params.maxNumOfSolutions = 3;
+
+    handler.configure(params);
 
     scrambles = {
         "R2 U2 R2 U2 R2 U2",
