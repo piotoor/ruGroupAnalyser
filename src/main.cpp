@@ -75,7 +75,7 @@ int main(int argc, char const* argv[]) {
                 stypox::Option { "numOfSolutions", maxNumOfSolutions, stypox::args("-n=", "--num-of-sols="), "number of solutions per cube (1-; default=1)",
                     false,
                     [] (int value){
-                        return value >= 1;
+                        return value >= 1 and value <= 255;
                     }},
                 stypox::Option { "minLength", minLength, stypox::args("-l=", "--min-length="), "min solution length (0-20; default=0)",
                     false,
