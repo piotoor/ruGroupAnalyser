@@ -575,76 +575,56 @@ TEST(ruLutCubeGeneratorTest, generateCubesRUCornersPermOnlyTest) {
     ASSERT_FALSE(generator.hasNext());
 }
 
-//TEST(ruLutCubeGeneratorTest, generateCubesNumberOfCubesAfterLockingAndIgnoringCornersTest) {
-//    ruLutCubeGenerator generator;
-//
-//    generatorParameters params;
-//    params.lockedCornersPerm = { };
-//    params.ignoredCornersPerm = { };
-//    params.lockedEdges = { };
-//    params.ignoredEdges = { 0, 1, 2, 3, 4, 5, 6 };
-//    params.lockedCornersOrient = { -1, -1, -1, -1, -1, -1 };
-//    params.ignoredCornersOrient = { 1, 1, 1, 1, 1, 1 };
-//
-//    const std::vector<std::vector<uint8_t>> expectedNumberOfCubes {
-//        { 120, 20, 4, 1, 1, 1, 1 },
-//        { 120, 20, 4, 1, 1, 1 },
-//        { 120, 20, 4, 1, 1 },
-//        { 120, 20, 4, 1 },
-//        {  30,  5, 1 },
-//        {   6,  1 },
-//        {   1 }
-//    };
-//
-//        int i = 0;
-//        generator.init(params);
-//
-//        while (generator.hasNext()) {
-//            auto cube = generator.next();
-//            i++;
-//        }
-//        std::cout << (int) i << std::endl;
-//
-//    for (int j = 0; j < 6; ++j) {
-//        std::cout << "j = " << (int) j << std::endl;
-//        params.ignoredCornersPerm.insert(j);
-//        int i = 0;
-//        generator.init(params);
-//
-//        while (generator.hasNext()) {
-//            auto cube = generator.next();
-//            i++;
-//        }
-//        std::cout << (int) i << std::endl;
-//    }
-//
-//
-////    for (int8_t ignored_i = 0; ignored_i <= ruBaseCube::noOfCorners; ++ignored_i) {
-////        params.lockedCornersPerm.clear();
-////
-////        for (int8_t locked_i = params.ignoredCornersPerm.empty() ? 0 : *(params.ignoredCornersPerm.rbegin()) + 1; locked_i <= ruBaseCube::noOfCorners; ++locked_i) {
-////            generator.init(params);
-////            std::cout << "[";
-////            std::copy(begin(params.lockedCornersPerm), end(params.lockedCornersPerm), std::ostream_iterator<int>(std::cout, " "));
-////            std::cout << "]" << std::endl << "[";
-////            std::copy(begin(params.ignoredCornersPerm), end(params.ignoredCornersPerm), std::ostream_iterator<int>(std::cout, " "));
-////            std::cout << "]" << std::endl;
-////            std::cout << std::endl;
-////            std::cout << "ignored_i = " << (int) ignored_i << " locked_i = " << (int)locked_i << std::endl;
-////            std::cout << size(params.ignoredCornersPerm) << " " << size(params.lockedCornersPerm) << std::endl;
-////            for (int i = 0; i < expectedNumberOfCubes[size(params.ignoredCornersPerm)][size(params.lockedCornersPerm)]; ++i) { // * lutGenerators::noOfCornersOrientations / 3 * lutGenerators::noOfEdgesPermutations / 2; ++i) {
-////                std::cout << (int) i << std::endl;
-////                ASSERT_TRUE(generator.hasNext());
-////                auto ruLutCube = generator.next();
-////            }
-////            ASSERT_FALSE(generator.hasNext());
-////            //std::cout << size(params.lockedCornersPerm) << " " << size(params.ignoredCornersPerm) << std::endl;
-////            params.lockedCornersPerm.insert(locked_i);
-////        }
-////       // std::cout << std::endl;
-////        params.ignoredCornersPerm.insert(ignored_i);
-//
-//
-////    }
-//
-//}
+
+TEST(ruLutCubeGeneratorTest, generateCubesNumberOfCubesAfterLockingAndIgnoringCornersTest) {
+    ruLutCubeGenerator generator;
+
+    generatorParameters params;
+    params.lockedCornersPerm = { };
+    params.ignoredCornersPerm = { };
+    params.lockedEdges = { };
+    params.ignoredEdges = { 0, 1, 2, 3, 4, 5, 6 };
+    params.lockedCornersOrient = { -1, -1, -1, -1, -1, -1 };
+    params.ignoredCornersOrient = { 1, 1, 1, 1, 1, 1 };
+
+    const std::vector<std::vector<uint8_t>> expectedNumberOfCornerPerms {
+        { 120, 20, 4, 1, 1, 1, 1 },
+        { 120, 20, 4, 1, 1, 1 },
+        { 120, 20, 4, 1, 1 },
+        { 120, 20, 4, 1 },
+        {  30,  5, 1 },
+        {   6,  1 },
+        {   1 }
+    };
+
+    for (int8_t numOfIgnored = -1; numOfIgnored < ruCube::noOfCorners; ++numOfIgnored) {
+        if (numOfIgnored >= 0) {
+            params.ignoredCornersPerm.insert(numOfIgnored);
+        }
+
+        params.lockedCornersPerm.clear();
+        generator.init(params);
+
+        uint16_t numOfGeneratedCubes = 0;
+        while (generator.hasNext()) {
+            auto lutCube = generator.next();
+            ++numOfGeneratedCubes;
+        }
+
+        ASSERT_EQ(expectedNumberOfCornerPerms[size(params.ignoredCornersPerm)][size(params.lockedCornersPerm)], numOfGeneratedCubes);
+
+        for (int8_t numOfLocked = numOfIgnored + 1; numOfLocked < ruCube::noOfCorners ; ++numOfLocked) {
+            params.lockedCornersPerm.insert(numOfLocked);
+            generator.init(params);
+
+            uint16_t numOfGeneratedCubes = 0;
+            while (generator.hasNext()) {
+                auto lutCube = generator.next();
+                ++numOfGeneratedCubes;
+            }
+            ASSERT_EQ(expectedNumberOfCornerPerms[size(params.ignoredCornersPerm)][size(params.lockedCornersPerm)], numOfGeneratedCubes);
+
+        }
+    }
+
+}
