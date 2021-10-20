@@ -53,8 +53,8 @@ class ruCubeStateConverter
         std::array<uint8_t, maxNumOfPieces> perm;
 
     public:
-        static constexpr std::array<uint16_t, maxNumOfPieces> factLookup = {
-            1, 1, 2, 6, 24, 120, 720
+        static constexpr std::array<uint16_t, maxNumOfPieces + 1> factLookup = {
+            1, 1, 2, 6, 24, 120, 720, 5040
         };
 
         static constexpr std::array<uint16_t, maxNumOfPieces> powersOf3 = {

@@ -576,7 +576,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesRUCornersPermOnlyTest) {
 }
 
 
-TEST(ruLutCubeGeneratorTest, generateCubesNumberOfCubesAfterLockingAndIgnoringCornersTest) {
+TEST(ruLutCubeGeneratorTest, generateCubesNumberOfCornersPermutationsTest) {
     ruLutCubeGenerator generator;
 
     generatorParameters params;
@@ -626,7 +626,55 @@ TEST(ruLutCubeGeneratorTest, generateCubesNumberOfCubesAfterLockingAndIgnoringCo
 
         }
     }
+}
 
+TEST(ruLutCubeGeneratorTest, generateCubesNumberOfEdgesPermutationsTest) {
+    ruLutCubeGenerator generator;
+
+    generatorParameters params;
+    params.lockedCornersPerm = { };
+    params.ignoredCornersPerm = { 0, 1, 2, 3, 4, 5 };
+    params.lockedEdges = { };
+    params.ignoredEdges = { };
+    params.lockedCornersOrient = { -1, -1, -1, -1, -1, -1 };
+    params.ignoredCornersOrient = { 1, 1, 1, 1, 1, 1 };
+
+    using conv = ruCubeStateConverter;
+    for (int8_t numOfIgnored = -1; numOfIgnored < ruCube::noOfEdges; ++numOfIgnored) {
+        if (numOfIgnored >= 0) {
+            params.ignoredEdges.insert(numOfIgnored);
+        }
+
+        params.lockedEdges.clear();
+        generator.init(params);
+
+        uint16_t numOfGeneratedCubes = 0;
+        while (generator.hasNext()) {
+            auto lutCube = generator.next();
+            ++numOfGeneratedCubes;
+        }
+
+        int n = ruCube::noOfEdges - size(params.lockedEdges);
+        int n_ign = size(params.ignoredEdges);
+        int expectedNumOfCubes = conv::factLookup[n] / conv::factLookup[n_ign];
+        ASSERT_EQ(expectedNumOfCubes, numOfGeneratedCubes);
+
+        for (int8_t numOfLocked = numOfIgnored + 1; numOfLocked < ruCube::noOfEdges ; ++numOfLocked) {
+            params.lockedEdges.insert(numOfLocked);
+            generator.init(params);
+
+            uint16_t numOfGeneratedCubes = 0;
+            while (generator.hasNext()) {
+                auto lutCube = generator.next();
+                ++numOfGeneratedCubes;
+            }
+            int n = ruCube::noOfEdges - size(params.lockedEdges);
+            int n_ign = size(params.ignoredEdges);
+            int expectedNumOfCubes = conv::factLookup[n] / conv::factLookup[n_ign];
+            ASSERT_EQ(expectedNumOfCubes, numOfGeneratedCubes);
+
+        }
+    }
 }
 
 TEST(ruLutCubeGeneratorTest, generateCubesLLCornersPermutationTest) {
