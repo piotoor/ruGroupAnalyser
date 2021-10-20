@@ -628,3 +628,36 @@ TEST(ruLutCubeGeneratorTest, generateCubesNumberOfCubesAfterLockingAndIgnoringCo
     }
 
 }
+
+TEST(ruLutCubeGeneratorTest, generateCubesLLCornersPermutationTest) {
+    ruLutCubeGenerator generator;
+
+    generatorParameters params;
+    params.lockedCornersPerm = { 4, 5 };
+    params.ignoredCornersPerm = { };
+    params.lockedEdges = { 4, 5, 6 };
+    params.ignoredEdges = { 0, 1, 2, 3, 4, 5, 6 };
+    params.lockedCornersOrient = { 0, 0, 0, 0, 0, 0 };
+    params.ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
+
+    generator.init(params);
+
+    std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes = {
+        { 0101112131415, 0123456 },
+        { 0111213101415, 0132456 },
+        { 0121310111415, 0123456 },
+        { 0131011121415, 0132456 },
+    };
+
+    ruCubeStateConverter converter;
+
+    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+        const auto &[corners, edges] = expectedCubes[i];
+        ASSERT_TRUE(generator.hasNext());
+        auto ruLutCube = generator.next();
+        ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+    }
+
+    ASSERT_FALSE(generator.hasNext());
+}
