@@ -628,6 +628,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesNumberOfCornersPermutationsTest) {
     }
 }
 
+
 TEST(ruLutCubeGeneratorTest, generateCubesNumberOfEdgesPermutationsTest) {
     ruLutCubeGenerator generator;
 
@@ -674,6 +675,67 @@ TEST(ruLutCubeGeneratorTest, generateCubesNumberOfEdgesPermutationsTest) {
             ASSERT_EQ(expectedNumOfCubes, numOfGeneratedCubes);
 
         }
+    }
+}
+
+TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesWithIgnoredAndLockedTest) {
+    ruLutCubeGenerator generator;
+
+    std::vector<generatorParameters> params = {
+        {   // LL
+            { 4, 5, 6 },                // lockedEdges
+            { },                        // ignoredEdges
+            { 4, 5 },                   // lockedCornersPerm
+            { },                        // ignoredCornersPerm
+            { -1, -1, -1, -1, 0, 0 },   // lockedCornersOrient
+            { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+        },
+        {   // PLL
+            { 4, 5, 6 },                // lockedEdges
+            { },                        // ignoredEdges
+            { 4, 5 },                   // lockedCornersPerm
+            { },                        // ignoredCornersPerm
+            { 0, 0, 0, 0, 0, 0 },       // lockedCornersOrient
+            { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+        },
+        {   // Sune no AUF
+            { 4, 5, 6 },                // lockedEdges
+            { },                        // ignoredEdges
+            { 0, 1, 2, 3, 4, 5 },       // lockedCornersPerm
+            { },                        // ignoredCornersPerm
+            { 1, 0, 1, 1, 0, 0 },       // lockedCornersOrient
+            { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+        },
+        {   // H no AUF
+            { 4, 5, 6 },                // lockedEdges
+            { },                        // ignoredEdges
+            { 0, 1, 2, 3, 4, 5 },       // lockedCornersPerm
+            { },                        // ignoredCornersPerm
+            { 1, 2, 1, 2, 0, 0 },       // lockedCornersOrient
+            { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+        },
+
+
+    };
+
+    std::vector<uint16_t> expectedNumberOfCubes = {
+        1296,
+        48,
+        12,
+        12
+    };
+
+
+    for (size_t i = 0; i < size(params); ++i) {
+        generator.init (params[i]);
+
+        int noOfCubes = 0;
+        for (; noOfCubes < expectedNumberOfCubes[i]; ++noOfCubes ) {
+            ASSERT_TRUE(generator.hasNext());
+            auto ruLutCube = generator.next();
+        }
+        std::cout << "Total number of cubes [" << std::setw(3) << i << "] = " << (int) noOfCubes << std::endl;
+        ASSERT_FALSE(generator.hasNext());
     }
 }
 
