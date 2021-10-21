@@ -722,14 +722,32 @@ TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesWithIgnoredAndLocked
             { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
             { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
         },
+        {   // permutation only
+            { },                        // lockedEdges
+            { },                        // ignoredEdges
+            { },                        // lockedCornersPerm
+            { },                        // ignoredCornersPerm
+            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+            { 1, 1, 1, 1, 1, 1 },       // ignoredCornersOrient
+        },
+        {   // permutation only, 2 edges ignored
+            { },                        // lockedEdges
+            { 3, 5 },                        // ignoredEdges
+            { },                        // lockedCornersPerm
+            { },                        // ignoredCornersPerm
+            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+            { 1, 1, 1, 1, 1, 1 },       // ignoredCornersOrient
+        },
     };
 
-    std::vector<uint16_t> expectedNumberOfCubes = {
+    std::vector<uint32_t> expectedNumberOfCubes = {
         1296,
         48,
         12,
         12,
-        243
+        243,
+        302400,
+        302400
     };
 
 
