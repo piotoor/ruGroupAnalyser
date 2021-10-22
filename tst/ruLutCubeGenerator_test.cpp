@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "ruLutCubeGenerator.h"
 #include "ruCubeStateConverter.h"
+#include "ruCubeMultiSolveHandler.h"
 
 using cornersArray = std::array<int8_t, 6>;
 
@@ -732,11 +733,67 @@ TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesWithIgnoredAndLocked
         },
         {   // permutation only, 2 edges ignored
             { },                        // lockedEdges
-            { 3, 5 },                        // ignoredEdges
+            { 3, 5 },                   // ignoredEdges
             { },                        // lockedCornersPerm
             { },                        // ignoredCornersPerm
             { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
             { 1, 1, 1, 1, 1, 1 },       // ignoredCornersOrient
+        },
+        {   // last F2L slot
+            { 4, 5 },                   // lockedEdges
+            { 0, 1, 2, 3 },             // ignoredEdges
+            { 4 },                      // lockedCornersPerm
+            { 0, 1, 2, 3 },             // ignoredCornersPerm
+            { -1, -1, -1, -1, 0, -1 },  // lockedCornersOrient
+            { 1, 1, 1, 1, 0, 0 },       // ignoredCornersOrient
+        },
+        {   // last two F2L slots
+            { 5 },                      // lockedEdges
+            { 0, 1, 2, 3 },             // ignoredEdges
+            { },                        // lockedCornersPerm
+            { 0, 1, 2, 3 },             // ignoredCornersPerm
+            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+            { 1, 1, 1, 1, 0, 0 },       // ignoredCornersOrient
+        },
+        {   // all pieces but two edges and two corners are locked. The rest is ignored.
+            { 0, 1, 3, 4, 6 },          // lockedEdges
+            { 2, 5 },                   // ignoredEdges
+            { 0, 1, 3, 4 },             // lockedCornersPerm
+            { 2, 5 },                   // ignoredCornersPerm
+            { 0, 0, -1, 0, -1, 0 },     // lockedCornersOrient
+            { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
+        },
+        {   // all pieces but three edges and two corners are locked. The rest is ignored.
+            { 0, 1, 3, 6 },             // lockedEdges
+            { 2, 4, 5 },                // ignoredEdges
+            { 0, 1, 3, 4 },             // lockedCornersPerm
+            { 2, 5 },                   // ignoredCornersPerm
+            { 0, 0, -1, 0, -1, 0 },     // lockedCornersOrient
+            { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
+        },
+        {   // two edges and two corners ignored
+            { },                        // lockedEdges
+            { 2, 4 },                   // ignoredEdges
+            {  },                       // lockedCornersPerm
+            { 2, 4 },                   // ignoredCornersPerm
+            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+            { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
+        },
+        {   // one edge and two corners ignored
+            { },                        // lockedEdges
+            { 2 },                      // ignoredEdges
+            {  },                       // lockedCornersPerm
+            { 2, 4 },                   // ignoredCornersPerm
+            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+            { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
+        },
+        {   // one edge and one corner ignored
+            { },                        // lockedEdges
+            { 2 },                      // ignoredEdges
+            {  },                       // lockedCornersPerm
+            { 4 },                      // ignoredCornersPerm
+            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+            { 0, 0, 1, 0, 0, 0 },       // ignoredCornersOrient
         },
     };
 
@@ -746,15 +803,25 @@ TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesWithIgnoredAndLocked
         12,
         12,
         243,
-        302400,
-        302400
+        302'400,
+        302'400,
+        75,
+        8100,
+        1,
+        1,
+        24'494'400,
+        24'494'400,
+        73'483'200
     };
 
 
     for (size_t i = 0; i < size(params); ++i) {
         generator.init (params[i]);
+        ruCubeMultiSolveHandler handler(params[i]);
+        ASSERT_EQ(expectedNumberOfCubes[i], handler.calculateTotalNumberOfCubesToGenerate());
 
         int noOfCubes = 0;
+
         for (; noOfCubes < expectedNumberOfCubes[i]; ++noOfCubes ) {
             ASSERT_TRUE(generator.hasNext());
             auto ruLutCube = generator.next();
