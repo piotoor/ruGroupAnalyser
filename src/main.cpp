@@ -33,6 +33,7 @@ int main(int argc, char const* argv[]) {
     bool headers = false;
     bool lineNumbers = false;
     bool fixedWidthMoves = false;
+    bool summary = false;
     std::pair<uint64_t, uint32_t> solvedMask = std::make_pair(ruBaseCube::allCornersMask, ruBaseCube::allEdgesMask);
 
     try {
@@ -98,9 +99,10 @@ int main(int argc, char const* argv[]) {
                 false },
 
                 stypox::HelpSection { "\nOutput options:" },
-                stypox::SwitchOption { "headers", headers, stypox::args("-H", "--headers"), "headers and footers" },
+                stypox::SwitchOption { "headers", headers, stypox::args("-H", "--headers"), "headers" },
                 stypox::SwitchOption { "lineNumbers", lineNumbers, stypox::args("-L", "--line-numbers"), "line numbers" },
-                stypox::SwitchOption { "fixedWidthMoves", fixedWidthMoves, stypox::args("-F", "--fixed-width"), "fixed width moves" }
+                stypox::SwitchOption { "fixedWidthMoves", fixedWidthMoves, stypox::args("-F", "--fixed-width"), "fixed width moves" },
+                stypox::SwitchOption { "summary", summary, stypox::args("-S", "--summary"), "solution summary" }
             ),
             "--------------- ruGroupAnalyser ---------------"
         };
@@ -138,6 +140,7 @@ int main(int argc, char const* argv[]) {
             reportFlags.fixedWidthMoves = fixedWidthMoves;
             reportFlags.headers = headers;
             reportFlags.lineNumbers = lineNumbers;
+            reportFlags.summary = summary;
 
             ruCubeSingleSolveHandler solveHandler(solParams, masks, reportFlags);
             solveHandler.solve(cube);
@@ -161,6 +164,7 @@ int main(int argc, char const* argv[]) {
             reportFlags.fixedWidthMoves = fixedWidthMoves;
             reportFlags.headers = headers;
             reportFlags.lineNumbers = lineNumbers;
+            reportFlags.summary = summary;
 
             ruCubeSingleSolveHandler solveHandler(solParams, masks, reportFlags);
             solveHandler.solve(cube);
