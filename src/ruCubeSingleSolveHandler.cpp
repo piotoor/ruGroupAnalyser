@@ -9,7 +9,8 @@ ruCubeSingleSolveHandler::ruCubeSingleSolveHandler( const solutionParameters &so
                                                                masks),
                                                         headers(flags.headers),
                                                         lineNumbers(flags.lineNumbers),
-                                                        fixedWidthMoves(flags.fixedWidthMoves) {
+                                                        fixedWidthMoves(flags.fixedWidthMoves),
+                                                        compressSolutions(flags.compressSolutions) {
 
 }
 
@@ -24,6 +25,7 @@ void ruCubeSingleSolveHandler::configure(   const solutionParameters &solParams,
     this->headers = flags.headers;
     this->lineNumbers = flags.lineNumbers;
     this->fixedWidthMoves = flags.fixedWidthMoves;
+    this->compressSolutions = flags.compressSolutions;
 }
 
 void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
@@ -33,7 +35,7 @@ void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
     solver.solve(&cube);
     elapsedTime = bt.getElapsedTime();
     solutionsVect = solver.getSolutionsAsVectors();
-    solutionsStr = solver.getSolutionsAsStrings();
+    solutionsStr = solver.getSolutionsAsStrings(compressSolutions);
 }
 
 std::string ruCubeSingleSolveHandler::getReport() {

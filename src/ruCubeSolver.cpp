@@ -33,14 +33,14 @@ void ruCubeSolver::solve(ruBaseCube *cube) {
     }
 }
 
-std::vector<std::string> ruCubeSolver::getSolutionsAsStrings() const {
+std::vector<std::string> ruCubeSolver::getSolutionsAsStrings(bool compressSolutions) const {
     std::vector<std::string> solutionsStr;
 
     std::transform(begin(solutions),
                    end(solutions),
                    std::back_inserter(solutionsStr),
-                   [] (const auto &x) {
-                        return ruCubeScrambleParser::vectorScrambleToStringScramble(x);
+                   [compressSolutions] (const auto &x) {
+                        return ruCubeScrambleParser::vectorScrambleToStringScramble(x, compressSolutions);
                    });
 
     return solutionsStr;

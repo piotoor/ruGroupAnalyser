@@ -8,16 +8,18 @@
 
 namespace ruCubeScrambleParser {
 
-    std::string vectorScrambleToStringScramble(const std::vector<uint8_t> &moves) {
+    std::string vectorScrambleToStringScramble(const std::vector<uint8_t> &moves, bool compressSolution) {
         if (moves.empty()) {
             return "";
         }
+
+        const std::string separator = compressSolution ? "" : " ";
         return std::accumulate( begin(moves),
                                 end(moves),
                                 std::string(""),
-                                [] (const auto &lhs, const auto &rhs) {
-                                    return rhs < 6 ? lhs + std::string(" ") + ruCubeMovesStrings[rhs] : lhs;
-                                }).substr(1);
+                                [separator] (const auto &lhs, const auto &rhs) {
+                                    return rhs < 6 ? lhs + separator + ruCubeMovesStrings[rhs] : lhs;
+                                }).substr(compressSolution ? 0 : 1);
     }
 
     std::vector<uint8_t> stringScrambleToVectorScramble(const std::string &moves) {

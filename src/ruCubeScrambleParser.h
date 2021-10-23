@@ -18,7 +18,7 @@ namespace ruCubeScrambleParser
         { "U'", ruCubeMove::Ui  }
     };
 
-    std::string vectorScrambleToStringScramble(const std::vector<uint8_t> &moves);
+    std::string vectorScrambleToStringScramble(const std::vector<uint8_t> &moves, bool compressSolution = false);
     std::vector<uint8_t> stringScrambleToVectorScramble(const std::string &moves);
 };
 

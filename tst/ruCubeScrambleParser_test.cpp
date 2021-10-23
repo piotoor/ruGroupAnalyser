@@ -34,6 +34,38 @@ TEST(ruCubeScrambleParserTest, vectorScrambleToStringScrambleTest) {
     }
 }
 
+TEST(ruCubeScrambleParserTest, vectorScrambleToStringScrambleCompressSolutionTest) {
+    std::vector<std::vector<uint8_t>> scrambles {
+        { R, R2, Ri, U, U2, Ui },
+        { R },
+        { R2 },
+        { Ri },
+        { U },
+        { U2 },
+        { Ui },
+        { R, U },
+        { R, U, R, U, R, U, Ri, Ui, R2, U2, R2, U2, R, Ui, R2, U2, R2, U2, R2, Ui }
+    };
+
+    std::vector<std::string> expectedScrambles {
+        "RR2R'UU2U'",
+        "R",
+        "R2",
+        "R'",
+        "U",
+        "U2",
+        "U'",
+        "RU",
+        "RURURUR'U'R2U2R2U2RU'R2U2R2U2R2U'"
+    };
+
+    const bool compressSolution = true;
+    for (uint8_t i = 0; i < size(scrambles); ++i) {
+        std::string scramble = ruCubeScrambleParser::vectorScrambleToStringScramble(scrambles[i], compressSolution);
+        ASSERT_EQ(expectedScrambles[i], scramble);
+    }
+}
+
 TEST(ruCubeScrambleParserTest, vectorScrambleToStringScrambleNegativeTest) {
     std::vector<std::vector<uint8_t>> scrambles {
         { R, R2, Ri, 12, U, U2, Ui, 11, 8 },

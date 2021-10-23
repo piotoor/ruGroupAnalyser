@@ -10,6 +10,7 @@ struct solveReportFlags {
     bool headers = false;
     bool lineNumbers = false;
     bool fixedWidthMoves = false;
+    bool compressSolutions = false;
 };
 
 class ruCubeSingleSolveHandler
@@ -35,6 +36,7 @@ class ruCubeSingleSolveHandler
         bool headers;
         bool lineNumbers;
         bool fixedWidthMoves;
+        bool compressSolutions;
         std::chrono::milliseconds elapsedTime;
         std::vector<std::vector<uint8_t>> solutionsVect;
         std::vector<std::string> solutionsStr;

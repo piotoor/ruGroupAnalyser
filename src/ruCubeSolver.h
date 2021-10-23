@@ -26,7 +26,7 @@ class ruCubeSolver
 
         void configure(const solutionParameters &solParams = solutionParameters(), const solvedMasks &masks = solvedMasks());
         void solve(ruBaseCube *cube);
-        std::vector<std::string> getSolutionsAsStrings() const;
+        std::vector<std::string> getSolutionsAsStrings(bool compressSolutions = false) const;
         std::vector<std::vector<uint8_t>> getSolutionsAsVectors() const;
 
     private:
