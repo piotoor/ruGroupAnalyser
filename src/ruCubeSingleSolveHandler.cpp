@@ -27,7 +27,7 @@ void ruCubeSingleSolveHandler::configure(   const solutionParameters &solParams,
     this->lineNumbers = flags.lineNumbers;
     this->fixedWidthMoves = flags.fixedWidthMoves;
     this->compressSolutions = flags.compressSolutions;
-    this->summary = summary;
+    this->summary = flags.summary;
 }
 
 void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
@@ -61,7 +61,7 @@ std::string ruCubeSingleSolveHandler::getReport() {
         }
 
 
-        if (fixedWidthMoves) {
+        if (fixedWidthMoves and not compressSolutions) {
             std::string solution;
             for (const auto &x: solutionsStr[i]) {
 
@@ -75,6 +75,7 @@ std::string ruCubeSingleSolveHandler::getReport() {
             report << solutionsStr[i] << std::endl;
         }
     }
+
     if (summary) {
         report << "\nSolutions found: " << std::to_string(size(solutionsVect)) << std::endl;
         report << "Solving time: " << elapsedTime.count() << "ms" << std::endl;
