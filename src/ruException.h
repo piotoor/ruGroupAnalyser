@@ -49,4 +49,10 @@ class ruCubeScrambleException: public ruException {
         std::string what() const noexcept override;
 };
 
+class ruCubeGeneratorParametersException: public ruException {
+    public:
+        ruCubeGeneratorParametersException(const std::string& msg = "Invalid cube generator parameters");
+        virtual ~ruCubeGeneratorParametersException();
+        std::string what() const noexcept override;
+};
 #endif // RUEXCEPTION_H
