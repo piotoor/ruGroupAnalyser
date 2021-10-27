@@ -55,4 +55,11 @@ class ruCubeGeneratorParametersException: public ruException {
         virtual ~ruCubeGeneratorParametersException();
         std::string what() const noexcept override;
 };
+
+class ruCubeMultiSolveHandlerException: public ruException {
+    public:
+        ruCubeMultiSolveHandlerException(const std::string &msg = "Not enough available disk space");
+        virtual ~ruCubeMultiSolveHandlerException();
+        std::string what() const noexcept override;
+};
 #endif // RUEXCEPTION_H

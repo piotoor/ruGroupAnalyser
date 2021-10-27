@@ -3,6 +3,7 @@
 #include <cmath>
 #include <algorithm>
 #include <filesystem>
+#include "ruException.h"
 
 auto operator""_MB(long double x) -> uint64_t {
     return 1024ULL * 1024ULL * x;
@@ -46,29 +47,52 @@ void ruCubeMultiSolveHandler::generateAndSolve(std::string filename) {
 
     std::cout << "You are about to generate and solve " << numOfCubes << " cubes..." << std::endl;
     if (singleReportSize * numOfCubes > availableDiskSpace) {
-        std::cout << "Not enough available disk space to save the output.\nTrying to optimize";
+        std::cout << "Not enough available disk space to save the output." << std::endl;
+        std::cout << "Trying to optimize..." << std::flush;
     }
 
     while (singleReportSize * numOfCubes > availableDiskSpace and canBeOptimizedFurther) {
         canBeOptimizedFurther = optimizeReport();
         singleReportSize = estimateSingleSolveReportSize();
         optimized = true;
-        std::cout << ".";
     }
 
     if (not canBeOptimizedFurther) {
-        throw 666; // notEnoughAvailableDiskSpace
-    }
-
-    if (optimized) {
         std::cout << std::endl;
-        std::cout << "The following optimizations have been applied to reduce the output size:" << std::endl;
-        if (solParams.maxNumOfSolutions) {
-
-        }
+        throw ruCubeMultiSolveHandlerException("Not enough available disk space. Exiting...");
     }
+
+    std::cout << "DONE" << std::endl;
+    printOptimizations();
 
     std::cout << "\nWorking..." << std::endl;
+    ruCubeSimpleBenchmarkTimer bt;
+
+    generator.init(genParams);
+}
+
+void ruCubeMultiSolveHandler::printOptimizations() {
+    std::cout << std::endl;
+    std::cout << "The following optimizations have been applied to reduce the output size:" << std::endl;
+    std::cout << std::boolalpha;
+    std::cout << "+--------------------------+-------+-------+" << std::endl;
+    std::cout << "|" << std::setw(26) << " parameters" << "|" << " old   " << "|" << " new   |" << std::endl;
+    std::cout << "+--------------------------+-------+-------+" << std::endl;
+    std::cout << "|" << std::setw(26) << " maxNumOfSolutions" << "| " << std::setw(6) << (int)solParamsInitial.maxNumOfSolutions << "| " << std::setw(6) << (int)solParams.maxNumOfSolutions << "|"
+              <<  (solParamsInitial.maxNumOfSolutions > solParams.maxNumOfSolutions ? " *" : "") << std::endl;
+    std::cout << "|" << std::setw(26) << " headers" << "| " << std::setw(6) << flagsInitial.headers << "| " << std::setw(6) << flags.headers << "|"
+              <<  (flagsInitial.headers != flags.headers ? " *" : "") << std::endl;
+    std::cout << "|" << std::setw(26) << " line numbers" << "| " << std::setw(6) << flagsInitial.lineNumbers << "| " << std::setw(6) << flags.lineNumbers << "|"
+              <<  (flagsInitial.lineNumbers != flags.lineNumbers ? " *" : "") << std::endl;
+    std::cout << "|" << std::setw(26) << " fixed width font" << "| " << std::setw(6) << flagsInitial.fixedWidthMoves << "| " << std::setw(6) << flags.fixedWidthMoves << "|"
+              <<  (flagsInitial.fixedWidthMoves != flags.fixedWidthMoves ? " *" : "") << std::endl;
+    std::cout << "|" << std::setw(26) << " summary" << "| " << std::setw(6) << flagsInitial.summary << "| " << std::setw(6) << flags.summary << "|"
+              <<  (flagsInitial.summary != flags.summary ? " *" : "") << std::endl;
+    std::cout << "|" << std::setw(26) << " compressed solution" << "| " << std::setw(6) << flagsInitial.compressSolutions << "| " << std::setw(6) << flags.compressSolutions << "|"
+              <<  (flagsInitial.compressSolutions != flags.compressSolutions ? " *" : "") << std::endl;
+    std::cout << "|" << std::setw(26) << " compressed cube state" << "| " << std::setw(6) << compressedCubeStateInitial << "| " << std::setw(6) << compressedCubeState << "|"
+              <<  (compressedCubeStateInitial != compressedCubeState ? " *" : "") << std::endl;
+    std::cout << "+--------------------------+-------+-------+" << std::endl;
 }
 
 void ruCubeMultiSolveHandler::disableHeadersAndFooters() {
@@ -108,7 +132,7 @@ uint64_t ruCubeMultiSolveHandler::estimateSingleSolveReportSize() {
         ans += maxCubeStateStrSize;
     }
 
-    ans += solParams.maxNumOfSolutions * flags.compressSolutions ? maxCompressedSolutionStrSize : maxSolutionStrSize;
+    ans += solParams.maxNumOfSolutions * (flags.compressSolutions ? maxCompressedSolutionStrSize : maxSolutionStrSize);
 
     if (flags.lineNumbers) {
         ans += solParams.maxNumOfSolutions * maxLineNumStrSize;
@@ -184,7 +208,7 @@ bool ruCubeMultiSolveHandler::optimizeReport() {
         } else if (flags.summary) {
             disableSummary();
             return true;
-        } else if (flags.compressSolutions) {
+        } else if (not flags.compressSolutions) {
             compressSolutions();
             return true;
         } else if (flags.headers) {

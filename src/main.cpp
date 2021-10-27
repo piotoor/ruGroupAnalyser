@@ -9,6 +9,8 @@
 #include "ruCubeSingleSolveInputParser.h"
 #include "ruException.h"
 #include "ruCubeSolvedMaskParser.h"
+#include "ruCubeMultiSolveHandler.h"
+#include "ruCubeGeneratorParametersParser.h"
 #include <cstdlib>
 
 enum class solvingMode {
@@ -177,7 +179,27 @@ int main(int argc, char const* argv[]) {
 
 
     } else if (mode.first == solvingMode::GENERATOR ){
-        std::cout << "Mode currently unavailable." << std::endl;
+        try {
+            auto genParams = ruCubeGeneratorParametersParser::strGeneratorParametersToStruct(mode.second);
+            solParams.maxLength = maxLength;
+            solParams.minLength = minLength;
+            solParams.maxNumOfSolutions = maxNumOfSolutions;
+            reportFlags.fixedWidthMoves = fixedWidthMoves;
+            reportFlags.headers = headers;
+            reportFlags.lineNumbers = lineNumbers;
+            reportFlags.summary = summary;
+
+            ruCubeMultiSolveHandler handler(genParams, solParams, reportFlags);
+            try {
+                handler.generateAndSolve("default.ruc");
+            } catch (ruCubeMultiSolveHandlerException &e) {
+                std::cout << e.what() << std::endl;
+                return EXIT_FAILURE;
+            }
+        } catch (ruCubeGeneratorParametersException &e) {
+            std::cout << e.what() << std::endl;
+            return EXIT_FAILURE;
+        }
     } else if (mode.first == solvingMode::ANALYSIS ){
         std::cout << "Mode currently unavailable." << std::endl;
     }

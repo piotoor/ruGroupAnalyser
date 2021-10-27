@@ -68,6 +68,7 @@ std::string ruCubeScrambleException::what() const noexcept {
     return std::string("ruCubeScrambleException: " + msg);
 }
 
+
 ruCubeGeneratorParametersException::ruCubeGeneratorParametersException(const std::string &msg): ruException(msg) {
 
 }
@@ -77,4 +78,16 @@ ruCubeGeneratorParametersException::~ruCubeGeneratorParametersException() {
 
 std::string ruCubeGeneratorParametersException::what() const noexcept {
     return std::string("ruCubeGeneratorParametersException: " + msg);
+}
+
+
+ruCubeMultiSolveHandlerException::ruCubeMultiSolveHandlerException(const std::string &msg): ruException(msg) {
+
+}
+
+ruCubeMultiSolveHandlerException::~ruCubeMultiSolveHandlerException() {
+}
+
+std::string ruCubeMultiSolveHandlerException::what() const noexcept {
+    return std::string("ruCubeMultiSolveHandlerException: " + msg);
 }

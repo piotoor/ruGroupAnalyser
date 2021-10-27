@@ -33,6 +33,7 @@ class ruCubeMultiSolveHandler
         void compressCubeState();
         void dropMaxNumOfSolutionsToN(uint8_t n);
 
+        void printOptimizations();
         bool optimizeReport();
 
         ruLutCubeGenerator generator;
@@ -43,6 +44,7 @@ class ruCubeMultiSolveHandler
         solveReportFlags flags;
         generatorParameters genParams;
         bool compressedCubeState = false;
+        bool compressedCubeStateInitial = false;
 
         solutionParameters solParamsInitial;
         solveReportFlags flagsInitial;
