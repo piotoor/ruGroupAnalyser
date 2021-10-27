@@ -2,6 +2,7 @@
 #include "ruException.h"
 #include <iostream>
 #include <iomanip>
+#include <sstream>
 
 ruBaseCube:: ruBaseCube() {
     movesVect = {
@@ -390,4 +391,20 @@ bool ruLutCube::isCornersOrientationSolveable(uint16_t cornersOrient) {
 
 bool ruLutCube::isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient) {
     return isPermutationSolveable(cornersPerm, edgesPerm) and isCornersOrientationSolveable(cornersOrient);
+}
+
+std::string ruLutCube::toString() {
+    ruCubeStateConverter converter;
+    uint64_t corners = converter.lexIndexCornersToIntCorners(cornersPerm, cornersOrient);
+    uint64_t co_mask = 0707070707070;
+    uint64_t cp_mask = 0070707070707;
+    uint64_t co = corners & co_mask;
+    uint64_t cp = corners & cp_mask;
+    co >>= 1;
+    corners = cp | (co_mask & (co));
+
+    std::stringstream ss;
+    ss << std::setfill('0');
+    ss << std::oct << std::setw(12) <<  corners << ";" << std::setw(7) << converter.lexIndexEdgesToIntEdges(edgesPerm);
+    return ss.str();
 }

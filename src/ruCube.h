@@ -204,6 +204,8 @@ class ruLutCube: public ruBaseCube {
 
         bool isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask) const override;
 
+        std::string toString();
+
     protected:
         void R() override;
         void R2() override;
