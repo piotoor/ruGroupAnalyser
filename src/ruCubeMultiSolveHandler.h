@@ -16,15 +16,22 @@ class ruCubeMultiSolveHandler
                                 const solutionParameters &solParams = solutionParameters(),
                                 const solveReportFlags &flags = solveReportFlags());
         virtual ~ruCubeMultiSolveHandler();
+        void configure( const generatorParameters &genParams = generatorParameters(),
+                        const solutionParameters &solParams = solutionParameters(),
+                        const solveReportFlags &flags = solveReportFlags());
 
         void generateAndSolve(std::string filename);
         uint32_t calculateTotalNumberOfCubesToGenerate();
     private:
+        uint64_t estimateSingleSolveReportSize();
+        uint64_t calculateAvailableDiskSpace();
         void disableHeadersAndFooters();
         void disableLineNumbers();
         void disableFixedWidthMoves();
+        void disableSummary();
+        void compressSolutions();
+        void compressCubeState();
         void dropMaxNumOfSolutionsToN(uint8_t n);
-        uint64_t estimateSingleSolveReportSize();
 
         bool optimizeReport();
 
@@ -35,15 +42,22 @@ class ruCubeMultiSolveHandler
         solvedMasks masks;
         solveReportFlags flags;
         generatorParameters genParams;
+        bool compressedCubeState = false;
 
-        static inline const uint8_t maxCubeStateStrSize = 100; // cube state; solved mask printed once
+        solutionParameters solParamsInitial;
+        solveReportFlags flagsInitial;
+
+
+        static inline const uint8_t maxCubeStateStrSize = 69; // cube state; solved mask printed once
+        static inline const uint8_t maxCompressedCubeStateStrSize = 21;
         static inline const uint8_t maxSolutionStrSize = 60;
+        static inline const uint8_t maxCompressedSolutionStrSize = 40;
         static inline const uint8_t maxLineNumStrSize = 7;
         static inline const uint8_t maxHeaderStrSize = 26;
-        static inline const uint8_t maxSummaryStrSize = 44;
+        static inline const uint8_t maxSummaryStrSize = 52;
         static inline const uint8_t maxNumOfHeaders = 20;
         static inline const uint8_t maxNumOfBlankLines = 20;
-        static inline const uint64_t maxOutputFileSize = 4.0_GB;    // todo calculate
+        static inline const uint64_t maxOutputFileSize = 4.5_GB;    // todo calculate
         // todo num of thhreads
 
         // fullreport header == gen masks + solved masks
