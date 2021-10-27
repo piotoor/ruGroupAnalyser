@@ -16,6 +16,15 @@ struct generatorParameters {
     std::set<int8_t> ignoredCornersPerm = {};
     cornersArray lockedCornersOrient = { -1, -1, -1, -1, -1, -1 };
     cornersArray ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
+
+    bool operator == (const generatorParameters &other) const {
+        return  lockedEdges == other.lockedEdges and
+                ignoredEdges == other.ignoredEdges and
+                lockedCornersPerm == other.lockedCornersPerm and
+                ignoredCornersPerm == other.ignoredCornersPerm and
+                lockedCornersOrient == other.lockedCornersOrient and
+                ignoredCornersOrient == other.ignoredCornersOrient;
+    }
 };
 
 class ruLutCubeGenerator
