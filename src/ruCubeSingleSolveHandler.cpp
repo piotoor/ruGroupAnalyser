@@ -7,61 +7,73 @@ ruCubeSingleSolveHandler::ruCubeSingleSolveHandler( const solutionParameters &so
                                                     const solveReportFlags &flags):
                                                         solver(solParams,
                                                                masks),
-                                                        headers(flags.headers),
-                                                        lineNumbers(flags.lineNumbers),
-                                                        fixedWidthMoves(flags.fixedWidthMoves),
-                                                        compressSolutions(flags.compressSolutions),
-                                                        summary(flags.summary) {
+                                                        flags(flags){
 
 }
 
 ruCubeSingleSolveHandler::~ruCubeSingleSolveHandler() {
 }
 
+ruCubeSingleSolveHandler::ruCubeSingleSolveHandler(const ruCubeSingleSolveHandler &other) {
+    solver = other.solver;
+    report.str( std::string() );
+    report.clear();
+    report << other.report.rdbuf();
+
+    flags = other.flags;
+
+    elapsedTime = other.elapsedTime;
+    solutionsVect = other.solutionsVect;
+    solutionsStr = other.solutionsStr;
+};
 
 void ruCubeSingleSolveHandler::configure(   const solutionParameters &solParams,
                                             const solvedMasks &masks,
                                             const solveReportFlags &flags) {
     solver.configure(solParams, masks);
-    this->headers = flags.headers;
-    this->lineNumbers = flags.lineNumbers;
-    this->fixedWidthMoves = flags.fixedWidthMoves;
-    this->compressSolutions = flags.compressSolutions;
-    this->summary = flags.summary;
+    this->flags = flags;
 }
 
 void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
     solutionsStr.clear();
     solutionsVect.clear();
     ruCubeSimpleBenchmarkTimer bt(false, false);
+    currCube = cube;
     solver.solve(&cube);
     elapsedTime = bt.getElapsedTime();
     solutionsVect = solver.getSolutionsAsVectors();
-    solutionsStr = solver.getSolutionsAsStrings(compressSolutions);
+    solutionsStr = solver.getSolutionsAsStrings(flags.compressSolutions);
 }
 
 std::string ruCubeSingleSolveHandler::getReport() {
     report.str( std::string() );
     report.clear();
 
+    if (flags.compressCubeState) {
+        report << currCube.toString() << std::endl << std::endl;
+    } else {
+        report << "+------------+-------+" << std::endl;
+        report << "|" << currCube.toString() << "|" << std::endl;
+        report << "+------------+-------+" << std::endl << std::endl;
+    }
     int currLength = -1;
     for (size_t i = 0; i < size(solutionsVect); ++i) {
         if (size(solutionsVect[i]) != currLength) {
-            if (currLength != -1 and headers) {
+            if (currLength != -1 and flags.headers) {
                     report << "\n";
             }
             currLength = size(solutionsVect[i]);
-            if (headers) {
+            if (flags.headers) {
 
                 report << "Solutions of length " << std::setw(2) << std::to_string(currLength) << "..." << std::endl;
             }
         }
-        if (lineNumbers) {
+        if (flags.lineNumbers) {
             report << std::setw(log(size(solutionsVect)) + 1) << std::left << std::to_string(i + 1) + "." << " ";
         }
 
 
-        if (fixedWidthMoves and not compressSolutions) {
+        if (flags.fixedWidthMoves and not flags.compressSolutions) {
             std::string solution;
             for (const auto &x: solutionsStr[i]) {
 
@@ -76,7 +88,7 @@ std::string ruCubeSingleSolveHandler::getReport() {
         }
     }
 
-    if (summary) {
+    if (flags.summary) {
         report << "\nSolutions found: " << std::to_string(size(solutionsVect)) << std::endl;
         report << "Solving time: " << elapsedTime.count() << "ms" << std::endl;
     }

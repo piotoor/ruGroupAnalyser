@@ -11,6 +11,7 @@ struct solveReportFlags {
     bool lineNumbers = false;
     bool fixedWidthMoves = false;
     bool compressSolutions = false;
+    bool compressCubeState = false;
     bool summary = false;
 };
 
@@ -20,7 +21,11 @@ class ruCubeSingleSolveHandler
         ruCubeSingleSolveHandler(const solutionParameters &solParams = solutionParameters(),
                                  const solvedMasks &masks = solvedMasks(),
                                  const solveReportFlags &flags = solveReportFlags());
+
         virtual ~ruCubeSingleSolveHandler();
+
+        ruCubeSingleSolveHandler(const ruCubeSingleSolveHandler&);
+
         void configure( const solutionParameters &solParams = solutionParameters(),
                         const solvedMasks &masks = solvedMasks(),
                         const solveReportFlags &flags = solveReportFlags());
@@ -34,14 +39,13 @@ class ruCubeSingleSolveHandler
     private:
         ruCubeSolver solver;
         std::stringstream report;
-        bool headers;
-        bool lineNumbers;
-        bool fixedWidthMoves;
-        bool compressSolutions;
-        bool summary;
+        solveReportFlags flags;
+
         std::chrono::milliseconds elapsedTime;
         std::vector<std::vector<uint8_t>> solutionsVect;
         std::vector<std::string> solutionsStr;
+
+        ruLutCube currCube;
 };
 
 #endif // RUGROUPSINGLESOLVEHANDLER_H

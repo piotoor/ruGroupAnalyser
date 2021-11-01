@@ -18,9 +18,24 @@ TEST(ruCubeSingleSolveHandlerTest, getReportDefaultTest) {
     };
 
     std::vector<std::string> expectedReports {
+        "+------------+-------+\n"
+        "|150102201324;0126345|\n"
+        "+------------+-------+\n\n"
         "R'\n",
+
+        "+------------+-------+\n"
+        "|201501021324;6012345|\n"
+        "+------------+-------+\n\n"
         "U' R'\n",
+
+        "+------------+-------+\n"
+        "|041501101203;6015234|\n"
+        "+------------+-------+\n\n"
         "R' U' R'\n",
+
+        "+------------+-------+\n"
+        "|222320010405;0231456|\n"
+        "+------------+-------+\n\n"
         "R U2 R' U' R U' R'\n"
     };
 
@@ -46,12 +61,21 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolutionParametersTest) {
     };
 
     std::vector<std::string> expectedReports {
+        "+------------+-------+\n"
+        "|150102201324;0126345|\n"
+        "+------------+-------+\n\n"
         "R U2 R2 U2 R2 U2 R2 U2 R2 U2 R2 U2\n"
         "U2 R2 U2 R2 U2 R2 U2 R2 U2 R2 U2 R\n",
 
+        "+------------+-------+\n"
+        "|222320010405;0231456|\n"
+        "+------------+-------+\n\n"
         "R U2 R' U' R U' R'\n"
         "R2 U2 R' U2 R' U R U2 R U2 R' U R'\n",
 
+        "+------------+-------+\n"
+        "|000112230405;3210456|\n"
+        "+------------+-------+\n\n"
         "R' U' R U' R' U2 R2 U R' U R U2 R'\n"
         "R U2 R' U2 R2 U R' U R U2 R2 U' R U R'\n"
     };
@@ -77,14 +101,23 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolutionParametersTest) {
     };
 
     expectedReports = {
+        "+------------+-------+\n"
+        "|000102030405;2103654|\n"
+        "+------------+-------+\n\n"
         "R2 U2 R2 U2 R2 U2\n"
         "U2 R2 U2 R2 U2 R2\n"
         "R U2 R2 U R2 U2 R2 U2 R2 U' R2 U2 R\n",
 
+        "+------------+-------+\n"
+        "|000102030405;0312456|\n"
+        "+------------+-------+\n\n"
         "R2 U' R' U' R U R U R U' R\n"
         "R U2 R U R U R U' R' U' R' U R'\n"
         "U R U2 R U R U R2 U' R' U' R2 U'\n",
 
+        "+------------+-------+\n"
+        "|000102030405;2301456|\n"
+        "+------------+-------+\n\n"
         "R2 U2 R U2 R2 U2 R2 U2 R U2 R2\n"
         "R2 U2 R' U2 R2 U2 R2 U2 R' U2 R2\n"
         "R2 U2 R2 U2 R2 U R2 U2 R2 U2 R2 U'\n"
@@ -121,6 +154,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersTest) {
     };
 
     std::vector<std::string> expectedReports {
+        "+------------+-------+\n"
+        "|000102030405;2103654|\n"
+        "+------------+-------+\n\n"
         "Solutions of length  6...\n"
         "R2 U2 R2 U2 R2 U2\n"
         "U2 R2 U2 R2 U2 R2\n"
@@ -128,6 +164,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersTest) {
         "Solutions of length 13...\n"
         "R U2 R2 U R2 U2 R2 U2 R2 U' R2 U2 R\n",
 
+        "+------------+-------+\n"
+        "|000102030405;0312456|\n"
+        "+------------+-------+\n\n"
         "Solutions of length 11...\n"
         "R2 U' R' U' R U R U R U' R\n"
         "\n"
@@ -135,6 +174,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersTest) {
         "R U2 R U R U R U' R' U' R' U R'\n"
         "U R U2 R U R U R2 U' R' U' R2 U'\n",
 
+        "+------------+-------+\n"
+        "|000102030405;2301456|\n"
+        "+------------+-------+\n\n"
         "Solutions of length 11...\n"
         "R2 U2 R U2 R2 U2 R2 U2 R U2 R2\n"
         "R2 U2 R' U2 R2 U2 R2 U2 R' U2 R2\n"
@@ -174,6 +216,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
     };
 
     std::vector<std::string> expectedReports {
+        "+------------+-------+\n"
+        "|000102030405;2103654|\n"
+        "+------------+-------+\n\n"
         "Solutions of length  6...\n"
         "1. R2 U2 R2 U2 R2 U2\n"
         "2. U2 R2 U2 R2 U2 R2\n"
@@ -181,6 +226,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "Solutions of length 13...\n"
         "3. R U2 R2 U R2 U2 R2 U2 R2 U' R2 U2 R\n",
 
+        "+------------+-------+\n"
+        "|000102030405;0312456|\n"
+        "+------------+-------+\n\n"
         "Solutions of length 11...\n"
         "1. R2 U' R' U' R U R U R U' R\n"
         "\n"
@@ -188,6 +236,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "2. R U2 R U R U R U' R' U' R' U R'\n"
         "3. U R U2 R U R U R2 U' R' U' R2 U'\n",
 
+        "+------------+-------+\n"
+        "|000102030405;2301456|\n"
+        "+------------+-------+\n\n"
         "Solutions of length 11...\n"
         "1. R2 U2 R U2 R2 U2 R2 U2 R U2 R2\n"
         "2. R2 U2 R' U2 R2 U2 R2 U2 R' U2 R2\n"
@@ -228,6 +279,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
     };
 
     std::vector<std::string> expectedReports {
+        "+------------+-------+\n"
+        "|000102030405;2103654|\n"
+        "+------------+-------+\n\n"
         "Solutions of length  6...\n"
         "1. R2 U2 R2 U2 R2 U2\n"
         "2. U2 R2 U2 R2 U2 R2\n"
@@ -235,6 +289,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "Solutions of length 13...\n"
         "3. R  U2 R2 U  R2 U2 R2 U2 R2 U' R2 U2 R\n",
 
+        "+------------+-------+\n"
+        "|000102030405;0312456|\n"
+        "+------------+-------+\n\n"
         "Solutions of length 11...\n"
         "1. R2 U' R' U' R  U  R  U  R  U' R\n"
         "\n"
@@ -242,6 +299,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "2. R  U2 R  U  R  U  R  U' R' U' R' U  R'\n"
         "3. U  R  U2 R  U  R  U  R2 U' R' U' R2 U'\n",
 
+        "+------------+-------+\n"
+        "|000102030405;2301456|\n"
+        "+------------+-------+\n\n"
         "Solutions of length 11...\n"
         "1. R2 U2 R  U2 R2 U2 R2 U2 R  U2 R2\n"
         "2. R2 U2 R' U2 R2 U2 R2 U2 R' U2 R2\n"
@@ -283,6 +343,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
     };
 
     std::vector<std::string> expectedReports {
+        "+------------+-------+\n"
+        "|000102030405;2103654|\n"
+        "+------------+-------+\n\n"
         "Solutions of length  6...\n"
         "1. R2U2R2U2R2U2\n"
         "2. U2R2U2R2U2R2\n"
@@ -290,6 +353,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "Solutions of length 13...\n"
         "3. RU2R2UR2U2R2U2R2U'R2U2R\n",
 
+        "+------------+-------+\n"
+        "|000102030405;0312456|\n"
+        "+------------+-------+\n\n"
         "Solutions of length 11...\n"
         "1. R2U'R'U'RURURU'R\n"
         "\n"
@@ -297,6 +363,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "2. RU2RURURU'R'U'R'UR'\n"
         "3. URU2RURUR2U'R'U'R2U'\n",
 
+        "+------------+-------+\n"
+        "|000102030405;2301456|\n"
+        "+------------+-------+\n\n"
         "Solutions of length 11...\n"
         "1. R2U2RU2R2U2R2U2RU2R2\n"
         "2. R2U2R'U2R2U2R2U2R'U2R2\n"
@@ -338,6 +407,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
     };
 
     std::vector<std::string> expectedReports {
+        "+------------+-------+\n"
+        "|000102030405;2103654|\n"
+        "+------------+-------+\n\n"
         "Solutions of length  6...\n"
         "1. R2U2R2U2R2U2\n"
         "2. U2R2U2R2U2R2\n"
@@ -347,6 +419,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
 
         "\nSolutions found: 3\n",
 
+        "+------------+-------+\n"
+        "|000102030405;0312456|\n"
+        "+------------+-------+\n\n"
         "Solutions of length 11...\n"
         "1. R2U'R'U'RURURU'R\n"
         "\n"
@@ -356,6 +431,9 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
 
         "\nSolutions found: 3\n",
 
+        "+------------+-------+\n"
+        "|000102030405;2301456|\n"
+        "+------------+-------+\n\n"
         "Solutions of length 11...\n"
         "1. R2U2RU2R2U2R2U2RU2R2\n"
         "2. R2U2R'U2R2U2R2U2R'U2R2\n"
