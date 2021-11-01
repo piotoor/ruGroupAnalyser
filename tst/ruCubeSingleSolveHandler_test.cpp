@@ -458,3 +458,75 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         ASSERT_TRUE(std::regex_match(lastLine, lastLineValidator));
     }
 }
+
+TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNumbersFixedWidthMovesCompressSolutionsSummaryAndCubeStateTest) {
+    solutionParameters params;
+    ruCubeSingleSolveHandler handler;
+    ruCubeSingleSolveInputParser parser;
+
+    params.minLength = 1;
+    params.maxLength = 13;
+    params.maxNumOfSolutions = 3;
+
+    solveReportFlags flags;
+    flags.headers = true;
+    flags.lineNumbers = true;
+    flags.fixedWidthMoves = true;
+    flags.compressSolutions = true;
+    flags.compressCubeState = true;
+    flags.summary = true;
+    handler.configure(params, solvedMasks(), flags);
+
+
+    std::vector<std::string> scrambles {
+        "R2 U2 R2 U2 R2 U2",
+        "R' U R' U' R' U' R' U R U R2",
+        "R2 U2 R2 U2 R2 U R2 U2 R2 U2 R2 U'"
+    };
+
+    std::vector<std::string> expectedReports {
+        "000102030405;2103654\n\n"
+        "Solutions of length  6...\n"
+        "1. R2U2R2U2R2U2\n"
+        "2. U2R2U2R2U2R2\n"
+        "\n"
+        "Solutions of length 13...\n"
+        "3. RU2R2UR2U2R2U2R2U'R2U2R\n"
+
+        "\nSolutions found: 3\n",
+
+        "000102030405;0312456\n\n"
+        "Solutions of length 11...\n"
+        "1. R2U'R'U'RURURU'R\n"
+        "\n"
+        "Solutions of length 13...\n"
+        "2. RU2RURURU'R'U'R'UR'\n"
+        "3. URU2RURUR2U'R'U'R2U'\n"
+
+        "\nSolutions found: 3\n",
+
+        "000102030405;2301456\n\n"
+        "Solutions of length 11...\n"
+        "1. R2U2RU2R2U2R2U2RU2R2\n"
+        "2. R2U2R'U2R2U2R2U2R'U2R2\n"
+        "\n"
+        "Solutions of length 12...\n"
+        "3. R2U2R2U2R2UR2U2R2U2R2U'\n"
+
+        "\nSolutions found: 3\n"
+    };
+
+    for (uint8_t i = 0; i < size(expectedReports); ++i) {
+        ruLutCube cube;
+        ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
+        handler.solve(cube);
+        std::string report = handler.getReport();
+        auto lastLineStart = report.find("Solving time");
+        std::string lastLine = report.substr(lastLineStart);
+        report = report.substr(0, lastLineStart);
+        ASSERT_EQ(expectedReports[i], report);
+
+        std::regex lastLineValidator("^Solving time:[[:space:]]+[[:digit:]]+ms\n$");
+        ASSERT_TRUE(std::regex_match(lastLine, lastLineValidator));
+    }
+}
