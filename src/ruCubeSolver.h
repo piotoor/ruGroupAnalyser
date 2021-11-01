@@ -20,8 +20,8 @@ class ruCubeSolver
 {
     public:
         ruCubeSolver(const solutionParameters &solParams = solutionParameters(), const solvedMasks &masks = solvedMasks());
-        explicit ruCubeSolver(const ruCubeSolver &other) = delete;
-        ruCubeSolver& operator=(const ruCubeSolver &other) = delete;
+        ruCubeSolver(const ruCubeSolver &other) = default;
+        ruCubeSolver& operator=(const ruCubeSolver &other) = default;
         virtual ~ruCubeSolver();
 
         void configure(const solutionParameters &solParams = solutionParameters(), const solvedMasks &masks = solvedMasks());
