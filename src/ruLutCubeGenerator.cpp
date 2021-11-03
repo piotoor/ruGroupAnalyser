@@ -89,3 +89,29 @@ bool ruLutCubeGenerator::hasNext() {
     return hasNextCube;
 }
 
+solvedMasks generatorParameters::toSolvedMasks () const {
+        solvedMasks ans { 0, 0 };
+
+        std::bitset<32> edgesBits;
+        for (int8_t i = 0; i < ruCube::noOfEdges; ++i) {
+            if (ignoredEdges.find(i) == ignoredEdges.end()) {
+                edgesBits.set(ruCube::noOfEdges - 1 - i);
+            }
+        }
+        ans.edgesMask = static_cast<uint32_t>(edgesBits.to_ulong());
+
+        std::bitset<32> cornersPermBits;
+        std::bitset<32> cornersOrientBits;
+        for (int8_t i = 0; i < ruCube::noOfCorners; ++i) {
+            if (ignoredCornersPerm.find(i) == ignoredCornersPerm.end()) {
+                cornersPermBits.set(ruCube::noOfCorners - 1 - i);
+            }
+            if (ignoredCornersOrient[i] == 0) {
+                cornersOrientBits.set(ruCube::noOfCorners - 1 - i);
+            }
+        }
+
+        ans.cornersMask =   (static_cast<uint64_t>(cornersOrientBits.to_ulong()) << (sizeof(uint32_t) * 8)) |
+                            static_cast<uint64_t>(cornersPermBits.to_ulong());
+        return ans;
+    }
