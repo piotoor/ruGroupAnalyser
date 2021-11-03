@@ -50,11 +50,11 @@ std::string ruCubeSingleSolveHandler::getReport() {
     report.clear();
 
     if (flags.compressCubeState) {
-        report << currCube.toString() << std::endl << std::endl;
+        report << currCube.toString() << std::endl;
     } else {
         report << "+------------+-------+" << std::endl;
         report << "|" << currCube.toString() << "|" << std::endl;
-        report << "+------------+-------+" << std::endl << std::endl;
+        report << "+------------+-------+" << std::endl;
     }
     int currLength = -1;
     for (size_t i = 0; i < size(solutionsVect); ++i) {
