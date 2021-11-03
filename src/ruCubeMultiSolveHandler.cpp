@@ -3,7 +3,9 @@
 #include <cmath>
 #include <algorithm>
 #include <filesystem>
+#include <fstream>
 #include "ruException.h"
+#include "ruCubeSingleSolveHandlerPool.h"
 
 auto operator""_MB(long double x) -> uint64_t {
     return 1024ULL * 1024ULL * x;
@@ -38,7 +40,7 @@ void ruCubeMultiSolveHandler::configure( const generatorParameters &genParams,
     this->flagsInitial = flags;
 }
 
-void ruCubeMultiSolveHandler::generateAndSolve(std::string filename) {
+void ruCubeMultiSolveHandler::prepare() {
     uint64_t singleReportSize = estimateSingleSolveReportSize();
     uint32_t numOfCubes = calculateTotalNumberOfCubesToGenerate();
     uint64_t availableDiskSpace = calculateAvailableDiskSpace();
@@ -64,11 +66,25 @@ void ruCubeMultiSolveHandler::generateAndSolve(std::string filename) {
 
     std::cout << "DONE" << std::endl;
     printOptimizations();
+}
 
-    std::cout << "\nWorking..." << std::endl;
+void ruCubeMultiSolveHandler::generateAndSolve(std::string filename) {
+    prepare();
+    std::cout << "\nGenerating..." << std::endl;
     ruCubeSimpleBenchmarkTimer bt;
+    std::ofstream output(filename);
 
     generator.init(genParams);
+
+    solvedMasks masks = genParams.toSolvedMasks();
+    ruCubeSingleSolveHandlerPool pool(4, solParams, masks, flags);
+
+    while (generator.hasNext()) {
+
+        pool.enqueueCube(generator.next());
+    }
+    std::cout << "DONE ";
+    output.close();
 }
 
 void ruCubeMultiSolveHandler::printOptimizations() {
@@ -156,6 +172,10 @@ uint64_t ruCubeMultiSolveHandler::calculateAvailableDiskSpace() {
     const std::filesystem::space_info si = std::filesystem::space(".", ec);
     return si.available;
 }
+
+
+// K - non locked
+// k - permutable
 
 uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
     uint8_t numOfIgnoredEdges = size(genParams.ignoredEdges);

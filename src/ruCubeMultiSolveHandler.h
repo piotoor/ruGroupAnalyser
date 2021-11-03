@@ -20,7 +20,7 @@ class ruCubeMultiSolveHandler
                         const solutionParameters &solParams = solutionParameters(),
                         const solveReportFlags &flags = solveReportFlags());
 
-        void generateAndSolve(std::string filename);
+        void generateAndSolve(std::string filename = "output.txt");
         uint32_t calculateTotalNumberOfCubesToGenerate();
     private:
         uint64_t estimateSingleSolveReportSize();
@@ -33,6 +33,7 @@ class ruCubeMultiSolveHandler
         void compressCubeState();
         void dropMaxNumOfSolutionsToN(uint8_t n);
 
+        void prepare();
         void printOptimizations();
         bool optimizeReport();
 
