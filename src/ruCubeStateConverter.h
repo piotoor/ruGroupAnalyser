@@ -27,6 +27,9 @@ class ruCubeStateConverter
         uint32_t lexIndexEdgesToIntEdges(uint16_t lexIndexEdges);
         uint64_t lexIndexCornersToIntCorners(uint16_t lexIndexPerm, uint16_t lexIndexOrient);
 
+        std::string lexIndexEdgesToIntEdgesAsStrWithIgnored(uint16_t lexIndexEdges, const std::bitset<7> &ignoredEdeges);
+        std::string lexIndexCornersToIntCornersAsStrWithIgnored(uint16_t lexIndexPerm, uint16_t lexIndexOrient, const std::bitset<6> &ignoredCornersPerm, const std::bitset<6> &ignoredCornersOrient);
+
         uint16_t vectEdgesPermToLexIndexEdgesPerm(const edgesArray &perm);
         uint16_t vectCornersPermToLexIndexCornersPerm(const cornersArray &perm);
         uint16_t vectCornersOrientToLexIndexCornersOrient(const cornersArray &orient);
@@ -38,6 +41,7 @@ class ruCubeStateConverter
         uint16_t vectPermToLexIndexPerm(const T &perm);
         void lexIndexPermToArrayPermIntermediate(uint16_t lexPerm, uint8_t numOfPieces);
         uint64_t lexIndexCornersOrientToIntCornersOrient(uint16_t lexIndexOrient);
+        std::string lexIndexCornersOrientToIntCornersOrientAsStrWithIgnored(uint16_t lexIndexOrient, const std::bitset<6> &ignoredCornersOrient);
 
         static inline constexpr uint8_t maxNumOfPieces = 7;
         static inline const uint8_t numOfEdges = 7;

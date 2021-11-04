@@ -233,7 +233,7 @@ ruLutCube::ruLutCube() {
     reset();
 }
 
-ruLutCube::ruLutCube(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient) {
+ruLutCube::ruLutCube(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient, const ruLutCubeIgnoredPieces &ignored): ignoredPieces(ignored) {
     setEdges(edgesPerm);
     this->cornersPerm = cornersPerm;
     this->cornersOrient = cornersOrient;
@@ -394,17 +394,8 @@ bool ruLutCube::isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16
 }
 
 std::string ruLutCube::toString() {
-    ruCubeStateConverter converter;
-    uint64_t corners = converter.lexIndexCornersToIntCorners(cornersPerm, cornersOrient);
-    uint64_t co_mask = 0707070707070;
-    uint64_t cp_mask = 0070707070707;
-    uint64_t co = corners & co_mask;
-    uint64_t cp = corners & cp_mask;
-    co >>= 1;
-    corners = cp | (co_mask & (co));
-
-    std::stringstream ss;
-    ss << std::setfill('0');
-    ss << std::oct << std::setw(12) <<  corners << ";" << std::setw(7) << converter.lexIndexEdgesToIntEdges(edgesPerm);
-    return ss.str();
+    ruCubeStateConverter conv;
+    const auto &[ep, co, cp] = ignoredPieces;
+    return  conv.lexIndexCornersToIntCornersAsStrWithIgnored(cornersPerm, cornersOrient, co, cp) + ";" +
+            conv.lexIndexEdgesToIntEdgesAsStrWithIgnored(edgesPerm, ep);
 }
