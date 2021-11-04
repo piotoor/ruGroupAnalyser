@@ -396,6 +396,6 @@ bool ruLutCube::isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16
 std::string ruLutCube::toString() {
     ruCubeStateConverter conv;
     const auto &[ep, co, cp] = ignoredPieces;
-    return  conv.lexIndexCornersToIntCornersAsStrWithIgnored(cornersPerm, cornersOrient, co, cp) + ";" +
+    return  conv.lexIndexCornersToIntCornersAsStrWithIgnored(cornersPerm, cornersOrient, cp, co) + ";" +
             conv.lexIndexEdgesToIntEdgesAsStrWithIgnored(edgesPerm, ep);
 }
