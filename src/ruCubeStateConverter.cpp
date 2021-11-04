@@ -229,8 +229,9 @@ std::string ruCubeStateConverter::lexIndexEdgesToIntEdgesAsStrWithIgnored(uint16
 
 std::string ruCubeStateConverter::lexIndexCornersToIntCornersAsStrWithIgnored(uint16_t lexIndexPerm, uint16_t lexIndexOrient, const std::bitset<ruBaseCube::noOfCorners> &ignoredCornersPerm, const std::bitset<ruBaseCube::noOfCorners> &ignoredCornersOrient) {
     std::string ans;
-    auto orient = lexIndexCornersOrientToIntCornersOrientAsStrWithIgnored(lexIndexOrient, ignoredCornersOrient);
     lexIndexPermToArrayPermIntermediate(lexIndexPerm, numOfCorners);
+    auto orient = lexIndexCornersOrientToIntCornersOrientAsStrWithIgnored(lexIndexOrient, ignoredCornersOrient);
+
     for (int8_t i = 0; i < numOfCorners; ++i) {
         ans += orient[i];
         if (ignoredCornersPerm[perm[i]]) {
@@ -239,6 +240,7 @@ std::string ruCubeStateConverter::lexIndexCornersToIntCornersAsStrWithIgnored(ui
             ans += std::to_string(perm[i]);
         }
     }
+
     return ans;
 }
 
@@ -246,7 +248,7 @@ std::string ruCubeStateConverter::lexIndexCornersOrientToIntCornersOrientAsStrWi
     std::string ans;
 
     for (int8_t i = 0; i < numOfCorners; ++i) {
-        if (ignoredCornersOrient[i]) {
+        if (ignoredCornersOrient[perm[numOfCorners - 1 - i]]) {
             ans = "-" + ans;
         } else {
             ans = std::to_string((0x1 << (lexIndexOrient % 3)) >> 1) + ans;
