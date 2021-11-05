@@ -1,19 +1,17 @@
 #include "ruCubeSingleSolveHandlerPool.h"
 
-ruCubeSingleSolveHandlerPool::ruCubeSingleSolveHandlerPool( size_t numOfThreads,
+ruCubeSingleSolveHandlerPool::ruCubeSingleSolveHandlerPool( std::shared_ptr<ruCubeFileWriter> writer,
+                                                            size_t numOfThreads,
                                                             const solutionParameters &solParams,
                                                             const solvedMasks &masks,
-                                                            const solveReportFlags &flags): numOfThreads(numOfThreads),
-                                                                                            stop(false) {
+                                                            const solveReportFlags &flags):  numOfThreads(numOfThreads),
+                                                                                                        stop(false) {
 
     for(size_t i = 0; i < numOfThreads; ++i) {
-        threads.emplace_back([this, i, solParams, masks, flags] {
+        threads.emplace_back([this, i, solParams, masks, flags, writer] {
                 ruCubeSingleSolveHandler handler(solParams, masks, flags);
                 std::cout << "yeah " + std::to_string(i) << std::endl;
-                std::ofstream output(std::string("solutions_") + std::to_string(i) + std::string(".txt"));
-                if (output.is_open()) {
-                    std::cout << ":dupa" << std::endl;
-                }
+
                 while (true) {
 
                     ruLutCube cube;
@@ -28,10 +26,10 @@ ruCubeSingleSolveHandlerPool::ruCubeSingleSolveHandlerPool( size_t numOfThreads,
                     }
 
                     handler.solve(cube);
-                    output << handler.getReport() << std::endl;
+                    writer->write(handler.getReport() + "\n");
 
                 }
-                output.close();
+                //output.close();
             }
         );
     }

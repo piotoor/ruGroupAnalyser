@@ -25,6 +25,8 @@ class ruCubeMultiSolveHandler
     private:
         uint64_t estimateSingleSolveReportSize();
         uint64_t calculateAvailableDiskSpace();
+        uint8_t calculateNumOfAvailableThreads();
+
         void disableHeadersAndFooters();
         void disableLineNumbers();
         void disableFixedWidthMoves();
@@ -78,6 +80,7 @@ class ruCubeMultiSolveHandler
 
 
         uint32_t totalNumberOfCubesToGenerate = 0;
+        uint8_t numOfThreads = 1;
 };
 
 #endif // RUCUBEMULTISOLVEHANDLER_H

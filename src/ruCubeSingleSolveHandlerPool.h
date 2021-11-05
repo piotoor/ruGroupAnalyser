@@ -11,11 +11,13 @@
 #include <stdexcept>
 #include <fstream>
 
+#include "ruCubeFileWriter.h"
 #include "ruCubeSingleSolveHandler.h"
 
 class ruCubeSingleSolveHandlerPool {
     public:
-        ruCubeSingleSolveHandlerPool(size_t numOfThreads = 1,
+        ruCubeSingleSolveHandlerPool(std::shared_ptr<ruCubeFileWriter> writer,
+                                     size_t numOfThreads = 1,
                                      const solutionParameters &solParams = solutionParameters(),
                                      const solvedMasks &masks = solvedMasks(),
                                      const solveReportFlags &flags = solveReportFlags());
@@ -32,6 +34,7 @@ class ruCubeSingleSolveHandlerPool {
         std::mutex queue_mutex;
         std::condition_variable condition;
         bool stop;
+        std::shared_ptr<ruCubeFileWriter> writer;
 };
 
 #endif // RUCUBESINGLESOLVEHANDLERPOOL_H
