@@ -7,6 +7,8 @@
 #include "ruCubeIgnoredPiecesGapFiller.h"
 #include "ruCubeSolver.h"
 
+#include <bitset>
+
 using cornersArray = std::array<int8_t, 6>;
 using edgesArray = std::array<int8_t, 7>;
 
@@ -42,7 +44,7 @@ class ruLutCubeGenerator
 
     private:
         void generateNextCube();
-
+        void saveCompressedGeneratorIgnoredParams(const generatorParameters &params);
 
         permutationGenerator<edgesArray> edgesPermGen;
         permutationGenerator<cornersArray> cornersPermGen;
@@ -64,6 +66,9 @@ class ruLutCubeGenerator
         uint16_t coIndex;
         uint16_t epIndex;
 
+        std::bitset<ruCube::noOfEdges> ignoredEdgesBits;
+        std::bitset<ruCube::noOfCorners> ignoredCornersPermBits;
+        std::bitset<ruCube::noOfCorners> ignoredCornersOrientBits;
 };
 
 #endif // RULUTCUBEGENERATOR_H
