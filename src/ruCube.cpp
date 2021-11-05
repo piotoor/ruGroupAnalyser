@@ -247,6 +247,7 @@ ruLutCube& ruLutCube::operator=(const ruLutCube& other) {
     edgesPerm = other.edgesPerm;
     cornersPerm = other.cornersPerm;
     cornersOrient = other.cornersOrient;
+    ignoredPieces = other.ignoredPieces;
     return *this;
 }
 
