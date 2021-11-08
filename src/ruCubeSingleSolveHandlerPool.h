@@ -20,7 +20,8 @@ class ruCubeSingleSolveHandlerPool {
                                      size_t numOfThreads = 1,
                                      const solutionParameters &solParams = solutionParameters(),
                                      const solvedMasks &masks = solvedMasks(),
-                                     const solveReportFlags &flags = solveReportFlags());
+                                     const solveReportFlags &flags = solveReportFlags(),
+                                     size_t bufferSize = 20 * 1024 * 1024);
 
         virtual ~ruCubeSingleSolveHandlerPool();
 
@@ -35,6 +36,7 @@ class ruCubeSingleSolveHandlerPool {
         std::condition_variable condition;
         bool stop;
         std::shared_ptr<ruCubeFileWriter> writer;
+        size_t bufferSize;
 };
 
 #endif // RUCUBESINGLESOLVEHANDLERPOOL_H

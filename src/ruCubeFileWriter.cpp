@@ -10,5 +10,6 @@ ruCubeFileWriter::~ruCubeFileWriter() {
 
 void ruCubeFileWriter::write(const std::string &data) {
     std::lock_guard<std::mutex> lock(writeMutex);
-    output << data;
+    //output << data;
+    output.write(data.c_str(), data.size());
 }

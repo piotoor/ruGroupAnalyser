@@ -4,13 +4,16 @@ ruCubeSingleSolveHandlerPool::ruCubeSingleSolveHandlerPool( std::shared_ptr<ruCu
                                                             size_t numOfThreads,
                                                             const solutionParameters &solParams,
                                                             const solvedMasks &masks,
-                                                            const solveReportFlags &flags):  numOfThreads(numOfThreads),
-                                                                                                        stop(false) {
+                                                            const solveReportFlags &flags,
+                                                            size_t bufferSize ): numOfThreads(numOfThreads),
+                                                                                 stop(false),
+                                                                                 bufferSize(bufferSize) {
 
     for(size_t i = 0; i < numOfThreads; ++i) {
-        threads.emplace_back([this, i, solParams, masks, flags, writer] {
+        threads.emplace_back([this, i, solParams, masks, flags, writer, bufferSize] {
                 ruCubeSingleSolveHandler handler(solParams, masks, flags);
                 std::cout << "yeah " + std::to_string(i) << std::endl;
+                std::string buff;
 
                 while (true) {
 
@@ -19,14 +22,25 @@ ruCubeSingleSolveHandlerPool::ruCubeSingleSolveHandlerPool( std::shared_ptr<ruCu
                         std::unique_lock<std::mutex> lock(this->queue_mutex);
                         this->condition.wait(lock,
                             [this]{ return this->stop || !this->cubes.empty(); });
-                        if(this->stop && this->cubes.empty())
+                        if(this->stop && this->cubes.empty()) {
+                            if (not buff.empty()) {
+                                writer->write(buff);
+
+                            }
                             return;
+                        }
                         cube = std::move(this->cubes.front());
                         this->cubes.pop();
                     }
 
                     handler.solve(cube);
-                    writer->write(handler.getReport() + "\n");
+                    // write to a buffer, and when full write and empty
+                    buff += handler.getReport() + "\n";
+                    if (buff.size() >= bufferSize) {
+                        writer->write(buff);
+                        buff.clear();
+                    }
+
 
                 }
                 //output.close();
