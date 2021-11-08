@@ -41,7 +41,6 @@ class ruCubeStateConverter
         uint16_t vectPermToLexIndexPerm(const T &perm);
         void lexIndexPermToArrayPermIntermediate(uint16_t lexPerm, uint8_t numOfPieces);
         uint64_t lexIndexCornersOrientToIntCornersOrient(uint16_t lexIndexOrient);
-        std::string lexIndexCornersOrientToIntCornersOrientAsStrWithIgnored(uint16_t lexIndexOrient, const std::bitset<6> &ignoredCornersOrient);
 
         static inline constexpr uint8_t maxNumOfPieces = 7;
         static inline const uint8_t numOfEdges = 7;

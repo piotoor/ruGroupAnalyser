@@ -212,15 +212,13 @@ uint16_t ruCubeStateConverter::vectCornersOrientToLexIndexCornersOrient(const co
 }
 
 std::string ruCubeStateConverter::lexIndexEdgesToIntEdgesAsStrWithIgnored(uint16_t lexIndexEdges, const std::bitset<ruBaseCube::noOfEdges> &ignoredEdeges) {
-    std::string ans;
+    std::string ans = "-------";
 
     lexIndexPermToArrayPermIntermediate(lexIndexEdges, numOfEdges);
 
     for (int8_t i = 0; i < numOfEdges; ++i) {
-        if (ignoredEdeges[perm[i]]) {
-            ans += "-";
-        } else {
-            ans += std::to_string(perm[i]);
+        if (not ignoredEdeges[perm[i]]) {
+            ans[i] = perm[i] + '0';
         }
     }
 
@@ -228,34 +226,20 @@ std::string ruCubeStateConverter::lexIndexEdgesToIntEdgesAsStrWithIgnored(uint16
 }
 
 std::string ruCubeStateConverter::lexIndexCornersToIntCornersAsStrWithIgnored(uint16_t lexIndexPerm, uint16_t lexIndexOrient, const std::bitset<ruBaseCube::noOfCorners> &ignoredCornersPerm, const std::bitset<ruBaseCube::noOfCorners> &ignoredCornersOrient) {
-    std::string ans;
+    std::string ans = "------------";
     lexIndexPermToArrayPermIntermediate(lexIndexPerm, numOfCorners);
-    auto orient = lexIndexCornersOrientToIntCornersOrientAsStrWithIgnored(lexIndexOrient, ignoredCornersOrient);
+
 
     for (int8_t i = 0; i < numOfCorners; ++i) {
-        ans += orient[i];
-        if (ignoredCornersPerm[perm[i]]) {
-            ans += "-";
-        } else {
-            ans += std::to_string(perm[i]);
+        if (not ignoredCornersOrient[perm[numOfCorners - 1 - i]]) {
+            ans[numOfCorners * 2 - 2 - i * 2] = ((0x1 << (lexIndexOrient % 3)) >> 1) + '0';
         }
-    }
-
-    return ans;
-}
-
-std::string ruCubeStateConverter::lexIndexCornersOrientToIntCornersOrientAsStrWithIgnored(uint16_t lexIndexOrient, const std::bitset<ruBaseCube::noOfCorners> &ignoredCornersOrient) {
-    std::string ans;
-
-    for (int8_t i = 0; i < numOfCorners; ++i) {
-        if (ignoredCornersOrient[perm[numOfCorners - 1 - i]]) {
-            ans = "-" + ans;
-        } else {
-            ans = std::to_string((0x1 << (lexIndexOrient % 3)) >> 1) + ans;
+        if (not ignoredCornersPerm[perm[i]]) {
+            ans[i * 2 + 1] = perm[i] + '0';
         }
         lexIndexOrient /= 3;
     }
-
     return ans;
 }
+
 
