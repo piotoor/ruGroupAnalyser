@@ -21,7 +21,7 @@ class ruCubeSingleSolveHandlerPool {
                                      const solutionParameters &solParams = solutionParameters(),
                                      const solvedMasks &masks = solvedMasks(),
                                      const solveReportFlags &flags = solveReportFlags(),
-                                     size_t bufferSize = 20 * 1024 * 1024);
+                                     int bufferSize = 50 * 1024 * 1024);
 
         virtual ~ruCubeSingleSolveHandlerPool();
 

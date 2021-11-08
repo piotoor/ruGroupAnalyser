@@ -5,7 +5,7 @@ ruCubeSingleSolveHandlerPool::ruCubeSingleSolveHandlerPool( std::shared_ptr<ruCu
                                                             const solutionParameters &solParams,
                                                             const solvedMasks &masks,
                                                             const solveReportFlags &flags,
-                                                            size_t bufferSize ): numOfThreads(numOfThreads),
+                                                            int bufferSize ): numOfThreads(numOfThreads),
                                                                                  stop(false),
                                                                                  bufferSize(bufferSize) {
 
@@ -13,7 +13,7 @@ ruCubeSingleSolveHandlerPool::ruCubeSingleSolveHandlerPool( std::shared_ptr<ruCu
         threads.emplace_back([this, i, solParams, masks, flags, writer, bufferSize] {
                 ruCubeSingleSolveHandler handler(solParams, masks, flags);
                 std::cout << "yeah " + std::to_string(i) << std::endl;
-                std::string buff;
+                std::stringstream buff;
 
                 while (true) {
 
@@ -23,8 +23,8 @@ ruCubeSingleSolveHandlerPool::ruCubeSingleSolveHandlerPool( std::shared_ptr<ruCu
                         this->condition.wait(lock,
                             [this]{ return this->stop || !this->cubes.empty(); });
                         if(this->stop && this->cubes.empty()) {
-                            if (not buff.empty()) {
-                                writer->write(buff);
+                            if ( buff.tellg() > 0) {
+                                writer->write(buff.str());
 
                             }
                             return;
@@ -35,9 +35,12 @@ ruCubeSingleSolveHandlerPool::ruCubeSingleSolveHandlerPool( std::shared_ptr<ruCu
 
                     handler.solve(cube);
                     // write to a buffer, and when full write and empty
-                    buff += handler.getReport() + "\n";
-                    if (buff.size() >= bufferSize) {
-                        writer->write(buff);
+                   //buff += handler.getReport() + "\n";
+                   handler.appendReport(buff);
+                   buff << "\n";
+                    if (buff.tellg() >= bufferSize) {
+                        writer->write(buff.str());
+                        buff.str( std::string() );
                         buff.clear();
                     }
 

@@ -45,10 +45,7 @@ void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
     solutionsStr = solver.getSolutionsAsStrings(flags.compressSolutions);
 }
 
-std::string ruCubeSingleSolveHandler::getReport() {
-    report.str( std::string() );
-    report.clear();
-
+void ruCubeSingleSolveHandler::appendReport(std::stringstream &report) {
     if (flags.compressCubeState) {
         report << currCube.toString() << std::endl;
     } else {
@@ -92,7 +89,12 @@ std::string ruCubeSingleSolveHandler::getReport() {
         report << "\nSolutions found: " << std::to_string(size(solutionsVect)) << std::endl;
         report << "Solving time: " << elapsedTime.count() << "ms" << std::endl;
     }
+}
 
+std::string ruCubeSingleSolveHandler::getReport() {
+    report.str( std::string() );
+    report.clear();
+    appendReport(report);
     return report.str();
 }
 
