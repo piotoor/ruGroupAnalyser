@@ -40,7 +40,7 @@ class ruCubeMultiSolveHandler
         bool optimizeReport();
 
         ruLutCubeGenerator generator;
-        ruCubeSingleSolveHandler handler;
+
 
         solutionParameters solParams;
         solvedMasks masks;
