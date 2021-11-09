@@ -17,11 +17,12 @@
 class ruCubeSingleSolveHandlerPool {
     public:
         ruCubeSingleSolveHandlerPool(std::shared_ptr<ruCubeFileWriter> writer,
+                                     int bufferSize,
+                                     size_t numOfCubesToFetch,
                                      size_t numOfThreads = 1,
                                      const solutionParameters &solParams = solutionParameters(),
                                      const solvedMasks &masks = solvedMasks(),
-                                     const solveReportFlags &flags = solveReportFlags(),
-                                     int bufferSize = 50 * 1024 * 1024);
+                                     const solveReportFlags &flags = solveReportFlags());
 
         virtual ~ruCubeSingleSolveHandlerPool();
 
@@ -36,7 +37,8 @@ class ruCubeSingleSolveHandlerPool {
         std::condition_variable condition;
         bool stop;
         std::shared_ptr<ruCubeFileWriter> writer;
-        size_t bufferSize;
+        int bufferSize;
+        size_t numOfCubesToFetch;
 };
 
 #endif // RUCUBESINGLESOLVEHANDLERPOOL_H

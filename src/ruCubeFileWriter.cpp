@@ -1,4 +1,5 @@
 #include "ruCubeFileWriter.h"
+#include <iostream>
 
 ruCubeFileWriter::ruCubeFileWriter(std::string path) {
     output.open(path);

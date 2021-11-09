@@ -80,7 +80,7 @@ class ruCubeMultiSolveHandler
 
 
         uint32_t totalNumberOfCubesToGenerate = 0;
-        uint8_t numOfThreads = 1;
+        size_t numOfThreads = 1;
 };
 
 #endif // RUCUBEMULTISOLVEHANDLER_H

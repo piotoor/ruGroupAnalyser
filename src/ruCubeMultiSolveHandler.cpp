@@ -79,22 +79,24 @@ void ruCubeMultiSolveHandler::prepare() {
 
 void ruCubeMultiSolveHandler::generateAndSolve(std::string filename) {
     prepare();
+    std::cout << "\nNumber of threads: " << numOfThreads;
     std::cout << "\nGenerating..." << std::endl;
     ruCubeSimpleBenchmarkTimer bt;
 
-    size_t noOfReportsCached = 20;
+    size_t noOfReportsCached = 150;
+    size_t numOfCubesToFetch = 500;
     auto writer = std::make_shared<ruCubeFileWriter>(filename);
     generator.init(genParams);
     ruCubeSingleSolveHandlerPool pool(  writer,
+                                        estimateSingleSolveReportSize() * noOfReportsCached,
+                                        numOfCubesToFetch,
                                         numOfThreads,
                                         solParams,
                                         genParams.toSolvedMasks(),
-                                        flags,
-                                        estimateSingleSolveReportSize() * noOfReportsCached);
+                                        flags);
     while (generator.hasNext()) {
         pool.enqueueCube(generator.next());
     }
-
     std::cout << "DONE ";
 }
 
