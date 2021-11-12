@@ -31,15 +31,15 @@ ruCubeSingleSolveHandlerThreadPool::ruCubeSingleSolveHandlerThreadPool( std::str
                     }
 
                     handler.solve(cube);
-                    //handler.appendReport(buff);
+                    handler.appendReport(buff);
 
                     buff << "\n";
-//                    if (k == numOfCubesToFetch) {
-//                        this->writer.write(buff.str());
-//                        buff.str( std::string() );
-//                        buff.clear();
-//                        k = 0;
-//                    }
+                    //if (k == numOfCubesToFetch) {
+                        this->writer.write(buff.str());
+                        buff.str( std::string() );
+                        buff.clear();
+                        k = 0;
+                    //}
 
                 }
             }
