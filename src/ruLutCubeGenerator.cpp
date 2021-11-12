@@ -10,6 +10,23 @@ ruLutCubeGenerator::~ruLutCubeGenerator() {
 
 }
 
+void ruLutCubeGenerator::saveCompressedGeneratorIgnoredParams(const generatorParameters &params) {
+    for (int8_t i = 0; i < ruCube::noOfEdges; ++i) {
+        if (params.ignoredEdges.find(i) != params.ignoredEdges.end()) {
+            ignoredEdgesBits.set(i);
+        }
+    }
+
+    for (int8_t i = 0; i < ruCube::noOfCorners; ++i) {
+        if (params.ignoredCornersPerm.find(i) != params.ignoredCornersPerm.end()) {
+            ignoredCornersPermBits.set(i);
+        }
+        if (params.ignoredCornersOrient[i] == 1) {
+            ignoredCornersOrientBits.set(i);
+        }
+    }
+}
+
 void ruLutCubeGenerator::init(const generatorParameters &params) {
     cornersOrientations =  orientGen.generateOrientations(params.lockedCornersOrient, params.ignoredCornersOrient);
     cornersPermutations =  cornersPermGen.generatePermutations(params.lockedCornersPerm, params.ignoredCornersPerm);
@@ -23,6 +40,7 @@ void ruLutCubeGenerator::init(const generatorParameters &params) {
                         return co;
                    });
 
+    saveCompressedGeneratorIgnoredParams(params);
     lexIndexCornersPerm = 0;
     lexIndexEdgesPerm = 0;
     lexIndexCornersOrient = 0;
@@ -80,7 +98,10 @@ void ruLutCubeGenerator::generateNextCube() {
 }
 
 ruLutCube ruLutCubeGenerator::next() {
-    ruLutCube ans(lexIndexEdgesPerm, lexIndexCornersPerm, lexIndexCornersOrient);
+    ruLutCube ans(lexIndexEdgesPerm,
+                  lexIndexCornersPerm,
+                  lexIndexCornersOrient,
+                  std::make_tuple(ignoredEdgesBits, ignoredCornersOrientBits, ignoredCornersPermBits));
     generateNextCube();
     return ans;
 }
@@ -89,3 +110,29 @@ bool ruLutCubeGenerator::hasNext() {
     return hasNextCube;
 }
 
+solvedMasks generatorParameters::toSolvedMasks () const {
+        solvedMasks ans { 0, 0 };
+
+        std::bitset<32> edgesBits;
+        for (int8_t i = 0; i < ruCube::noOfEdges; ++i) {
+            if (ignoredEdges.find(i) == ignoredEdges.end()) {
+                edgesBits.set(ruCube::noOfEdges - 1 - i);
+            }
+        }
+        ans.edgesMask = static_cast<uint32_t>(edgesBits.to_ulong());
+
+        std::bitset<32> cornersPermBits;
+        std::bitset<32> cornersOrientBits;
+        for (int8_t i = 0; i < ruCube::noOfCorners; ++i) {
+            if (ignoredCornersPerm.find(i) == ignoredCornersPerm.end()) {
+                cornersPermBits.set(ruCube::noOfCorners - 1 - i);
+            }
+            if (ignoredCornersOrient[i] == 0) {
+                cornersOrientBits.set(ruCube::noOfCorners - 1 - i);
+            }
+        }
+
+        ans.cornersMask =   (static_cast<uint64_t>(cornersOrientBits.to_ulong()) << (sizeof(uint32_t) * 8)) |
+                            static_cast<uint64_t>(cornersPermBits.to_ulong());
+        return ans;
+    }

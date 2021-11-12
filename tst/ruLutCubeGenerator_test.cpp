@@ -851,6 +851,13 @@ TEST(ruLutCubeGeneratorTest, generateCubesLLCornersPermutationTest) {
         { 0131011121415, 0132456 },
     };
 
+    const std::vector<std::string> expectedCubesAsString {
+        "000102030405;-------",
+        "010203000405;-------",
+        "020300010405;-------",
+        "030001020405;-------"
+    };
+
     ruCubeStateConverter converter;
 
     for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
@@ -859,6 +866,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesLLCornersPermutationTest) {
         auto ruLutCube = generator.next();
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
         ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+        ASSERT_EQ(expectedCubesAsString[i], ruLutCube.toString());
     }
 
     ASSERT_FALSE(generator.hasNext());

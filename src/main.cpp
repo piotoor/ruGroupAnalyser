@@ -21,6 +21,7 @@ enum class solvingMode {
 };
 
 int main(int argc, char const* argv[]) {
+    std::ios::sync_with_stdio(false);
     bool help = false;
     bool usage = false;
     std::pair<solvingMode, std::string> mode;

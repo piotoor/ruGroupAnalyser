@@ -4,6 +4,7 @@
 #include <cstdint>
 #include <vector>
 #include <memory>
+#include <bitset>
 #include "lutGenerators.h"
 
 enum ruCubeMove {
@@ -14,6 +15,8 @@ enum ruCubeMove {
     U2,
     Ui
 };
+
+
 
 class ruBaseCube {
     public:
@@ -68,6 +71,10 @@ class ruBaseCube {
         static inline const uint8_t noOfCorners = 6;
         static inline const uint8_t noOfEdges = 7;
 };
+
+using ruLutCubeIgnoredPieces =  std::tuple< std::bitset<ruBaseCube::noOfEdges>,
+                                            std::bitset<ruBaseCube::noOfCorners>,
+                                            std::bitset<ruBaseCube::noOfCorners> >; // ep, co, cp
 
 class ruCube: public ruBaseCube
 {
@@ -172,7 +179,7 @@ class ruCube: public ruBaseCube
 class ruLutCube: public ruBaseCube {
     public:
         ruLutCube();
-        ruLutCube(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient);
+        ruLutCube(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient, const ruLutCubeIgnoredPieces &ignored = std::make_tuple(0, 0, 0));
         ruLutCube(const ruLutCube& other) = default;
         ~ruLutCube();
         ruLutCube& operator=(const ruLutCube& other);
@@ -232,7 +239,7 @@ class ruLutCube: public ruBaseCube {
         //static std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
         static std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
 
-
+        ruLutCubeIgnoredPieces ignoredPieces;
     public:
         static inline const uint16_t solvedLexIndexEdgesPerm = 0;
         static inline const uint16_t solvedLexIndexCornersPerm = 0;

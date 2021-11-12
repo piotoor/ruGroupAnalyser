@@ -32,6 +32,7 @@ class ruCubeSingleSolveHandler
 
         void solve(ruLutCube cube);
         std::string getReport();
+        void appendReport(std::stringstream &report);
 
         std::vector<std::vector<uint8_t>> getSolutionsAsVectors();
         std::vector<std::string> getSolutionsAsStrings();

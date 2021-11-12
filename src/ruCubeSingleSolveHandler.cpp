@@ -45,16 +45,13 @@ void ruCubeSingleSolveHandler::solve(ruLutCube cube) {
     solutionsStr = solver.getSolutionsAsStrings(flags.compressSolutions);
 }
 
-std::string ruCubeSingleSolveHandler::getReport() {
-    report.str( std::string() );
-    report.clear();
-
+void ruCubeSingleSolveHandler::appendReport(std::stringstream &report) {
     if (flags.compressCubeState) {
-        report << currCube.toString() << std::endl;
+        report << currCube.toString() << "\n";
     } else {
-        report << "+------------+-------+" << std::endl;
-        report << "|" << currCube.toString() << "|" << std::endl;
-        report << "+------------+-------+" << std::endl;
+        report << "+------------+-------+" << "\n";
+        report << "|" << currCube.toString() << "|" << "\n";
+        report << "+------------+-------+" << "\n";
     }
     int currLength = -1;
     for (size_t i = 0; i < size(solutionsVect); ++i) {
@@ -65,7 +62,7 @@ std::string ruCubeSingleSolveHandler::getReport() {
             currLength = size(solutionsVect[i]);
             if (flags.headers) {
 
-                report << "Solutions of length " << std::setw(2) << std::to_string(currLength) << "..." << std::endl;
+                report << "Solutions of length " << std::setw(2) << std::to_string(currLength) << "..." << "\n";
             }
         }
         if (flags.lineNumbers) {
@@ -82,17 +79,22 @@ std::string ruCubeSingleSolveHandler::getReport() {
                 }
                 solution += x;
             }
-            report << solution << std::endl;
+            report << solution << "\n";
         } else {
-            report << solutionsStr[i] << std::endl;
+            report << solutionsStr[i] << "\n";
         }
     }
 
     if (flags.summary) {
-        report << "\nSolutions found: " << std::to_string(size(solutionsVect)) << std::endl;
-        report << "Solving time: " << elapsedTime.count() << "ms" << std::endl;
+        report << "\nSolutions found: " << std::to_string(size(solutionsVect)) << "\n";
+        report << "Solving time: " << elapsedTime.count() << "ms" << "\n";
     }
+}
 
+std::string ruCubeSingleSolveHandler::getReport() {
+    report.str( std::string() );
+    report.clear();
+    appendReport(report);
     return report.str();
 }
 

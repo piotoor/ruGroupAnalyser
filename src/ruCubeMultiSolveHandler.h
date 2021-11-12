@@ -20,11 +20,13 @@ class ruCubeMultiSolveHandler
                         const solutionParameters &solParams = solutionParameters(),
                         const solveReportFlags &flags = solveReportFlags());
 
-        void generateAndSolve(std::string filename = "output.txt");
+        void generateAndSolve(std::string fileName = "output.txt");
         uint32_t calculateTotalNumberOfCubesToGenerate();
     private:
         uint64_t estimateSingleSolveReportSize();
         uint64_t calculateAvailableDiskSpace();
+        uint8_t calculateNumOfAvailableThreads();
+
         void disableHeadersAndFooters();
         void disableLineNumbers();
         void disableFixedWidthMoves();
@@ -38,7 +40,7 @@ class ruCubeMultiSolveHandler
         bool optimizeReport();
 
         ruLutCubeGenerator generator;
-        ruCubeSingleSolveHandler handler;
+
 
         solutionParameters solParams;
         solvedMasks masks;
@@ -78,6 +80,7 @@ class ruCubeMultiSolveHandler
 
 
         uint32_t totalNumberOfCubesToGenerate = 0;
+        size_t numOfThreads = 1;
 };
 
 #endif // RUCUBEMULTISOLVEHANDLER_H

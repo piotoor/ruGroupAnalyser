@@ -2885,3 +2885,127 @@ TEST(ruCubeStateConverterTest, convertVectEdgesPermToLexIndexEdgesPermTest) {
         ASSERT_EQ(i, lexIndexEdgesPerm);
     }
 }
+
+TEST(ruCubeStateConverterTest, convertLexIndexEdgesToIntEdgesAsStrWithIgnoredTest) {
+    ruCubeStateConverter conv;
+
+    const std::vector<std::pair<uint16_t, std::bitset<ruBaseCube::noOfEdges>>> lexIndexEdges {
+        { 0,  0b0000000 },
+        { 1,  0b0000000 },
+        { 2,  0b0000000 } ,
+        { 3,  0b0000000 },
+        { 4,  0b0000000 },
+
+        { 5,  0b1111111 },
+        { 6,  0b0000001 },
+        { 7,  0b0000010 },
+        { 8,  0b0000100 },
+        { 9,  0b0001000 },
+
+        { 10, 0b0010000 },
+        { 11, 0b0100000 },
+        { 12, 0b1000000 },
+        { 13, 0b1111000 },
+        { 14, 0b0000111 },
+    };
+
+    const std::vector<std::string> expectedEdgesStrings = {
+        "0123456",
+        "0123465",
+        "0123546",
+        "0123564",
+        "0123645",
+
+        "-------",
+        "-124356",
+        "0-24365",
+        "01-4536",
+        "012456-",
+
+        "012-635",
+        "01246-3",
+        "012534-",
+        "012----",
+        "---5436",
+    };
+
+    for (uint16_t i = 0; i < std::size(expectedEdgesStrings); ++i) {
+        const auto &[ep, epi] = lexIndexEdges[i];
+        auto strEdges = conv.lexIndexEdgesToIntEdgesAsStrWithIgnored(ep, epi);
+        ASSERT_EQ(expectedEdgesStrings[i], strEdges);
+    }
+}
+
+TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersAsStrWithIgnoredTest) {
+    ruCubeStateConverter conv;
+
+    const std::vector<std::tuple<   uint16_t,
+                                    uint16_t,
+                                    std::bitset<ruBaseCube::noOfCorners>, // cpi
+                                    std::bitset<ruBaseCube::noOfCorners>>> lexIndexCubes { // coi
+        { 0,    0,      0b0, 0b0 },
+        { 1,    364,    0b0, 0b0 },
+        { 2,    91,     0b0, 0b0 },
+        { 3,    728,    0b0, 0b0 },
+        { 4,    546,    0b0, 0b0 },
+
+        { 5,    637,    0b0, 0b0 },
+        { 6,    637,    0b0, 0b0 },
+        { 7,    546,    0b0, 0b0 },
+        { 8,    630,    0b0, 0b0 },
+        { 9,    630,    0b0, 0b0 },
+
+        { 10,   598,    0b0, 0b0 },
+
+
+        { 0,    0,      0b111111, 0b111111 },
+        { 1,    364,    0b0,      0b111111 },
+        { 2,    91,     0b111111, 0b0 },
+        { 3,    728,    0b001111, 0b001111 },
+        { 4,    546,    0b010101, 0b101010 },
+
+        { 5,    637,    0b000001, 0b100000 },
+        { 6,    637,    0b000000, 0b000100 },
+        { 7,    546,    0b011011, 0b011111 },
+        { 8,    630,    0b100001, 0b100010 },
+        { 9,    630,    0b000111, 0b111000 },
+
+        { 10,   598,    0b010010, 0b010101 },
+    };
+
+    const std::vector<std::string> expectedCornersIntsAsStr = {
+        "000102030405",
+        "101112131514",
+        "001102140315",
+        "202122242523",
+        "200122052304",
+
+        "201122152413",
+        "201123122415",
+        "200123022504",
+        "201123140205",
+        "201123140502",
+
+        "201113051214",
+
+
+        "------------",
+        "-0-1-2-3-5-4",
+        "0-1-0-1-0-1-",
+        "------2425--",
+        "2--12--5-30-",
+
+        "2-1122-52413",
+        "201123-22415",
+        "-------225--",
+        "2--1231402--",
+        "2-1--3-4-50-",
+        "-01-1305-2--",
+    };
+
+    for (uint16_t i = 0; i < std::size(expectedCornersIntsAsStr); ++i) {
+        const auto &[cp, co, cpi, coi] = lexIndexCubes[i];
+        std::string cornersStr = conv.lexIndexCornersToIntCornersAsStrWithIgnored(cp, co, cpi, coi);
+        ASSERT_EQ(expectedCornersIntsAsStr[i], cornersStr);
+    }
+}

@@ -4,8 +4,11 @@
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
+#include <thread>
 #include "ruException.h"
-#include "ruCubeSingleSolveHandlerPool.h"
+#include "ruCubeSingleSolveHandlerThreadPool.h"
+#include "ruLutCubeQueue.h"
+#include "ruLutCubeGeneratorThread.h"
 
 auto operator""_MB(long double x) -> uint64_t {
     return 1024ULL * 1024ULL * x;
@@ -22,12 +25,17 @@ ruCubeMultiSolveHandler::ruCubeMultiSolveHandler(   const generatorParameters &g
                                                         flags(flags),
                                                         genParams(genParams),
                                                         solParamsInitial(solParams),
-                                                        flagsInitial(flags) {
+                                                        flagsInitial(flags),
+                                                        numOfThreads (calculateNumOfAvailableThreads()) {
 
 }
 
 ruCubeMultiSolveHandler::~ruCubeMultiSolveHandler() {
+}
 
+uint8_t ruCubeMultiSolveHandler::calculateNumOfAvailableThreads() {
+    uint8_t cores = std::thread::hardware_concurrency();
+    return fmaxf ( cores, UINT8_C(1) );
 }
 
 void ruCubeMultiSolveHandler::configure( const generatorParameters &genParams,
@@ -47,6 +55,7 @@ void ruCubeMultiSolveHandler::prepare() {
     bool canBeOptimizedFurther = true;
     bool optimized = false;
 
+
     std::cout << "You are about to generate and solve " << numOfCubes << " cubes..." << std::endl;
     if (singleReportSize * numOfCubes > availableDiskSpace) {
         std::cout << "Not enough available disk space to save the output." << std::endl;
@@ -64,27 +73,33 @@ void ruCubeMultiSolveHandler::prepare() {
         throw ruCubeMultiSolveHandlerException("Not enough available disk space. Exiting...");
     }
 
+    // number of threads
     std::cout << "DONE" << std::endl;
     printOptimizations();
 }
 
-void ruCubeMultiSolveHandler::generateAndSolve(std::string filename) {
+void ruCubeMultiSolveHandler::generateAndSolve(std::string fileName) {
     prepare();
+    std::cout << "\nNumber of threads: " << numOfThreads;
     std::cout << "\nGenerating..." << std::endl;
     ruCubeSimpleBenchmarkTimer bt;
-    std::ofstream output(filename);
 
-    generator.init(genParams);
+    size_t noOfReportsCached = 150;
+    size_t numOfCubesToFetch = 500;
 
-    solvedMasks masks = genParams.toSolvedMasks();
-    ruCubeSingleSolveHandlerPool pool(4, solParams, masks, flags);
+    std::shared_ptr<ruLutCubeQueue> cubeQueue = std::make_shared<ruLutCubeQueue>();
 
-    while (generator.hasNext()) {
+    ruCubeSingleSolveHandlerThreadPool pool(fileName,
+                                            cubeQueue,
+                                            estimateSingleSolveReportSize() * noOfReportsCached,
+                                            numOfCubesToFetch,
+                                            numOfThreads,
+                                            solParams,
+                                            genParams.toSolvedMasks(),
+                                            flags);
 
-        pool.enqueueCube(generator.next());
-    }
+    ruLutCubeGeneratorThread generatorThread(genParams, cubeQueue);
     std::cout << "DONE ";
-    output.close();
 }
 
 void ruCubeMultiSolveHandler::printOptimizations() {
