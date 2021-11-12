@@ -6,8 +6,9 @@
 #include <fstream>
 #include <thread>
 #include "ruException.h"
-#include "ruCubeSingleSolveHandlerPool.h"
-#include "ruCubeFileWriter.h"
+#include "ruCubeSingleSolveHandlerThreadPool.h"
+#include "ruLutCubeQueue.h"
+#include "ruLutCubeGeneratorThread.h"
 
 auto operator""_MB(long double x) -> uint64_t {
     return 1024ULL * 1024ULL * x;
@@ -77,7 +78,7 @@ void ruCubeMultiSolveHandler::prepare() {
     printOptimizations();
 }
 
-void ruCubeMultiSolveHandler::generateAndSolve(std::string filename) {
+void ruCubeMultiSolveHandler::generateAndSolve(std::string fileName) {
     prepare();
     std::cout << "\nNumber of threads: " << numOfThreads;
     std::cout << "\nGenerating..." << std::endl;
@@ -85,18 +86,19 @@ void ruCubeMultiSolveHandler::generateAndSolve(std::string filename) {
 
     size_t noOfReportsCached = 150;
     size_t numOfCubesToFetch = 500;
-    auto writer = std::make_shared<ruCubeFileWriter>(filename);
-    generator.init(genParams);
-    ruCubeSingleSolveHandlerPool pool(  writer,
-                                        estimateSingleSolveReportSize() * noOfReportsCached,
-                                        numOfCubesToFetch,
-                                        numOfThreads,
-                                        solParams,
-                                        genParams.toSolvedMasks(),
-                                        flags);
-    while (generator.hasNext()) {
-        pool.enqueueCube(generator.next());
-    }
+
+    std::shared_ptr<ruLutCubeQueue> cubeQueue = std::make_shared<ruLutCubeQueue>();
+
+    ruCubeSingleSolveHandlerThreadPool pool(fileName,
+                                            cubeQueue,
+                                            estimateSingleSolveReportSize() * noOfReportsCached,
+                                            numOfCubesToFetch,
+                                            numOfThreads,
+                                            solParams,
+                                            genParams.toSolvedMasks(),
+                                            flags);
+
+    ruLutCubeGeneratorThread generatorThread(genParams, cubeQueue);
     std::cout << "DONE ";
 }
 
