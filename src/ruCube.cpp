@@ -321,7 +321,7 @@ void ruLutCube::reset() {
 
 bool ruLutCube::isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask) const {
     if (edgesPermMask != ruLutCube::allEdgesMask) {
-        return this->edgesPermPruningTable[this->edgesPerm][static_cast<uint8_t>(edgesPermMask & 0xF)] > remainingMoves;
+        return this->edgesPermPruningTable[this->edgesPerm][static_cast<uint8_t>(edgesPermMask & 0x3F)] > remainingMoves;
     } else {
         return this->fullCubePruningTable[this->cornersPerm][this->cornersOrient][this->edgesPerm] > remainingMoves;
     }
