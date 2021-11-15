@@ -389,11 +389,10 @@ TEST(ruCubeTest, getPartialEdgesTest) {
         0b1000000,
 
         0b1111111,
-
         0b0000111,
-
         0b0001111,
         0b1111000,
+        0b0000000,
     };
 
     const std::vector<uint32_t> intEdges {
@@ -414,7 +413,8 @@ TEST(ruCubeTest, getPartialEdgesTest) {
             00123456,
             07777456,
             07773456,
-            00123777    },
+            00123777,
+            07777777    },
 
         {   06777777,
             07577777,
@@ -427,7 +427,8 @@ TEST(ruCubeTest, getPartialEdgesTest) {
             06543210,
             06547777,
             06543777,
-            07773210    },
+            07773210,
+            07777777    },
     };
 
     ruCube cube;
@@ -440,7 +441,7 @@ TEST(ruCubeTest, getPartialEdgesTest) {
 }
 
 TEST(ruCubeTest, getPartialCornersPermTest) {
-    const std::vector<uint32_t> cornersMasks {
+    const std::vector<uint64_t> cornersMasks {
         0b000001,
         0b000010,
         0b000100,
@@ -449,15 +450,18 @@ TEST(ruCubeTest, getPartialCornersPermTest) {
         0b100000,
 
         0b111111,
-
         0b000111,
         0b001111,
         0b111000,
+        0b000000,
+
+        0b110010
     };
 
     const std::vector<uint64_t> intCorners {
         0000102030405,
         0050403020100,
+        0442142251013,
     };
 
 
@@ -470,10 +474,12 @@ TEST(ruCubeTest, getPartialCornersPermTest) {
             0077777,
 
             0012345,
-
             0777345,
             0772345,
-            0012777    },
+            0012777,
+            0777777,
+
+            0017747    },
 
         {   0577777,
             0747777,
@@ -483,10 +489,26 @@ TEST(ruCubeTest, getPartialCornersPermTest) {
             0777770,
 
             0543210,
-
             0543777,
             0543277,
-            0777210    },
+            0777210,
+            0777777,
+            0747710    },
+
+        {   0777577,
+            0477777,
+            0777773,
+            0772777,
+            0717777,
+            0777707,
+
+            0412503,
+            0477573,
+            0472573,
+            0712707,
+            0777777,
+
+            0417707    },
     };
 
     ruCube cube;

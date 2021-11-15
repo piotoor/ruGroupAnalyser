@@ -764,6 +764,7 @@ TEST(ruCubeSolverTest, customRuLutCubeEdgesAndCornersMaskTest) {
     solutionParameters params = { minLength, maxLength, maxNoOfSols };
 
     for (uint8_t maskInd = 0; maskInd < size(masks); ++maskInd) {
+
         auto &[edgesMask, cornersMask] = masks[maskInd];
         solvedMasks masks = {edgesMask, cornersMask};
         solver.configure(params, masks);

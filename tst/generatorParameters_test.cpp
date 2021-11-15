@@ -183,7 +183,6 @@ TEST(generatorParametersTest, toSolvedMasksTest) {
 
 
     for (size_t i = 0; i < size(expectedSolvedMasks); ++i) {
-        std::cout << i << std::endl;
         ASSERT_EQ(expectedSolvedMasks[i].edgesMask, params[i].toSolvedMasks().edgesMask);
         ASSERT_EQ(expectedSolvedMasks[i].cornersMask, params[i].toSolvedMasks().cornersMask);
     }

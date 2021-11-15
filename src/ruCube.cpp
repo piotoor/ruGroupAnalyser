@@ -93,9 +93,9 @@ uint32_t ruCube::getPartialEdges(uint8_t mask) const {
     const uint8_t edgeSize = 3;
 
     for (uint8_t i = 0; i < ruCube::noOfEdges; ++i) {
-        int curr = ((07 << i * edgeSize) & partialPerm) >> i * edgeSize;
+        uint32_t curr = ((UINT32_C(07) << (i * edgeSize)) & partialPerm) >> (i * edgeSize);
         if ((mask & (1 << (ruCube::noOfEdges - curr - 1))) == 0) {
-            partialPerm |= (07 << i * edgeSize);
+            partialPerm |= (UINT32_C(07) << (i * edgeSize));
         }
     }
 
@@ -107,16 +107,14 @@ uint32_t ruCube::getPartialCornersPerm(uint8_t mask) const {
     uint32_t ans = 0;
     const uint8_t cornerSize = 6;
     const uint8_t cornerOutputSize = 3;
-
     for (uint8_t i = 0; i < ruCube::noOfCorners; ++i) {
-        int curr = ((07 << i * cornerSize) & partialPerm) >> (i * cornerSize);
+        uint64_t curr = ((UINT64_C(07) << (i * cornerSize)) & partialPerm) >> (i * cornerSize);
         if ((mask & (1 << (ruCube::noOfCorners - curr - 1))) == 0) {
-            ans |= (07 << (i * cornerOutputSize));
+            ans |= (UINT32_C(07) << (i * cornerOutputSize));
         } else {
             ans |= (curr << (i * cornerOutputSize));
         }
     }
-
     return ans;
 }
 
@@ -342,10 +340,10 @@ void ruLutCube::reset() {
 bool ruLutCube::isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask, uint64_t cornersMask) const {
     if (edgesPermMask != ruLutCube::allEdgesMask or cornersMask != ruLutCube::allCornersMask) {
         uint32_t cornersPermMask = cornersMask & 0x3F;
-        return  this->edgesPermPruningTable[this->edgesPerm][static_cast<uint8_t>(edgesPermMask & 0x7F)] > remainingMoves or
-                this->cornersPermPruningTable[this->cornersPerm][static_cast<uint8_t>(cornersPermMask)] > remainingMoves;
+        return  this->edgesPermPruningTable[this->edgesPerm][static_cast<uint8_t>(edgesPermMask & 0x7F)] > (int8_t)remainingMoves or
+                this->cornersPermPruningTable[this->cornersPerm][static_cast<uint8_t>(cornersPermMask)] > (int8_t)remainingMoves;
     } else {
-        return this->fullCubePruningTable[this->cornersPerm][this->cornersOrient][this->edgesPerm] > remainingMoves;
+        return this->fullCubePruningTable[this->cornersPerm][this->cornersOrient][this->edgesPerm] > (int8_t)remainingMoves;
     }
 }
 

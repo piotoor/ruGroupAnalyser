@@ -545,7 +545,7 @@ void cornersPartialPermPruningDfs(ruCube &cube,
                 }
                 ruCube cube;
                 ruCubeStateConverter converter;
-                ans[0].fill(0);
+
 
                 std::unordered_map<uint32_t, uint8_t> cornersPermPartialPermPruningTable;
                 std::unordered_map<uint32_t, std::unordered_set<uint32_t>> partialPermOwners;
@@ -555,11 +555,14 @@ void cornersPartialPermPruningDfs(ruCube &cube,
                     cornersPartialPermPruningDfs(cube, converter, 1, maxCornersPermPruningDepth, -6, partInd, cornersPermPartialPermPruningTable, partialPermOwners);
                     for (const auto &[partial, perms]: partialPermOwners) {
                         for (const auto &perm: perms) {
-                            ans[perm][partInd] = cornersPermPartialPermPruningTable[partial];
+                            if (ans[perm][partInd] == -1) {
+                                ans[perm][partInd] = cornersPermPartialPermPruningTable[partial];
+                            }
+
                         }
                     }
                 }
-
+                ans[0].fill(0);
                 std::cout << "DONE ";
             }
             {
