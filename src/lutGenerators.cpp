@@ -222,9 +222,9 @@ namespace lutGenerators {
         }
     }
 
-    std::array<std::array<uint8_t, noOfPartialEdgesPermCases>, noOfEdgesPermutations> generateEdgesPermPruningTable() {
+    std::array<std::array<int8_t, noOfPartialEdgesPermCases>, noOfEdgesPermutations> generateEdgesPermPruningTable() {
         std::ifstream f("edgesPruningTable.pru");
-        std::array<std::array<uint8_t, noOfPartialEdgesPermCases>, noOfEdgesPermutations>  ans {};
+        std::array<std::array<int8_t, noOfPartialEdgesPermCases>, noOfEdgesPermutations>  ans {};
         if (f.good()) {
             std::cout << std::setw(48) << std::left << "Loading edges pruning table..." << std::flush;
             ruCubeSimpleBenchmarkTimer bt;
@@ -488,5 +488,97 @@ namespace lutGenerators {
 
         return ans;
     }
-}
 
+void cornersPartialPermPruningDfs(ruCube &cube,
+                                    ruCubeStateConverter &conv,
+                                    uint8_t depth,
+                                    uint8_t maxDepth,
+                                    int8_t prevMove,
+                                    uint8_t partInd,
+                                    std::unordered_map<uint32_t, uint8_t> &pruningTable,
+                                    std::unordered_map<uint32_t, std::unordered_set<uint32_t>> &partialPermOwners) {
+        if (depth <= maxDepth) {
+            for (int8_t i = 0; i < 6; ++i) {
+                if (i / 3 == prevMove / 3) {
+                    continue;
+                }
+
+                cube.turn(i);
+                uint32_t partialPerm = cube.getPartialCornersPerm(partInd);
+
+                partialPermOwners[partialPerm].insert(conv.intCornersToLexIndexCornersPerm(cube.getCorners()));
+                if (pruningTable.find(partialPerm) == pruningTable.end()) {
+                    pruningTable[partialPerm] = depth;
+
+                } else {
+                    if (depth < pruningTable[partialPerm]) {
+                        pruningTable[partialPerm] = depth;
+                    }
+                }
+
+                cornersPartialPermPruningDfs(cube, conv, depth + 1, maxDepth, i, partInd, pruningTable, partialPermOwners);
+                cube.inverseTurn(i);
+            }
+        }
+    }
+
+    std::array<std::array<int8_t, noOfPartialCornersPermCases>, noOfCornersPermutations> generateCornersPermPruningTable() {
+        std::ifstream f("cornersPermPruningTable.pru");
+        std::array<std::array<int8_t, lutGenerators::noOfPartialCornersPermCases>, lutGenerators::noOfCornersPermutations>  ans {};
+        if (f.good()) {
+            std::cout << std::setw(48) << std::left << "Loading corners perm pruning table..." << std::flush;
+            ruCubeSimpleBenchmarkTimer bt;
+
+            for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
+                f.read((char*)ans[i].data(), lutGenerators::noOfPartialCornersPermCases);
+            }
+
+            std::cout << "DONE ";
+        } else {
+            f.close();
+            {
+                std::cout << std::setw(48) << std::left << "Generating corners perm pruning table..." << std::flush;
+                ruCubeSimpleBenchmarkTimer bt;
+
+                for (auto &r: ans) {
+                    r.fill(-1);
+                }
+                ruCube cube;
+                ruCubeStateConverter converter;
+                ans[0].fill(0);
+
+                std::unordered_map<uint32_t, uint8_t> cornersPermPartialPermPruningTable;
+                std::unordered_map<uint32_t, std::unordered_set<uint32_t>> partialPermOwners;
+
+                for (uint8_t partInd = 0; partInd < lutGenerators::noOfPartialCornersPermCases; ++partInd) {
+                    partialPermOwners.clear();
+                    cornersPartialPermPruningDfs(cube, converter, 1, maxCornersPermPruningDepth, -6, partInd, cornersPermPartialPermPruningTable, partialPermOwners);
+                    for (const auto &[partial, perms]: partialPermOwners) {
+                        for (const auto &perm: perms) {
+                            ans[perm][partInd] = cornersPermPartialPermPruningTable[partial];
+                        }
+                    }
+                }
+
+                std::cout << "DONE ";
+            }
+            {
+                std::cout << std::setw(48) << std::left << "Saving corners perm pruning table..." << std::flush;
+                ruCubeSimpleBenchmarkTimer bt;
+                std::ofstream f("cornersPermPruningTable.pru");
+
+                if (f.good()) {
+                    for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
+                        f.write((char*)ans[i].data(), lutGenerators::noOfPartialCornersPermCases);
+                    }
+                }
+
+                f.close();
+                std::cout << "DONE ";
+            }
+        }
+
+        return ans;
+    }
+
+}

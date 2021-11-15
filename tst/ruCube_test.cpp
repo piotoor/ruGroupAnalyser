@@ -438,3 +438,62 @@ TEST(ruCubeTest, getPartialEdgesTest) {
         }
     }
 }
+
+TEST(ruCubeTest, getPartialCornersPermTest) {
+    const std::vector<uint32_t> cornersMasks {
+        0b000001,
+        0b000010,
+        0b000100,
+        0b001000,
+        0b010000,
+        0b100000,
+
+        0b111111,
+
+        0b000111,
+        0b001111,
+        0b111000,
+    };
+
+    const std::vector<uint64_t> intCorners {
+        0000102030405,
+        0050403020100,
+    };
+
+
+    const std::vector<std::vector<uint32_t>> expectedPartialCornersPerms {
+        {   0777775,
+            0777747,
+            0777377,
+            0772777,
+            0717777,
+            0077777,
+
+            0012345,
+
+            0777345,
+            0772345,
+            0012777    },
+
+        {   0577777,
+            0747777,
+            0773777,
+            0777277,
+            0777717,
+            0777770,
+
+            0543210,
+
+            0543777,
+            0543277,
+            0777210    },
+    };
+
+    ruCube cube;
+    for (uint8_t i = 0; i < size(expectedPartialCornersPerms); ++i) {
+        for (uint8_t j = 0; j < size(cornersMasks); ++j) {
+            cube.setCorners(intCorners[i]);
+            ASSERT_EQ(expectedPartialCornersPerms[i][j], cube.getPartialCornersPerm(cornersMasks[j]));
+        }
+    }
+}
