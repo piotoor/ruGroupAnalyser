@@ -82,6 +82,11 @@ namespace lutGenerators {
     inline static const uint8_t noOfPartialCornersPermCases = 64;
     std::array<std::array<int8_t, noOfPartialCornersPermCases>, noOfCornersPermutations> generateCornersPermPruningTable();
 
+    inline static const uint8_t maxCornersOrientPruningDepth = 11;
+    inline static const uint8_t noOfPartialCornersOrientCases = 64;
+    std::array<std::array<int8_t, noOfPartialCornersOrientCases>, noOfCornersOrientations> generateCornersOrientPruningTable();
+
+
     inline static const uint8_t maxCornersPruningDepth = 14;
     std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> generateCornersPruningTable();
 

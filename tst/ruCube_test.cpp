@@ -519,3 +519,83 @@ TEST(ruCubeTest, getPartialCornersPermTest) {
         }
     }
 }
+
+TEST(ruCubeTest, getPartialCornersOrientTest) {
+    const std::vector<uint64_t> cornersMasks {
+        0b000001,
+        0b000010,
+        0b000100,
+        0b001000,
+        0b010000,
+        0b100000,
+
+        0b111111,
+        0b000111,
+        0b001111,
+        0b111000,
+        0b000000,
+
+        0b110010
+    };
+
+    const std::vector<uint64_t> intCorners {
+        0000102030405,
+        0151413121110,
+        0442142251013,
+    };
+
+
+    const std::vector<std::vector<uint32_t>> expectedPartialCornersOrients {
+        {   0777770,
+            0777707,
+            0777077,
+            0770777,
+            0707777,
+            0077777,
+
+            0000000,
+            0777000,
+            0770000,
+            0000777,
+            0777777,
+
+            0007707    },
+
+        {   0177777,
+            0717777,
+            0771777,
+            0777177,
+            0777717,
+            0777771,
+
+            0111111,
+            0111777,
+            0111177,
+            0777111,
+            0777777,
+            0717711    },
+
+        {   0777277,
+            0477777,
+            0777771,
+            0774777,
+            0727777,
+            0777717,
+
+            0424211,
+            0477271,
+            0474271,
+            0724717,
+            0777777,
+
+            0427717    },
+    };
+
+    ruCube cube;
+    for (uint8_t i = 0; i < size(expectedPartialCornersOrients); ++i) {
+        for (uint8_t j = 0; j < size(cornersMasks); ++j) {
+            cube.setCorners(intCorners[i]);
+            ASSERT_EQ(expectedPartialCornersOrients[i][j], cube.getPartialCornersOrient(cornersMasks[j]));
+        }
+    }
+}

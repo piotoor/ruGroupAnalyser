@@ -91,6 +91,7 @@ class ruCube: public ruBaseCube
         void setCube(uint32_t edges, uint64_t corners) override;
         uint32_t getPartialEdges(uint8_t mask) const;
         uint32_t getPartialCornersPerm(uint8_t mask) const;
+        uint32_t getPartialCornersOrient(uint8_t mask) const;
 
         bool isSolved(uint32_t edgesMask = ruCube::solvedEdges, uint64_t cornersMask = ruCube::solvedCorners) const override;
         bool isSolvedEdges(uint32_t edgesMask) const override;
@@ -236,6 +237,7 @@ class ruLutCube: public ruBaseCube {
 
         static std::array<std::array<int8_t, lutGenerators::noOfPartialEdgesPermCases>, lutGenerators::noOfEdgesPermutations>  edgesPermPruningTable;
         static std::array<std::array<int8_t, lutGenerators::noOfPartialCornersPermCases>, lutGenerators::noOfCornersPermutations> cornersPermPruningTable;
+        static std::array<std::array<int8_t, lutGenerators::noOfPartialCornersOrientCases>, lutGenerators::noOfCornersOrientations> cornersOrientPruningTable;
         static std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>      cornersPruningTable;
         static std::vector<std::vector<std::vector<int8_t>>> fullCubePruningTable;
         //static std::array<std::array<bool, lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;

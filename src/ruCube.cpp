@@ -118,6 +118,24 @@ uint32_t ruCube::getPartialCornersPerm(uint8_t mask) const {
     return ans;
 }
 
+uint32_t ruCube::getPartialCornersOrient(uint8_t mask) const {
+    uint64_t partialOrient = getCorners();
+    uint32_t ans = 0;
+    const uint8_t cornerSize = 6;
+    const uint8_t cornerOutputSize = 3;
+    const uint8_t cornerPermBitSize = 3;
+    for (uint8_t i = 0; i < ruCube::noOfCorners; ++i) {
+        uint64_t curr = ((UINT64_C(07) << (i * cornerSize)) & partialOrient) >> (i * cornerSize);
+        uint64_t currOrient = ((UINT64_C(07) << (i * cornerSize + cornerPermBitSize)) & partialOrient) >> (i * cornerSize + cornerPermBitSize);
+        if ((mask & (1 << (ruCube::noOfCorners - curr - 1))) == 0) {
+            ans |= (UINT32_C(07) << (i * cornerOutputSize));
+        } else {
+            ans |= (currOrient << (i * cornerOutputSize));
+        }
+    }
+    return ans;
+}
+
 bool ruCube::isSolved(uint32_t edgesMask, uint64_t cornersMask) const {
     return isSolvedEdges(edgesMask) && isSolvedCorners(cornersMask);
 }
@@ -243,6 +261,7 @@ std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerat
 
 std::array<std::array<int8_t, lutGenerators::noOfPartialEdgesPermCases>, lutGenerators::noOfEdgesPermutations>  ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
 std::array<std::array<int8_t, lutGenerators::noOfPartialCornersPermCases>, lutGenerators::noOfCornersPermutations> ruLutCube::cornersPermPruningTable = lutGenerators::generateCornersPermPruningTable();
+ std::array<std::array<int8_t, lutGenerators::noOfPartialCornersOrientCases>, lutGenerators::noOfCornersOrientations> ruLutCube::cornersOrientPruningTable = lutGenerators::generateCornersOrientPruningTable();
 std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>  ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
 std::vector<std::vector<std::vector<int8_t>>>  ruLutCube::fullCubePruningTable = lutGenerators::generateFullCubePruningTable();
 std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>    ruLutCube::permutationValidityTable = lutGenerators::generatePermutationValidityTable();
@@ -340,8 +359,10 @@ void ruLutCube::reset() {
 bool ruLutCube::isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask, uint64_t cornersMask) const {
     if (edgesPermMask != ruLutCube::allEdgesMask or cornersMask != ruLutCube::allCornersMask) {
         uint32_t cornersPermMask = cornersMask & 0x3F;
+        uint32_t cornersOrientMask = (cornersMask >> UINT64_C(32)) & 0x3F;
         return  this->edgesPermPruningTable[this->edgesPerm][static_cast<uint8_t>(edgesPermMask & 0x7F)] > (int8_t)remainingMoves or
-                this->cornersPermPruningTable[this->cornersPerm][static_cast<uint8_t>(cornersPermMask)] > (int8_t)remainingMoves;
+                this->cornersPermPruningTable[this->cornersPerm][static_cast<uint8_t>(cornersPermMask)] > (int8_t)remainingMoves or
+                this->cornersOrientPruningTable[this->cornersOrient][static_cast<uint8_t>(cornersOrientMask)] > (int8_t)remainingMoves;
     } else {
         return this->fullCubePruningTable[this->cornersPerm][this->cornersOrient][this->edgesPerm] > (int8_t)remainingMoves;
     }
