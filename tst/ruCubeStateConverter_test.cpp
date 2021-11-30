@@ -52,7 +52,7 @@ TEST(ruCubeStateConverterTest, convertvectCornersToIntCornersTest) {
     };
 
     for (uint8_t i = 0; i < std::size(cornersOrient); ++i) {
-        auto corners = conv.vectCornersToIntCorners(cornersPerm[i], cornersOrient[i]);
+        auto corners = conv.vectCornersToIntCorners(cornersOrient[i], cornersPerm[i]);
         ASSERT_EQ(expectedCorners[i], corners);
     }
 }
@@ -121,7 +121,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
     };
 
     for (uint8_t i = 0; i < std::size(cornersPerm); ++i) {
-        auto corners = conv.vectCornersToIntCorners(cornersPerm[i], cornersOrient[i]);
+        auto corners = conv.vectCornersToIntCorners(cornersOrient[i], cornersPerm[i]);
         ASSERT_EQ(expectedCorners[i], corners);
     }
 
@@ -2427,7 +2427,7 @@ TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersPermAndBackTest
     for (uint16_t i = 0; i < std::size(cornersInts); ++i) {
         uint16_t cornersLexIndex = conv.intCornersToLexIndexCornersPerm(cornersInts[i]);
         ASSERT_EQ(i, cornersLexIndex);
-        uint64_t cornersPermInt = conv.lexIndexCornersToIntCorners(cornersLexIndex, ruLutCube::solvedLexIndexCornersOrient);
+        uint64_t cornersPermInt = conv.lexIndexCornersToIntCorners(ruLutCube::solvedLexIndexCornersOrient, cornersLexIndex);
         ASSERT_EQ(cornersInts[i], cornersPermInt);
     }
 }
@@ -2535,7 +2535,7 @@ TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersTest) {
     };
 
     for (uint16_t i = 0; i < std::size(expectedCornersInts); ++i) {
-        uint64_t cornersInt = conv.lexIndexCornersToIntCorners(lexIndexCornersPerms[i], lexIndexCornersOrients[i]);
+        uint64_t cornersInt = conv.lexIndexCornersToIntCorners(lexIndexCornersOrients[i], lexIndexCornersPerms[i]);
         ASSERT_EQ(expectedCornersInts[i], cornersInt);
     }
 }

@@ -30,7 +30,7 @@ namespace ruCubeStateParser {
             edgesPerm[i] = edges[i] - '0';
         }
 
-        return std::make_tuple(cornersPerm, cornersOrient, edgesPerm);
+        return std::make_tuple(cornersOrient, cornersPerm, edgesPerm);
     }
 
 }

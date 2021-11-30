@@ -39,7 +39,7 @@ namespace lutGenerators {
         ruCubeStateConverter converter;
 
         for (uint16_t cornersPerm = 0; cornersPerm < noOfCornersPermutations; ++cornersPerm) {
-            cube->setCorners(converter.lexIndexCornersToIntCorners(cornersPerm, ruLutCube::solvedLexIndexCornersOrient));
+            cube->setCorners(converter.lexIndexCornersToIntCorners(ruLutCube::solvedLexIndexCornersOrient, cornersPerm));
             for (uint8_t t = R; t <= Ui; ++t) {
                 cube->turn(t);
                 ans[cornersPerm][t] = converter.intCornersToLexIndexCornersPerm(cube->getCorners());
@@ -60,7 +60,7 @@ namespace lutGenerators {
         ruCubeStateConverter converter;
 
         for (uint16_t cornersOrient = 0; cornersOrient < noOfCornersOrientations; ++cornersOrient) {
-            cube->setCorners(converter.lexIndexCornersToIntCorners(ruLutCube::solvedLexIndexCornersPerm, cornersOrient));
+            cube->setCorners(converter.lexIndexCornersToIntCorners(cornersOrient, ruLutCube::solvedLexIndexCornersPerm));
 
             for (uint8_t t = R; t <= Ui; ++t) {
                 cube->turn(t);
@@ -124,7 +124,7 @@ namespace lutGenerators {
         ruCubeStateConverter converter;
 
         for (uint16_t cp = 0; cp < noOfCornersPermutations; ++cp) {
-            cube->setCorners(converter.lexIndexCornersToIntCorners(cp, ruLutCube::solvedLexIndexCornersOrient));
+            cube->setCorners(converter.lexIndexCornersToIntCorners(ruLutCube::solvedLexIndexCornersOrient, cp));
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] = cube->isSolvedCorners(ruCube::cornersPermutationMask);
 
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::URF)] = cube->isSolvedCorners(ruCube::URFPermMask);
@@ -160,7 +160,7 @@ namespace lutGenerators {
         ruCubeStateConverter converter;
 
         for (uint16_t co = 0; co < noOfCornersOrientations; ++co) {
-            cube->setCorners(converter.lexIndexCornersToIntCorners(ruLutCube::solvedLexIndexCornersPerm, co));
+            cube->setCorners(converter.lexIndexCornersToIntCorners(co, ruLutCube::solvedLexIndexCornersPerm));
 
             ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] = cube->isSolvedCorners(ruCube::cornersOrientationMask);
 

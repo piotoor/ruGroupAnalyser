@@ -10,8 +10,7 @@ TEST(ruLutCubeTest, initialStateTest) {
     ASSERT_EQ (ruLutCube::solvedLexIndexCornersPerm, cube.getCornersPerm());
     ASSERT_EQ (ruLutCube::solvedLexIndexCornersOrient, cube.getCornersOrient());
 
-
-    ASSERT_TRUE (cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+    ASSERT_TRUE (cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
     ASSERT_TRUE (cube.isInDomino());
 }
 
@@ -24,7 +23,7 @@ TEST(ruLutCubeTest, settersGettersTest) {
     ASSERT_EQ (3432243, cube.getCorners());
 
     cube.reset();
-    cube.setCube(1234, 423234);
+    cube.setCube(423234, 1234);
     ASSERT_EQ (1234, cube.getEdges());
     ASSERT_EQ (423234, cube.getCorners());
 
@@ -37,18 +36,19 @@ TEST(ruLutCubeTest, settersGettersTest) {
 
 TEST(ruLutCubeTest, cubeStateResetTest) {
     ruLutCube cube;
-    ASSERT_TRUE (cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+    ASSERT_TRUE (cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
+
     cube.setEdges(2234);
     cube.setCorners(344);
-    ASSERT_FALSE (cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+    ASSERT_FALSE (cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
+
     cube.reset();
-    ASSERT_TRUE (cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+    ASSERT_TRUE (cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
 }
 
 TEST(ruLutCubeTest, singleTurnTest) {
     ruLutCube cube;
-
-    ASSERT_TRUE (cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+    ASSERT_TRUE (cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
 
     cube.turn(R);
     cube.turn(R);
@@ -76,7 +76,7 @@ TEST(ruLutCubeTest, singleTurnTest) {
     cube.turn(Ui);
     cube.turn(Ui);
 
-    ASSERT_TRUE (cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+    ASSERT_TRUE (cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
 
     cube.turn(Ri);
     cube.turn(U);
@@ -127,7 +127,7 @@ TEST(ruLutCubeTest, singleTurnTest) {
     cube.turn(U);
     cube.turn(R2);
 
-    ASSERT_TRUE (cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+    ASSERT_TRUE (cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
 }
 
 TEST(ruLutCubeTest, singleTurnInversionTest) {
@@ -135,9 +135,9 @@ TEST(ruLutCubeTest, singleTurnInversionTest) {
 
     for (int trn = R; trn <= Ui; ++trn) {
         cube.turn(trn);
-        ASSERT_FALSE(cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+        ASSERT_FALSE(cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
         cube.inverseTurn(trn);
-        ASSERT_TRUE(cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+        ASSERT_TRUE(cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
     }
 
     cube.inverseTurn(R);
@@ -194,7 +194,7 @@ TEST(ruLutCubeTest, singleTurnInversionTest) {
     cube.turn(Ui);
     cube.inverseTurn(U2);
 
-    ASSERT_TRUE(cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+    ASSERT_TRUE(cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
 }
 
 TEST(ruLutCubeTest, scrambleAndScrambleInversionTest) {
@@ -204,7 +204,7 @@ TEST(ruLutCubeTest, scrambleAndScrambleInversionTest) {
     cube.scramble(moves);
 
     cube.inverseScramble(moves);
-    ASSERT_TRUE(cube.isSolved(ruLutCube::allEdgesMask, ruLutCube::allCornersMask));
+    ASSERT_TRUE(cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
 }
 
 TEST(ruLutCubeTest, isInDominoTest) {
@@ -272,7 +272,7 @@ TEST(ruLutCubeTest, scrambleNegativeTest) {
         6
     };
 
-    int i = 0;
+    size_t i = 0;
     for (const auto &scr: invalidScrambles) {
         try {
             cube.scramble(scr);
@@ -298,10 +298,10 @@ TEST(ruLutCubeTest, scrambleInversionNegativeTest) {
         6
     };
 
-    int i = 0;
+    size_t i = 0;
     for (const auto &scr: invalidScrambleInversions) {
         try {
-            cube.scramble(scr);
+            cube.inverseScramble(scr);
         } catch (const ruCubeTurnException &e) {
             ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(firstInvalidTurn[i]) + ") out of range (which is [0:5])"), e.what());
         }
@@ -319,15 +319,15 @@ TEST(ruLutCubeTest, predefinedIsSolvedFilterTest) {
         { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
     };
 
-    const std::vector<std::pair<uint32_t, uint64_t>> filters {
-        { ruLutCube::allEdgesMask,  ruLutCube::allCornersMask },
-        { ruLutCube::allEdgesMask,  0x0 },
-        { 0x0,                      ruLutCube::allCornersMask },
-        { 0x0,                      0x0 },
-        { 0x0,                      ruLutCube::allCornersOrientMask },
-        { 0x0,                      ruLutCube::allCornersPermMask },
-        { ruLutCube::allEdgesMask,  ruLutCube::allCornersOrientMask },
-        { ruLutCube::allEdgesMask,  ruLutCube::allCornersPermMask },
+    const std::vector<std::pair<uint64_t, uint32_t>> masks {
+        { ruLutCube::allCornersMask,       ruLutCube::allEdgesMask },
+        { 0x0,                             ruLutCube::allEdgesMask },
+        { ruLutCube::allCornersMask,       0x0                     },
+        { 0x0,                             0x0                     },
+        { ruLutCube::allCornersOrientMask, 0x0                     },
+        { ruLutCube::allCornersPermMask,   0x0                     },
+        { ruLutCube::allCornersOrientMask, ruLutCube::allEdgesMask },
+        { ruLutCube::allCornersPermMask,   ruLutCube::allEdgesMask },
     };
 
     const std::vector<std::vector<bool>> expected {
@@ -339,11 +339,12 @@ TEST(ruLutCubeTest, predefinedIsSolvedFilterTest) {
         { false, true,  false, true,  false, true,  false, true  },
     };
 
-    for (uint8_t i = 0 ; i < size(scrambles); ++i) {
+    for (size_t scrInd = 0 ; scrInd < size(scrambles); ++scrInd) {
         ruLutCube cube;
-        cube.scramble(scrambles[i]);
-        for (uint8_t j = 0; j < size(filters); ++j) {
-            ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
+        cube.scramble(scrambles[scrInd]);
+        for (size_t mskInd = 0; mskInd < size(masks); ++mskInd) {
+            auto &[cornersMask, edgesMask] = masks[mskInd];
+            ASSERT_EQ(expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
         }
     }
 }
@@ -358,25 +359,25 @@ TEST(ruLutCubeTest, customIsSolvedFilterTest) {
         { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
     };
 
-    const std::vector<std::pair<uint32_t, uint64_t>> filters {
-        { 0b111000000101010,    0b0001011111100000000000000000000000000111111 },
-        { 0b111000000101010,    0b0001011111100000000000000000000000000111011 },
-        { 0b010000000100010,    0b0001001000000000000000000000000000000111111 },
-        { 0b111000000101010,    0b0001011111100000000000000000000000000111111 },
-        { 0b000000000100000,    0b0000001000000000000000000000000000000000001 },
-        { 0b000000000001010,    0b0000000001000000000000000000000000000001000 },
-        { 0b000000000100000,    0b0000010000000000000000000000000000000000001 },
-        { 0b000000000100010,    0b0000010011100000000000000000000000001000000 },
-        { 0b000000000001000,    0b0100101010100000000000000000000000000000001 },
-        { 0b000000010001000,    0b0001011111100000000000000000000000000111111 },
-        { 0b000000000000001,    0b0000001000000000000000000000000000000000001 },
-        { 0b000000000000100,    0b0000000001000000000000000000000000000001000 },
-        { 0b000000010001000,    0b0000000001000000000000000000000000000001000 },
-        { 0b000000010001000,    0b0000000001000000000000000000000000000001000 },
-        { 0b000000010001000,    0b0000000001000000000000000000000000000001000 },
-        { 0b111000000101010,    0b0000000000000000000000000000000000000000000 },
-        { 0b000000000101010,    0b0000100000000000000000000000000000001000000 },
-        { 0b100000010101010,    0b1111111111100000000000000000000011111111111 },
+    const std::vector<std::pair<uint64_t, uint32_t>> masks {
+        { 0b0001011111100000000000000000000000000111111, 0b111000000101010 },
+        { 0b0001011111100000000000000000000000000111011, 0b111000000101010 },
+        { 0b0001001000000000000000000000000000000111111, 0b010000000100010 },
+        { 0b0001011111100000000000000000000000000111111, 0b111000000101010 },
+        { 0b0000001000000000000000000000000000000000001, 0b000000000100000 },
+        { 0b0000000001000000000000000000000000000001000, 0b000000000001010 },
+        { 0b0000010000000000000000000000000000000000001, 0b000000000100000 },
+        { 0b0000010011100000000000000000000000001000000, 0b000000000100010 },
+        { 0b0100101010100000000000000000000000000000001, 0b000000000001000 },
+        { 0b0001011111100000000000000000000000000111111, 0b000000010001000 },
+        { 0b0000001000000000000000000000000000000000001, 0b000000000000001 },
+        { 0b0000000001000000000000000000000000000001000, 0b000000000000100 },
+        { 0b0000000001000000000000000000000000000001000, 0b000000010001000 },
+        { 0b0000000001000000000000000000000000000001000, 0b000000010001000 },
+        { 0b0000000001000000000000000000000000000001000, 0b000000010001000 },
+        { 0b0000000000000000000000000000000000000000000, 0b111000000101010 },
+        { 0b0000100000000000000000000000000000001000000, 0b000000000101010 },
+        { 0b1111111111100000000000000000000011111111111, 0b100000010101010 },
     };
 
     const std::vector<std::vector<bool>> expected {
@@ -388,11 +389,12 @@ TEST(ruLutCubeTest, customIsSolvedFilterTest) {
         { false, false, false,      false, false, true,     true,  true,  false,    false, false, true,     true,  true,  true,     true , false, false },
     };
 
-    for (uint8_t i = 0 ; i < size(scrambles); ++i) {
+    for (size_t scrInd = 0 ; scrInd < size(scrambles); ++scrInd) {
         ruLutCube cube;
-        cube.scramble(scrambles[i]);
-        for (uint8_t j = 0; j < size(filters); ++j) {
-            ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
+        cube.scramble(scrambles[scrInd]);
+        for (size_t mskInd = 0; mskInd < size(masks); ++mskInd) {
+            auto &[cornersMask, edgesMask] = masks[mskInd];
+            ASSERT_EQ(expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
         }
     }
 }
@@ -445,7 +447,7 @@ TEST(ruLutCubeTest, toStringTest) {
     ruCubeStateConverter conv;
     for (size_t i = 0; i < size(expectedStrCubes); ++i) {
         const auto &[corners, edges] = cubes[i];
-        ruLutCube cube(conv.intEdgesToLexIndexEdges(edges), conv.intCornersToLexIndexCornersPerm(corners), conv.intCornersToLexIndexCornersOrient(corners));
+        ruLutCube cube(conv.intCornersToLexIndexCornersOrient(corners), conv.intCornersToLexIndexCornersPerm(corners), conv.intEdgesToLexIndexEdges(edges));
         ASSERT_EQ(expectedStrCubes[i], cube.toString());
     }
 }
@@ -457,8 +459,8 @@ TEST(ruLutCubeTest, toStringWithIgnoredTest) {
         { 0101112131415, 00234165, 0b000000, 0b000000, 0b0000000 },
         { 0101112131415, 00231456, 0b000000, 0b000000, 0b0000000 },
 
-        { 0101112131415, 00213465, 0b111111, 0b000000, 0b0000000 },
-        { 0101112131415, 00123456, 0b000000, 0b111111, 0b0000000 },
+        { 0101112131415, 00213465, 0b000000, 0b111111, 0b0000000 },
+        { 0101112131415, 00123456, 0b111111, 0b000000, 0b0000000 },
         { 0101112131415, 01023465, 0b000000, 0b000000, 0b1111111 },
         { 0101114121513, 00234561, 0b111111, 0b111111, 0b1111111 },
 
@@ -497,16 +499,12 @@ TEST(ruLutCubeTest, toStringWithIgnoredTest) {
 
     ruCubeStateConverter conv;
 
-    using ruLutCubeIgnoredPieces =  std::tuple< std::bitset<ruBaseCube::noOfEdges>,
-                                                std::bitset<ruBaseCube::noOfCorners>,
-                                                std::bitset<ruBaseCube::noOfCorners> >; // ep, co, cp
-
     for (size_t i = 0; i < size(expectedStrCubes); ++i) {
-        const auto &[corners, edges, cpi, coi, epi] = cubes[i];
-        ruLutCubeIgnoredPieces ignoredPieces { epi, coi, cpi };
-        ruLutCube cube( conv.intEdgesToLexIndexEdges(edges),
+        const auto &[corners, edges, coi, cpi, epi] = cubes[i];
+        ruLutCubeIgnoredPieces ignoredPieces { coi, cpi, epi };
+        ruLutCube cube( conv.intCornersToLexIndexCornersOrient(corners),
                         conv.intCornersToLexIndexCornersPerm(corners),
-                        conv.intCornersToLexIndexCornersOrient(corners),
+                        conv.intEdgesToLexIndexEdges(edges),
                         ignoredPieces);
         ASSERT_EQ(expectedStrCubes[i], cube.toString());
     }

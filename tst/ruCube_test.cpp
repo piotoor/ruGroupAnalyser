@@ -8,7 +8,7 @@ TEST(ruCubeTest, initialStateTest) {
 
     ASSERT_EQ (ruCube::solvedEdges, cube.getEdges());
     ASSERT_EQ (ruCube::solvedCorners, cube.getCorners());
-    ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+    ASSERT_TRUE (cube.isSolved(ruCube::allCornersMask, ruCube::allEdgesMask));
     ASSERT_TRUE (cube.isInDomino());
 }
 
@@ -20,7 +20,7 @@ TEST(ruCubeTest, settersGettersTest) {
     ASSERT_EQ (076543210, cube.getEdges());
     ASSERT_EQ (01511413121110, cube.getCorners());
 
-    cube.setCube(001234765, 01011112151413);
+    cube.setCube(01011112151413, 001234765);
     ASSERT_EQ (001234765, cube.getEdges());
     ASSERT_EQ (01011112151413, cube.getCorners());
 }
@@ -28,33 +28,33 @@ TEST(ruCubeTest, settersGettersTest) {
 TEST(ruCubeTest, cubeStateResetTest) {
     ruCube cube;
 
-    ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+    ASSERT_TRUE (cube.isSolved(ruCube::allCornersMask, ruCube::allEdgesMask));
     cube.setEdges(076543210);
     cube.setCorners(01511413121110);
-    ASSERT_FALSE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+    ASSERT_FALSE (cube.isSolved(ruCube::allCornersMask, ruCube::allEdgesMask));
     cube.reset();
-    ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+    ASSERT_TRUE (cube.isSolved(ruCube::allCornersMask, ruCube::allEdgesMask));
 }
 
 TEST(ruCubeTest, singleTurnTest) {
     ruCube cube;
 
-    cube.turn(R); // R
+    cube.turn(R);
     ASSERT_EQ(00126345, cube.getEdges());
     ASSERT_EQ(0251112402344, cube.getCorners());
-    cube.turn(U); // U
+    cube.turn(U);
     ASSERT_EQ(06012345, cube.getEdges());
     ASSERT_EQ(0402511122344, cube.getCorners());
-    cube.turn(R2); // R2
+    cube.turn(R2);
     ASSERT_EQ(06014523, cube.getEdges());
     ASSERT_EQ(0232511444012, cube.getCorners());
-    cube.turn(U2); // U2
+    cube.turn(U2);
     ASSERT_EQ(01460523, cube.getEdges());
     ASSERT_EQ(0114423254012, cube.getCorners());
-    cube.turn(Ri); // R'
+    cube.turn(Ri);
     ASSERT_EQ(01465230, cube.getEdges());
     ASSERT_EQ(0454423202241, cube.getCorners());
-    cube.turn(Ui); // U'
+    cube.turn(Ui);
     ASSERT_EQ(04651230, cube.getEdges());
     ASSERT_EQ(0442320452241, cube.getCorners());
 
@@ -93,9 +93,9 @@ TEST(ruCubeTest, singleTurnInversionTest) {
 
     for (int trn = R; trn <= Ui; ++trn) {
         cube.turn(trn);
-        ASSERT_FALSE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+        ASSERT_FALSE(cube.isSolved(ruCube::allCornersMask, ruCube::allEdgesMask));
         cube.inverseTurn(trn);
-        ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+        ASSERT_TRUE(cube.isSolved(ruCube::allCornersMask, ruCube::allEdgesMask));
     }
 
     cube.inverseTurn(R);
@@ -152,18 +152,17 @@ TEST(ruCubeTest, singleTurnInversionTest) {
     cube.turn(Ui);
     cube.inverseTurn(U2);
 
-    ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+    ASSERT_TRUE(cube.isSolved(ruCube::allCornersMask, ruCube::allEdgesMask));
 }
 
 TEST(ruCubeTest, scrambleTest) {
     ruCube cube;
 
-    const std::vector<uint8_t> moves{R, U, R2, U2, Ri, Ui};
-    cube.scramble(moves);
+    cube.scramble({ R, U, R2, U2, Ri, Ui });
     ASSERT_EQ(04651230, cube.getEdges());
     ASSERT_EQ(0442320452241, cube.getCorners());
 
-    cube.scramble({R2, U2, R2, U2, R, U, Ri, Ui});
+    cube.scramble({ R2, U2, R2, U2, R, U, Ri, Ui });
     ASSERT_EQ(04130265, cube.getEdges());
     ASSERT_EQ(0434541142042, cube.getCorners());
 }
@@ -171,12 +170,11 @@ TEST(ruCubeTest, scrambleTest) {
 TEST(ruCubeTest, scrambleInversionTest) {
     ruCube cube;
 
-    const std::vector<uint8_t> moves{U, R, U2, R2, Ui, Ri};
-    cube.inverseScramble(moves);
+    cube.inverseScramble({ U, R, U2, R2, Ui, Ri });
     ASSERT_EQ(04651230, cube.getEdges());
     ASSERT_EQ(0442320452241, cube.getCorners());
 
-    cube.inverseScramble({U, R, Ui, Ri, U2, R2, U2, R2});
+    cube.inverseScramble({ U, R, Ui, Ri, U2, R2, U2, R2 });
     ASSERT_EQ(04130265, cube.getEdges());
     ASSERT_EQ(0434541142042, cube.getCorners());
 }
@@ -185,17 +183,17 @@ TEST(ruCubeTest, isInDominoTest) {
     ruCube cube;
 
     ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({R2, U2, R2, U2, R2, U2});
+    cube.scramble({ R2, U2, R2, U2, R2, U2 });
     ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({R2, U, R2, Ui, R2, U, R2, U, R2, Ui, R2, Ui, R2, U, R2, U2, R2, Ui, R2, U2, R2, U2, R2, Ui, R2, Ui});
+    cube.scramble({ R2, U, R2, Ui, R2, U, R2, U, R2, Ui, R2, Ui, R2, U, R2, U2, R2, Ui, R2, U2, R2, U2, R2, Ui, R2, Ui });
     ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({R, U, Ri, U, R, U2, Ri});
+    cube.scramble({ R, U, Ri, U, R, U2, Ri });
     ASSERT_FALSE(cube.isInDomino());
-    cube.scramble({R, U, Ri, U, R, U2, Ri});
+    cube.scramble({ R, U, Ri, U, R, U2, Ri });
     ASSERT_FALSE(cube.isInDomino());
-    cube.scramble({U, R, U, Ri, U, R, Ui, Ri, U, R, U2, R});
+    cube.scramble({ U, R, U, Ri, U, R, Ui, Ri, U, R, U2, R });
     ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({R2, U, Ri, Ui, Ri, Ui, Ri, U, R, U, Ri});
+    cube.scramble({ R2, U, Ri, Ui, Ri, Ui, Ri, U, R, U, Ri });
     ASSERT_FALSE(cube.isInDomino());
 }
 
@@ -246,7 +244,7 @@ TEST(ruCubeTest, scrambleNegativeTest) {
         6
     };
 
-    int i = 0;
+    size_t i = 0;
     for (const auto &scr: invalidScrambles) {
         try {
             cube.scramble(scr);
@@ -272,10 +270,10 @@ TEST(ruCubeTest, scrambleInversionNegativeTest) {
         6
     };
 
-    int i = 0;
+    size_t i = 0;
     for (const auto &scr: invalidScrambleInversions) {
         try {
-            cube.scramble(scr);
+            cube.inverseScramble(scr);
         } catch (const ruCubeTurnException &e) {
             ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(firstInvalidTurn[i]) + ") out of range (which is [0:5])"), e.what());
         }
@@ -293,15 +291,15 @@ TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
         { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
     };
 
-    const std::vector<std::pair<uint32_t, uint64_t>> filters {
-        { ruCube::allEdgesMask,     ruCube::allCornersMask },
-        { ruCube::allEdgesMask,     00 },
-        { 00,                       ruCube::allCornersMask },
-        { 00,                       00 },
-        { 00,                       ruCube::cornersOrientationMask },
-        { 00,                       ruCube::cornersPermutationMask },
-        { ruCube::allEdgesMask,     ruCube::cornersOrientationMask },
-        { ruCube::allEdgesMask,     ruCube::cornersPermutationMask }
+    const std::vector<std::pair<uint64_t, uint32_t>> masks {
+        { ruCube::allCornersMask,         ruCube::allEdgesMask },
+        { 00,                             ruCube::allEdgesMask },
+        { ruCube::allCornersMask,         00                   },
+        { 00,                             00                   },
+        { ruCube::cornersOrientationMask, 00                   },
+        { ruCube::cornersPermutationMask, 00                   },
+        { ruCube::cornersOrientationMask, ruCube::allEdgesMask },
+        { ruCube::cornersPermutationMask, ruCube::allEdgesMask }
     };
 
     const std::vector<std::vector<bool>> expected {
@@ -313,14 +311,14 @@ TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
         { false, true,  false, true,  false, true,  false, true  }
     };
 
-    for (uint8_t i = 0 ; i < size(scrambles); ++i) {
+    for (size_t scrInd = 0 ; scrInd < size(scrambles); ++scrInd) {
         ruCube cube;
-        cube.scramble(scrambles[i]);
-        for (uint8_t j = 0; j < size(filters); ++j) {
-            ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
+        cube.scramble(scrambles[scrInd]);
+        for (size_t mskInd = 0; mskInd < size(masks); ++mskInd) {
+            auto &[cornersMask, edgesMask] = masks[mskInd];
+            ASSERT_EQ(expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
         }
     }
-
 }
 
 TEST(ruCubeTest, customIsSolvedFilterTest) {
@@ -333,30 +331,30 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
         { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
     };
 
-    const std::vector<std::pair<uint32_t, uint64_t>> filters {
-        { 00000070, 0000000000077 },
-        { 00000070, 0000000000007 },
-        { 00000070, 0000000000070 },
+    const std::vector<std::pair<uint64_t, uint32_t>> masks {
+        { 0000000000077, 00000070 },
+        { 0000000000007, 00000070 },
+        { 0000000000070, 00000070 },
 
-        { 00000070, 0000000007700 },
-        { 00000070, 0000000000700 },
-        { 00000070, 0000000007000 },
+        { 0000000007700, 00000070 },
+        { 0000000000700, 00000070 },
+        { 0000000007000, 00000070 },
 
-        { 00000070, 0000000770000 },
-        { 00000070, 0000000070000 },
-        { 00000070, 0000000700000 },
+        { 0000000770000, 00000070 },
+        { 0000000070000, 00000070 },
+        { 0000000700000, 00000070 },
 
-        { 07000070, 0000000000077 },
-        { 07000070, 0000000000007 },
-        { 07000070, 0000000000070 },
+        { 0000000000077, 07000070 },
+        { 0000000000007, 07000070 },
+        { 0000000000070, 07000070 },
 
-        { 07000070, 0000000007700 },
-        { 07000070, 0000000000700 },
-        { 07000070, 0000000007000 },
+        { 0000000007700, 07000070 },
+        { 0000000000700, 07000070 },
+        { 0000000007000, 07000070 },
 
-        { 07000070, 0000000770000 },
-        { 07000070, 0000000070000 },
-        { 07000070, 0000000700000 }
+        { 0000000770000, 07000070 },
+        { 0000000070000, 07000070 },
+        { 0000000700000, 07000070 }
     };
 
     const std::vector<std::vector<bool>> expected {
@@ -368,14 +366,14 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
         { true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true  }
     };
 
-    for (uint8_t i = 0 ; i < size(scrambles); ++i) {
+    for (size_t scrInd = 0 ; scrInd < size(scrambles); ++scrInd) {
         ruCube cube;
-        cube.scramble(scrambles[i]);
-        for (uint8_t j = 0; j < size(filters); ++j) {
-            ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
+        cube.scramble(scrambles[scrInd]);
+        for (size_t mskInd = 0; mskInd < size(masks); ++mskInd) {
+            auto &[cornersMask, edgesMask] = masks[mskInd];
+            ASSERT_EQ(expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
         }
     }
-
 }
 
 TEST(ruCubeTest, getPartialEdgesTest) {
@@ -399,7 +397,6 @@ TEST(ruCubeTest, getPartialEdgesTest) {
         00123456,
         06543210,
     };
-
 
     const std::vector<std::vector<uint32_t>> expectedPartialEdges {
         {   07777776,
@@ -432,10 +429,10 @@ TEST(ruCubeTest, getPartialEdgesTest) {
     };
 
     ruCube cube;
-    for (uint8_t i = 0; i < size(expectedPartialEdges); ++i) {
-        for (uint8_t j = 0; j < size(edgesMasks); ++j) {
-            cube.setEdges(intEdges[i]);
-            ASSERT_EQ(expectedPartialEdges[i][j], cube.getPartialEdges(edgesMasks[j]));
+    for (size_t expectedInd = 0; expectedInd < size(expectedPartialEdges); ++expectedInd) {
+        for (size_t maskInd = 0; maskInd < size(edgesMasks); ++maskInd) {
+            cube.setEdges(intEdges[expectedInd]);
+            ASSERT_EQ(expectedPartialEdges[expectedInd][maskInd], cube.getPartialEdges(edgesMasks[maskInd]));
         }
     }
 }
@@ -454,7 +451,6 @@ TEST(ruCubeTest, getPartialCornersPermTest) {
         0b001111,
         0b111000,
         0b000000,
-
         0b110010
     };
 
@@ -463,7 +459,6 @@ TEST(ruCubeTest, getPartialCornersPermTest) {
         0050403020100,
         0442142251013,
     };
-
 
     const std::vector<std::vector<uint32_t>> expectedPartialCornersPerms {
         {   0777775,
@@ -478,7 +473,6 @@ TEST(ruCubeTest, getPartialCornersPermTest) {
             0772345,
             0012777,
             0777777,
-
             0017747    },
 
         {   0577777,
@@ -507,15 +501,14 @@ TEST(ruCubeTest, getPartialCornersPermTest) {
             0472573,
             0712707,
             0777777,
-
             0417707    },
     };
 
     ruCube cube;
-    for (uint8_t i = 0; i < size(expectedPartialCornersPerms); ++i) {
-        for (uint8_t j = 0; j < size(cornersMasks); ++j) {
-            cube.setCorners(intCorners[i]);
-            ASSERT_EQ(expectedPartialCornersPerms[i][j], cube.getPartialCornersPerm(cornersMasks[j]));
+    for (size_t expectedInd = 0; expectedInd < size(expectedPartialCornersPerms); ++expectedInd) {
+        for (size_t maskInd = 0; maskInd < size(cornersMasks); ++maskInd) {
+            cube.setCorners(intCorners[expectedInd]);
+            ASSERT_EQ(expectedPartialCornersPerms[expectedInd][maskInd], cube.getPartialCornersPerm(cornersMasks[maskInd]));
         }
     }
 }
@@ -534,7 +527,6 @@ TEST(ruCubeTest, getPartialCornersOrientTest) {
         0b001111,
         0b111000,
         0b000000,
-
         0b110010
     };
 
@@ -543,7 +535,6 @@ TEST(ruCubeTest, getPartialCornersOrientTest) {
         0151413121110,
         0442142251013,
     };
-
 
     const std::vector<std::vector<uint32_t>> expectedPartialCornersOrients {
         {   0777770,
@@ -558,7 +549,6 @@ TEST(ruCubeTest, getPartialCornersOrientTest) {
             0770000,
             0000777,
             0777777,
-
             0007707    },
 
         {   0177777,
@@ -587,15 +577,14 @@ TEST(ruCubeTest, getPartialCornersOrientTest) {
             0474271,
             0724717,
             0777777,
-
             0427717    },
     };
 
     ruCube cube;
-    for (uint8_t i = 0; i < size(expectedPartialCornersOrients); ++i) {
-        for (uint8_t j = 0; j < size(cornersMasks); ++j) {
-            cube.setCorners(intCorners[i]);
-            ASSERT_EQ(expectedPartialCornersOrients[i][j], cube.getPartialCornersOrient(cornersMasks[j]));
+    for (size_t expectedInd = 0; expectedInd < size(expectedPartialCornersOrients); ++expectedInd) {
+        for (size_t maskInd = 0; maskInd < size(cornersMasks); ++maskInd) {
+            cube.setCorners(intCorners[expectedInd]);
+            ASSERT_EQ(expectedPartialCornersOrients[expectedInd][maskInd], cube.getPartialCornersOrient(cornersMasks[maskInd]));
         }
     }
 }

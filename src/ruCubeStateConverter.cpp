@@ -14,7 +14,7 @@ ruCubeStateConverter::~ruCubeStateConverter() {
 
 }
 
-uint64_t ruCubeStateConverter::vectCornersToIntCorners(const cornersArray& perm, const cornersArray& orient) const {
+uint64_t ruCubeStateConverter::vectCornersToIntCorners(const cornersArray& orient, const cornersArray& perm) const {
     uint64_t ans = 0;
 
     std::set<int8_t> availPerm { 0, 1, 2, 3, 4, 5 };
@@ -146,7 +146,7 @@ void ruCubeStateConverter::lexIndexPermToArrayPermIntermediate(uint16_t lexPerm,
     }
 }
 
-uint64_t ruCubeStateConverter::lexIndexCornersToIntCorners(uint16_t lexIndexPerm, uint16_t lexIndexOrient) {
+uint64_t ruCubeStateConverter::lexIndexCornersToIntCorners(uint16_t lexIndexOrient, uint16_t lexIndexPerm) {
     uint64_t ans = lexIndexCornersOrientToIntCornersOrient(lexIndexOrient);
     lexIndexPermToArrayPermIntermediate(lexIndexPerm, numOfCorners);
 

@@ -18,17 +18,17 @@ class ruCubeStateConverter
         explicit ruCubeStateConverter(const ruCubeStateConverter &other) = delete;
         ruCubeStateConverter& operator=(const ruCubeStateConverter &other) = delete;
         virtual ~ruCubeStateConverter();
-        uint64_t vectCornersToIntCorners(const cornersArray &perm, const cornersArray &orient) const;
+        uint64_t vectCornersToIntCorners(const cornersArray &orient, const cornersArray &perm) const;
         uint32_t vectEdgesToIntEdges(const edgesArray &perm) const;
         uint16_t intEdgesToLexIndexEdges(const uint32_t edges);
         uint16_t intCornersToLexIndexCornersPerm(const uint64_t corners);
         uint16_t intCornersToLexIndexCornersOrient(const uint64_t corners);
 
         uint32_t lexIndexEdgesToIntEdges(uint16_t lexIndexEdges);
-        uint64_t lexIndexCornersToIntCorners(uint16_t lexIndexPerm, uint16_t lexIndexOrient);
+        uint64_t lexIndexCornersToIntCorners(uint16_t lexIndexOrient, uint16_t lexIndexPerm);
 
         std::string lexIndexEdgesToIntEdgesAsStrWithIgnored(uint16_t lexIndexEdges, const std::bitset<7> &ignoredEdeges);
-        std::string lexIndexCornersToIntCornersAsStrWithIgnored(uint16_t lexIndexPerm, uint16_t lexIndexOrient, const std::bitset<6> &ignoredCornersPerm, const std::bitset<6> &ignoredCornersOrient);
+        std::string lexIndexCornersToIntCornersAsStrWithIgnored(uint16_t lexIndexOrient, uint16_t lexIndexPerm, const std::bitset<6> &ignoredCornersOrient, const std::bitset<6> &ignoredCornersPerm);
 
         uint16_t vectEdgesPermToLexIndexEdgesPerm(const edgesArray &perm);
         uint16_t vectCornersPermToLexIndexCornersPerm(const cornersArray &perm);

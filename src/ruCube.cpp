@@ -4,23 +4,39 @@
 #include <iomanip>
 #include <sstream>
 
+std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfCornersOrientations>  ruLutCube::cornersOrientMoveMap = lutGenerators::generateCornersOrientMoveMap();
+std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfCornersPermutations>  ruLutCube::cornersPermMoveMap   = lutGenerators::generateCornersPermMoveMap();
+std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfEdgesPermutations>    ruLutCube::edgesPermMoveMap     = lutGenerators::generateEdgesPermMoveMap();
+
+std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerators::noOfCornersOrientations>    ruLutCube::cornersOrientSolvedTable = lutGenerators::generateCornersOrientSolvedTable();
+std::array<std::bitset<lutGenerators::noOfCornersPermSolvedStates>, lutGenerators::noOfCornersPermutations>      ruLutCube::cornersPermSolvedTable  = lutGenerators::generateCornersPermSolvedTable();
+std::array<std::bitset<lutGenerators::noOfEdgesPermSolvedStates>, lutGenerators::noOfEdgesPermutations>          ruLutCube::edgesPermSolvedTable    = lutGenerators::generateEdgesPermSolvedTable();
+
+std::array<std::array<int8_t, lutGenerators::noOfPartialCornersOrientCases>, lutGenerators::noOfCornersOrientations>    ruLutCube::cornersOrientPruningTable = lutGenerators::generateCornersOrientPruningTable();
+std::array<std::array<int8_t, lutGenerators::noOfPartialCornersPermCases>, lutGenerators::noOfCornersPermutations>      ruLutCube::cornersPermPruningTable = lutGenerators::generateCornersPermPruningTable();
+std::array<std::array<int8_t, lutGenerators::noOfPartialEdgesPermCases>, lutGenerators::noOfEdgesPermutations>          ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
+std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>          ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
+std::vector<std::vector<std::vector<int8_t>>>                                                                           ruLutCube::fullCubePruningTable = lutGenerators::generateFullCubePruningTable();
+
+std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>    ruLutCube::permutationValidityTable = lutGenerators::generatePermutationValidityTable();
+
 ruBaseCube:: ruBaseCube() {
     movesVect = {
-        &ruBaseCube::R,
-        &ruBaseCube::R2,
-        &ruBaseCube::Ri,
-        &ruBaseCube::U,
-        &ruBaseCube::U2,
-        &ruBaseCube::Ui,
+        &ruBaseCube::moveR,
+        &ruBaseCube::moveR2,
+        &ruBaseCube::moveRi,
+        &ruBaseCube::moveU,
+        &ruBaseCube::moveU2,
+        &ruBaseCube::moveUi,
     };
 
     movesInvertionsVect = {
-        &ruBaseCube::Ri,
-        &ruBaseCube::R2,
-        &ruBaseCube::R,
-        &ruBaseCube::Ui,
-        &ruBaseCube::U2,
-        &ruBaseCube::U,
+        &ruBaseCube::moveRi,
+        &ruBaseCube::moveR2,
+        &ruBaseCube::moveR,
+        &ruBaseCube::moveUi,
+        &ruBaseCube::moveU2,
+        &ruBaseCube::moveU,
     };
 }
 
@@ -50,7 +66,7 @@ void ruBaseCube::scramble(std::vector<uint8_t> moves) {
 }
 
 void ruBaseCube::inverseScramble(std::vector<uint8_t> moves) {
-    for (int i = size(moves) - 1; i >= 0; --i) {
+    for (int i = static_cast<int>(size(moves)) - 1; i >= 0; --i) {
         inverseTurn(moves[i]);
     }
 }
@@ -63,217 +79,212 @@ ruCube::~ruCube() {
 
 }
 
-ruCube::ruCube(uint32_t edges, uint64_t corners): edges(edges), corners(corners) {
+ruCube::ruCube(uint64_t corners, uint32_t edges): corners(corners), edges(edges) {
     reset();
-}
-
-uint32_t ruCube::getEdges() const{
-    return this->edges;
 }
 
 uint64_t ruCube::getCorners() const{
     return this->corners;
 }
 
-void ruCube::setEdges(uint32_t edges){
-    this->edges = edges;
+uint32_t ruCube::getEdges() const{
+    return this->edges;
 }
 
 void ruCube::setCorners(uint64_t corners) {
     this->corners = corners;
 }
 
-void ruCube::setCube(uint32_t edges, uint64_t corners) {
+void ruCube::setEdges(uint32_t edges){
+    this->edges = edges;
+}
+
+void ruCube::setCube(uint64_t corners, uint32_t edges) {
     setEdges(edges);
     setCorners(corners);
 }
 
-uint32_t ruCube::getPartialEdges(uint8_t mask) const {
-    uint32_t partialPerm = getEdges();
-    const uint8_t edgeSize = 3;
+uint32_t ruCube::getPartialCornersOrient(uint8_t mask) const {
+    uint32_t partialCornersOrient = 0;
 
-    for (uint8_t i = 0; i < ruCube::noOfEdges; ++i) {
-        uint32_t curr = ((UINT32_C(07) << (i * edgeSize)) & partialPerm) >> (i * edgeSize);
-        if ((mask & (1 << (ruCube::noOfEdges - curr - 1))) == 0) {
-            partialPerm |= (UINT32_C(07) << (i * edgeSize));
+    for (uint8_t i = 0; i < ruCube::noOfCorners; ++i) {
+        uint64_t curr = getPermPartOfCorner(getCorners(), i);
+        uint64_t currOrient = getOrientPartOfCorner(getCorners(), i);
+
+        if (isPartOfCornerIgnored(curr, mask)) {
+            setCorner(partialCornersOrient, i, 07);
+        } else {
+            setCorner(partialCornersOrient, i, currOrient);
         }
     }
+    return partialCornersOrient;
+}
 
-    return partialPerm;
+uint32_t ruCube::getOrientPartOfCorner(uint64_t corners, uint8_t i) const {
+    return ((UINT64_C(07) << (i * cornerBitLength + cornerPermBitLength)) & corners) >> (i * cornerBitLength + cornerPermBitLength);
+}
+
+bool ruCube::isPartOfCornerIgnored(uint8_t currCorner, uint8_t mask) const {
+    return (mask & (1 << (ruCube::noOfCorners - currCorner - 1))) == 0;
+}
+
+uint32_t ruCube::getPermPartOfCorner(uint64_t corners, uint8_t i) const {
+    return ((UINT64_C(07) << (i * cornerBitLength)) & corners) >> (i * cornerBitLength);
+}
+
+void ruCube::setCorner(uint32_t &corners, uint8_t i, uint32_t val) const {
+    corners |= (val << (i * outputCornerBitLength));
 }
 
 uint32_t ruCube::getPartialCornersPerm(uint8_t mask) const {
-    uint64_t partialPerm = getCorners();
-    uint32_t ans = 0;
-    const uint8_t cornerSize = 6;
-    const uint8_t cornerOutputSize = 3;
+    uint32_t partialCornersPerm = 0;
+
     for (uint8_t i = 0; i < ruCube::noOfCorners; ++i) {
-        uint64_t curr = ((UINT64_C(07) << (i * cornerSize)) & partialPerm) >> (i * cornerSize);
-        if ((mask & (1 << (ruCube::noOfCorners - curr - 1))) == 0) {
-            ans |= (UINT32_C(07) << (i * cornerOutputSize));
+        uint64_t curr = getPermPartOfCorner(getCorners(), i);
+
+        if (isPartOfCornerIgnored(curr, mask)) {
+            setCorner(partialCornersPerm, i, 07);
         } else {
-            ans |= (curr << (i * cornerOutputSize));
+            setCorner(partialCornersPerm, i, curr);
         }
     }
-    return ans;
+    return partialCornersPerm;
 }
 
-uint32_t ruCube::getPartialCornersOrient(uint8_t mask) const {
-    uint64_t partialOrient = getCorners();
-    uint32_t ans = 0;
-    const uint8_t cornerSize = 6;
-    const uint8_t cornerOutputSize = 3;
-    const uint8_t cornerPermBitSize = 3;
-    for (uint8_t i = 0; i < ruCube::noOfCorners; ++i) {
-        uint64_t curr = ((UINT64_C(07) << (i * cornerSize)) & partialOrient) >> (i * cornerSize);
-        uint64_t currOrient = ((UINT64_C(07) << (i * cornerSize + cornerPermBitSize)) & partialOrient) >> (i * cornerSize + cornerPermBitSize);
-        if ((mask & (1 << (ruCube::noOfCorners - curr - 1))) == 0) {
-            ans |= (UINT32_C(07) << (i * cornerOutputSize));
-        } else {
-            ans |= (currOrient << (i * cornerOutputSize));
+uint32_t ruCube::getEdge(uint32_t edges, uint8_t i) const {
+    return ((UINT32_C(07) << (i * edgeBitLength)) & edges) >> (i * edgeBitLength);
+}
+
+bool ruCube::isEdgeIgnored(uint8_t currEdge, uint8_t mask) const {
+    return (mask & (1 << (ruCube::noOfEdges - currEdge - 1))) == 0;
+}
+
+void ruCube::setEdge(uint32_t &edges, uint8_t i, uint32_t val) const {
+    edges |= (val << (i * edgeBitLength));
+}
+
+uint32_t ruCube::getPartialEdges(uint8_t mask) const {
+    uint32_t partialEdges = getEdges();
+
+    for (uint8_t i = 0; i < ruCube::noOfEdges; ++i) {
+        uint32_t currEdge = getEdge(partialEdges, i);
+
+        if (isEdgeIgnored(currEdge, mask)) {
+            setEdge(partialEdges, i, 07);
         }
     }
-    return ans;
+
+    return partialEdges;
 }
 
-bool ruCube::isSolved(uint32_t edgesMask, uint64_t cornersMask) const {
+bool ruCube::isSolved(uint64_t cornersMask, uint32_t edgesMask) const {
     return isSolvedEdges(edgesMask) && isSolvedCorners(cornersMask);
 }
 
-bool ruCube::isSolvedEdges(uint32_t edgesMask) const {
-    return (edges & edgesMask) == (solvedEdges & edgesMask);
+bool ruCube::isSolvedCornersOrient() const {
+    return (corners & 0707070707070) == (solvedCorners & 0707070707070);
 }
 
 bool ruCube::isSolvedCorners(uint64_t cornersMask) const {
     return (corners & cornersMask) == (solvedCorners & cornersMask);
 }
 
-bool ruCube::isSolvedCornersO() const {
-    return (corners & 0707070707070) == (solvedCorners & 0707070707070);
+bool ruCube::isSolvedEdges(uint32_t edgesMask) const {
+    return (edges & edgesMask) == (solvedEdges & edgesMask);
 }
 
 bool ruCube::isSolvedEEinE() const {
-	uint32_t mEdges = edges & 00000707;
-	return ((00000406 == mEdges) || (00000604 == mEdges));
+    uint32_t eEdges = edges & 00000707;
+
+    return (00000406 == eEdges) || (00000604 == eEdges);
 }
 
 bool ruCube::isSolvedMEinM() const {
-	uint32_t mEdges = edges & 07070000;
-	return ((00020000 == mEdges) || (02000000 == mEdges));
+    uint32_t mEdges = edges & 07070000;
+
+    return (00020000 == mEdges) || (02000000 == mEdges);
 }
 
 bool ruCube::isSolvedSEinS() const {
-	uint32_t mEdges = edges & 00707070;
-	return ((00103050 == mEdges) || (00105030 == mEdges) || (00301050 == mEdges)
-		 || (00305010 == mEdges) || (00503010 == mEdges) || (00501030 == mEdges));
+    uint32_t sEdges = edges & 00707070;
+
+    return (00103050 == sEdges) || (00105030 == sEdges) || (00301050 == sEdges)
+        || (00305010 == sEdges) || (00503010 == sEdges) || (00501030 == sEdges);
 }
 
 bool ruCube::isInDomino() const {
-    return isSolvedCornersO() && isSolvedEEinE();
+    return isSolvedCornersOrient() && isSolvedEEinE();
 }
 
 void ruCube::reset() {
-    edges = ruCube::solvedEdges;
     corners = ruCube::solvedCorners;
+    edges = ruCube::solvedEdges;
 }
 
-void ruCube::R() {
-	// EP
-	edges = (edges & 07770000) | ((edges & 00007770) >> 3) | ((edges & 00000007) << 9);
+void ruCube::moveR() {
+    edges = (edges & 07770000) | ((edges & 00007770) >> 3) | ((edges & 00000007) << 9);
+    corners = ((corners & 0600000006000) >> 1) | ((corners & 0100000001000) << 2) |
+              ((corners & 0000000300030) << 1) | ((corners & 0000000400040) >> 2) |
+              (corners & 0077777070707);
 
-	// CO sum modulo 3
-	corners = ((corners & 0600000006000) >> 1) | ((corners & 0100000001000) << 2) |
-			  ((corners & 0000000300030) << 1) | ((corners & 0000000400040) >> 2) |
-			   (corners & 0077777070707);
-
-	// CP
-	tmp = cornersPB.URF;
-	cornersPB.URF = cornersPB.DFR;
-	cornersPB.DFR = cornersPB.DRB;
-	cornersPB.DRB = cornersPB.UBR;
-	cornersPB.UBR = tmp;
+    tmp = cornersPB.URF;
+    cornersPB.URF = cornersPB.DFR;
+    cornersPB.DFR = cornersPB.DRB;
+    cornersPB.DRB = cornersPB.UBR;
+    cornersPB.UBR = tmp;
 }
 
-void ruCube::R2() {
-	// EP
-	edges = (edges & 07770000) | ((edges & 00007700) >> 6) | ((edges & 00000077) << 6);
+void ruCube::moveR2() {
+    edges = (edges & 07770000) | ((edges & 00007700) >> 6) | ((edges & 00000077) << 6);
 
-	// CP
-	tmp = cornersPB.URF;
-	cornersPB.URF = cornersPB.DRB;
-	cornersPB.DRB = tmp;
-	tmp = cornersPB.UBR;
-	cornersPB.UBR = cornersPB.DFR;
-	cornersPB.DFR = tmp;
+    tmp = cornersPB.URF;
+    cornersPB.URF = cornersPB.DRB;
+    cornersPB.DRB = tmp;
+    tmp = cornersPB.UBR;
+    cornersPB.UBR = cornersPB.DFR;
+    cornersPB.DFR = tmp;
 }
 
-void ruCube::Ri() {
-	// EP
-	edges = (edges & 07770000) | ((edges & 00000777) << 3) | ((edges & 00007000) >> 9);
+void ruCube::moveRi() {
+    edges = (edges & 07770000) | ((edges & 00000777) << 3) | ((edges & 00007000) >> 9);
+    corners = ((corners & 0600000006000) >> 1) | ((corners & 0100000001000) << 2) |
+                ((corners & 0000000300030) << 1) | ((corners & 0000000400040) >> 2) |
+                 (corners & 0077777070707);
 
-	// CO
-	corners = ((corners & 0600000006000) >> 1) | ((corners & 0100000001000) << 2) |
-			  ((corners & 0000000300030) << 1) | ((corners & 0000000400040) >> 2) |
-			   (corners & 0077777070707);
-
-	// CP
-	tmp = cornersPB.URF;
-	cornersPB.URF = cornersPB.UBR;
-	cornersPB.UBR = cornersPB.DRB;
-	cornersPB.DRB = cornersPB.DFR;
-	cornersPB.DFR = tmp;
+    tmp = cornersPB.URF;
+    cornersPB.URF = cornersPB.UBR;
+    cornersPB.UBR = cornersPB.DRB;
+    cornersPB.DRB = cornersPB.DFR;
+    cornersPB.DFR = tmp;
 }
 
-void ruCube::U() {
-	// EP
-	edges = (edges & 00000777) | ((edges & 07770000) >> 3) | ((edges & 00007000) << 9);
-
-	// CP
-	corners = (corners & 07777) | ((corners & 0777777000000) >> 6) | ((corners & 0000000770000) << 18);
+void ruCube::moveU() {
+    edges = (edges & 00000777) | ((edges & 07770000) >> 3) | ((edges & 00007000) << 9);
+    corners = (corners & 07777) | ((corners & 0777777000000) >> 6) | ((corners & 0000000770000) << 18);
 }
 
-void ruCube::U2() {
-	// EP
-	edges = (edges & 0777) | ((edges & 07700000) >> 6) | ((edges & 00077000) << 6);
-	// CP
-	corners = (corners & 07777) | ((corners & 0777700000000) >> 12) | ((corners & 077770000) << 12);
+void ruCube::moveU2() {
+    edges = (edges & 0777) | ((edges & 07700000) >> 6) | ((edges & 00077000) << 6);
+    corners = (corners & 07777) | ((corners & 0777700000000) >> 12) | ((corners & 077770000) << 12);
 }
 
-void ruCube::Ui() {
-	// EP
-	edges = (edges & 0777) | ((edges & 00777000) << 3) | ((edges & 07000000) >> 9);
-
-	// CP
-	corners = (corners & 07777) | ((corners & 0007777770000) << 6) | ((corners & 0770000000000) >> 18);
+void ruCube::moveUi() {
+    edges = (edges & 0777) | ((edges & 00777000) << 3) | ((edges & 07000000) >> 9);
+    corners = (corners & 07777) | ((corners & 0007777770000) << 6) | ((corners & 0770000000000) >> 18);
 }
 
-bool ruCube::isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask, uint64_t cornersMask) const {
-    return remainingMoves and edgesPermMask and cornersMask and 0;
+bool ruCube::isPruningPossible(uint8_t remainingMoves, uint64_t cornersMask, uint32_t edgesPermMask) const {
+    return remainingMoves and cornersMask and edgesPermMask and 0;
 }
-
-std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfEdgesPermutations>    ruLutCube::edgesPermMoveMap     = lutGenerators::generateEdgesPermMoveMap();
-std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfCornersPermutations>  ruLutCube::cornersPermMoveMap   = lutGenerators::generateCornersPermMoveMap();
-std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfCornersOrientations>  ruLutCube::cornersOrientMoveMap = lutGenerators::generateCornersOrientMoveMap();
-
-std::array<std::bitset<lutGenerators::noOfEdgesPermSolvedStates>, lutGenerators::noOfEdgesPermutations>          ruLutCube::edgesPermSolvedTable    = lutGenerators::generateEdgesPermSolvedTable();
-std::array<std::bitset<lutGenerators::noOfCornersPermSolvedStates>, lutGenerators::noOfCornersPermutations>      ruLutCube::cornersPermSolvedTable  = lutGenerators::generateCornersPermSolvedTable();
-std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerators::noOfCornersOrientations>    ruLutCube::cornersOrientSolvedTable = lutGenerators::generateCornersOrientSolvedTable();
-
-std::array<std::array<int8_t, lutGenerators::noOfPartialEdgesPermCases>, lutGenerators::noOfEdgesPermutations>  ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
-std::array<std::array<int8_t, lutGenerators::noOfPartialCornersPermCases>, lutGenerators::noOfCornersPermutations> ruLutCube::cornersPermPruningTable = lutGenerators::generateCornersPermPruningTable();
- std::array<std::array<int8_t, lutGenerators::noOfPartialCornersOrientCases>, lutGenerators::noOfCornersOrientations> ruLutCube::cornersOrientPruningTable = lutGenerators::generateCornersOrientPruningTable();
-std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>  ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
-std::vector<std::vector<std::vector<int8_t>>>  ruLutCube::fullCubePruningTable = lutGenerators::generateFullCubePruningTable();
-std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>    ruLutCube::permutationValidityTable = lutGenerators::generatePermutationValidityTable();
 
 ruLutCube::ruLutCube() {
     reset();
 }
 
-ruLutCube::ruLutCube(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient, const ruLutCubeIgnoredPieces &ignored): ignoredPieces(ignored) {
-    setEdges(edgesPerm);
-    this->cornersPerm = cornersPerm;
+ruLutCube::ruLutCube(uint16_t cornersOrient, uint16_t cornersPerm, uint16_t edgesPerm, const ruLutCubeIgnoredPieces &ignored): ignoredPieces(ignored) {
     this->cornersOrient = cornersOrient;
+    this->cornersPerm = cornersPerm;
+    setEdges(edgesPerm);
 }
 
 ruLutCube::~ruLutCube() {
@@ -281,29 +292,25 @@ ruLutCube::~ruLutCube() {
 }
 
 ruLutCube& ruLutCube::operator=(const ruLutCube& other) {
-    edgesPerm = other.edgesPerm;
-    cornersPerm = other.cornersPerm;
     cornersOrient = other.cornersOrient;
+    cornersPerm = other.cornersPerm;
+    edgesPerm = other.edgesPerm;
     ignoredPieces = other.ignoredPieces;
     return *this;
 }
 
 bool ruLutCube::operator==(const ruLutCube &other) const {
-    return  edgesPerm == other.edgesPerm and
+    return  cornersOrient == other.cornersOrient and
             cornersPerm == other.cornersPerm and
-            cornersOrient == other.cornersOrient;
-}
-
-uint32_t ruLutCube::getEdges() const {
-    return this->edgesPerm;
+            edgesPerm == other.edgesPerm;
 }
 
 uint64_t ruLutCube::getCorners() const {
     return static_cast<uint64_t>((cornersOrient << sizeof(uint16_t) * 8) | cornersPerm);
 }
 
-void ruLutCube::setEdges(uint32_t edges) {
-    this->edgesPerm = edges;
+uint32_t ruLutCube::getEdges() const {
+    return this->edgesPerm;
 }
 
 void ruLutCube::setCorners(uint64_t corners) {
@@ -311,31 +318,36 @@ void ruLutCube::setCorners(uint64_t corners) {
     this->cornersOrient = (corners & setCornersOrientMask) >> (sizeof(uint16_t) * 8);
 }
 
-void ruLutCube::setCube(uint32_t edges, uint64_t corners) {
+void ruLutCube::setEdges(uint32_t edges) {
+    this->edgesPerm = edges;
+}
+
+void ruLutCube::setCube(uint64_t corners, uint32_t edges) {
     setEdges(edges);
     setCorners(corners);
 }
 
-bool ruLutCube::isSolved(uint32_t edgesMask, uint64_t cornersMask) const {
-    return isSolvedEdges(edgesMask) and isSolvedCorners(cornersMask);
+bool ruLutCube::isSolved(uint64_t cornersMask, uint32_t edgesMask) const {
+    return isSolvedCorners(cornersMask) and isSolvedEdges(edgesMask);
+}
+
+bool ruLutCube::isSolvedCornersOrient() const {
+    return cornersPermSolvedTable[cornersOrient][static_cast<uint8_t>(lutGenerators::cornersOrientSolvedState::allCorners)];
+}
+
+bool ruLutCube::isSolvedCorners(uint64_t cornersMask) const {
+    uint32_t cornersPermMask    = cornersMask & 0xFFFFFFFF;
+    uint32_t cornersOrientMask  = (cornersMask >> (sizeof(uint32_t) * 8)) & 0xFFFFFFFF;
+
+    return ((cornersPermSolvedTable[cornersPerm].to_ullong() & cornersPermMask) == (lutGenerators::cornersPermSolvedBitMask & cornersPermMask)) and ((cornersOrientSolvedTable[cornersOrient].to_ulong() & cornersOrientMask) == (lutGenerators::cornersOrientSolvedBitMask & cornersOrientMask));
 }
 
 bool ruLutCube::isSolvedEdges(uint32_t edgesMask) const {
     return (edgesPermSolvedTable[edgesPerm].to_ulong() & edgesMask) == (lutGenerators::edgesSolvedBitmask & edgesMask);
 }
 
-bool ruLutCube::isSolvedCorners(uint64_t cornersMask) const {
-    uint32_t cornersPermMask    = cornersMask & 0xFFFFFFFF;
-    uint32_t cornersOrientMask  = (cornersMask >> (sizeof(uint32_t) * 8)) & 0xFFFFFFFF;
-    return ((cornersPermSolvedTable[cornersPerm].to_ullong() & cornersPermMask) == (lutGenerators::cornersPermSolvedBitMask & cornersPermMask)) and ((cornersOrientSolvedTable[cornersOrient].to_ulong() & cornersOrientMask) == (lutGenerators::cornersOrientSolvedBitMask & cornersOrientMask));
-}
-
 bool ruLutCube::isInDomino() const {
-    return isSolvedCornersO() and isSolvedEEinE();
-}
-
-bool ruLutCube::isSolvedCornersO() const {
-    return cornersPermSolvedTable[cornersOrient][static_cast<uint8_t>(lutGenerators::cornersOrientSolvedState::allCorners)];
+    return isSolvedCornersOrient() and isSolvedEEinE();
 }
 
 bool ruLutCube::isSolvedEEinE() const {
@@ -351,15 +363,17 @@ bool ruLutCube::isSolvedSEinS() const {
 }
 
 void ruLutCube::reset() {
-    this->edgesPerm = solvedLexIndexEdgesPerm;
-    this->cornersPerm = solvedLexIndexCornersPerm;
     this->cornersOrient = solvedLexIndexCornersOrient;
+    this->cornersPerm = solvedLexIndexCornersPerm;
+    this->edgesPerm = solvedLexIndexEdgesPerm;
+    this->ignoredPieces = ruLutCubeIgnoredPieces();
 }
 
-bool ruLutCube::isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask, uint64_t cornersMask) const {
+bool ruLutCube::isPruningPossible(uint8_t remainingMoves, uint64_t cornersMask, uint32_t edgesPermMask) const {
     if (edgesPermMask != ruLutCube::allEdgesMask or cornersMask != ruLutCube::allCornersMask) {
         uint32_t cornersPermMask = cornersMask & 0x3F;
         uint32_t cornersOrientMask = (cornersMask >> UINT64_C(32)) & 0x3F;
+
         return  this->edgesPermPruningTable[this->edgesPerm][static_cast<uint8_t>(edgesPermMask & 0x7F)] > (int8_t)remainingMoves or
                 this->cornersPermPruningTable[this->cornersPerm][static_cast<uint8_t>(cornersPermMask)] > (int8_t)remainingMoves or
                 this->cornersOrientPruningTable[this->cornersOrient][static_cast<uint8_t>(cornersOrientMask)] > (int8_t)remainingMoves;
@@ -368,40 +382,40 @@ bool ruLutCube::isPruningPossible(uint8_t remainingMoves, uint32_t edgesPermMask
     }
 }
 
-void ruLutCube::R() {
-    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::R];
-    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::R];
+void ruLutCube::moveR() {
     cornersOrient = cornersOrientMoveMap[cornersOrient][ruCubeMove::R];
+    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::R];
+    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::R];
 }
 
-void ruLutCube::R2() {
-    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::R2];
-    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::R2];
+void ruLutCube::moveR2() {
     cornersOrient = cornersOrientMoveMap[cornersOrient][ruCubeMove::R2];
+    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::R2];
+    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::R2];
 }
 
-void ruLutCube::Ri() {
-    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::Ri];
-    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::Ri];
+void ruLutCube::moveRi() {
     cornersOrient = cornersOrientMoveMap[cornersOrient][ruCubeMove::Ri];
+    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::Ri];
+    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::Ri];
 }
 
-void ruLutCube::U() {
-    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::U];
-    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::U];
+void ruLutCube::moveU() {
     cornersOrient = cornersOrientMoveMap[cornersOrient][ruCubeMove::U];
+    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::U];
+    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::U];
 }
 
-void ruLutCube::U2() {
-    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::U2];
-    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::U2];
+void ruLutCube::moveU2() {
     cornersOrient = cornersOrientMoveMap[cornersOrient][ruCubeMove::U2];
+    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::U2];
+    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::U2];
 }
 
-void ruLutCube::Ui() {
-    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::Ui];
-    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::Ui];
+void ruLutCube::moveUi() {
     cornersOrient = cornersOrientMoveMap[cornersOrient][ruCubeMove::Ui];
+    cornersPerm = cornersPermMoveMap[cornersPerm][ruCubeMove::Ui];
+    edgesPerm = edgesPermMoveMap[edgesPerm][ruCubeMove::Ui];
 }
 
 uint16_t ruLutCube::getCornersOrient() const {
@@ -412,12 +426,17 @@ uint16_t ruLutCube::getCornersPerm() const {
     return this->cornersPerm;
 }
 
+void ruLutCube::setCornersOrient(uint16_t cornersOrient) {
+    this->cornersOrient = cornersOrient;
+}
+
 void ruLutCube::setCornersPerm(uint16_t cornersPerm) {
     this->cornersPerm = cornersPerm;
 }
 
-void ruLutCube::setCornersOrient(uint16_t cornersOrient) {
-    this->cornersOrient = cornersOrient;
+bool ruLutCube::isCornersOrientationSolveable(uint16_t cornersOrient) {
+    return  cornersOrient < lutGenerators::noOfCornersOrientations and
+            cornersPruningTable[0][cornersOrient] != -1;
 }
 
 bool ruLutCube::isPermutationSolveable(uint16_t cornersPerm, uint16_t edgesPerm) {
@@ -426,18 +445,14 @@ bool ruLutCube::isPermutationSolveable(uint16_t cornersPerm, uint16_t edgesPerm)
             permutationValidityTable[cornersPerm][edgesPerm];
 }
 
-bool ruLutCube::isCornersOrientationSolveable(uint16_t cornersOrient) {
-    return  cornersOrient < lutGenerators::noOfCornersOrientations and
-            cornersPruningTable[0][cornersOrient] != -1;
-}
-
-bool ruLutCube::isCubeSolveable(uint16_t edgesPerm, uint16_t cornersPerm, uint16_t cornersOrient) {
+bool ruLutCube::isCubeSolveable(uint16_t cornersOrient, uint16_t cornersPerm, uint16_t edgesPerm) {
     return isPermutationSolveable(cornersPerm, edgesPerm) and isCornersOrientationSolveable(cornersOrient);
 }
 
 std::string ruLutCube::toString() {
     ruCubeStateConverter conv;
-    const auto &[ep, co, cp] = ignoredPieces;
+    const auto &[co, cp, ep] = ignoredPieces;
+
     return  conv.lexIndexCornersToIntCornersAsStrWithIgnored(cornersPerm, cornersOrient, cp, co) + ";" +
             conv.lexIndexEdgesToIntEdgesAsStrWithIgnored(edgesPerm, ep);
 }

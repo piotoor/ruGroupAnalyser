@@ -80,9 +80,9 @@ bool ruCubeStateValidator::isVectCubePermSolveableQuick(const cornersArray& corn
 bool ruCubeStateValidator::isVectCubeStateSolveableQuick(   const cornersArray&cornersOrient,
                                                             const cornersArray &cornersPerm,
                                                             const edgesArray &edgesPerm) {
-    return cube.isCubeSolveable(converter.vectEdgesPermToLexIndexEdgesPerm(edgesPerm),
+    return cube.isCubeSolveable(converter.vectCornersOrientToLexIndexCornersOrient(cornersOrient),
                                 converter.vectCornersPermToLexIndexCornersPerm(cornersPerm),
-                                converter.vectCornersOrientToLexIndexCornersOrient(cornersOrient));
+                                converter.vectEdgesPermToLexIndexEdgesPerm(edgesPerm));
 }
 
 

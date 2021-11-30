@@ -12,8 +12,8 @@ struct solutionParameters {
 };
 
 struct solvedMasks {
-    uint32_t edgesMask = ruBaseCube::allEdgesMask;
     uint64_t cornersMask = ruBaseCube::allCornersMask;
+    uint32_t edgesMask = ruBaseCube::allEdgesMask;
 
     bool operator==(const solvedMasks &other) const {
         return  edgesMask == other.edgesMask and

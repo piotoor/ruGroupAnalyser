@@ -271,7 +271,7 @@ TEST(ruCubeSolverTest, multipleScramblesTest) {
             cube->reset();
             cube->scramble(scr);
             cube->scramble(solution);
-            ASSERT_TRUE(cube->isSolved(ruBaseCube::allEdgesMask, ruBaseCube::allCornersMask));
+            ASSERT_TRUE(cube->isSolved(ruBaseCube::allCornersMask, ruBaseCube::allEdgesMask));
             std::cout << "(sol: " << std::setw(2) << size(solution) << " moves) ";
             std::cout << "DONE" << std::endl;
         }
@@ -319,7 +319,7 @@ TEST(ruCubeSolverTest, multipleScramblesSolutionsAsStringsTest) {
             cube->reset();
             cube->scramble(scrambles[i]);
             cube->scramble(solution[0]);
-            ASSERT_TRUE(cube->isSolved(ruBaseCube::allEdgesMask, ruBaseCube::allCornersMask));
+            ASSERT_TRUE(cube->isSolved(ruBaseCube::allCornersMask, ruBaseCube::allEdgesMask));
             ASSERT_EQ(expectedSolutionsStrings[i], solutionStr[0]);
             std::cout << "(sol: " << std::setw(2) << size(solution[0]) << " moves) ";
             std::cout << "DONE" << std::endl;
@@ -491,7 +491,7 @@ TEST(ruCubeSolverTest, customRuLutCubeEdgesMaskTest) {
 
 
     for (uint8_t maskInd = 0; maskInd < size(edgesMasks); ++maskInd) {
-        solvedMasks masks = {edgesMasks[maskInd], ruLutCube::noCornersMask};
+        solvedMasks masks = {ruLutCube::noCornersMask, edgesMasks[maskInd]};
         solver.configure(params, masks);
         for (uint8_t i = 0; i < size(scrambles); ++i) {
             cube.reset();
@@ -651,7 +651,7 @@ TEST(ruCubeSolverTest, customRuLutCubeCornersMaskTest) {
     solutionParameters params = { minLength, maxLength, maxNoOfSols };
 
     for (uint8_t maskInd = 0; maskInd < size(cornersMasks); ++maskInd) {
-        solvedMasks masks = { ruLutCube::noEdgesMask, cornersMasks[maskInd] };
+        solvedMasks masks = { cornersMasks[maskInd], ruLutCube::noEdgesMask };
         solver.configure(params, masks);
 
         for (uint8_t i = 0; i < size(scrambles); ++i) {
@@ -746,13 +746,13 @@ TEST(ruCubeSolverTest, customRuLutCubeEdgesAndCornersMaskTest) {
         },
     };
 
-    std::vector<std::pair<uint32_t, uint64_t>> masks {
-        { 0b1000000, 0x0000003F'00000000 },
-        { 0b0000001, 0x00000000'0000003F },
-        { 0b1000001, 0x0000003F'0000003F },
-        { 0b0000001, 0x00000003'00000003 },
-        { 0b0000001, 0x00000020'00000020 },
-        { 0b1000000, 0x00000010'00000010 },
+    std::vector<std::pair<uint64_t, uint32_t>> masks {
+        { 0x0000003F'00000000, 0b1000000 },
+        { 0x00000000'0000003F, 0b0000001 },
+        { 0x0000003F'0000003F, 0b1000001 },
+        { 0x00000003'00000003, 0b0000001 },
+        { 0x00000020'00000020, 0b0000001 },
+        { 0x00000010'00000010, 0b1000000 },
     };
 
     ruLutCube cube;
@@ -765,8 +765,8 @@ TEST(ruCubeSolverTest, customRuLutCubeEdgesAndCornersMaskTest) {
 
     for (uint8_t maskInd = 0; maskInd < size(masks); ++maskInd) {
 
-        auto &[edgesMask, cornersMask] = masks[maskInd];
-        solvedMasks masks = {edgesMask, cornersMask};
+        auto &[cornersMask, edgesMask] = masks[maskInd];
+        solvedMasks masks = {cornersMask, edgesMask};
         solver.configure(params, masks);
 
         for (uint8_t i = 0; i < size(scrambles); ++i) {
@@ -830,8 +830,8 @@ class ruCubeSolverPerformanceTest : public ::testing::Test {
                 };
 
                 solvedMasks masks = {
-                    edgesMasks[i],
-                    ruBaseCube::allCornersMask
+                    ruBaseCube::allCornersMask,
+                    edgesMasks[i]
                 };
 
                 ruCubeSolver solver(params, masks);
@@ -862,7 +862,7 @@ class ruCubeSolverPerformanceTest : public ::testing::Test {
                     cube->reset();
                     cube->scramble(scrambles[j]);
                     cube->scramble(solutions[j]);
-                    ASSERT_TRUE(cube->isSolved(edgesMasks[i], ruBaseCube::allCornersMask));
+                    ASSERT_TRUE(cube->isSolved(ruBaseCube::allCornersMask, edgesMasks[i]));
                 }
                 ++i;
             }
