@@ -24,46 +24,6 @@ TEST(ruLutCubeTest, settersGettersTest) {
     ASSERT_EQ (34, cube.getCornersOrient());
 }
 
-TEST(ruLutCubeTest, predefinedIsSolvedFilterTest) {
-    const std::vector<std::vector<uint8_t>> scrambles {
-        { R2, U2, R2, U2, R2, U2 },
-        { R,  U,  Ri, U,  R,  U2, Ri, U2 },
-        { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
-        { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
-        { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
-        { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
-    };
-
-    const std::vector<std::pair<uint64_t, uint32_t>> masks {
-        { ruLutCube::allCornersMask,       ruLutCube::allEdgesMask },
-        { 0x0,                             ruLutCube::allEdgesMask },
-        { ruLutCube::allCornersMask,       0x0                     },
-        { 0x0,                             0x0                     },
-        { ruLutCube::allCornersOrientMask, 0x0                     },
-        { ruLutCube::allCornersPermMask,   0x0                     },
-        { ruLutCube::allCornersOrientMask, ruLutCube::allEdgesMask },
-        { ruLutCube::allCornersPermMask,   ruLutCube::allEdgesMask },
-    };
-
-    const std::vector<std::vector<bool>> expected {
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, false, false, true,  false, true,  false, false },
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, true,  false, true,  false, false, false, false },
-        { false, true,  false, true,  false, true,  false, true  },
-    };
-
-    for (size_t scrInd = 0 ; scrInd < size(scrambles); ++scrInd) {
-        ruLutCube cube;
-        cube.scramble(scrambles[scrInd]);
-        for (size_t mskInd = 0; mskInd < size(masks); ++mskInd) {
-            auto &[cornersMask, edgesMask] = masks[mskInd];
-            ASSERT_EQ(expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
-        }
-    }
-}
-
 TEST(ruLutCubeTest, customIsSolvedFilterTest) {
     const std::vector<std::vector<uint8_t>> scrambles {
         { R2, U2, R2, U2, R2, U2 },

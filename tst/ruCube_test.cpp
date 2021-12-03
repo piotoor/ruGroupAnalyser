@@ -12,46 +12,6 @@ TEST(ruCubeTest, initialStateTest) {
     ASSERT_TRUE (cube.isInDomino());
 }
 
-TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
-    const std::vector<std::vector<uint8_t>> scrambles {
-        { R2, U2, R2, U2, R2, U2 },
-        { R,  U,  Ri, U,  R,  U2, Ri, U2 },
-        { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
-        { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
-        { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
-        { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
-    };
-
-    const std::vector<std::pair<uint64_t, uint32_t>> masks {
-        { ruCube::allCornersMask,         ruCube::allEdgesMask },
-        { 00,                             ruCube::allEdgesMask },
-        { ruCube::allCornersMask,         00                   },
-        { 00,                             00                   },
-        { ruCube::cornersOrientationMask, 00                   },
-        { ruCube::cornersPermutationMask, 00                   },
-        { ruCube::cornersOrientationMask, ruCube::allEdgesMask },
-        { ruCube::cornersPermutationMask, ruCube::allEdgesMask }
-    };
-
-    const std::vector<std::vector<bool>> expected {
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, false, false, true,  false, true,  false, false },
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, true,  false, true,  false, false, false, false },
-        { false, true,  false, true,  false, true,  false, true  }
-    };
-
-    for (size_t scrInd = 0 ; scrInd < size(scrambles); ++scrInd) {
-        ruCube cube;
-        cube.scramble(scrambles[scrInd]);
-        for (size_t mskInd = 0; mskInd < size(masks); ++mskInd) {
-            auto &[cornersMask, edgesMask] = masks[mskInd];
-            ASSERT_EQ(expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
-        }
-    }
-}
-
 TEST(ruCubeTest, customIsSolvedFilterTest) {
     const std::vector<std::vector<uint8_t>> scrambles {
         { R2, U2, R2, U2, R2, U2 },

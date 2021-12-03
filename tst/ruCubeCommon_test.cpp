@@ -315,3 +315,64 @@ namespace {
         }
     }
 }
+
+
+namespace {
+    template <class T>
+    class ruCubeAndLutCubeCommonIsSolvedTests: public testing::Test {
+        protected:
+            ruCubeAndLutCubeCommonIsSolvedTests(): cube(std::make_unique<T>()) {
+            }
+
+            virtual ~ruCubeAndLutCubeCommonIsSolvedTests() {
+            }
+
+            std::unique_ptr<ruBaseCube> cube;
+
+            static inline const std::vector<std::vector<uint8_t>> scrambles {
+                { R2, U2, R2, U2, R2, U2 },
+                { R,  U,  Ri, U,  R,  U2, Ri, U2 },
+                { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
+                { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
+                { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
+                { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
+            };
+
+            static inline const std::vector<std::pair<uint64_t, uint32_t>> masks {
+                { T::allCornersMask,         T::allEdgesMask },
+                { 00,                        T::allEdgesMask },
+                { T::allCornersMask,         00              },
+                { 00,                        00              },
+                { T::allCornersOrientMask,   00              },
+                { T::allCornersPermMask,     00              },
+                { T::allCornersOrientMask,   T::allEdgesMask },
+                { T::allCornersPermMask,     T::allEdgesMask }
+            };
+
+            static inline const std::vector<std::vector<bool>> expected {
+                { false, false, true,  true,  true,  true,  false, false },
+                { false, false, false, true,  false, true,  false, false },
+                { false, false, true,  true,  true,  true,  false, false },
+                { false, false, true,  true,  true,  true,  false, false },
+                { false, true,  false, true,  false, false, false, false },
+                { false, true,  false, true,  false, true,  false, true  }
+            };
+    };
+
+    using testing::Types;
+    using Implementations = Types<ruCube, ruLutCube>;
+    TYPED_TEST_SUITE(ruCubeAndLutCubeCommonIsSolvedTests, Implementations);
+
+    TYPED_TEST(ruCubeAndLutCubeCommonIsSolvedTests, predefinedIsSolvedFilterTest) {
+        for (size_t scrInd = 0 ; scrInd < size(this->scrambles); ++scrInd) {
+
+            this->cube->reset();
+            this->cube->scramble(this->scrambles[scrInd]);
+            for (size_t mskInd = 0; mskInd < size(this->masks); ++mskInd) {
+                auto &[cornersMask, edgesMask] = this->masks[mskInd];
+                SCOPED_TRACE("\nscrInd = " + std::to_string(scrInd) + "\nmskInd = " + std::to_string(mskInd));
+                ASSERT_EQ(this->expected[scrInd][mskInd], this->cube->isSolved(cornersMask, edgesMask));
+            }
+        }
+    }
+}

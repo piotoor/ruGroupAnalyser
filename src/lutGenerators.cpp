@@ -125,7 +125,7 @@ namespace lutGenerators {
 
         for (uint16_t cp = 0; cp < noOfCornersPermutations; ++cp) {
             cube->setCorners(converter.lexIndexCornersToIntCorners(ruLutCube::solvedLexIndexCornersOrient, cp));
-            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] = cube->isSolvedCorners(ruCube::cornersPermutationMask);
+            ans[cp][static_cast<uint8_t>(cornersPermSolvedState::allCorners)] = cube->isSolvedCorners(ruCube::allCornersPermMask);
 
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::URF)] = cube->isSolvedCorners(ruCube::URFPermMask);
             ans[cp][static_cast<uint8_t>(cornersPermSolvedState::UFL)] = cube->isSolvedCorners(ruCube::UFLPermMask);
@@ -162,7 +162,7 @@ namespace lutGenerators {
         for (uint16_t co = 0; co < noOfCornersOrientations; ++co) {
             cube->setCorners(converter.lexIndexCornersToIntCorners(co, ruLutCube::solvedLexIndexCornersPerm));
 
-            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] = cube->isSolvedCorners(ruCube::cornersOrientationMask);
+            ans[co][static_cast<uint8_t>(cornersOrientSolvedState::allCorners)] = cube->isSolvedCorners(ruCube::allCornersOrientMask);
 
             ans[co][static_cast<uint8_t>(cornersOrientSolvedState::URF)] = cube->isSolvedCorners(ruCube::URFOrientMask);
             ans[co][static_cast<uint8_t>(cornersOrientSolvedState::UFL)] = cube->isSolvedCorners(ruCube::UFLOrientMask);
