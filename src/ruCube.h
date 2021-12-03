@@ -29,11 +29,12 @@ class ruBaseCube {
         virtual void setEdges(uint32_t edges) = 0;
         virtual void setCube(uint64_t corners, uint32_t edges) = 0;
 
+        virtual bool isSolved() const = 0;
         virtual bool isSolved(uint64_t cornersMask, uint32_t edgesMask) const = 0;
+        virtual bool isSolvedCornersOrient() const = 0;
         virtual bool isSolvedCorners(uint64_t cornersMask) const = 0;
         virtual bool isSolvedEdges(uint32_t edgesMask) const = 0;
         virtual bool isInDomino() const = 0;
-        virtual bool isSolvedCornersOrient() const = 0;
         virtual bool isSolvedEEinE() const = 0;
         virtual bool isSolvedMEinM() const = 0;
         virtual bool isSolvedSEinS() const = 0;
@@ -82,6 +83,7 @@ class ruCube: public ruBaseCube {
         uint32_t getPartialCornersPerm(uint8_t mask) const;
         uint32_t getPartialEdges(uint8_t mask) const;
 
+        bool isSolved() const override;
         bool isSolved(uint64_t cornersMask = ruCube::solvedCorners, uint32_t edgesMask = ruCube::solvedEdges) const override;
         bool isSolvedCornersOrient() const override;
         bool isSolvedCorners(uint64_t cornersMask) const override;
@@ -200,6 +202,7 @@ class ruLutCube: public ruBaseCube {
         void setCornersOrient(uint16_t cornersOrient);
         void setCornersPerm(uint16_t cornersPerm);
 
+        bool isSolved() const override;
         bool isSolved(uint64_t cornersMask = ruLutCube::allCornersMask, uint32_t edgesMask = ruLutCube::allEdgesMask) const override;
         bool isSolvedCornersOrient() const override;
         bool isSolvedCorners(uint64_t cornersMask) const override;

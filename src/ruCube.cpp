@@ -177,6 +177,10 @@ uint32_t ruCube::getPartialEdges(uint8_t mask) const {
     return partialEdges;
 }
 
+bool ruCube::isSolved() const {
+    return isSolved(ruCube::allCornersMask, ruCube::allEdgesMask);
+}
+
 bool ruCube::isSolved(uint64_t cornersMask, uint32_t edgesMask) const {
     return isSolvedEdges(edgesMask) && isSolvedCorners(cornersMask);
 }
@@ -325,6 +329,10 @@ void ruLutCube::setEdges(uint32_t edges) {
 void ruLutCube::setCube(uint64_t corners, uint32_t edges) {
     setEdges(edges);
     setCorners(corners);
+}
+
+bool ruLutCube::isSolved() const {
+    return isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask);
 }
 
 bool ruLutCube::isSolved(uint64_t cornersMask, uint32_t edgesMask) const {
