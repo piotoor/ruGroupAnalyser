@@ -31,12 +31,34 @@ namespace testDataGenerators {
     }
 }
 
+namespace testCustomAsserts {
+    template <class T>
+    testing::AssertionResult AssertEqOct(const char* a_expr,
+                                         const char* b_expr,
+                                         T a,
+                                         T b) {
+        if (a == b) {
+            return testing::AssertionSuccess();
+        }
+        std::stringstream ss;
+        ss  << "Expected equality of these values:\n"
+            << "\t" << a_expr << "\n"
+            << "\t\t" << "Which is: " << std::oct << a << "\n"
+            << "\t" << b_expr << "\n"
+            << "\t\t" << "Which is: " << std::oct << b;
+
+        return testing::AssertionFailure() << ss.str();
+    }
+}
+
+
+
 
 TEST(ruCubeTest, initialStateTest) {
     ruCube cube;
 
-    ASSERT_EQ (ruCube::solvedEdges, cube.getEdges());
-    ASSERT_EQ (ruCube::solvedCorners, cube.getCorners());
+    EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, ruCube::solvedEdges, cube.getEdges());
+    EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, ruCube::solvedCorners, cube.getCorners());
     ASSERT_TRUE (cube.isSolved(ruCube::allCornersMask, ruCube::allEdgesMask));
     ASSERT_TRUE (cube.isInDomino());
 }
@@ -91,7 +113,7 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
         cube.scramble(scrambles[scrInd]);
         for (size_t mskInd = 0; mskInd < size(masks); ++mskInd) {
             auto &[cornersMask, edgesMask] = masks[mskInd];
-            ASSERT_EQ(expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
+            EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
         }
     }
 }
@@ -184,7 +206,7 @@ namespace {
         const auto& [intEdges, edgesMask, expectedPartialEdges] = GetParam();
 
         cube.setEdges(intEdges);
-        ASSERT_EQ(expectedPartialEdges, cube.getPartialEdges(edgesMask));
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, expectedPartialEdges, cube.getPartialEdges(edgesMask));
     }
 
     INSTANTIATE_TEST_SUITE_P (
@@ -262,7 +284,7 @@ namespace {
         const auto& [intCorners, cornersPermMask, expectedPartialCornersPerm] = GetParam();
 
         cube.setCorners(intCorners);
-        ASSERT_EQ(expectedPartialCornersPerm, cube.getPartialCornersPerm(cornersPermMask));
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, expectedPartialCornersPerm, cube.getPartialCornersPerm(cornersPermMask));
     }
 
     INSTANTIATE_TEST_SUITE_P (
@@ -340,7 +362,7 @@ namespace {
         const auto& [intCorners, cornersOrientMask, expectedPartialCornersOrient] = GetParam();
 
         cube.setCorners(intCorners);
-        ASSERT_EQ(expectedPartialCornersOrient, cube.getPartialCornersOrient(cornersOrientMask));
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, expectedPartialCornersOrient, cube.getPartialCornersOrient(cornersOrientMask));
     }
 
 }
