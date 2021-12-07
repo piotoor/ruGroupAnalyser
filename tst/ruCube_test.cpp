@@ -97,15 +97,16 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
 }
 
 namespace {
-    class ruCubePartialStateTests: public testing::TestWithParam<std::tuple<uint32_t, uint32_t, uint32_t>> {
+    template <class T>
+    class ruCubePartialStateTests: public testing::TestWithParam<std::tuple<T, uint32_t, uint32_t>> {
         public:
            struct toString {
               template <class ParamType>
               std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
-                 const auto& [intEdges, edgesMask, expected] = testData.param;
+                 const auto& [intPieces, piecesMask, expected] = testData.param;
 
                  std::stringstream ss;
-                 ss << std::oct << "edges_" << std::setw(7) << std::setfill('0') << intEdges << "_edgesMask_" << std::bitset<8>(edgesMask);
+                 ss << std::oct << "pieces_" << std::setw(7) << std::setfill('0') << intPieces << "_mask_" << std::bitset<8>(piecesMask);
                  return ss.str();
               }
            };
@@ -114,9 +115,12 @@ namespace {
             ruCube cube;
     };
 
+    class ruCubePartialEdgesTests: public ruCubePartialStateTests<uint32_t> {
+    };
+
     INSTANTIATE_TEST_SUITE_P (
         getPartialEdgesTest,
-        ruCubePartialStateTests,
+        ruCubePartialEdgesTests,
         ::testing::ValuesIn(testDataGenerators::combineWithExpected<uint32_t, uint32_t, uint32_t> (
             {
                 00123456,
@@ -167,76 +171,14 @@ namespace {
                 07777777
             }
         )),
-        ruCubePartialStateTests::toString()
+        ruCubePartialEdgesTests::toString()
     );
 
-    TEST_P(ruCubePartialStateTests, getPartialEdgesTest) {
+    TEST_P(ruCubePartialEdgesTests, getPartialEdgesTest) {
         const auto& [intEdges, edgesMask, expectedPartialEdges] = GetParam();
 
         cube.setEdges(intEdges);
         ASSERT_EQ(expectedPartialEdges, cube.getPartialEdges(edgesMask));
-    }
-}
-
-
-TEST(ruCubeTest, getPartialEdgesTest) {
-    const std::vector<uint32_t> edgesMasks {
-        0b0000001,
-        0b0000010,
-        0b0000100,
-        0b0001000,
-        0b0010000,
-        0b0100000,
-        0b1000000,
-
-        0b1111111,
-        0b0000111,
-        0b0001111,
-        0b1111000,
-        0b0000000,
-    };
-
-    const std::vector<uint32_t> intEdges {
-        00123456,
-        06543210,
-    };
-
-    const std::vector<std::vector<uint32_t>> expectedPartialEdges {
-        {   07777776,
-            07777757,
-            07777477,
-            07773777,
-            07727777,
-            07177777,
-            00777777,
-
-            00123456,
-            07777456,
-            07773456,
-            00123777,
-            07777777    },
-
-        {   06777777,
-            07577777,
-            07747777,
-            07773777,
-            07777277,
-            07777717,
-            07777770,
-
-            06543210,
-            06547777,
-            06543777,
-            07773210,
-            07777777    },
-    };
-
-    ruCube cube;
-    for (size_t expectedInd = 0; expectedInd < size(expectedPartialEdges); ++expectedInd) {
-        for (size_t maskInd = 0; maskInd < size(edgesMasks); ++maskInd) {
-            cube.setEdges(intEdges[expectedInd]);
-            ASSERT_EQ(expectedPartialEdges[expectedInd][maskInd], cube.getPartialEdges(edgesMasks[maskInd]));
-        }
     }
 }
 
