@@ -97,7 +97,7 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
 }
 
 namespace {
-    template <class T>
+    template <class T, int N>
     class ruCubePartialStateTests: public testing::TestWithParam<std::tuple<T, uint32_t, uint32_t>> {
         public:
            struct toString {
@@ -106,7 +106,7 @@ namespace {
                  const auto& [intPieces, piecesMask, expected] = testData.param;
 
                  std::stringstream ss;
-                 ss << std::oct << "pieces_" << std::setw(7) << std::setfill('0') << intPieces << "_mask_" << std::bitset<8>(piecesMask);
+                 ss << std::oct << "pieces_" << std::setw(N) << std::setfill('0') << intPieces << "_mask_" << std::bitset<8>(piecesMask);
                  return ss.str();
               }
            };
@@ -115,7 +115,10 @@ namespace {
             ruCube cube;
     };
 
-    class ruCubePartialEdgesTests: public ruCubePartialStateTests<uint32_t> {
+    class ruCubePartialEdgesTests: public ruCubePartialStateTests<uint32_t, 7> {
+    };
+
+    class ruCubePartialCornersTests: public ruCubePartialStateTests<uint64_t, 12> {
     };
 
     INSTANTIATE_TEST_SUITE_P (
@@ -180,81 +183,83 @@ namespace {
         cube.setEdges(intEdges);
         ASSERT_EQ(expectedPartialEdges, cube.getPartialEdges(edgesMask));
     }
-}
 
-TEST(ruCubeTest, getPartialCornersPermTest) {
-    const std::vector<uint64_t> cornersMasks {
-        0b000001,
-        0b000010,
-        0b000100,
-        0b001000,
-        0b010000,
-        0b100000,
+    INSTANTIATE_TEST_SUITE_P (
+        getPartialCornersTest,
+        ruCubePartialCornersTests,
+        ::testing::ValuesIn(testDataGenerators::combineWithExpected<uint64_t, uint32_t, uint32_t> (
+            {
+                0000102030405,
+                0050403020100,
+                0442142251013,
+            },
+            {
+                0b000001,
+                0b000010,
+                0b000100,
+                0b001000,
+                0b010000,
+                0b100000,
 
-        0b111111,
-        0b000111,
-        0b001111,
-        0b111000,
-        0b000000,
-        0b110010
-    };
+                0b111111,
+                0b000111,
+                0b001111,
+                0b111000,
+                0b000000,
+                0b110010
+            },
+            {
+                0777775,
+                0777747,
+                0777377,
+                0772777,
+                0717777,
+                0077777,
 
-    const std::vector<uint64_t> intCorners {
-        0000102030405,
-        0050403020100,
-        0442142251013,
-    };
+                0012345,
+                0777345,
+                0772345,
+                0012777,
+                0777777,
+                0017747,
 
-    const std::vector<std::vector<uint32_t>> expectedPartialCornersPerms {
-        {   0777775,
-            0777747,
-            0777377,
-            0772777,
-            0717777,
-            0077777,
+                0577777,
+                0747777,
+                0773777,
+                0777277,
+                0777717,
+                0777770,
 
-            0012345,
-            0777345,
-            0772345,
-            0012777,
-            0777777,
-            0017747    },
+                0543210,
+                0543777,
+                0543277,
+                0777210,
+                0777777,
+                0747710,
 
-        {   0577777,
-            0747777,
-            0773777,
-            0777277,
-            0777717,
-            0777770,
+                0777577,
+                0477777,
+                0777773,
+                0772777,
+                0717777,
+                0777707,
 
-            0543210,
-            0543777,
-            0543277,
-            0777210,
-            0777777,
-            0747710    },
+                0412503,
+                0477573,
+                0472573,
+                0712707,
+                0777777,
+                0417707
+            }
+        )),
+        ruCubePartialCornersTests::toString()
+    );
 
-        {   0777577,
-            0477777,
-            0777773,
-            0772777,
-            0717777,
-            0777707,
+    TEST_P(ruCubePartialCornersTests, getPartialCornersPermTest) {
+        const auto& [intCorners, cornersPermMask, expectedPartialCornersPerm] = GetParam();
 
-            0412503,
-            0477573,
-            0472573,
-            0712707,
-            0777777,
-            0417707    },
-    };
-
-    ruCube cube;
-    for (size_t expectedInd = 0; expectedInd < size(expectedPartialCornersPerms); ++expectedInd) {
-        for (size_t maskInd = 0; maskInd < size(cornersMasks); ++maskInd) {
-            cube.setCorners(intCorners[expectedInd]);
-            ASSERT_EQ(expectedPartialCornersPerms[expectedInd][maskInd], cube.getPartialCornersPerm(cornersMasks[maskInd]));
-        }
+        cube.setCorners(intCorners);
+        ASSERT_EQ(expectedPartialCornersPerm, cube.getPartialCornersPerm(cornersPermMask));
     }
 }
 
