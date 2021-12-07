@@ -1,6 +1,35 @@
 #include "gtest/gtest.h"
 #include "ruCube.h"
 #include "ruException.h"
+#include <vector>
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include <bitset>
+
+namespace testDataGenerators {
+//    template<class T1, class T2>
+//    std::vector<std::tuple<T1, T2>> combine(std::vector<T1> v1, std::vector<T2> v2) {
+//        std::vector<std::tuple<T1, T2>> ans;
+//
+//
+//        return ans;
+//    }
+
+    template<class T1, class T2, class T3>
+    std::vector<std::tuple<T1, T2, T3>> combineWithExpected(std::vector<T1> v1, std::vector<T2> v2, std::vector<T3> expected) {
+        std::vector<std::tuple<T1, T2, T3>> ans;
+
+        size_t expectedInd = 0;
+        for (const auto &x: v1) {
+            for (const auto &y: v2) {
+                ans.emplace_back(x, y, expected[expectedInd++]);
+            }
+        }
+
+        return ans;
+    }
+}
 
 
 TEST(ruCubeTest, initialStateTest) {
@@ -66,6 +95,89 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
         }
     }
 }
+
+namespace {
+    class ruCubePartialStateTests: public testing::TestWithParam<std::tuple<uint32_t, uint32_t, uint32_t>> {
+        public:
+           struct toString {
+              template <class ParamType>
+              std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                 const auto& [intEdges, edgesMask, expected] = testData.param;
+
+                 std::stringstream ss;
+                 ss << std::oct << "edges_" << std::setw(7) << std::setfill('0') << intEdges << "_edgesMask_" << std::bitset<8>(edgesMask);
+                 return ss.str();
+              }
+           };
+
+        protected:
+            ruCube cube;
+    };
+
+    INSTANTIATE_TEST_SUITE_P (
+        getPartialEdgesTest,
+        ruCubePartialStateTests,
+        ::testing::ValuesIn(testDataGenerators::combineWithExpected<uint32_t, uint32_t, uint32_t> (
+            {
+                00123456,
+                06543210,
+            },
+            {
+                0b0000001,
+                0b0000010,
+                0b0000100,
+                0b0001000,
+                0b0010000,
+                0b0100000,
+                0b1000000,
+
+                0b1111111,
+                0b0000111,
+                0b0001111,
+                0b1111000,
+                0b0000000,
+            },
+            {
+                07777776,
+                07777757,
+                07777477,
+                07773777,
+                07727777,
+                07177777,
+                00777777,
+
+                00123456,
+                07777456,
+                07773456,
+                00123777,
+                07777777,
+
+                06777777,
+                07577777,
+                07747777,
+                07773777,
+                07777277,
+                07777717,
+                07777770,
+
+                06543210,
+                06547777,
+                06543777,
+                07773210,
+                07777777
+            }
+        )),
+        ruCubePartialStateTests::toString()
+    );
+
+    TEST_P(ruCubePartialStateTests, getPartialEdgesTest) {
+        const auto& [intEdges, edgesMask, expectedPartialEdges] = GetParam();
+
+        cube.setEdges(intEdges);
+        ASSERT_EQ(expectedPartialEdges, cube.getPartialEdges(edgesMask));
+    }
+}
+
 
 TEST(ruCubeTest, getPartialEdgesTest) {
     const std::vector<uint32_t> edgesMasks {
