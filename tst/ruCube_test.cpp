@@ -67,7 +67,7 @@ TEST(ruCubeTest, customIsSolvedFilterTest) {
         cube.scramble(scrambles[scrInd]);
         for (size_t mskInd = 0; mskInd < size(masks); ++mskInd) {
             auto &[cornersMask, edgesMask] = masks[mskInd];
-            EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
+            ASSERT_EQ(expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
         }
     }
 }

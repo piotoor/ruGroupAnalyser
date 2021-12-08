@@ -20,11 +20,11 @@ namespace testDataGenerators {
 }
 
 namespace testCustomAsserts {
-    template <class T>
+    template <class T1, class T2>
     testing::AssertionResult AssertEqOct(const char* a_expr,
                                          const char* b_expr,
-                                         T a,
-                                         T b) {
+                                         T1 a,
+                                         T2 b) {
         if (a == b) {
             return testing::AssertionSuccess();
         }

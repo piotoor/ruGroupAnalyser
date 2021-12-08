@@ -1,14 +1,15 @@
 #include "gtest/gtest.h"
 #include "ruCube.h"
 #include "ruException.h"
+#include "testCustomDefinitions.h"
 
 
 TEST(ruLutCubeTest, initialStateTest) {
     ruLutCube cube;
 
-    ASSERT_EQ (ruLutCube::solvedLexIndexCornersOrient, cube.getEdges());
-    ASSERT_EQ (ruLutCube::solvedLexIndexCornersPerm, cube.getCornersPerm());
-    ASSERT_EQ (ruLutCube::solvedLexIndexCornersOrient, cube.getCornersOrient());
+    EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, ruLutCube::solvedLexIndexCornersOrient, cube.getEdges());
+    EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, ruLutCube::solvedLexIndexCornersPerm, cube.getCornersPerm());
+    EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, ruLutCube::solvedLexIndexCornersOrient, cube.getCornersOrient());
 
     ASSERT_TRUE (cube.isSolved(ruLutCube::allCornersMask, ruLutCube::allEdgesMask));
     ASSERT_TRUE (cube.isInDomino());
@@ -20,8 +21,8 @@ TEST(ruLutCubeTest, settersGettersTest) {
     cube.reset();
     cube.setCornersPerm(2234);
     cube.setCornersOrient(34);
-    ASSERT_EQ (2234, cube.getCornersPerm());
-    ASSERT_EQ (34, cube.getCornersOrient());
+    EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 2234, cube.getCornersPerm());
+    EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 34, cube.getCornersOrient());
 }
 
 TEST(ruLutCubeTest, customIsSolvedFilterTest) {

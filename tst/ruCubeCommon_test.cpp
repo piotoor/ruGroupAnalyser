@@ -1,6 +1,7 @@
 #include "gtest/gtest.h"
 #include "ruCube.h"
 #include "ruException.h"
+#include "testCustomDefinitions.h"
 #include "ruCubeFactory.h"
 #include "ruCubeScrambleParser.h"
 #include <vector>
@@ -25,12 +26,12 @@ namespace {
     TYPED_TEST(ruCubeAndLutCubeCommonCubeStateTests, commonSettersGettersTest) {
         this->cube->setEdges(1234);
         this->cube->setCorners(3432243);
-        ASSERT_EQ (1234, this->cube->getEdges());
-        ASSERT_EQ (3432243, this->cube->getCorners());
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 1234, this->cube->getEdges());
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 3432243, this->cube->getCorners());
 
         this->cube->setCube(423234, 1234);
-        ASSERT_EQ (1234, this->cube->getEdges());
-        ASSERT_EQ (423234, this->cube->getCorners());
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 1234, this->cube->getEdges());
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 423234, this->cube->getCorners());
     }
 
     TYPED_TEST(ruCubeAndLutCubeCommonCubeStateTests, cubeStateResetTest) {
