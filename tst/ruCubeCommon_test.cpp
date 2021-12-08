@@ -234,17 +234,56 @@ namespace {
             ASSERT_EQ(expected, this->cube->isSolvedSEinS());
         }
     }
+}
 
-//    TYPED_TEST(ruCubeAndLutCubeCommonScrambleTests, scrambleAndScrambleInversionTest) {
-//        for (const auto &data: this->testData) {
-//            auto &[scr, expected] = data;
-//            SCOPED_TRACE("scr = " + ruCubeScrambleParser::vectorScrambleToStringScramble(scr));
-//
-//            this->cube->scramble(scr);
-//            this->cube->inverseScramble(scr);
-//            ASSERT_TRUE(this->cube->isSolved());
-//        }
-//    }
+namespace {
+template <class T>
+    class ruCubeAndLutCubeCommonScrambleTests: public testing::Test {
+        protected:
+            ruCubeAndLutCubeCommonScrambleTests(): cube(std::make_unique<T>()) {
+            }
+
+            virtual ~ruCubeAndLutCubeCommonScrambleTests() {
+            }
+
+            std::unique_ptr<ruBaseCube> cube;
+
+            static inline const std::vector<std::vector<uint8_t>> scrambles {
+                { R },
+                { R2 },
+                { Ri },
+                { U },
+                { U2 },
+                { Ui },
+                { R, U },
+                { R, U2 },
+                { R, Ui },
+                { R2, U },
+                { R2, U2 },
+                { R2, Ui },
+                { Ri, U },
+                { Ri, U2 },
+                { Ri, Ui },
+                { R, U, Ri, U, R, U2, Ri },
+                { R2, U2, R2, U2, R2, U2 },
+                { R2, U, R2, U2, R, Ui, R2, Ui, R2 },
+                { R2, U, R2, Ui, R2, U, R2, U, R2, Ui, R2, Ui, R2, U, R2, U2, R2, Ui, R2, U2 }
+            };
+    };
+
+    using testing::Types;
+    using Implementations = Types<ruCube, ruLutCube>;
+    TYPED_TEST_SUITE(ruCubeAndLutCubeCommonScrambleTests, Implementations);
+
+    TYPED_TEST(ruCubeAndLutCubeCommonScrambleTests, scrambleInverseScrambleCancellingOutTest) {
+            for (const auto &scr: this->scrambles) {
+                SCOPED_TRACE("scr = " + ruCubeScrambleParser::vectorScrambleToStringScramble(scr));
+
+                this->cube->scramble(scr);
+                this->cube->inverseScramble(scr);
+                ASSERT_TRUE(this->cube->isSolved());
+        }
+    }
 }
 
 namespace {
@@ -316,7 +355,6 @@ namespace {
         }
     }
 }
-
 
 namespace {
     template <class T>
