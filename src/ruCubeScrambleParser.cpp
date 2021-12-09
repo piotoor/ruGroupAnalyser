@@ -18,7 +18,7 @@ namespace ruCubeScrambleParser {
                                 end(moves),
                                 std::string(""),
                                 [separator, alnumMoves] (const auto &lhs, const auto &rhs) {
-                                    return rhs < 6 ? lhs + separator + (alnumMoves ? ruCubeMovesStrings[rhs] : ruCubeMovesStringsAlnum[rhs]) : lhs;
+                                    return rhs < 6 ? lhs + separator + (alnumMoves ? ruCubeMovesStringsAlnum[rhs] : ruCubeMovesStrings[rhs]) : lhs;
                                 }).substr(compressSolution ? 0 : 1);
     }
 

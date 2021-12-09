@@ -29,9 +29,10 @@ namespace {
 
                     std::stringstream ss;
                     bool compressSolution = true;
+                    bool alnumMoves = true;
                     ss  << std::oct << "masks_" << std::setw(12) << std::setfill('0') << cornersMask << "_"
                         << std::setw(7) << edgesMask << "_"
-                        << ruCubeScrambleParser::vectorScrambleToStringScramble(scramble, compressSolution);
+                        << ruCubeScrambleParser::vectorScrambleToStringScramble(scramble, compressSolution, alnumMoves);
                     return ss.str();
                 }
            };
