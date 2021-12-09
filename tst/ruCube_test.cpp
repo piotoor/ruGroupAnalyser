@@ -2,6 +2,7 @@
 #include "ruCube.h"
 #include "ruException.h"
 #include "testCustomDefinitions.h"
+#include "ruCubeScrambleParser.h"
 #include <vector>
 #include <string>
 #include <sstream>
@@ -17,58 +18,83 @@ TEST(ruCubeTest, initialStateTest) {
     ASSERT_TRUE (cube.isInDomino());
 }
 
-TEST(ruCubeTest, customIsSolvedFilterTest) {
-    const std::vector<std::vector<uint8_t>> scrambles {
-        { R2, U2, R2, U2, R2, U2 },
-        { R,  U,  Ri, U,  R,  U2, Ri, U2 },
-        { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
-        { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
-        { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
-        { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
+namespace {
+    class ruCubeIsSolvedTests: public testing::TestWithParam<std::tuple<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                    std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto& [scramble, masks, expected] = testData.param;
+                    const auto& [cornersMask, edgesMask] = masks;
+
+                    std::stringstream ss;
+                    bool compressSolution = true;
+                    ss  << std::oct << "masks_" << std::setw(12) << std::setfill('0') << cornersMask << "_"
+                        << std::setw(7) << edgesMask << "_"
+                        << ruCubeScrambleParser::vectorScrambleToStringScramble(scramble, compressSolution);
+                    return ss.str();
+                }
+           };
+
+        protected:
+            ruCube cube;
     };
 
-    const std::vector<std::pair<uint64_t, uint32_t>> masks {
-        { 0000000000077, 00000070 },
-        { 0000000000007, 00000070 },
-        { 0000000000070, 00000070 },
+    INSTANTIATE_TEST_SUITE_P (
+        customIsSolvedFilters,
+        ruCubeIsSolvedTests,
+        ::testing::ValuesIn(testDataGenerators::combineWithExpected<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
+            {
+                { R2, U2, R2, U2, R2, U2 },
+                { R,  U,  Ri, U,  R,  U2, Ri, U2 },
+                { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
+                { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
+                { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
+                { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
+            },
+            {
+                { 0000000000077, 00000070 },
+                { 0000000000007, 00000070 },
+                { 0000000000070, 00000070 },
 
-        { 0000000007700, 00000070 },
-        { 0000000000700, 00000070 },
-        { 0000000007000, 00000070 },
+                { 0000000007700, 00000070 },
+                { 0000000000700, 00000070 },
+                { 0000000007000, 00000070 },
 
-        { 0000000770000, 00000070 },
-        { 0000000070000, 00000070 },
-        { 0000000700000, 00000070 },
+                { 0000000770000, 00000070 },
+                { 0000000070000, 00000070 },
+                { 0000000700000, 00000070 },
 
-        { 0000000000077, 07000070 },
-        { 0000000000007, 07000070 },
-        { 0000000000070, 07000070 },
+                { 0000000000077, 07000070 },
+                { 0000000000007, 07000070 },
+                { 0000000000070, 07000070 },
 
-        { 0000000007700, 07000070 },
-        { 0000000000700, 07000070 },
-        { 0000000007000, 07000070 },
+                { 0000000007700, 07000070 },
+                { 0000000000700, 07000070 },
+                { 0000000007000, 07000070 },
 
-        { 0000000770000, 07000070 },
-        { 0000000070000, 07000070 },
-        { 0000000700000, 07000070 }
-    };
+                { 0000000770000, 07000070 },
+                { 0000000070000, 07000070 },
+                { 0000000700000, 07000070 }
+            },
+            {
+                true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false,
+                true,  true,  true,       true,  true,  true,     false, true,  false,    false, false, false,    false, false, false,    false, false, false,
+                true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,
+                true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false,
+                false, false, true,       true,  true,  true,     false, false, false,    false, false, true,     true,  true,  true,     false, false, false,
+                true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true
+            }
+        )),
+        ruCubeIsSolvedTests::toString()
+    );
 
-    const std::vector<std::vector<bool>> expected {
-        { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false },
-        { true,  true,  true,       true,  true,  true,     false, true,  false,    false, false, false,    false, false, false,    false, false, false },
-        { true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true  },
-        { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false },
-        { false, false, true,       true,  true,  true,     false, false, false,    false, false, true,     true,  true,  true,     false, false, false },
-        { true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true  }
-    };
+    TEST_P(ruCubeIsSolvedTests, customIsSolvedFiltersTest) {
+        const auto& [scramble, masks, expected] = GetParam();
+        const auto& [cornersMask, edgesMask] = masks;
 
-    for (size_t scrInd = 0 ; scrInd < size(scrambles); ++scrInd) {
-        ruCube cube;
-        cube.scramble(scrambles[scrInd]);
-        for (size_t mskInd = 0; mskInd < size(masks); ++mskInd) {
-            auto &[cornersMask, edgesMask] = masks[mskInd];
-            ASSERT_EQ(expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
-        }
+        cube.scramble(scramble);
+        ASSERT_EQ(expected, cube.isSolved(cornersMask, edgesMask));
     }
 }
 
