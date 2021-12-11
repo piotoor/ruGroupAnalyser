@@ -19,26 +19,7 @@ TEST(ruCubeTest, initialStateTest) {
 }
 
 namespace {
-    class ruCubeIsSolvedTests: public testing::TestWithParam<std::tuple<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool>> {
-        public:
-            struct toString {
-                template <class ParamType>
-                    std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
-                    const auto& [scramble, masks, expected] = testData.param;
-                    const auto& [cornersMask, edgesMask] = masks;
-
-                    std::stringstream ss;
-                    bool compressSolution = true;
-                    bool alnumMoves = true;
-                    ss  << std::oct << "masks_" << std::setw(12) << std::setfill('0') << cornersMask << "_"
-                        << std::setw(7) << edgesMask << "_"
-                        << ruCubeScrambleParser::vectorScrambleToStringScramble(scramble, compressSolution, alnumMoves);
-                    return ss.str();
-                }
-           };
-
-        protected:
-            ruCube cube;
+    class ruCubeIsSolvedTests: public templateSuiteClasses::ruCubeBaseIsSolvedTests<ruCube> {
     };
 
     INSTANTIATE_TEST_SUITE_P (
@@ -100,31 +81,13 @@ namespace {
 }
 
 namespace {
-    template <class T, int N>
-    class ruCubePartialStateTests: public testing::TestWithParam<std::tuple<T, uint32_t, uint32_t>> {
-        public:
-           struct toString {
-              template <class ParamType>
-              std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
-                 const auto& [intPieces, piecesMask, expected] = testData.param;
-
-                 std::stringstream ss;
-                 ss << std::oct << "pieces_" << std::setw(N) << std::setfill('0') << intPieces << "_mask_" << std::bitset<8>(piecesMask);
-                 return ss.str();
-              }
-           };
-
-        protected:
-            ruCube cube;
+    class ruCubePartialEdgesTests: public templateSuiteClasses::ruCubePartialStateTests<uint32_t, 7> {
     };
 
-    class ruCubePartialEdgesTests: public ruCubePartialStateTests<uint32_t, 7> {
+    class ruCubePartialCornersPermTests: public templateSuiteClasses::ruCubePartialStateTests<uint64_t, 12> {
     };
 
-    class ruCubePartialCornersPermTests: public ruCubePartialStateTests<uint64_t, 12> {
-    };
-
-    class ruCubePartialCornersOrientTests: public ruCubePartialStateTests<uint64_t, 12> {
+    class ruCubePartialCornersOrientTests: public templateSuiteClasses::ruCubePartialStateTests<uint64_t, 12> {
     };
 
     INSTANTIATE_TEST_SUITE_P (
@@ -345,5 +308,4 @@ namespace {
         cube.setCorners(intCorners);
         EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, expectedPartialCornersOrient, cube.getPartialCornersOrient(cornersOrientMask));
     }
-
 }

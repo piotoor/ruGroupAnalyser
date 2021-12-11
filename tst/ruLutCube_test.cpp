@@ -25,53 +25,60 @@ TEST(ruLutCubeTest, settersGettersTest) {
     EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 34, cube.getCornersOrient());
 }
 
-TEST(ruLutCubeTest, customIsSolvedFilterTest) {
-    const std::vector<std::vector<uint8_t>> scrambles {
-        { R2, U2, R2, U2, R2, U2 },
-        { R,  U,  Ri, U,  R,  U2, Ri, U2 },
-        { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
-        { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
-        { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
-        { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
+namespace {
+    class ruLutCubeIsSolvedTests: public templateSuiteClasses::ruCubeBaseIsSolvedTests<ruLutCube> {
     };
 
-    const std::vector<std::pair<uint64_t, uint32_t>> masks {
-        { 0b0001011111100000000000000000000000000111111, 0b111000000101010 },
-        { 0b0001011111100000000000000000000000000111011, 0b111000000101010 },
-        { 0b0001001000000000000000000000000000000111111, 0b010000000100010 },
-        { 0b0001011111100000000000000000000000000111111, 0b111000000101010 },
-        { 0b0000001000000000000000000000000000000000001, 0b000000000100000 },
-        { 0b0000000001000000000000000000000000000001000, 0b000000000001010 },
-        { 0b0000010000000000000000000000000000000000001, 0b000000000100000 },
-        { 0b0000010011100000000000000000000000001000000, 0b000000000100010 },
-        { 0b0100101010100000000000000000000000000000001, 0b000000000001000 },
-        { 0b0001011111100000000000000000000000000111111, 0b000000010001000 },
-        { 0b0000001000000000000000000000000000000000001, 0b000000000000001 },
-        { 0b0000000001000000000000000000000000000001000, 0b000000000000100 },
-        { 0b0000000001000000000000000000000000000001000, 0b000000010001000 },
-        { 0b0000000001000000000000000000000000000001000, 0b000000010001000 },
-        { 0b0000000001000000000000000000000000000001000, 0b000000010001000 },
-        { 0b0000000000000000000000000000000000000000000, 0b111000000101010 },
-        { 0b0000100000000000000000000000000000001000000, 0b000000000101010 },
-        { 0b1111111111100000000000000000000011111111111, 0b100000010101010 },
-    };
+    INSTANTIATE_TEST_SUITE_P (
+        customIsSolvedFilters,
+        ruLutCubeIsSolvedTests,
+        ::testing::ValuesIn(testDataGenerators::combineWithExpected<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
+            {
+                { R2, U2, R2, U2, R2, U2 },
+                { R,  U,  Ri, U,  R,  U2, Ri, U2 },
+                { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
+                { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
+                { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
+                { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
+            },
+            {
+                { 0b0001011111100000000000000000000000000111111, 0b111000000101010 },
+                { 0b0001011111100000000000000000000000000111011, 0b111000000101010 },
+                { 0b0001001000000000000000000000000000000111111, 0b010000000100010 },
+                { 0b0001011111100000000000000000000000000011111, 0b111000000101010 },
+                { 0b0000001000000000000000000000000000000000001, 0b000000000100000 },
+                { 0b0000000001000000000000000000000000000001000, 0b000000000001010 },
+                { 0b0000010000000000000000000000000000000000001, 0b000000000100000 },
+                { 0b0000010011100000000000000000000000001000000, 0b000000000100010 },
+                { 0b0100101010100000000000000000000000000000001, 0b000000000001000 },
+                { 0b0001011111100000000000000000000000000111111, 0b000000010001000 },
+                { 0b0000001000000000000000000000000000000000001, 0b000000000000001 },
+                { 0b0000000001000000000000000000000000000001000, 0b000000000000100 },
+                { 0b0000000001000000000000000000000000000001000, 0b000000010101000 },
+                { 0b0000000001000000000000000000000000000001000, 0b000000011101000 },
+                { 0b0000000001000000000000000000000000000001000, 0b000000010001000 },
+                { 0b0000000000000000000000000000000000000000000, 0b111000000101010 },
+                { 0b0000100000000000000000000000000000001000000, 0b000000000101010 },
+                { 0b1111111111100000000000000000000011111111111, 0b100000010101010 },
+            },
+            {
+                true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    true , true , false,
+                false, false, true,       false, true,  false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false,
+                false, false, false,      false, false, false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false,
+                false, false, false,      false, false, false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false,
+                false, false, false,      false, false, false,    false, false, false,    false, false, false,    false, false, false,    true , false, false,
+                false, false, false,      false, false, true,     true,  true,  false,    false, false, true,     true,  true,  true,     true , false, false,
+            }
+        )),
+        ruLutCubeIsSolvedTests::toString()
+    );
 
-    const std::vector<std::vector<bool>> expected {
-        { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    true , true , false },
-        { false, false, true,       false, true,  false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false },
-        { false, false, false,      false, false, false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false },
-        { false, false, false,      false, false, false,    false, false, false,    false, true,  true,     false, false, false,    false, false, false },
-        { false, false, false,      false, false, false,    false, false, false,    false, false, false,    false, false, false,    true , false, false },
-        { false, false, false,      false, false, true,     true,  true,  false,    false, false, true,     true,  true,  true,     true , false, false },
-    };
+    TEST_P(ruLutCubeIsSolvedTests, customIsSolvedFiltersTest) {
+        const auto& [scramble, masks, expected] = GetParam();
+        const auto& [cornersMask, edgesMask] = masks;
 
-    for (size_t scrInd = 0 ; scrInd < size(scrambles); ++scrInd) {
-        ruLutCube cube;
-        cube.scramble(scrambles[scrInd]);
-        for (size_t mskInd = 0; mskInd < size(masks); ++mskInd) {
-            auto &[cornersMask, edgesMask] = masks[mskInd];
-            ASSERT_EQ(expected[scrInd][mskInd], cube.isSolved(cornersMask, edgesMask));
-        }
+        cube.scramble(scramble);
+        ASSERT_EQ(expected, cube.isSolved(cornersMask, edgesMask));
     }
 }
 
