@@ -9,7 +9,7 @@
 #include <iomanip>
 #include <bitset>
 
-TEST(ruCubeTest, initialStateTest) {
+TEST(ruCubeTests, initialStateTest) {
     ruCube cube;
 
     EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, ruCube::solvedEdges, cube.getEdges());
@@ -19,13 +19,13 @@ TEST(ruCubeTest, initialStateTest) {
 }
 
 namespace {
-    class ruCubeIsSolvedTests: public templateSuiteClasses::ruCubeBaseIsSolvedTests<ruCube> {
+    class ruCubeIsSolvedTestFixture: public templateFixtureClasses::ruCubeIsSolvedBaseParameterizedTestFixture<ruCube> {
     };
 
     INSTANTIATE_TEST_SUITE_P (
-        customIsSolvedFilters,
-        ruCubeIsSolvedTests,
-        ::testing::ValuesIn(testDataGenerators::combineWithExpected<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
+        ruCubeTests,
+        ruCubeIsSolvedTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianAndAppendFromThird<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
             {
                 { R2, U2, R2, U2, R2, U2 },
                 { R,  U,  Ri, U,  R,  U2, Ri, U2 },
@@ -68,10 +68,10 @@ namespace {
                 true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true
             }
         )),
-        ruCubeIsSolvedTests::toString()
+        ruCubeIsSolvedTestFixture::toString()
     );
 
-    TEST_P(ruCubeIsSolvedTests, customIsSolvedFiltersTest) {
+    TEST_P(ruCubeIsSolvedTestFixture, customIsSolvedFiltersTest) {
         const auto& [scramble, masks, expected] = GetParam();
         const auto& [cornersMask, edgesMask] = masks;
 
@@ -81,19 +81,19 @@ namespace {
 }
 
 namespace {
-    class ruCubePartialEdgesTests: public templateSuiteClasses::ruCubePartialStateTests<uint32_t, 7> {
+    class ruCubePartialEdgesTestFixture: public templateFixtureClasses::ruCubePartialStateBaseParameterizedTestFixture<uint32_t, 7> {
     };
 
-    class ruCubePartialCornersPermTests: public templateSuiteClasses::ruCubePartialStateTests<uint64_t, 12> {
+    class ruCubePartialCornersPermTestFixture: public templateFixtureClasses::ruCubePartialStateBaseParameterizedTestFixture<uint64_t, 12> {
     };
 
-    class ruCubePartialCornersOrientTests: public templateSuiteClasses::ruCubePartialStateTests<uint64_t, 12> {
+    class ruCubePartialCornersOrientTestFixture: public templateFixtureClasses::ruCubePartialStateBaseParameterizedTestFixture<uint64_t, 12> {
     };
 
     INSTANTIATE_TEST_SUITE_P (
-        getPartialEdgesTest,
-        ruCubePartialEdgesTests,
-        ::testing::ValuesIn(testDataGenerators::combineWithExpected<uint32_t, uint32_t, uint32_t> (
+        ruCubeTests,
+        ruCubePartialEdgesTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianAndAppendFromThird<uint32_t, uint32_t, uint32_t> (
             {
                 00123456,
                 06543210,
@@ -143,10 +143,10 @@ namespace {
                 07777777
             }
         )),
-        ruCubePartialEdgesTests::toString()
+        ruCubePartialEdgesTestFixture::toString()
     );
 
-    TEST_P(ruCubePartialEdgesTests, getPartialEdgesTest) {
+    TEST_P(ruCubePartialEdgesTestFixture, getPartialEdgesTest) {
         const auto& [intEdges, edgesMask, expectedPartialEdges] = GetParam();
 
         cube.setEdges(intEdges);
@@ -154,9 +154,9 @@ namespace {
     }
 
     INSTANTIATE_TEST_SUITE_P (
-        getPartialCornersPermTest,
-        ruCubePartialCornersPermTests,
-        ::testing::ValuesIn(testDataGenerators::combineWithExpected<uint64_t, uint32_t, uint32_t> (
+        ruCubeTests,
+        ruCubePartialCornersPermTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianAndAppendFromThird<uint64_t, uint32_t, uint32_t> (
             {
                 0000102030405,
                 0050403020100,
@@ -221,10 +221,10 @@ namespace {
                 0417707
             }
         )),
-        ruCubePartialCornersPermTests::toString()
+        ruCubePartialCornersPermTestFixture::toString()
     );
 
-    TEST_P(ruCubePartialCornersPermTests, getPartialCornersPermTest) {
+    TEST_P(ruCubePartialCornersPermTestFixture, getPartialCornersPermTest) {
         const auto& [intCorners, cornersPermMask, expectedPartialCornersPerm] = GetParam();
 
         cube.setCorners(intCorners);
@@ -232,9 +232,9 @@ namespace {
     }
 
     INSTANTIATE_TEST_SUITE_P (
-        getPartialCornersOrientTest,
-        ruCubePartialCornersOrientTests,
-        ::testing::ValuesIn(testDataGenerators::combineWithExpected<uint64_t, uint32_t, uint32_t> (
+        ruCubeTests,
+        ruCubePartialCornersOrientTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianAndAppendFromThird<uint64_t, uint32_t, uint32_t> (
             {
                 0000102030405,
                 0151413121110,
@@ -299,10 +299,10 @@ namespace {
                 0427717
             }
         )),
-        ruCubePartialCornersOrientTests::toString()
+        ruCubePartialCornersOrientTestFixture::toString()
     );
 
-    TEST_P(ruCubePartialCornersOrientTests, getPartialCornersOrientTest) {
+    TEST_P(ruCubePartialCornersOrientTestFixture, getPartialCornersOrientTest) {
         const auto& [intCorners, cornersOrientMask, expectedPartialCornersOrient] = GetParam();
 
         cube.setCorners(intCorners);

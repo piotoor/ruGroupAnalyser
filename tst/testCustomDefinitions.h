@@ -5,8 +5,9 @@
 #include <vector>
 
 namespace testDataGenerators {
+
     template<class T1, class T2, class T3>
-    std::vector<std::tuple<T1, T2, T3>> combineWithExpected(std::vector<T1> v1, std::vector<T2> v2, std::vector<T3> expected) {
+    std::vector<std::tuple<T1, T2, T3>> combineTwoVectorsCartesianAndAppendFromThird(std::vector<T1> v1, std::vector<T2> v2, std::vector<T3> expected) {
         std::vector<std::tuple<T1, T2, T3>> ans;
 
         size_t expectedInd = 0;
@@ -40,9 +41,9 @@ namespace testCustomAsserts {
     }
 }
 
-namespace templateSuiteClasses {
+namespace templateFixtureClasses {
     template <class T, int N>
-    class ruCubePartialStateTests: public testing::TestWithParam<std::tuple<T, uint32_t, uint32_t>> {
+    class ruCubePartialStateBaseParameterizedTestFixture: public testing::TestWithParam<std::tuple<T, uint32_t, uint32_t>> {
         public:
            struct toString {
               template <class ParamType>
@@ -60,7 +61,7 @@ namespace templateSuiteClasses {
     };
 
     template <class T>
-    class ruCubeBaseIsSolvedTests: public testing::TestWithParam<std::tuple<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool>> {
+    class ruCubeIsSolvedBaseParameterizedTestFixture: public testing::TestWithParam<std::tuple<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool>> {
         public:
             struct toString {
                 template <class ParamType>

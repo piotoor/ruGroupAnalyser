@@ -4,7 +4,7 @@
 #include "testCustomDefinitions.h"
 
 
-TEST(ruLutCubeTest, initialStateTest) {
+TEST(ruLutCubeTests, initialStateTest) {
     ruLutCube cube;
 
     EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, ruLutCube::solvedLexIndexCornersOrient, cube.getEdges());
@@ -15,7 +15,7 @@ TEST(ruLutCubeTest, initialStateTest) {
     ASSERT_TRUE (cube.isInDomino());
 }
 
-TEST(ruLutCubeTest, settersGettersTest) {
+TEST(ruLutCubeTests, settersGettersTest) {
     ruLutCube cube;
 
     cube.reset();
@@ -26,13 +26,13 @@ TEST(ruLutCubeTest, settersGettersTest) {
 }
 
 namespace {
-    class ruLutCubeIsSolvedTests: public templateSuiteClasses::ruCubeBaseIsSolvedTests<ruLutCube> {
+    class ruLutCubeIsSolvedTestFixture: public templateFixtureClasses::ruCubeIsSolvedBaseParameterizedTestFixture<ruLutCube> {
     };
 
     INSTANTIATE_TEST_SUITE_P (
-        customIsSolvedFilters,
-        ruLutCubeIsSolvedTests,
-        ::testing::ValuesIn(testDataGenerators::combineWithExpected<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
+        ruLutCubeTests,
+        ruLutCubeIsSolvedTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianAndAppendFromThird<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
             {
                 { R2, U2, R2, U2, R2, U2 },
                 { R,  U,  Ri, U,  R,  U2, Ri, U2 },
@@ -70,10 +70,10 @@ namespace {
                 false, false, false,      false, false, true,     true,  true,  false,    false, false, true,     true,  true,  true,     true , false, false,
             }
         )),
-        ruLutCubeIsSolvedTests::toString()
+        ruLutCubeIsSolvedTestFixture::toString()
     );
 
-    TEST_P(ruLutCubeIsSolvedTests, customIsSolvedFiltersTest) {
+    TEST_P(ruLutCubeIsSolvedTestFixture, customIsSolvedFiltersTest) {
         const auto& [scramble, masks, expected] = GetParam();
         const auto& [cornersMask, edgesMask] = masks;
 
@@ -82,7 +82,38 @@ namespace {
     }
 }
 
-TEST(ruLutCubeTest, toStringTest) {
+//namespace {
+//    class ruLutCubeToStringPamrameterizedTestFixture: public testing::TestWithParam<std::tuple<T, uint64_t, uint32_t>, std::string> {
+//        public:
+//            struct toString {
+//                template <class ParamType>
+//                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+//                    const auto& [masks, expected] = testData.param;
+//                    const auto& [cornersMask, edgesMask] = masks;
+//
+//                    std::stringstream ss;
+//                    bool compressSolution = true;
+//                    bool alnumMoves = true;
+//                    ss  << std::oct << "masks_" << std::setw(12) << std::setfill('0') << cornersMask << "_"
+//                        << std::setw(7) << edgesMask;
+//                    return ss.str();
+//                }
+//
+//        protected:
+//            ruLutCube cube;
+//    };
+//
+//    INSTANTIATE_TEST_SUITE_P (
+//        ruLutCubeTests,
+//        ruLutCubeToStringPamrameterizedTestFixture,
+//        ::testing::ValuesIn({
+//
+//        })
+//    )
+//}
+
+
+TEST(ruLutCubeTests, toStringTest) {
     std::vector<std::tuple<uint64_t, uint32_t>> cubes {
         { 0101112131415, 00234651 },
         { 0101112131415, 00234516 },
@@ -135,7 +166,7 @@ TEST(ruLutCubeTest, toStringTest) {
     }
 }
 
-TEST(ruLutCubeTest, toStringWithIgnoredTest) {
+TEST(ruLutCubeTests, toStringWithIgnoredTest) {
     std::vector<std::tuple<uint64_t, uint32_t, std::bitset<ruBaseCube::noOfCorners>, std::bitset<ruBaseCube::noOfCorners>, std::bitset<ruBaseCube::noOfEdges>>> cubes {
         { 0101112131415, 00234651, 0b000000, 0b000000, 0b0000000 },
         { 0101112131415, 00234516, 0b000000, 0b000000, 0b0000000 },
