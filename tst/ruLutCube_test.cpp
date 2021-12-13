@@ -82,87 +82,85 @@ namespace {
     }
 }
 
-//namespace {
-//    class ruLutCubeToStringPamrameterizedTestFixture: public testing::TestWithParam<std::tuple<T, uint64_t, uint32_t>, std::string> {
-//        public:
-//            struct toString {
-//                template <class ParamType>
-//                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
-//                    const auto& [masks, expected] = testData.param;
-//                    const auto& [cornersMask, edgesMask] = masks;
-//
-//                    std::stringstream ss;
-//                    bool compressSolution = true;
-//                    bool alnumMoves = true;
-//                    ss  << std::oct << "masks_" << std::setw(12) << std::setfill('0') << cornersMask << "_"
-//                        << std::setw(7) << edgesMask;
-//                    return ss.str();
-//                }
-//
-//        protected:
-//            ruLutCube cube;
-//    };
-//
-//    INSTANTIATE_TEST_SUITE_P (
-//        ruLutCubeTests,
-//        ruLutCubeToStringPamrameterizedTestFixture,
-//        ::testing::ValuesIn({
-//
-//        })
-//    )
-//}
+namespace {
+    class ruLutCubeToStringPamrameterizedTestFixture: public testing::TestWithParam<std::tuple<std::tuple<uint64_t, uint32_t>, std::string>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto& [masks, expected] = testData.param;
+                    const auto& [cornersMask, edgesMask] = masks;
 
+                    std::stringstream ss;
+                    bool compressSolution = true;
+                    bool alnumMoves = true;
+                    ss  << std::oct << "masks_" << std::setw(12) << std::setfill('0') << cornersMask << "_"
+                        << std::setw(7) << edgesMask;
+                    return ss.str();
+                }
+            };
 
-TEST(ruLutCubeTests, toStringTest) {
-    std::vector<std::tuple<uint64_t, uint32_t>> cubes {
-        { 0101112131415, 00234651 },
-        { 0101112131415, 00234516 },
-        { 0101112131415, 00234165 },
-        { 0101112131415, 00231456 },
-
-        { 0101112131415, 00213465 },
-        { 0101112131415, 00123456 },
-        { 0101112131415, 01023465 },
-        { 0101114121513, 00234561 },
-
-        { 0101114121513, 00234615 },
-        { 0101114121513, 00234156 },
-        { 0101114121513, 00231465 },
-        { 0101114121513, 00213456 },
-
-        { 0101114121513, 00123465 },
-        { 0101114121513, 01023456 },
-        { 0101113151214, 00234561 },
-        { 0101113151214, 00234615 },
+        protected:
+            ruLutCube cube;
     };
 
-    std::vector<std::string> expectedStrCubes {
-        "000102030405;0234651",
-        "000102030405;0234516",
-        "000102030405;0234165",
-        "000102030405;0231456",
+    INSTANTIATE_TEST_SUITE_P (
+        ruLutCubeTests,
+        ruLutCubeToStringPamrameterizedTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::tuple<uint64_t, uint32_t>, std::string> (
+            {
+                { 0101112131415, 00234651 },
+                { 0101112131415, 00234516 },
+                { 0101112131415, 00234165 },
+                { 0101112131415, 00231456 },
 
-        "000102030405;0213465",
-        "000102030405;0123456",
-        "000102030405;1023465",
-        "000104020503;0234561",
+                { 0101112131415, 00213465 },
+                { 0101112131415, 00123456 },
+                { 0101112131415, 01023465 },
+                { 0101114121513, 00234561 },
 
-        "000104020503;0234615",
-        "000104020503;0234156",
-        "000104020503;0231465",
-        "000104020503;0213456",
+                { 0101114121513, 00234615 },
+                { 0101114121513, 00234156 },
+                { 0101114121513, 00231465 },
+                { 0101114121513, 00213456 },
 
-        "000104020503;0123465",
-        "000104020503;1023456",
-        "000103050204;0234561",
-        "000103050204;0234615",
-    };
+                { 0101114121513, 00123465 },
+                { 0101114121513, 01023456 },
+                { 0101113151214, 00234561 },
+                { 0101113151214, 00234615 },
+            },
+            {
+                "000102030405;0234651",
+                "000102030405;0234516",
+                "000102030405;0234165",
+                "000102030405;0231456",
 
-    ruCubeStateConverter conv;
-    for (size_t i = 0; i < size(expectedStrCubes); ++i) {
-        const auto &[corners, edges] = cubes[i];
+                "000102030405;0213465",
+                "000102030405;0123456",
+                "000102030405;1023465",
+                "000104020503;0234561",
+
+                "000104020503;0234615",
+                "000104020503;0234156",
+                "000104020503;0231465",
+                "000104020503;0213456",
+
+                "000104020503;0123465",
+                "000104020503;1023456",
+                "000103050204;0234561",
+                "000103050204;0234615",
+            }
+        )),
+        ruLutCubeToStringPamrameterizedTestFixture::toString()
+    );
+
+    TEST_P(ruLutCubeToStringPamrameterizedTestFixture, customIsSolvedFiltersTest) {
+        ruCubeStateConverter conv;
+        const auto &[cubeState, expected] = GetParam();
+        const auto &[corners, edges] = cubeState;
+
         ruLutCube cube(conv.intCornersToLexIndexCornersOrient(corners), conv.intCornersToLexIndexCornersPerm(corners), conv.intEdgesToLexIndexEdges(edges));
-        ASSERT_EQ(expectedStrCubes[i], cube.toString());
+        ASSERT_EQ(expected, cube.toString());
     }
 }
 
