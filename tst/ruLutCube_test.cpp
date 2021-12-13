@@ -99,6 +99,7 @@ namespace {
 
         protected:
             ruLutCube cube;
+            ruCubeStateConverter conv;
     };
 
     INSTANTIATE_TEST_SUITE_P (
@@ -130,7 +131,6 @@ namespace {
     );
 
     TEST_P(ruLutCubeToStringPamrameterizedTestFixture, customIsSolvedFiltersTest) {
-        ruCubeStateConverter conv;
         const auto &[corners, edges, expected] = GetParam();
 
         ruLutCube cube(conv.intCornersToLexIndexCornersOrient(corners), conv.intCornersToLexIndexCornersPerm(corners), conv.intEdgesToLexIndexEdges(edges));
