@@ -32,7 +32,7 @@ namespace {
     INSTANTIATE_TEST_SUITE_P (
         ruLutCubeTests,
         ruLutCubeIsSolvedTestFixture,
-        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianAndAppendFromThird<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianCombineThirdLinear<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
             {
                 { R2, U2, R2, U2, R2, U2 },
                 { R,  U,  Ri, U,  R,  U2, Ri, U2 },

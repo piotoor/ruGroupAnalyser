@@ -25,7 +25,7 @@ namespace {
     INSTANTIATE_TEST_SUITE_P (
         ruCubeTests,
         ruCubeIsSolvedTestFixture,
-        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianAndAppendFromThird<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianCombineThirdLinear<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
             {
                 { R2, U2, R2, U2, R2, U2 },
                 { R,  U,  Ri, U,  R,  U2, Ri, U2 },
@@ -93,7 +93,7 @@ namespace {
     INSTANTIATE_TEST_SUITE_P (
         ruCubeTests,
         ruCubePartialEdgesTestFixture,
-        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianAndAppendFromThird<uint32_t, uint32_t, uint32_t> (
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianCombineThirdLinear<uint32_t, uint32_t, uint32_t> (
             {
                 00123456,
                 06543210,
@@ -156,7 +156,7 @@ namespace {
     INSTANTIATE_TEST_SUITE_P (
         ruCubeTests,
         ruCubePartialCornersPermTestFixture,
-        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianAndAppendFromThird<uint64_t, uint32_t, uint32_t> (
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianCombineThirdLinear<uint64_t, uint32_t, uint32_t> (
             {
                 0000102030405,
                 0050403020100,
@@ -234,7 +234,7 @@ namespace {
     INSTANTIATE_TEST_SUITE_P (
         ruCubeTests,
         ruCubePartialCornersOrientTestFixture,
-        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianAndAppendFromThird<uint64_t, uint32_t, uint32_t> (
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianCombineThirdLinear<uint64_t, uint32_t, uint32_t> (
             {
                 0000102030405,
                 0151413121110,
