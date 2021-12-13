@@ -91,8 +91,6 @@ namespace {
                     const auto& [corners, edges, expected] = testData.param;
 
                     std::stringstream ss;
-                    bool compressSolution = true;
-                    bool alnumMoves = true;
                     ss  << std::oct << std::setw(12) << std::setfill('0') << corners << "_"
                         << std::oct << std::setw(7)  << std::setfill('0') << edges;
                     return ss.str();
