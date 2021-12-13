@@ -152,7 +152,6 @@ namespace {
                 std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
                     const auto& [corners, edges, coi, cpi, epi, expected] = testData.param;
 
-
                     std::stringstream ss;
                     ss  << std::oct << std::setw(12) << std::setfill('0') << corners << "_"
                         << std::oct << std::setw(7)  << std::setfill('0') << edges   << "_"
@@ -211,62 +210,3 @@ namespace {
         ASSERT_EQ(expected, cube.toString());
     }
 }
-
-//
-//TEST(ruLutCubeTests, toStringWithIgnoredTest) {
-//    std::vector<std::tuple<uint64_t, uint32_t, std::bitset<ruBaseCube::noOfCorners>, std::bitset<ruBaseCube::noOfCorners>, std::bitset<ruBaseCube::noOfEdges>>> cubes {
-//        { 0101112131415, 00234651, 0b000000, 0b000000, 0b0000000 },
-//        { 0101112131415, 00234516, 0b000000, 0b000000, 0b0000000 },
-//        { 0101112131415, 00234165, 0b000000, 0b000000, 0b0000000 },
-//        { 0101112131415, 00231456, 0b000000, 0b000000, 0b0000000 },
-//
-//        { 0101112131415, 00213465, 0b000000, 0b111111, 0b0000000 },
-//        { 0101112131415, 00123456, 0b111111, 0b000000, 0b0000000 },
-//        { 0101112131415, 01023465, 0b000000, 0b000000, 0b1111111 },
-//        { 0101114121513, 00234561, 0b111111, 0b111111, 0b1111111 },
-//
-//        { 0101114121513, 00234615, 0b100000, 0b100000, 0b1000000 },
-//        { 0101114121513, 00234156, 0b010000, 0b010000, 0b0100000 },
-//        { 0101114121513, 00231465, 0b001000, 0b001000, 0b0010000 },
-//        { 0101114121513, 00213456, 0b000100, 0b000100, 0b0001000 },
-//
-//        { 0101114121513, 00123465, 0b000010, 0b000010, 0b0000100 },
-//        { 0101114121513, 01023456, 0b000001, 0b000001, 0b0000010 },
-//        { 0101113151214, 00234561, 0b111100, 0b111100, 0b0000001 },
-//        { 0101113151214, 00234615, 0b111100, 0b111100, 0b0000011 },
-//    };
-//
-//    std::vector<std::string> expectedStrCubes {
-//        "000102030405;0234651",
-//        "000102030405;0234516",
-//        "000102030405;0234165",
-//        "000102030405;0231456",
-//
-//        "0-0-0-0-0-0-;0213465",
-//        "-0-1-2-3-4-5;0123456",
-//        "000102030405;-------",
-//        "------------;-------",
-//
-//        "00010402--03;0234-15",
-//        "0001--020503;02341-6",
-//        "0001040205--;0231-65",
-//        "000104--0503;021-456",
-//
-//        "00--04020503;01-3465",
-//        "--0104020503;-023456",
-//        "0001--------;-234561",
-//        "0001--------;-2346-5",
-//    };
-//
-//    ruCubeStateConverter conv;
-//
-//    for (size_t i = 0; i < size(expectedStrCubes); ++i) {
-//        const auto &[corners, edges, coi, cpi, epi] = cubes[i];
-//        ruLutCubeIgnoredPieces ignoredPieces { coi, cpi, epi };
-//        ruLutCube cube( conv.intCornersToLexIndexCornersOrient(corners),
-//                        conv.intCornersToLexIndexCornersPerm(corners),
-//                        conv.intEdgesToLexIndexEdges(edges),
-//                        ignoredPieces);
-//        ASSERT_EQ(expectedStrCubes[i], cube.toString());
-//    }
-//}
