@@ -98,10 +98,10 @@ void ruLutCubeGenerator::generateNextCube() {
 }
 
 ruLutCube ruLutCubeGenerator::next() {
-    ruLutCube ans(lexIndexEdgesPerm,
+    ruLutCube ans(lexIndexCornersOrient,
                   lexIndexCornersPerm,
-                  lexIndexCornersOrient,
-                  std::make_tuple(ignoredEdgesBits, ignoredCornersOrientBits, ignoredCornersPermBits));
+                  lexIndexEdgesPerm,
+                  { ignoredCornersOrientBits, ignoredCornersPermBits, ignoredEdgesBits });
     generateNextCube();
     return ans;
 }

@@ -53,12 +53,12 @@ std::vector<std::vector<uint8_t>> ruCubeSolver::getSolutionsAsVectors() const {
 void ruCubeSolver::dfs(uint8_t depth, uint8_t maxDepth, int8_t prevMove) {
     if (solutions.size() < maxNumOfSolutions) {
         if (depth == maxDepth) {
-            if (cube->isSolved(edgesMask, cornersMask)) {
+            if (cube->isSolved(cornersMask, edgesMask)) {
                 solutions.push_back(currSolution);
             }
         } else {
             for (int8_t i = 0; i < 6; ++i) {
-                if (i / 3 == prevMove / 3 or cube->isPruningPossible(maxDepth - depth, this->edgesMask, this->cornersMask)) {
+                if (i / 3 == prevMove / 3 or cube->isPruningPossible(maxDepth - depth, this->cornersMask, this->edgesMask)) {
                     continue;
                 }
 

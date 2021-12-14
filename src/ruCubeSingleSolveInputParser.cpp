@@ -20,7 +20,7 @@ ruLutCube ruCubeSingleSolveInputParser::getCubeFromScramble(std::string scramble
 using ruCubeStateVect = std::tuple<cornersArray, cornersArray, edgesArray>;
 
 ruLutCube ruCubeSingleSolveInputParser::getCubeFromState(std::string state) {
-    auto [cp, co, ep] = ruCubeStateParser::stringStateToVect(state);
+    auto [co, cp, ep] = ruCubeStateParser::stringStateToVect(state);
     if (!validator.isVectCornersPermValid(cp)) {
         throw ruCubeStateException("Validation exception. Invalid corners permutation.");
     } else if (!validator.isVectCornersOrientValid(co)) {
@@ -33,9 +33,9 @@ ruLutCube ruCubeSingleSolveInputParser::getCubeFromState(std::string state) {
         throw ruCubeStateException("Validation exception. Unsolvable state.");
     }
 
-    ruLutCube cube(converter.vectEdgesPermToLexIndexEdgesPerm(ep),
+    ruLutCube cube(converter.vectCornersOrientToLexIndexCornersOrient(co),
                    converter.vectCornersPermToLexIndexCornersPerm(cp),
-                   converter.vectCornersOrientToLexIndexCornersOrient(co));
+                   converter.vectEdgesPermToLexIndexEdgesPerm(ep));
 
     return cube;
 }

@@ -1,601 +1,311 @@
 #include "gtest/gtest.h"
 #include "ruCube.h"
 #include "ruException.h"
+#include "testCustomDefinitions.h"
+#include "ruCubeScrambleParser.h"
+#include <vector>
+#include <string>
+#include <sstream>
+#include <iomanip>
+#include <bitset>
 
-
-TEST(ruCubeTest, initialStateTest) {
+TEST(ruCubeTests, initialStateTest) {
     ruCube cube;
 
-    ASSERT_EQ (ruCube::solvedEdges, cube.getEdges());
-    ASSERT_EQ (ruCube::solvedCorners, cube.getCorners());
-    ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
+    EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, ruCube::solvedEdges, cube.getEdges());
+    EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, ruCube::solvedCorners, cube.getCorners());
+    ASSERT_TRUE (cube.isSolved(ruCube::allCornersMask, ruCube::allEdgesMask));
     ASSERT_TRUE (cube.isInDomino());
 }
 
-TEST(ruCubeTest, settersGettersTest) {
-    ruCube cube;
-
-    cube.setEdges(076543210);
-    cube.setCorners(01511413121110);
-    ASSERT_EQ (076543210, cube.getEdges());
-    ASSERT_EQ (01511413121110, cube.getCorners());
-
-    cube.setCube(001234765, 01011112151413);
-    ASSERT_EQ (001234765, cube.getEdges());
-    ASSERT_EQ (01011112151413, cube.getCorners());
-}
-
-TEST(ruCubeTest, cubeStateResetTest) {
-    ruCube cube;
-
-    ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
-    cube.setEdges(076543210);
-    cube.setCorners(01511413121110);
-    ASSERT_FALSE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
-    cube.reset();
-    ASSERT_TRUE (cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
-}
-
-TEST(ruCubeTest, singleTurnTest) {
-    ruCube cube;
-
-    cube.turn(R); // R
-    ASSERT_EQ(00126345, cube.getEdges());
-    ASSERT_EQ(0251112402344, cube.getCorners());
-    cube.turn(U); // U
-    ASSERT_EQ(06012345, cube.getEdges());
-    ASSERT_EQ(0402511122344, cube.getCorners());
-    cube.turn(R2); // R2
-    ASSERT_EQ(06014523, cube.getEdges());
-    ASSERT_EQ(0232511444012, cube.getCorners());
-    cube.turn(U2); // U2
-    ASSERT_EQ(01460523, cube.getEdges());
-    ASSERT_EQ(0114423254012, cube.getCorners());
-    cube.turn(Ri); // R'
-    ASSERT_EQ(01465230, cube.getEdges());
-    ASSERT_EQ(0454423202241, cube.getCorners());
-    cube.turn(Ui); // U'
-    ASSERT_EQ(04651230, cube.getEdges());
-    ASSERT_EQ(0442320452241, cube.getCorners());
-
-    cube.turn(R);
-    cube.turn(R);
-    cube.turn(R);
-    cube.turn(R);
-
-    cube.turn(R2);
-    cube.turn(R2);
-
-    cube.turn(Ri);
-    cube.turn(Ri);
-    cube.turn(Ri);
-    cube.turn(Ri);
-
-    cube.turn(U);
-    cube.turn(U);
-    cube.turn(U);
-    cube.turn(U);
-
-    cube.turn(U2);
-    cube.turn(U2);
-
-    cube.turn(Ui);
-    cube.turn(Ui);
-    cube.turn(Ui);
-    cube.turn(Ui);
-
-    ASSERT_EQ(04651230, cube.getEdges());
-    ASSERT_EQ(0442320452241, cube.getCorners());
-}
-
-TEST(ruCubeTest, singleTurnInversionTest) {
-    ruCube cube;
-
-    for (int trn = R; trn <= Ui; ++trn) {
-        cube.turn(trn);
-        ASSERT_FALSE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
-        cube.inverseTurn(trn);
-        ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
-    }
-
-    cube.inverseTurn(R);
-    cube.inverseTurn(R);
-    cube.inverseTurn(R);
-    cube.inverseTurn(R);
-
-    cube.inverseTurn(R2);
-    cube.inverseTurn(R2);
-
-    cube.inverseTurn(Ri);
-    cube.inverseTurn(Ri);
-    cube.inverseTurn(Ri);
-    cube.inverseTurn(Ri);
-
-    cube.inverseTurn(U);
-    cube.inverseTurn(U);
-    cube.inverseTurn(U);
-    cube.inverseTurn(U);
-
-    cube.inverseTurn(U2);
-    cube.inverseTurn(U2);
-
-    cube.inverseTurn(Ui);
-    cube.inverseTurn(Ui);
-    cube.inverseTurn(Ui);
-    cube.inverseTurn(Ui);
-
-    cube.inverseTurn(R);
-    cube.inverseTurn(R);
-    cube.turn(R2);
-    cube.turn(R);
-    cube.turn(R);
-    cube.inverseTurn(R2);
-
-    cube.inverseTurn(Ri);
-    cube.inverseTurn(Ri);
-    cube.turn(R2);
-    cube.turn(Ri);
-    cube.turn(Ri);
-    cube.inverseTurn(R2);
-
-    cube.inverseTurn(U);
-    cube.inverseTurn(U);
-    cube.turn(U2);
-    cube.turn(U);
-    cube.turn(U);
-    cube.inverseTurn(U2);
-
-    cube.inverseTurn(Ui);
-    cube.inverseTurn(Ui);
-    cube.turn(U2);
-    cube.turn(Ui);
-    cube.turn(Ui);
-    cube.inverseTurn(U2);
-
-    ASSERT_TRUE(cube.isSolved(ruCube::allEdgesMask, ruCube::allCornersMask));
-}
-
-TEST(ruCubeTest, scrambleTest) {
-    ruCube cube;
-
-    const std::vector<uint8_t> moves{R, U, R2, U2, Ri, Ui};
-    cube.scramble(moves);
-    ASSERT_EQ(04651230, cube.getEdges());
-    ASSERT_EQ(0442320452241, cube.getCorners());
-
-    cube.scramble({R2, U2, R2, U2, R, U, Ri, Ui});
-    ASSERT_EQ(04130265, cube.getEdges());
-    ASSERT_EQ(0434541142042, cube.getCorners());
-}
-
-TEST(ruCubeTest, scrambleInversionTest) {
-    ruCube cube;
-
-    const std::vector<uint8_t> moves{U, R, U2, R2, Ui, Ri};
-    cube.inverseScramble(moves);
-    ASSERT_EQ(04651230, cube.getEdges());
-    ASSERT_EQ(0442320452241, cube.getCorners());
-
-    cube.inverseScramble({U, R, Ui, Ri, U2, R2, U2, R2});
-    ASSERT_EQ(04130265, cube.getEdges());
-    ASSERT_EQ(0434541142042, cube.getCorners());
-}
-
-TEST(ruCubeTest, isInDominoTest) {
-    ruCube cube;
-
-    ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({R2, U2, R2, U2, R2, U2});
-    ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({R2, U, R2, Ui, R2, U, R2, U, R2, Ui, R2, Ui, R2, U, R2, U2, R2, Ui, R2, U2, R2, U2, R2, Ui, R2, Ui});
-    ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({R, U, Ri, U, R, U2, Ri});
-    ASSERT_FALSE(cube.isInDomino());
-    cube.scramble({R, U, Ri, U, R, U2, Ri});
-    ASSERT_FALSE(cube.isInDomino());
-    cube.scramble({U, R, U, Ri, U, R, Ui, Ri, U, R, U2, R});
-    ASSERT_TRUE(cube.isInDomino());
-    cube.scramble({R2, U, Ri, Ui, Ri, Ui, Ri, U, R, U, Ri});
-    ASSERT_FALSE(cube.isInDomino());
-}
-
-TEST(ruCubeTest, singleTurnNegativeTest) {
-    ruCube cube;
-
-    const std::vector<uint8_t> invalidTurns {
-        6, 7, 8, 9, 10, 11, 12, 15, 20, 30, 100, 255
+namespace {
+    class ruCubeIsSolvedTestFixture: public templateFixtureClasses::ruCubeIsSolvedBaseParameterizedTestFixture<ruCube> {
     };
 
-    for (const auto &i: invalidTurns) {
-        try {
-            cube.turn(i);
-        } catch (const ruCubeTurnException &e) {
-            ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(i) + ") out of range (which is [0:5])"), e.what());
-        }
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeTests,
+        ruCubeIsSolvedTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianCombineThirdLinear<std::vector<uint8_t>, std::tuple<uint64_t, uint32_t>, bool> (
+            {
+                { R2, U2, R2, U2, R2, U2 },
+                { R,  U,  Ri, U,  R,  U2, Ri, U2 },
+                { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
+                { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
+                { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
+                { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
+            },
+            {
+                { 0000000000077, 00000070 },
+                { 0000000000007, 00000070 },
+                { 0000000000070, 00000070 },
+
+                { 0000000007700, 00000070 },
+                { 0000000000700, 00000070 },
+                { 0000000007000, 00000070 },
+
+                { 0000000770000, 00000070 },
+                { 0000000070000, 00000070 },
+                { 0000000700000, 00000070 },
+
+                { 0000000000077, 07000070 },
+                { 0000000000007, 07000070 },
+                { 0000000000070, 07000070 },
+
+                { 0000000007700, 07000070 },
+                { 0000000000700, 07000070 },
+                { 0000000007000, 07000070 },
+
+                { 0000000770000, 07000070 },
+                { 0000000070000, 07000070 },
+                { 0000000700000, 07000070 }
+            },
+            {
+                true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false,
+                true,  true,  true,       true,  true,  true,     false, true,  false,    false, false, false,    false, false, false,    false, false, false,
+                true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,
+                true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false,
+                false, false, true,       true,  true,  true,     false, false, false,    false, false, true,     true,  true,  true,     false, false, false,
+                true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true
+            }
+        )),
+        ruCubeIsSolvedTestFixture::toString()
+    );
+
+    TEST_P(ruCubeIsSolvedTestFixture, customIsSolvedFiltersTest) {
+        const auto& [scramble, masks, expected] = GetParam();
+        const auto& [cornersMask, edgesMask] = masks;
+
+        cube.scramble(scramble);
+        ASSERT_EQ(expected, cube.isSolved(cornersMask, edgesMask));
     }
 }
 
-TEST(ruCubeTest, singleTurnInversionNegativeTest) {
-    ruCube cube;
-
-    const std::vector<uint8_t> invalidTurns {
-        6, 7, 8, 9, 10, 11, 12, 15, 20, 30, 100, 255
+namespace {
+    class ruCubePartialEdgesTestFixture: public templateFixtureClasses::ruCubePartialStateBaseParameterizedTestFixture<uint32_t, 7> {
     };
 
-    for (const auto &i: invalidTurns) {
-        try {
-            cube.inverseTurn(i);
-        } catch (const ruCubeTurnException &e) {
-            ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(i) + ") out of range (which is [0:5])"), e.what());
-        }
-    }
-}
-
-TEST(ruCubeTest, scrambleNegativeTest) {
-    ruCube cube;
-
-    const std::vector<std::vector<uint8_t>> invalidScrambles {
-        { 6 },
-        { R, U, R2, U2, Ri, Ui, 10, U2, R2, 8, 10 },
-        { R, U, R2, Ri, R2, Ri, 6 }
+    class ruCubePartialCornersPermTestFixture: public templateFixtureClasses::ruCubePartialStateBaseParameterizedTestFixture<uint64_t, 12> {
     };
 
-    const std::vector<uint8_t> firstInvalidTurn {
-        6,
-        10,
-        6
+    class ruCubePartialCornersOrientTestFixture: public templateFixtureClasses::ruCubePartialStateBaseParameterizedTestFixture<uint64_t, 12> {
     };
 
-    int i = 0;
-    for (const auto &scr: invalidScrambles) {
-        try {
-            cube.scramble(scr);
-        } catch (const ruCubeTurnException &e) {
-            ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(firstInvalidTurn[i]) + ") out of range (which is [0:5])"), e.what());
-        }
-        ++i;
-    }
-}
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeTests,
+        ruCubePartialEdgesTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianCombineThirdLinear<uint32_t, uint32_t, uint32_t> (
+            {
+                00123456,
+                06543210,
+            },
+            {
+                0b0000001,
+                0b0000010,
+                0b0000100,
+                0b0001000,
+                0b0010000,
+                0b0100000,
+                0b1000000,
 
-TEST(ruCubeTest, scrambleInversionNegativeTest) {
-    ruCube cube;
+                0b1111111,
+                0b0000111,
+                0b0001111,
+                0b1111000,
+                0b0000000,
+            },
+            {
+                07777776,
+                07777757,
+                07777477,
+                07773777,
+                07727777,
+                07177777,
+                00777777,
 
-    const std::vector<std::vector<uint8_t>> invalidScrambleInversions {
-        { 6 },
-        { R, U, R2, U2, Ri, Ui, 10, U2, R2, 8, 10 },
-        { R, U, R2, Ri, R2, Ri, 6 }
-    };
+                00123456,
+                07777456,
+                07773456,
+                00123777,
+                07777777,
 
-    const std::vector<uint8_t> firstInvalidTurn {
-        6,
-        10,
-        6
-    };
+                06777777,
+                07577777,
+                07747777,
+                07773777,
+                07777277,
+                07777717,
+                07777770,
 
-    int i = 0;
-    for (const auto &scr: invalidScrambleInversions) {
-        try {
-            cube.scramble(scr);
-        } catch (const ruCubeTurnException &e) {
-            ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(firstInvalidTurn[i]) + ") out of range (which is [0:5])"), e.what());
-        }
-        ++i;
-    }
-}
+                06543210,
+                06547777,
+                06543777,
+                07773210,
+                07777777
+            }
+        )),
+        ruCubePartialEdgesTestFixture::toString()
+    );
 
-TEST(ruCubeTest, predefinedIsSolvedFilterTest) {
-    const std::vector<std::vector<uint8_t>> scrambles {
-        { R2, U2, R2, U2, R2, U2 },
-        { R,  U,  Ri, U,  R,  U2, Ri, U2 },
-        { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
-        { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
-        { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
-        { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
-    };
+    TEST_P(ruCubePartialEdgesTestFixture, getPartialEdgesTest) {
+        const auto& [intEdges, edgesMask, expectedPartialEdges] = GetParam();
 
-    const std::vector<std::pair<uint32_t, uint64_t>> filters {
-        { ruCube::allEdgesMask,     ruCube::allCornersMask },
-        { ruCube::allEdgesMask,     00 },
-        { 00,                       ruCube::allCornersMask },
-        { 00,                       00 },
-        { 00,                       ruCube::cornersOrientationMask },
-        { 00,                       ruCube::cornersPermutationMask },
-        { ruCube::allEdgesMask,     ruCube::cornersOrientationMask },
-        { ruCube::allEdgesMask,     ruCube::cornersPermutationMask }
-    };
-
-    const std::vector<std::vector<bool>> expected {
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, false, false, true,  false, true,  false, false },
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, false, true,  true,  true,  true,  false, false },
-        { false, true,  false, true,  false, false, false, false },
-        { false, true,  false, true,  false, true,  false, true  }
-    };
-
-    for (uint8_t i = 0 ; i < size(scrambles); ++i) {
-        ruCube cube;
-        cube.scramble(scrambles[i]);
-        for (uint8_t j = 0; j < size(filters); ++j) {
-            ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
-        }
+        cube.setEdges(intEdges);
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, expectedPartialEdges, cube.getPartialEdges(edgesMask));
     }
 
-}
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeTests,
+        ruCubePartialCornersPermTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianCombineThirdLinear<uint64_t, uint32_t, uint32_t> (
+            {
+                0000102030405,
+                0050403020100,
+                0442142251013,
+            },
+            {
+                0b000001,
+                0b000010,
+                0b000100,
+                0b001000,
+                0b010000,
+                0b100000,
 
-TEST(ruCubeTest, customIsSolvedFilterTest) {
-    const std::vector<std::vector<uint8_t>> scrambles {
-        { R2, U2, R2, U2, R2, U2 },
-        { R,  U,  Ri, U,  R,  U2, Ri, U2 },
-        { Ri, U,  Ri, Ui, Ri, Ui, Ri, U,  R,  U,  R2 },
-        { R2, U2, R2, U2, R2, U,  R2, U2, R2, U2, R2, Ui },
-        { R,  U,  Ri, Ui, R,  U,  Ri, Ui, R,  U,  Ri, Ui },
-        { Ri, Ui, R,  Ui, Ri, U2, R,  U2, R,  U,  Ri, U,  R,  U2, Ri, U2 }
-    };
+                0b111111,
+                0b000111,
+                0b001111,
+                0b111000,
+                0b000000,
+                0b110010
+            },
+            {
+                0777775,
+                0777747,
+                0777377,
+                0772777,
+                0717777,
+                0077777,
 
-    const std::vector<std::pair<uint32_t, uint64_t>> filters {
-        { 00000070, 0000000000077 },
-        { 00000070, 0000000000007 },
-        { 00000070, 0000000000070 },
+                0012345,
+                0777345,
+                0772345,
+                0012777,
+                0777777,
+                0017747,
 
-        { 00000070, 0000000007700 },
-        { 00000070, 0000000000700 },
-        { 00000070, 0000000007000 },
+                0577777,
+                0747777,
+                0773777,
+                0777277,
+                0777717,
+                0777770,
 
-        { 00000070, 0000000770000 },
-        { 00000070, 0000000070000 },
-        { 00000070, 0000000700000 },
+                0543210,
+                0543777,
+                0543277,
+                0777210,
+                0777777,
+                0747710,
 
-        { 07000070, 0000000000077 },
-        { 07000070, 0000000000007 },
-        { 07000070, 0000000000070 },
+                0777577,
+                0477777,
+                0777773,
+                0772777,
+                0717777,
+                0777707,
 
-        { 07000070, 0000000007700 },
-        { 07000070, 0000000000700 },
-        { 07000070, 0000000007000 },
+                0412503,
+                0477573,
+                0472573,
+                0712707,
+                0777777,
+                0417707
+            }
+        )),
+        ruCubePartialCornersPermTestFixture::toString()
+    );
 
-        { 07000070, 0000000770000 },
-        { 07000070, 0000000070000 },
-        { 07000070, 0000000700000 }
-    };
+    TEST_P(ruCubePartialCornersPermTestFixture, getPartialCornersPermTest) {
+        const auto& [intCorners, cornersPermMask, expectedPartialCornersPerm] = GetParam();
 
-    const std::vector<std::vector<bool>> expected {
-        { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false },
-        { true,  true,  true,       true,  true,  true,     false, true,  false,    false, false, false,    false, false, false,    false, false, false },
-        { true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true  },
-        { true,  true,  true,       true,  true,  true,     true,  true,  true,     false, false, false,    false, false, false,    false, false, false },
-        { false, false, true,       true,  true,  true,     false, false, false,    false, false, true,     true,  true,  true,     false, false, false },
-        { true,  true,  true,       true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true,     true,  true,  true  }
-    };
-
-    for (uint8_t i = 0 ; i < size(scrambles); ++i) {
-        ruCube cube;
-        cube.scramble(scrambles[i]);
-        for (uint8_t j = 0; j < size(filters); ++j) {
-            ASSERT_EQ(expected[i][j], cube.isSolved(filters[j].first, filters[j].second));
-        }
+        cube.setCorners(intCorners);
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, expectedPartialCornersPerm, cube.getPartialCornersPerm(cornersPermMask));
     }
 
-}
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeTests,
+        ruCubePartialCornersOrientTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combineTwoVectorsCartesianCombineThirdLinear<uint64_t, uint32_t, uint32_t> (
+            {
+                0000102030405,
+                0151413121110,
+                0442142251013
+            },
+            {
+                0b000001,
+                0b000010,
+                0b000100,
+                0b001000,
+                0b010000,
+                0b100000,
 
-TEST(ruCubeTest, getPartialEdgesTest) {
-    const std::vector<uint32_t> edgesMasks {
-        0b0000001,
-        0b0000010,
-        0b0000100,
-        0b0001000,
-        0b0010000,
-        0b0100000,
-        0b1000000,
+                0b111111,
+                0b000111,
+                0b001111,
+                0b111000,
+                0b000000,
+                0b110010
+            },
+            {
+                0777770,
+                0777707,
+                0777077,
+                0770777,
+                0707777,
+                0077777,
 
-        0b1111111,
-        0b0000111,
-        0b0001111,
-        0b1111000,
-        0b0000000,
-    };
+                0000000,
+                0777000,
+                0770000,
+                0000777,
+                0777777,
+                0007707,
 
-    const std::vector<uint32_t> intEdges {
-        00123456,
-        06543210,
-    };
+                0177777,
+                0717777,
+                0771777,
+                0777177,
+                0777717,
+                0777771,
 
+                0111111,
+                0111777,
+                0111177,
+                0777111,
+                0777777,
+                0717711,
 
-    const std::vector<std::vector<uint32_t>> expectedPartialEdges {
-        {   07777776,
-            07777757,
-            07777477,
-            07773777,
-            07727777,
-            07177777,
-            00777777,
+                0777277,
+                0477777,
+                0777771,
+                0774777,
+                0727777,
+                0777717,
 
-            00123456,
-            07777456,
-            07773456,
-            00123777,
-            07777777    },
+                0424211,
+                0477271,
+                0474271,
+                0724717,
+                0777777,
+                0427717
+            }
+        )),
+        ruCubePartialCornersOrientTestFixture::toString()
+    );
 
-        {   06777777,
-            07577777,
-            07747777,
-            07773777,
-            07777277,
-            07777717,
-            07777770,
+    TEST_P(ruCubePartialCornersOrientTestFixture, getPartialCornersOrientTest) {
+        const auto& [intCorners, cornersOrientMask, expectedPartialCornersOrient] = GetParam();
 
-            06543210,
-            06547777,
-            06543777,
-            07773210,
-            07777777    },
-    };
-
-    ruCube cube;
-    for (uint8_t i = 0; i < size(expectedPartialEdges); ++i) {
-        for (uint8_t j = 0; j < size(edgesMasks); ++j) {
-            cube.setEdges(intEdges[i]);
-            ASSERT_EQ(expectedPartialEdges[i][j], cube.getPartialEdges(edgesMasks[j]));
-        }
-    }
-}
-
-TEST(ruCubeTest, getPartialCornersPermTest) {
-    const std::vector<uint64_t> cornersMasks {
-        0b000001,
-        0b000010,
-        0b000100,
-        0b001000,
-        0b010000,
-        0b100000,
-
-        0b111111,
-        0b000111,
-        0b001111,
-        0b111000,
-        0b000000,
-
-        0b110010
-    };
-
-    const std::vector<uint64_t> intCorners {
-        0000102030405,
-        0050403020100,
-        0442142251013,
-    };
-
-
-    const std::vector<std::vector<uint32_t>> expectedPartialCornersPerms {
-        {   0777775,
-            0777747,
-            0777377,
-            0772777,
-            0717777,
-            0077777,
-
-            0012345,
-            0777345,
-            0772345,
-            0012777,
-            0777777,
-
-            0017747    },
-
-        {   0577777,
-            0747777,
-            0773777,
-            0777277,
-            0777717,
-            0777770,
-
-            0543210,
-            0543777,
-            0543277,
-            0777210,
-            0777777,
-            0747710    },
-
-        {   0777577,
-            0477777,
-            0777773,
-            0772777,
-            0717777,
-            0777707,
-
-            0412503,
-            0477573,
-            0472573,
-            0712707,
-            0777777,
-
-            0417707    },
-    };
-
-    ruCube cube;
-    for (uint8_t i = 0; i < size(expectedPartialCornersPerms); ++i) {
-        for (uint8_t j = 0; j < size(cornersMasks); ++j) {
-            cube.setCorners(intCorners[i]);
-            ASSERT_EQ(expectedPartialCornersPerms[i][j], cube.getPartialCornersPerm(cornersMasks[j]));
-        }
-    }
-}
-
-TEST(ruCubeTest, getPartialCornersOrientTest) {
-    const std::vector<uint64_t> cornersMasks {
-        0b000001,
-        0b000010,
-        0b000100,
-        0b001000,
-        0b010000,
-        0b100000,
-
-        0b111111,
-        0b000111,
-        0b001111,
-        0b111000,
-        0b000000,
-
-        0b110010
-    };
-
-    const std::vector<uint64_t> intCorners {
-        0000102030405,
-        0151413121110,
-        0442142251013,
-    };
-
-
-    const std::vector<std::vector<uint32_t>> expectedPartialCornersOrients {
-        {   0777770,
-            0777707,
-            0777077,
-            0770777,
-            0707777,
-            0077777,
-
-            0000000,
-            0777000,
-            0770000,
-            0000777,
-            0777777,
-
-            0007707    },
-
-        {   0177777,
-            0717777,
-            0771777,
-            0777177,
-            0777717,
-            0777771,
-
-            0111111,
-            0111777,
-            0111177,
-            0777111,
-            0777777,
-            0717711    },
-
-        {   0777277,
-            0477777,
-            0777771,
-            0774777,
-            0727777,
-            0777717,
-
-            0424211,
-            0477271,
-            0474271,
-            0724717,
-            0777777,
-
-            0427717    },
-    };
-
-    ruCube cube;
-    for (uint8_t i = 0; i < size(expectedPartialCornersOrients); ++i) {
-        for (uint8_t j = 0; j < size(cornersMasks); ++j) {
-            cube.setCorners(intCorners[i]);
-            ASSERT_EQ(expectedPartialCornersOrients[i][j], cube.getPartialCornersOrient(cornersMasks[j]));
-        }
+        cube.setCorners(intCorners);
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, expectedPartialCornersOrient, cube.getPartialCornersOrient(cornersOrientMask));
     }
 }

@@ -124,60 +124,60 @@ TEST(generatorParametersTest, toSolvedMasksTest) {
 
     std::vector<solvedMasks> expectedSolvedMasks = {
         {
+            UINT64_C(0x0000003F0000003F),
             UINT32_C(0x7F),
-            UINT64_C(0x0000003F0000003F)
         },
         {
+            UINT64_C(0x0000003F0000003F),
             UINT32_C(0x7F),
-            UINT64_C(0x0000003F0000003F)
         },
         {
+            UINT64_C(0x0000003F0000003F),
             UINT32_C(0x7F),
-            UINT64_C(0x0000003F0000003F)
         },
         {
+            UINT64_C(0x0000003F0000003F),
             UINT32_C(0x7F),
-            UINT64_C(0x0000003F0000003F)
         },
         {
+            UINT64_C(0x0000003F0000003F),
             UINT32_C(0x7F),
-            UINT64_C(0x0000003F0000003F)
         },
         {
+            UINT64_C(0x3F),
             UINT32_C(0x7F),
-            UINT64_C(0x3F)
         },
         {
+            UINT64_C(0x3F),
             UINT32_C(0x75),
-            UINT64_C(0x3F)
         },
         {
+            UINT64_C(0x0000000300000003),
             UINT32_C(0x07),
-            UINT64_C(0x0000000300000003)
         },
         {
+            UINT64_C(0x0000000300000003),
             UINT32_C(0x07),
-            UINT64_C(0x0000000300000003)
         },
         {
+            UINT64_C(0x0000003500000036),
             UINT32_C(0x6D),
-            UINT64_C(0x0000003500000036)
         },
         {
+            UINT64_C(0x0000003500000036),
             UINT32_C(0x69),
-            UINT64_C(0x0000003500000036)
         },
         {
+            UINT64_C(0x0000003500000035),
             UINT32_C(0x6B),
-            UINT64_C(0x0000003500000035)
         },
         {
+            UINT64_C(0x0000003500000035),
             UINT32_C(0x6F),
-            UINT64_C(0x0000003500000035)
         },
         {
+            UINT64_C(0x000000370000003D),
             UINT32_C(0x6F),
-            UINT64_C(0x000000370000003D)
         },
     };
 

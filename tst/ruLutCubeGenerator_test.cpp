@@ -50,7 +50,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedPiecesTest) {
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
     }
     ASSERT_FALSE(generator.hasNext());
 
@@ -108,7 +108,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedPiecesTest) {
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
     }
     ASSERT_FALSE(generator.hasNext());
 }
@@ -178,7 +178,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithIgnoredPiecesTest) {
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
     }
 
     ASSERT_FALSE(generator.hasNext());
@@ -218,7 +218,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedAndIgnoredPiecesTest) {
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
     }
     ASSERT_FALSE(generator.hasNext());
 }
@@ -321,7 +321,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesLastF2LPairTest) {
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
     }
 
     ASSERT_FALSE(generator.hasNext());
@@ -365,7 +365,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesLLEdgesTest) {
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
     }
 
     ASSERT_FALSE(generator.hasNext());
@@ -421,7 +421,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesLLCornersOrientationTest) {
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
     }
 
     ASSERT_FALSE(generator.hasNext());
@@ -570,7 +570,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesRUCornersPermOnlyTest) {
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
     }
 
     ASSERT_FALSE(generator.hasNext());
@@ -865,7 +865,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesLLCornersPermutationTest) {
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
         ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersPerm(), ruLutCube.getCornersOrient()));
+        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
         ASSERT_EQ(expectedCubesAsString[i], ruLutCube.toString());
     }
 
