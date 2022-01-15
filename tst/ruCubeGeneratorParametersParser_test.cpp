@@ -119,7 +119,7 @@ TEST(ruCubeGeneratorParametersParserTest, negativeTest) {
         try {
             auto genPerms = ruCubeGeneratorParametersParser::strGeneratorParametersToStruct(generatorParamsStr[i]);
         } catch (const ruCubeGeneratorParametersException &e) {
-            exceptionMessage = e.what();
+            exceptionMessage = std::string(e.what());
         }
         ASSERT_EQ(expectedException, exceptionMessage);
     }

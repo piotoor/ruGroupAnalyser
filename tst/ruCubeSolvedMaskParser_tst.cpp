@@ -58,7 +58,7 @@ TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntNegativeTest) {
         try {
             auto masksInt = ruCubeSolvedMaskParser::stringSolvedMaskToInt(masksStr[i]);
         } catch (const ruCubeSolvedMaskException &e) {
-            exceptionMessage = e.what();
+            exceptionMessage = std::string(e.what());
         }
         ASSERT_EQ(expectedException, exceptionMessage);
     }
@@ -114,7 +114,7 @@ TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntSimpleCorrectMasksNegative
         try {
             auto masks = ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masksStr[i]);
         } catch (const ruCubeSolvedMaskException &e) {
-            exceptionMessage = e.what();
+            exceptionMessage = std::string(e.what());
         }
         ASSERT_EQ(expectedException, exceptionMessage);
     }

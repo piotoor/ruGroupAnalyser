@@ -7,31 +7,31 @@ ruException::ruException(const std::string& msg): msg(msg) {
 ruException::~ruException() {
 }
 
-ruCubeStateException::ruCubeStateException(const std::string& msg): ruException(msg) {
+ruCubeStateException::ruCubeStateException(const std::string& msg): ruException(std::string("ruCubeStateException: ") + msg) {
 
 }
 
 ruCubeStateException::~ruCubeStateException() {
 }
 
-std::string ruCubeStateException::what() const noexcept {
-    return std::string("ruCubeStateException: " + msg);
+const char* ruCubeStateException::what() const noexcept {
+    return msg.c_str();
 }
 
-ruCubeTurnException::ruCubeTurnException(uint8_t index): ruException(std::string("Cube turn index (which is ") + std::to_string(index) + ") out of range (which is [0:5])") {
+ruCubeTurnException::ruCubeTurnException(uint8_t index): ruException(std::string("ruCubeTurnException: Cube turn index (which is ") + std::to_string(index) + ") out of range (which is [0:5])") {
 }
 
 ruCubeTurnException::~ruCubeTurnException() {
 
 }
 
-std::string ruCubeTurnException::what() const noexcept {
-    return std::string("ruCubeTurnException: " + msg);
+const char* ruCubeTurnException::what() const noexcept {
+    return msg.c_str();
 }
 
 
 
-ruCubeFactoryException::ruCubeFactoryException(const std::string& msg): ruException(msg) {
+ruCubeFactoryException::ruCubeFactoryException(const std::string& msg): ruException(std::string("ruCubeFactoryException: ") + msg) {
 
 }
 
@@ -39,55 +39,55 @@ ruCubeFactoryException::~ruCubeFactoryException() {
 
 }
 
-std::string ruCubeFactoryException::what() const noexcept {
-    return std::string("ruCubeFactoryException: " + msg);
+const char* ruCubeFactoryException::what() const noexcept {
+    return msg.c_str();
 }
 
 
-ruCubeSolvedMaskException::ruCubeSolvedMaskException(const std::string& msg): ruException(msg) {
+ruCubeSolvedMaskException::ruCubeSolvedMaskException(const std::string& msg): ruException(std::string("ruCubeSolvedMaskException: ") + msg) {
 
 }
 
 ruCubeSolvedMaskException::~ruCubeSolvedMaskException() {
 }
 
-std::string ruCubeSolvedMaskException::what() const noexcept {
-    return std::string("ruCubeSolvedMaskException: " + msg);
+const char* ruCubeSolvedMaskException::what() const noexcept {
+    return msg.c_str();
 }
 
 
 
-ruCubeScrambleException::ruCubeScrambleException(const std::string& msg): ruException(msg) {
+ruCubeScrambleException::ruCubeScrambleException(const std::string& msg): ruException(std::string("ruCubeScrambleException: ") + msg) {
 
 }
 
 ruCubeScrambleException::~ruCubeScrambleException() {
 }
 
-std::string ruCubeScrambleException::what() const noexcept {
-    return std::string("ruCubeScrambleException: " + msg);
+const char* ruCubeScrambleException::what() const noexcept {
+    return msg.c_str();
 }
 
 
-ruCubeGeneratorParametersException::ruCubeGeneratorParametersException(const std::string &msg): ruException(msg) {
+ruCubeGeneratorParametersException::ruCubeGeneratorParametersException(const std::string &msg): ruException(std::string("ruCubeGeneratorParametersException: ") + msg) {
 
 }
 
 ruCubeGeneratorParametersException::~ruCubeGeneratorParametersException() {
 }
 
-std::string ruCubeGeneratorParametersException::what() const noexcept {
-    return std::string("ruCubeGeneratorParametersException: " + msg);
+const char* ruCubeGeneratorParametersException::what() const noexcept {
+    return msg.c_str();
 }
 
 
-ruCubeMultiSolveHandlerException::ruCubeMultiSolveHandlerException(const std::string &msg): ruException(msg) {
+ruCubeMultiSolveHandlerException::ruCubeMultiSolveHandlerException(const std::string &msg): ruException(std::string("ruCubeMultiSolveHandlerException: ") + msg) {
 
 }
 
 ruCubeMultiSolveHandlerException::~ruCubeMultiSolveHandlerException() {
 }
 
-std::string ruCubeMultiSolveHandlerException::what() const noexcept {
-    return std::string("ruCubeMultiSolveHandlerException: " + msg);
+const char* ruCubeMultiSolveHandlerException::what() const noexcept {
+    return msg.c_str();
 }

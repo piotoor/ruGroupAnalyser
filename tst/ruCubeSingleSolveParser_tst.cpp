@@ -84,7 +84,7 @@ TEST(ruCubeSingleSolveInputParserTest, getCubeFromScrambleNegativeTest) {
         try {
             auto cube = parser.getCubeFromScramble(scrambles[i]);
         } catch (const ruCubeScrambleException &e) {
-            ASSERT_EQ(expectedException, e.what());
+            ASSERT_EQ(expectedException, std::string(e.what()));
         }
     }
     ASSERT_EQ(size(scrambles), i);
@@ -181,7 +181,7 @@ TEST(ruCubeSingleSolveInputParserTest, getCubeFromStateNegativeTest) {
         try {
             auto cube = parser.getCubeFromState(states[i]);
         } catch (const ruCubeStateException &e) {
-            ASSERT_EQ(exceptions[i], e.what());
+            ASSERT_EQ(exceptions[i], std::string(e.what()));
         }
     }
     ASSERT_EQ(size(states), i);

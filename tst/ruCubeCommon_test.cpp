@@ -126,7 +126,7 @@ namespace {
                 try {
                     this->cube->turn(i);
                 } catch (const ruCubeTurnException &e) {
-                    ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(i) + ") out of range (which is [0:5])"), e.what());
+                    ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(i) + ") out of range (which is [0:5])"), std::string(e.what()));
                     throw;
                 },
                 ruCubeTurnException
@@ -142,7 +142,7 @@ namespace {
                 try {
                     this->cube->inverseTurn(i);
                 } catch (const ruCubeTurnException &e) {
-                    ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(i) + ") out of range (which is [0:5])"), e.what());
+                    ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(i) + ") out of range (which is [0:5])"), std::string(e.what()));
                     throw;
                 },
                 ruCubeTurnException
@@ -324,8 +324,8 @@ namespace {
                 try {
                     this->cube->scramble(scr);
                 } catch (const ruCubeTurnException &e) {
-                    std::cout << e.what() << std::endl;
-                    ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(this->firstInvalidTurn[i]) + ") out of range (which is [0:5])"), e.what());
+                    std::cout << std::string(e.what()) << std::endl;
+                    ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(this->firstInvalidTurn[i]) + ") out of range (which is [0:5])"), std::string(e.what()));
                     throw;
                 },
                 ruCubeTurnException
@@ -344,8 +344,8 @@ namespace {
                 try {
                     this->cube->inverseScramble(scr);
                 } catch (const ruCubeTurnException &e) {
-                    std::cout << e.what() << std::endl;
-                    ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(this->firstInvalidTurn[i]) + ") out of range (which is [0:5])"), e.what());
+                    std::cout << std::string(e.what()) << std::endl;
+                    ASSERT_EQ(std::string("ruCubeTurnException: Cube turn index (which is " + std::to_string(this->firstInvalidTurn[i]) + ") out of range (which is [0:5])"), std::string(e.what()));
                     throw;
                 },
                 ruCubeTurnException

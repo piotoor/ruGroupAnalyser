@@ -53,7 +53,7 @@ TEST(ruCubeStateParserTest, negativeTest) {
         try {
             auto vectState = ruCubeStateParser::stringStateToVect(cubeStatesStr[i]);
         } catch (const ruCubeStateException &e) {
-            exceptionMessage = e.what();
+            exceptionMessage = std::string(e.what());
         }
         ASSERT_EQ(expectedException, exceptionMessage);
     }

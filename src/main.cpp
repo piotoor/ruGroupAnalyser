@@ -96,7 +96,7 @@ int main(int argc, char const* argv[]) {
                         try {
                             return ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(std::string{str});
                         } catch (const ruCubeSolvedMaskException &e) {
-                            throw std::runtime_error{e.what()};
+                            throw std::runtime_error{std::string(e.what())};
                         }
                 },
                 false },
@@ -125,7 +125,7 @@ int main(int argc, char const* argv[]) {
         p.validate();
 
     } catch (const std::runtime_error &e) {
-        std::cout << e.what() << std::endl;
+        std::cout << std::string(e.what()) << std::endl;
 
         return EXIT_FAILURE;
     }
@@ -150,7 +150,7 @@ int main(int argc, char const* argv[]) {
 
             std::cout << solveHandler.getReport();
         } catch (const ruCubeScrambleException &e) {
-            std::cout << e.what() << std::endl;
+            std::cout << std::string(e.what()) << std::endl;
             return EXIT_FAILURE;
         }
 
@@ -174,7 +174,7 @@ int main(int argc, char const* argv[]) {
 
             std::cout << solveHandler.getReport();
         } catch (const ruCubeStateException& e) {
-            std::cout << e.what() << std::endl;
+            std::cout << std::string(e.what()) << std::endl;
             return EXIT_FAILURE;
         }
 
@@ -194,11 +194,11 @@ int main(int argc, char const* argv[]) {
             try {
                 handler.generateAndSolve("default.ruc");
             } catch (ruCubeMultiSolveHandlerException &e) {
-                std::cout << e.what() << std::endl;
+                std::cout << std::string(e.what()) << std::endl;
                 return EXIT_FAILURE;
             }
         } catch (ruCubeGeneratorParametersException &e) {
-            std::cout << e.what() << std::endl;
+            std::cout << std::string(e.what()) << std::endl;
             return EXIT_FAILURE;
         }
     } else if (mode.first == solvingMode::ANALYSIS ){
