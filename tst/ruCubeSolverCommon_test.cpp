@@ -169,3 +169,91 @@ TEST_F(ruCubeSolverPerformanceTest, ruCubeSolverVsRuLutCubeSolver) {
 TEST_F(ruCubeSolverPerformanceTest, ruCubeSolverVsRuLutCubeSolverCustomEdgesMask) {
     ruCubeSolverVsRuLutCubeSolver(00070707, 0b0010101);
 }
+
+
+namespace {
+    template <class T>
+    class ruCubeAndLutCubeSolverCustomConfigurationSolveTests: public testing::Test {
+        protected:
+            ruCubeAndLutCubeSolverCustomConfigurationSolveTests(): cube(std::make_unique<T>()) {
+            }
+
+            virtual ~ruCubeAndLutCubeSolverCustomConfigurationSolveTests() {
+            }
+
+            std::unique_ptr<ruBaseCube> cube;
+
+            static inline const std::vector<std::tuple<std::vector<uint8_t>, solutionParameters, std::vector<std::vector<uint8_t>>>> testData = {
+                {
+                    { R2, U2, R2, U2, R2, U2 },
+                    { 6, 6, 2 },
+                    {
+                        { R2, U2, R2, U2, R2, U2 },
+                        { U2, R2, U2, R2, U2, R2 },
+                    }
+                },
+                {
+                    { R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U },
+                    { 12, 14, 4 },
+                    {
+                        { R2, U2, R2, U2, R2, U, R2, U2, R2, U2, R2, Ui },
+                        { R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U },
+                        { U, R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2 },
+                        { Ui, R2, U2, R2, U2, R2, U, R2, U2, R2, U2, R2 }
+                    }
+                },
+                {
+                    { R2, U2, R2, U2, R2, Ui, R2, U2, R2, U2, R2, U },
+                    { 6, 10, 4 },
+                    {
+
+                    }
+                },
+                {
+                    { R, U, Ri, U, R, U2, Ri },
+                    { 6, 8, 1 },
+                    {
+                        { R, U2, Ri, Ui, R, Ui, Ri }
+                    }
+                },
+                {
+                    { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
+                    { 12, 12, 2 },
+                    {
+                        { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
+                        { U, R, Ui, Ri, U, R, Ui, Ri, U, R, Ui, Ri }
+                    }
+                },
+                {
+                    { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
+                    { 12, 12, 200 },
+                    {
+                        { R, U, Ri, Ui, R, U, Ri, Ui, R, U, Ri, Ui },
+                        { U, R, Ui, Ri, U, R, Ui, Ri, U, R, Ui, Ri }
+                    }
+                },
+            };
+    };
+
+    using testing::Types;
+    using Implementations = Types<ruCube, ruLutCube>;
+    TYPED_TEST_SUITE(ruCubeAndLutCubeSolverCustomConfigurationSolveTests, Implementations);
+
+    TYPED_TEST(ruCubeAndLutCubeSolverCustomConfigurationSolveTests, correctSolution) {
+        for (const auto &data: this->testData) {
+            const auto &[scr, params, expected] = data;
+            const auto &[minLength, maxLength, maxNumOfSolutions] = params;
+
+            std::stringstream ss;
+            ss << "scr = " << ruCubeScrambleParser::vectorScrambleToStringScramble(scr) << ", params = { " << (int)minLength << ", " << (int)maxLength << ", " << (int)maxNumOfSolutions << "}" << std::endl;
+            SCOPED_TRACE(ss.str());
+
+            ruCubeSolver solver(params);
+            this->cube->reset();
+            this->cube->scramble(scr);
+            solver.solve(this->cube.get());
+            auto solutions = solver.getSolutionsAsVectors();
+            ASSERT_EQ(expected, solutions);
+        }
+    }
+}
