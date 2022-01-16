@@ -69,3 +69,103 @@ namespace {
         }
     }
 }
+
+class ruCubeSolverPerformanceTest : public ::testing::Test {
+    protected:
+        void ruCubeSolverVsRuLutCubeSolver(uint32_t edgesMask = ruCube::allEdgesMask, uint32_t ruEdgesMask = ruCube::allEdgesMask) {
+            std::vector<std::vector<uint8_t>> scrambles {
+                { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R, U, Ri, U },
+                { R, U, R, U, R2, U, R, U, R, Ui, R, U2, R2, U2, Ri, U2, R, U, Ri, U },
+                { R, U, R, U, R2, U, R, Ui, Ri, U, Ri, Ui, Ri, Ui, Ri, U2, R, U, Ri, Ui },
+                { Ri, Ui, Ri, Ui, R2, U, R, Ui, Ri, U, Ri, Ui, Ri, Ui, Ri, U2, R, U, Ri, U2 },
+                { R2, U2, R2, U2, R2, Ui, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, Ri, U2 },
+
+                { R2, U2, R2, U2, R, U, R2, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, Ri, U2 },
+                { R2, U2, R2, U, R2, Ui, R, U, Ri, U, Ri, U, Ri, Ui, Ri, U, R, U, Ri, U },
+                { R2, U2, R, U2, R2, Ui, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, R2, U2 },
+                { R2, U2, R2, U2, Ri, Ui, R, Ui, Ri, U, R2, U2, Ri, Ui, Ri, U2, R, U, Ri, U2 },
+                { R2, U2, R2, Ui, R2, U2, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, Ri, U2 },
+
+                { U2, R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R, U, Ri, U },
+                { Ui, R, U, R, U, R2, U, R, U, R, Ui, R, U2, R2, U2, Ri, U2, R, U, Ri, U },
+                { R, Ui, R, U, R2, U, R, Ui, Ri, U, Ri, Ui, Ri, Ui, Ri, U2, R, U, Ri, Ui },
+                { Ri, Ui, Ri, Ui, R2, U, R, Ui, Ri, Ui, Ri, Ui, Ri, Ui, Ri, U2, R, U, Ri, U2 },
+                { U, R2, U2, R, U2, R2, Ui, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, Ri, U2 },
+
+                { R2, U2, R2, U2, R, U, R2, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, Ri, U2, R },
+                { R2, U2, R2, U, R2, Ui, R, U, Ri, U, Ri, U, Ri, Ui, Ri, U, R, U, Ri, U, Ri },
+                { R2, U2, R, U2, R2, Ui, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, R2, U2, R2 },
+                { R2, U2, R2, U2, Ri, Ui, R, Ui, Ri, U, R2, U2, Ri, Ui, Ri, U2, R, U, Ri, Ui, R },
+                { R2, U2, R2, Ui, R2, U2, R, Ui, Ri, U, Ri, U2, Ri, Ui, Ri, U2, R, U, Ri, U, Ri }
+            };
+
+            std::vector<std::unique_ptr<ruBaseCube>> cubes;
+            cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube));
+            cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruLutCube));
+
+            std::stringstream ss;
+
+            ss << std::endl;
+            ss << "+-----------+-----------+" << std::endl;
+            ss << "| cube type | time [ms] |" << std::endl;
+            ss << "+-----------+-----------+";
+
+            int i = 0;
+            std::vector<std::string> cubesNames {"ruCube", "ruLutCube"};
+            std::vector<uint32_t> edgesMasks {edgesMask, ruEdgesMask};
+
+            for (auto &cube: cubes) {
+                solutionParameters params = {
+                    0, 20, 1
+                };
+
+                solvedMasks masks = {
+                    ruBaseCube::allCornersMask,
+                    edgesMasks[i]
+                };
+
+                ruCubeSolver solver(params, masks);
+                std::vector<std::vector<uint8_t>> solutions;
+
+
+                const std::chrono::time_point<std::chrono::steady_clock> start = std::chrono::steady_clock::now();
+
+                int scrIndex = 0;
+                for (const auto &scr: scrambles) {
+                    std::cout << std::setw(10) <<  cubesNames[i] << " solving scramble " << std::setw(2) << scrIndex << "..." << std::flush;
+                    cube->reset();
+                    cube->scramble(scr);
+                    solver.solve(cube.get());
+                    solutions.push_back(solver.getSolutionsAsVectors()[0]);
+                    ++scrIndex;
+                    std::cout << "DONE" << std::endl << std::flush;
+                }
+
+                const auto stop = std::chrono::steady_clock::now();
+                std::chrono::duration<double> diff = stop - start;
+                using namespace std::literals;
+                double dur = diff / 1ms;
+                ss << std::endl << "| " << std::setw(9) << cubesNames[i] << " |";
+                ss << std::setw(11) << dur << "|";
+
+                for (uint8_t j = 0; j < size(scrambles); ++j) {
+                    cube->reset();
+                    cube->scramble(scrambles[j]);
+                    cube->scramble(solutions[j]);
+                    ASSERT_TRUE(cube->isSolved(ruBaseCube::allCornersMask, edgesMasks[i]));
+                }
+                ++i;
+            }
+            ss << std::endl;
+            ss << "+-----------+-----------+" << std::endl;
+            std::cout << ss.str();
+        }
+};
+
+TEST_F(ruCubeSolverPerformanceTest, ruCubeSolverVsRuLutCubeSolver) {
+    ruCubeSolverVsRuLutCubeSolver();
+}
+
+TEST_F(ruCubeSolverPerformanceTest, ruCubeSolverVsRuLutCubeSolverCustomEdgesMask) {
+    ruCubeSolverVsRuLutCubeSolver(00070707, 0b0010101);
+}
