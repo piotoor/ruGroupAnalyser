@@ -5,51 +5,6 @@
 #include <vector>
 #include <sstream>
 
-TEST(ruCubeSolverTest, simpleDefaultConfigurationSolveTest) {
-    std::vector<std::unique_ptr<ruBaseCube>> cubes;
-    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube));
-    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruLutCube));
-
-    ASSERT_EQ(2, size(cubes));
-
-    for (auto &cube: cubes) {
-        cube->turn(R);
-        cube->turn(U);
-        cube->turn(R2);
-        cube->turn(Ui);
-
-        ruCubeSolver solver;
-        solver.solve(cube.get());
-        auto solutions = solver.getSolutionsAsVectors();
-        std::vector<std::vector<uint8_t>> expectedSolutions = {
-            { U, R2, Ui, Ri }
-        };
-
-        ASSERT_EQ(expectedSolutions.size(), solutions.size());
-        for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-            ASSERT_EQ(expectedSolutions[i], solutions[i]);
-        }
-
-
-
-        cube->reset();
-        cube->turn(Ri);
-        cube->turn(U);
-        cube->turn(Ri);
-        cube->turn(Ui);
-
-        solver.solve(cube.get());
-        solutions = solver.getSolutionsAsVectors();
-        expectedSolutions = {
-            { U, R, Ui, R }
-        };
-
-        ASSERT_EQ(expectedSolutions.size(), solutions.size());
-        for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-            ASSERT_EQ(expectedSolutions[i], solutions[i]);
-        }
-    }
-}
 
 TEST(ruCubeSolverTest, customConfigurationSolveTest) {
     std::vector<std::unique_ptr<ruBaseCube>> cubes;
