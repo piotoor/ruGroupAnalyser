@@ -6,42 +6,6 @@
 #include <sstream>
 
 
-TEST(ruCubeSolverTest, singleMoveSolutionsTest) {
-    std::vector<std::vector<uint8_t>> expectedSolutions = {
-        { Ui },
-        { U2 },
-        { U },
-        { Ri },
-        { R2 },
-        { R }
-    };
-
-    std::vector<std::vector<uint8_t>> scrambles = {
-        { U },
-        { U2 },
-        { Ui },
-        { R },
-        { R2 },
-        { Ri }
-    };
-
-    for (uint8_t i = 0; i < expectedSolutions.size(); ++i) {
-        ruCubeSolver solver;
-
-        std::vector<std::unique_ptr<ruBaseCube>> cubes;
-        cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube));
-        cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruLutCube));
-
-        for (auto &cube: cubes) {
-            cube->scramble(scrambles[i]);
-            solver.solve(cube.get());
-            auto solutions = solver.getSolutionsAsVectors();
-
-            ASSERT_EQ(expectedSolutions[i], solutions[0]);
-        }
-    }
-}
-
 TEST(ruCubeSolverTest, multipleScramblesSolutionsAsStringsTest) {
     std::vector<std::vector<uint8_t>> scrambles {
         { R2 },

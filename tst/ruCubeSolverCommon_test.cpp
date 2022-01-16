@@ -257,3 +257,49 @@ namespace {
         }
     }
 }
+
+
+namespace {
+    template <class T>
+    class ruCubeAndLutCubeSolverSingleMoveSolutionsTests: public testing::Test {
+        protected:
+            ruCubeAndLutCubeSolverSingleMoveSolutionsTests(): cube(std::make_unique<T>()) {
+            }
+
+            virtual ~ruCubeAndLutCubeSolverSingleMoveSolutionsTests() {
+            }
+
+            std::unique_ptr<ruBaseCube> cube;
+
+            static inline const std::vector<std::tuple<std::vector<uint8_t>, std::vector<uint8_t>>> testData {
+                { { Ui }, { U } },
+                { { U2 }, { U2 } },
+                { { U }, { Ui } },
+                { { Ri }, { R } },
+                { { R2 }, { R2 } },
+                { { R }, { Ri } }
+            };
+    };
+
+    using testing::Types;
+    using Implementations = Types<ruCube, ruLutCube>;
+    TYPED_TEST_SUITE(ruCubeAndLutCubeSolverSingleMoveSolutionsTests, Implementations);
+
+    TYPED_TEST(ruCubeAndLutCubeSolverSingleMoveSolutionsTests, singleMoveSolutionsTest) {
+        for (const auto &data: this->testData) {
+            const auto &[scramble, expected] = data;
+
+            std::stringstream ss;
+            ss << "scr = " << ruCubeScrambleParser::vectorScrambleToStringScramble(scramble) << std::endl;
+            SCOPED_TRACE(ss.str());
+
+            ruCubeSolver solver;
+            this->cube->reset();
+            this->cube->scramble(scramble);
+            solver.solve(this->cube.get());
+            auto solutions = solver.getSolutionsAsVectors();
+
+            ASSERT_EQ(expected, solutions[0]);
+        }
+    }
+}
