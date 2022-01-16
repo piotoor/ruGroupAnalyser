@@ -303,3 +303,49 @@ namespace {
         }
     }
 }
+
+
+namespace {
+    template <class T>
+    class ruCubeAndLutCubeSolverMultipleScramblesSolutionsAsStringsTests: public testing::Test {
+        protected:
+            ruCubeAndLutCubeSolverMultipleScramblesSolutionsAsStringsTests(): cube(std::make_unique<T>()) {
+            }
+
+            virtual ~ruCubeAndLutCubeSolverMultipleScramblesSolutionsAsStringsTests() {
+            }
+
+            std::unique_ptr<ruBaseCube> cube;
+
+            static inline const std::vector<std::tuple<std::vector<uint8_t>, std::string>> testData {
+                { { R2 }, "R2" },
+                { { R2, U }, "U' R2" },
+                { { R2, U, R}, "R' U' R2" },
+                { { R2, U, R, Ui }, "U R' U' R2" },
+                { { R2, U, R, Ui, R2 }, "R2 U R' U' R2" },
+                { { R2, Ui, Ri, Ui, R2, U2 }, "U2 R2 U R U R2" },
+            };
+    };
+
+    using testing::Types;
+    using Implementations = Types<ruCube, ruLutCube>;
+    TYPED_TEST_SUITE(ruCubeAndLutCubeSolverMultipleScramblesSolutionsAsStringsTests, Implementations);
+
+    TYPED_TEST(ruCubeAndLutCubeSolverMultipleScramblesSolutionsAsStringsTests, multipleScramblesTest) {
+        for (const auto &data: this->testData) {
+            const auto &[scramble, expected] = data;
+
+            std::stringstream ss;
+            ss << "scr = " << ruCubeScrambleParser::vectorScrambleToStringScramble(scramble) << std::endl;
+            SCOPED_TRACE(ss.str());
+
+            ruCubeSolver solver;
+            this->cube->reset();
+            this->cube->scramble(scramble);
+            solver.solve(this->cube.get());
+            auto solutionsStr = solver.getSolutionsAsStrings();
+
+            ASSERT_EQ(expected, solutionsStr[0]);
+        }
+    }
+}

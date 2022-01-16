@@ -6,54 +6,6 @@
 #include <sstream>
 
 
-TEST(ruCubeSolverTest, multipleScramblesSolutionsAsStringsTest) {
-    std::vector<std::vector<uint8_t>> scrambles {
-        { R2 },
-        { R2, U },
-        { R2, U, R},
-        { R2, U, R, Ui },
-        { R2, U, R, Ui, R2 },
-        { R2, Ui, Ri, Ui, R2, U2 },
-    };
-
-    std::vector<std::string> expectedSolutionsStrings {
-        "R2",
-        "U' R2",
-        "R' U' R2",
-        "U R' U' R2",
-        "R2 U R' U' R2",
-        "U2 R2 U R U R2"
-    };
-
-    std::vector<std::unique_ptr<ruBaseCube>> cubes;
-    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube));
-    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruLutCube));
-
-    for (auto &cube: cubes) {
-        ruCubeSolver solver;
-
-        for (uint8_t i = 0; i < std::size(scrambles); ++i) {
-            std::cout << "Solving scramble of length " << std::setw(2) << size(scrambles[i]) << "... ";
-            std::cout.flush();
-            cube->reset();
-            cube->scramble(scrambles[i]);
-            solver.solve(cube.get());
-            auto solution = solver.getSolutionsAsVectors();
-            auto solutionStr = solver.getSolutionsAsStrings();
-            ASSERT_EQ(1, std::size(solution));
-            ASSERT_EQ(1, std::size(solutionStr));
-
-            cube->reset();
-            cube->scramble(scrambles[i]);
-            cube->scramble(solution[0]);
-            ASSERT_TRUE(cube->isSolved(ruBaseCube::allCornersMask, ruBaseCube::allEdgesMask));
-            ASSERT_EQ(expectedSolutionsStrings[i], solutionStr[0]);
-            std::cout << "(sol: " << std::setw(2) << size(solution[0]) << " moves) ";
-            std::cout << "DONE" << std::endl;
-        }
-    }
-}
-
 TEST(ruCubeSolverTest, customRuLutCubeEdgesMaskTest) {
     std::vector<std::vector<uint8_t>> scrambles {
         {  },
