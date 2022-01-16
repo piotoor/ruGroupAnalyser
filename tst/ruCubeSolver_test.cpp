@@ -226,59 +226,6 @@ TEST(ruCubeSolverTest, singleMoveSolutionsTest) {
     }
 }
 
-
-
-
-TEST(ruCubeSolverTest, multipleScramblesTest) {
-    std::vector<std::vector<uint8_t>> scrambles {
-        { R2 },
-        { R2, U },
-        { R2, U, R},
-        { R2, U, R, Ui },
-        { R2, U, R, Ui, R2 },
-        { R2, U, R, Ui, R2, U },
-        { R2, U, R, Ui, R2, Ui, Ri },
-        { R2, U, R, Ui, R2, U, R, U },
-        { R2, U, R, Ui, R2, U, R, U, R },
-        { R2, U, R, Ui, R2, U, R, U, R, U2 },
-        { R2, U, R, Ui, R2, U, R, U, R, U, Ri },
-        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2 },
-        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R },
-        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, Ri, U },
-        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri },
-        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2 },
-        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R2 },
-        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, Ri, U },
-        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R, Ui, R },
-        { R2, U, R, Ui, R2, U, R, U, R, Ui, R2, U2, R, U2, Ri, U2, R, U, Ri, U },
-    };
-
-
-    std::vector<std::unique_ptr<ruBaseCube>> cubes;
-    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube));
-    cubes.push_back(ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruLutCube));
-
-    for (auto &cube: cubes) {
-        ruCubeSolver solver;
-
-        for (const auto &scr: scrambles) {
-            std::cout << "Solving scramble of length " << std::setw(2) << size(scr) << "... ";
-            std::cout.flush();
-            cube->reset();
-            cube->scramble(scr);
-            solver.solve(cube.get());
-            auto solution = solver.getSolutionsAsVectors()[0];
-            cube->reset();
-            cube->scramble(scr);
-            cube->scramble(solution);
-            ASSERT_TRUE(cube->isSolved(ruBaseCube::allCornersMask, ruBaseCube::allEdgesMask));
-            std::cout << "(sol: " << std::setw(2) << size(solution) << " moves) ";
-            std::cout << "DONE" << std::endl;
-        }
-    }
-}
-
-
 TEST(ruCubeSolverTest, multipleScramblesSolutionsAsStringsTest) {
     std::vector<std::vector<uint8_t>> scrambles {
         { R2 },
