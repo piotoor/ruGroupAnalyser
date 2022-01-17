@@ -138,7 +138,6 @@ namespace {
     }
 }
 
-
 namespace {
     class ruLutCubeToStringWithIgnoredPiecesPamrameterizedTestFixture: public testing::TestWithParam<std::tuple<uint64_t,
                                                                                                                 uint32_t,
