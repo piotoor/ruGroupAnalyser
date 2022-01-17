@@ -49,6 +49,16 @@ namespace {
                 { ruLutCube::noCornersMask, 0b0000111 },
                 { ruLutCube::noCornersMask, 0b0001111 },
                 { ruLutCube::noCornersMask, 0b1111000 },
+                { 0x0000003F'00000000, ruLutCube::noEdgesMask },   // CO only
+                { 0x00000000'0000003F, ruLutCube::noEdgesMask },   // CP only
+                { 0x0000003F'0000003F, ruLutCube::noEdgesMask },   // CO + CP
+                { 0x00000003'00000003, ruLutCube::noEdgesMask },   // F2L corners
+                { 0x00000020'00000020, ruLutCube::noEdgesMask },   // URF
+                { 0x00000010'00000010, ruLutCube::noEdgesMask },   // UFL
+                { 0x00000008'00000008, ruLutCube::noEdgesMask },   // ULB
+                { 0x00000004'00000004, ruLutCube::noEdgesMask },   // UBR
+                { 0x00000002'00000002, ruLutCube::noEdgesMask },   // DRB
+                { 0x00000001'00000001, ruLutCube::noEdgesMask },   // DFR
             },
             {
                 {  },
@@ -170,7 +180,107 @@ namespace {
                 "U2 R2",
                 "U R2",
                 "U R U' R' U2 R2",
-                "U R2 U R2 U'"
+                "U R2 U R2 U'",
+            //--------------------------------------
+                "",
+                "R",
+                "",
+                "R",
+                "",
+                "",
+                "",
+                "U R U' R",
+                "U R U R",
+
+                "",
+                "R'",
+                "R2",
+                "R",
+                "U' R2",
+                "U2 R2",
+                "U R2",
+                "R2 U' R'",
+                "U' R' U",
+
+                "",
+                "R'",
+                "R2",
+                "R",
+                "U' R2",
+                "U2 R2",
+                "U R2",
+                "U R U' R' U2 R2",
+                "R' U' R U R'",
+
+                "",
+                "R'",
+                "R2",
+                "R",
+                "U' R2",
+                "U2 R2",
+                "U R2",
+                "U R U R2",
+                "R' U' R U R'",
+
+                "",
+                "R'",
+                "R2",
+                "R",
+                "R2",
+                "R2",
+                "R2",
+                "R2",
+                "R2",
+
+                "",
+                "",
+                "",
+                "",
+                "U'",
+                "U2",
+                "U",
+                "U'",
+                "U",
+
+                "",
+                "",
+                "",
+                "",
+                "U'",
+                "U2",
+                "U",
+                "R U' R' U2",
+                "",
+
+                "",
+                "R'",
+                "R2",
+                "R",
+                "R2",
+                "R2",
+                "R2",
+                "R",
+                "R' U'",
+
+                "",
+                "R'",
+                "R2",
+                "R",
+                "U' R2",
+                "U2 R2",
+                "U R2",
+                "R' U' R",
+                "R'",
+
+                "",
+                "R'",
+                "R2",
+                "R",
+                "U' R2",
+                "U2 R2",
+                "U R2",
+                "U2 R2",
+                "U2 R' U' R2"
             }
         )),
         ruCubeSolverCustomRuLutCubeMaskTestFixture::toString()
