@@ -31,60 +31,16 @@ bool ruCubeIgnoredPiecesGapFiller::cornersOrientationIgnoredGapsFill(cornersArra
     if (numOfNegativeOrients != 0) {
         constexpr uint8_t maxTotalOrient = 12;
         uint8_t orientReplacement = (maxTotalOrient - sumOfPositiveOrients) % 3;
-
-        for (size_t i = 0; i < size(cornersOrient); ++i) {
-            if (cornersOrient[i] == -1) {
-                cornersOrient[i] = orientReplacement;
-                orientReplacement = 0;
-            }
-        }
+        replaceNegativeOrients(cornersOrient, orientReplacement);
     }
 
     return true;
 }
 
-void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillCleanup() {
-    missingEdges.clear();
-    missingCorners.clear();
-    hasNextEdgesPerm = true;
-    hasNextCornersPerm = true;
-    cornersPermIgnoredIndices.clear();
-    edgesPermIgnoredIndices.clear();
-    missingCornersBits.reset();
-    missingEdgesBits.reset();
-}
-
 void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(const cornersArray& cornersPerm, const edgesArray& edgesPerm) {
     permutationIgnoredGapsFillCleanup();
-
-    for (uint8_t i = 0; i < ruBaseCube::noOfCorners; ++i) {
-        if (cornersPerm[i] == -1) {
-            cornersPermIgnoredIndices.push_back(i);
-        } else {
-            missingCornersBits.flip(cornersPerm[i]);
-        }
-    }
-
-    for (uint8_t i = 0; i < ruBaseCube::noOfEdges; ++i) {
-        if (edgesPerm[i] == -1) {
-            edgesPermIgnoredIndices.push_back(i);
-        } else {
-            missingEdgesBits.flip(edgesPerm[i]);
-        }
-    }
-
-    for (uint8_t i = 0; i < ruBaseCube::noOfCorners; ++i) {
-        if (!missingCornersBits[i]) {
-            missingCorners.push_back(i);
-        }
-    }
-
-    for (uint8_t i = 0; i < ruBaseCube::noOfEdges; ++i) {
-        if (!missingEdgesBits[i]) {
-            missingEdges.push_back(i);
-        }
-    }
-
+    findMissingCorners(cornersPerm);
+    findMissingEdges(edgesPerm);
 }
 
 bool ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillNext(cornersArray& cornersPerm, edgesArray& edgesPerm) {
@@ -115,4 +71,54 @@ bool ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillNext(cornersArray& 
     return validOutput;
 }
 
+void ruCubeIgnoredPiecesGapFiller::replaceNegativeOrients(cornersArray& cornersOrient, uint8_t orientReplacement) {
+    for (size_t i = 0; i < size(cornersOrient); ++i) {
+        if (cornersOrient[i] == -1) {
+            cornersOrient[i] = orientReplacement;
+            orientReplacement = 0;
+        }
+    }
+}
 
+void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillCleanup() {
+    missingEdges.clear();
+    missingCorners.clear();
+    hasNextEdgesPerm = true;
+    hasNextCornersPerm = true;
+    cornersPermIgnoredIndices.clear();
+    edgesPermIgnoredIndices.clear();
+    missingCornersBits.reset();
+    missingEdgesBits.reset();
+}
+
+void ruCubeIgnoredPiecesGapFiller::findMissingCorners(const cornersArray &cornersPerm) {
+    for (uint8_t i = 0; i < ruBaseCube::noOfCorners; ++i) {
+        if (cornersPerm[i] == -1) {
+            cornersPermIgnoredIndices.push_back(i);
+        } else {
+            missingCornersBits.flip(cornersPerm[i]);
+        }
+    }
+
+    for (uint8_t i = 0; i < ruBaseCube::noOfCorners; ++i) {
+        if (!missingCornersBits[i]) {
+            missingCorners.push_back(i);
+        }
+    }
+}
+
+void ruCubeIgnoredPiecesGapFiller::findMissingEdges(const edgesArray &edgesPerm) {
+    for (uint8_t i = 0; i < ruBaseCube::noOfEdges; ++i) {
+        if (edgesPerm[i] == -1) {
+            edgesPermIgnoredIndices.push_back(i);
+        } else {
+            missingEdgesBits.flip(edgesPerm[i]);
+        }
+    }
+
+    for (uint8_t i = 0; i < ruBaseCube::noOfEdges; ++i) {
+        if (!missingEdgesBits[i]) {
+            missingEdges.push_back(i);
+        }
+    }
+}
