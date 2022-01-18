@@ -51,7 +51,7 @@ TEST(ruCubeStateConverterTest, convertvectCornersToIntCornersTest) {
         0402423112225,
     };
 
-    for (uint8_t i = 0; i < std::size(cornersOrient); ++i) {
+    for (size_t i = 0; i < std::size(cornersOrient); ++i) {
         auto corners = conv.vectCornersToIntCorners(cornersOrient[i], cornersPerm[i]);
         ASSERT_EQ(expectedCorners[i], corners);
     }
@@ -76,7 +76,7 @@ TEST(ruCubeStateConverterTest, convertvectEdgesToIntEdgesTest) {
         02013645,
     };
 
-    for (uint8_t i = 0; i < std::size(edgesPerm); ++i) {
+    for (size_t i = 0; i < std::size(edgesPerm); ++i) {
         auto edges = conv.vectEdgesToIntEdges(edgesPerm[i]);
         ASSERT_EQ(expectedEdges[i], edges);
     }
@@ -120,7 +120,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
         0454443202221,
     };
 
-    for (uint8_t i = 0; i < std::size(cornersPerm); ++i) {
+    for (size_t i = 0; i < std::size(cornersPerm); ++i) {
         auto corners = conv.vectCornersToIntCorners(cornersOrient[i], cornersPerm[i]);
         ASSERT_EQ(expectedCorners[i], corners);
     }
@@ -146,7 +146,7 @@ TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
         03204561,
     };
 
-    for (uint8_t i = 0; i < std::size(edgesPerm); ++i) {
+    for (size_t i = 0; i < std::size(edgesPerm); ++i) {
         auto edges = conv.vectEdgesToIntEdges(edgesPerm[i]);
         ASSERT_EQ(expectedEdges[i], edges);
     }
@@ -553,7 +553,7 @@ TEST(ruCubeStateConverterTest, convertIntEdgesToLexIndexEdgesTest) {
         00354621,
     };
 
-    for (uint16_t i = 0; i < std::size(edgesInts); ++i) {
+    for (size_t i = 0; i < std::size(edgesInts); ++i) {
         uint16_t edgesLexIndex = conv.intEdgesToLexIndexEdges(edgesInts[i]);
         ASSERT_EQ(i, edgesLexIndex);
     }
@@ -960,7 +960,7 @@ TEST(ruCubeStateConverterTest, convertLexIndexEdgesToIntEdgesTest) {
         00354621,
     };
 
-    for (uint16_t i = 0; i < std::size(expectedEdgesInts); ++i) {
+    for (size_t i = 0; i < std::size(expectedEdgesInts); ++i) {
         uint32_t intEdges = conv.lexIndexEdgesToIntEdges(i);
         ASSERT_EQ(expectedEdgesInts[i], intEdges);
     }
@@ -1692,7 +1692,7 @@ TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersPermTest) {
         0151413121110
     };
 
-    for (uint16_t i = 0; i < std::size(cornersInts); ++i) {
+    for (size_t i = 0; i < std::size(cornersInts); ++i) {
         uint16_t cornersLexIndex = conv.intCornersToLexIndexCornersPerm(cornersInts[i]);
         ASSERT_EQ(i, cornersLexIndex);
     }
@@ -2424,7 +2424,7 @@ TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersPermAndBackTest
         0151413121110
     };
 
-    for (uint16_t i = 0; i < std::size(cornersInts); ++i) {
+    for (size_t i = 0; i < std::size(cornersInts); ++i) {
         uint16_t cornersLexIndex = conv.intCornersToLexIndexCornersPerm(cornersInts[i]);
         ASSERT_EQ(i, cornersLexIndex);
         uint64_t cornersPermInt = conv.lexIndexCornersToIntCorners(ruLutCube::solvedLexIndexCornersOrient, cornersLexIndex);
@@ -2489,7 +2489,7 @@ TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersOrientTest) {
         598
     };
 
-    for (uint16_t i = 0; i < std::size(cornersInts); ++i) {
+    for (size_t i = 0; i < std::size(cornersInts); ++i) {
         uint16_t cornersLexIndex = conv.intCornersToLexIndexCornersOrient(cornersInts[i]);
         ASSERT_EQ(cornersOrientsExpected[i], cornersLexIndex);
     }
@@ -2534,7 +2534,7 @@ TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersTest) {
         0402123152224,
     };
 
-    for (uint16_t i = 0; i < std::size(expectedCornersInts); ++i) {
+    for (size_t i = 0; i < std::size(expectedCornersInts); ++i) {
         uint64_t cornersInt = conv.lexIndexCornersToIntCorners(lexIndexCornersOrients[i], lexIndexCornersPerms[i]);
         ASSERT_EQ(expectedCornersInts[i], cornersInt);
     }
@@ -2570,7 +2570,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersOrientToLexIndexCornersOrientTe
         598
     };
 
-    for (uint8_t i = 0; i < std::size(cornersOrient); ++i) {
+    for (size_t i = 0; i < std::size(cornersOrient); ++i) {
         auto lexIndexCornersOrient = conv.vectCornersOrientToLexIndexCornersOrient(cornersOrient[i]);
         ASSERT_EQ(expectedLexIndexCornersOrients[i], lexIndexCornersOrient);
     }
@@ -2764,7 +2764,7 @@ TEST(ruCubeStateConverterTest, convertVectCornersPermToLexIndexCornersPermTest) 
         { 1, 3, 4, 2, 0, 5 }
     };
 
-    for (uint8_t i = 0; i < std::size(cornersPerm); ++i) {
+    for (size_t i = 0; i < std::size(cornersPerm); ++i) {
         auto lexIndexCornersPerm = conv.vectCornersPermToLexIndexCornersPerm(cornersPerm[i]);
         ASSERT_EQ(i, lexIndexCornersPerm);
     }
@@ -2880,7 +2880,7 @@ TEST(ruCubeStateConverterTest, convertVectEdgesPermToLexIndexEdgesPermTest) {
         { 0, 1, 6, 3, 4, 2, 5 }
     };
 
-    for (uint8_t i = 0; i < std::size(edgesPerm); ++i) {
+    for (size_t i = 0; i < std::size(edgesPerm); ++i) {
         auto lexIndexEdgesPerm = conv.vectEdgesPermToLexIndexEdgesPerm(edgesPerm[i]);
         ASSERT_EQ(i, lexIndexEdgesPerm);
     }
@@ -2929,7 +2929,7 @@ TEST(ruCubeStateConverterTest, convertLexIndexEdgesToIntEdgesAsStrWithIgnoredTes
         "---5436",
     };
 
-    for (uint16_t i = 0; i < std::size(expectedEdgesStrings); ++i) {
+    for (size_t i = 0; i < std::size(expectedEdgesStrings); ++i) {
         const auto &[ep, epi] = lexIndexEdges[i];
         auto strEdges = conv.lexIndexEdgesToIntEdgesAsStrWithIgnored(ep, epi);
         ASSERT_EQ(expectedEdgesStrings[i], strEdges);
@@ -3003,7 +3003,7 @@ TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersAsStrWithIgnore
         "-01-1305-2--",
     };
 
-    for (uint16_t i = 0; i < std::size(expectedCornersIntsAsStr); ++i) {
+    for (size_t i = 0; i < std::size(expectedCornersIntsAsStr); ++i) {
         const auto &[cp, co, cpi, coi] = lexIndexCubes[i];
         std::string cornersStr = conv.lexIndexCornersToIntCornersAsStrWithIgnored(cp, co, cpi, coi);
         ASSERT_EQ(expectedCornersIntsAsStr[i], cornersStr);

@@ -148,7 +148,7 @@ class ruCubeSolverPerformanceTest : public ::testing::Test {
                 ss << std::endl << "| " << std::setw(9) << cubesNames[i] << " |";
                 ss << std::setw(11) << dur << "|";
 
-                for (uint8_t j = 0; j < size(scrambles); ++j) {
+                for (size_t j = 0; j < size(scrambles); ++j) {
                     cube->reset();
                     cube->scramble(scrambles[j]);
                     cube->scramble(solutions[j]);

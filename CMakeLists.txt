@@ -11,7 +11,26 @@ set(CMAKE_RUNTIME_OUTPUT_DIRECTORY_RELEASE ${CMAKE_BINARY_DIR}/release)
 
 project(ruGroupAnalyser)
 set(CMAKE_CXX_STANDARD 17)
-set(CMAKE_CXX_FLAGS "-Wall -Wextra")
+set(CMAKE_CXX_FLAGS
+   "-Wall \
+    -pedantic-errors -Wextra -Wcast-align \
+    -Wcast-qual \
+    -Wdisabled-optimization \
+    -Werror -Wfloat-equal -Wformat=2 \
+    -Wformat-nonliteral -Wformat-security  \
+    -Wformat-y2k \
+    -Wimport  -Winit-self \
+    -Winvalid-pch   \
+    -Wmissing-field-initializers -Wmissing-format-attribute   \
+    -Wmissing-include-dirs \
+    -Wpointer-arith \
+    -Wredundant-decls \
+    -Wstack-protector \
+    -Wstrict-aliasing=2 \
+    -Wunreachable-code -Wunused \
+    -Wunused-parameter \
+    -Wvariadic-macros \
+    -Wwrite-strings")
 set(CMAKE_CXX_FLAGS_RELEASE "-O3")
 set(CMAKE_CXX_FLAGS_DEBUG "-g -DDEBUG")
 include_directories(src)

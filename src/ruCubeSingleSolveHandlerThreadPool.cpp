@@ -19,7 +19,7 @@ ruCubeSingleSolveHandlerThreadPool::ruCubeSingleSolveHandlerThreadPool( std::str
                 ruCubeSingleSolveHandler handler(solParams, masks, flags);
                 std::cout << "thread " + std::to_string(i) << std::endl;
                 std::stringstream buff;
-                int k = 0;
+
                 while (true) {
                     ruLutCube cube;
                     {
@@ -34,12 +34,9 @@ ruCubeSingleSolveHandlerThreadPool::ruCubeSingleSolveHandlerThreadPool( std::str
                     handler.appendReport(buff);
 
                     buff << "\n";
-                    //if (k == numOfCubesToFetch) {
-                        this->writer.write(buff.str());
-                        buff.str( std::string() );
-                        buff.clear();
-                        k = 0;
-                    //}
+                    this->writer.write(buff.str());
+                    buff.str( std::string() );
+                    buff.clear();
 
                 }
             }

@@ -32,7 +32,7 @@ int main(int argc, char const* argv[]) {
 
     uint8_t minLength = 0;
     uint8_t maxLength = 20;
-    int maxNumOfSolutions = 1;
+    uint8_t maxNumOfSolutions = 1;
     bool headers = false;
     bool lineNumbers = false;
     bool fixedWidthMoves = false;
@@ -53,22 +53,22 @@ int main(int argc, char const* argv[]) {
                             size_t semicolonIndex = str.find_first_of(";");
                             if (semicolonIndex == std::string::npos)
                                 throw std::runtime_error{""};
-                            solvingMode mode = solvingMode::SINGLE_SOLVE_SCRAMBLE;
+                            solvingMode sm = solvingMode::SINGLE_SOLVE_SCRAMBLE;
 
                             std::string_view modeStr = str.substr(0, semicolonIndex);
                             std::string_view args = str.substr(semicolonIndex + 1);
 
                             if (modeStr == "s") {
-                                mode = solvingMode::SINGLE_SOLVE_STATE;
+                                sm = solvingMode::SINGLE_SOLVE_STATE;
                             } else if (modeStr == "g") {
-                                mode = solvingMode::GENERATOR;
+                                sm = solvingMode::GENERATOR;
                             } else if (modeStr == "S") {
-                                mode = solvingMode::SINGLE_SOLVE_SCRAMBLE;
+                                sm = solvingMode::SINGLE_SOLVE_SCRAMBLE;
                             } else {
                                 throw std::runtime_error{""};
                             }
 
-                            return std::pair<solvingMode, std::string>{mode, args};
+                            return std::pair<solvingMode, std::string>{sm, args};
                         } catch (...) {
                             throw std::runtime_error{"Invalid cube state format: " + std::string{str}};
                         }

@@ -156,7 +156,7 @@ class ruCube: public ruBaseCube {
             uint64_t    : 3;
             uint64_t URF: 3;
         };
-        struct cornersPermBits {;
+        struct cornersPermBits {
             uint64_t DFR: 6;
             uint64_t DRB: 6;
             uint64_t UBR: 6;

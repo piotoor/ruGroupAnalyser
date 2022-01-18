@@ -30,7 +30,7 @@ TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntCorrectMasksTest) {
         { 0x0101010101010101, 0x00000000 },
     };
 
-    for (uint8_t i = 0; i < size(expectedMasks); ++i) {
+    for (size_t i = 0; i < size(expectedMasks); ++i) {
         ruCubeSolvedMaskPair masks;
         ASSERT_NO_THROW(masks = ruCubeSolvedMaskParser::stringSolvedMaskToInt(masksStr[i]));
         ASSERT_EQ(expectedMasks[i], masks);
@@ -52,11 +52,11 @@ TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntNegativeTest) {
 
     std::string expectedException = "ruCubeSolvedMaskException: Parsing exception. Invalid cube solved mask definition.";
 
-    uint8_t i = 0;
+    size_t i = 0;
     for (; i < size(masksStr); ++i) {
         std::string exceptionMessage;
         try {
-            auto masksInt = ruCubeSolvedMaskParser::stringSolvedMaskToInt(masksStr[i]);
+            ruCubeSolvedMaskParser::stringSolvedMaskToInt(masksStr[i]);
         } catch (const ruCubeSolvedMaskException &e) {
             exceptionMessage = std::string(e.what());
         }
@@ -88,7 +88,7 @@ TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntSimpleCorrectMasksTest) {
         { 0x00000000'0000000F, 0x0000006E },
     };
 
-    for (uint8_t i = 0; i < size(expectedMasks); ++i) {
+    for (size_t i = 0; i < size(expectedMasks); ++i) {
         ruCubeSolvedMaskPair masks;
         ASSERT_NO_THROW(masks = ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masksStr[i]));
         ASSERT_EQ(expectedMasks[i], masks);
@@ -108,11 +108,11 @@ TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntSimpleCorrectMasksNegative
 
     std::string expectedException = "ruCubeSolvedMaskException: Parsing exception. Invalid cube solved mask definition.";
 
-    uint8_t i = 0;
+    size_t i = 0;
     for (; i < size(masksStr); ++i) {
         std::string exceptionMessage;
         try {
-            auto masks = ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masksStr[i]);
+            ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masksStr[i]);
         } catch (const ruCubeSolvedMaskException &e) {
             exceptionMessage = std::string(e.what());
         }

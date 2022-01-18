@@ -62,7 +62,7 @@ void permutationGenerator<T>::generateAns(const std::set<int8_t> &locked) {
 
     do {
         ans.push_back(tmp);
-        for (int i = 0, k = 0; i < size(ans.back()); ++i) {
+        for (size_t i = 0, k = 0; i < size(ans.back()); ++i) {
             if (ans.back()[i] == -2) {
                 ans.back()[i] = permuteablePieces[k++];
             }

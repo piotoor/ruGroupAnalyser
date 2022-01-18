@@ -25,7 +25,7 @@ ruCubeSingleSolveHandler::ruCubeSingleSolveHandler(const ruCubeSingleSolveHandle
     elapsedTime = other.elapsedTime;
     solutionsVect = other.solutionsVect;
     solutionsStr = other.solutionsStr;
-};
+}
 
 void ruCubeSingleSolveHandler::configure(   const solutionParameters &solParams,
                                             const solvedMasks &masks,
@@ -55,7 +55,7 @@ void ruCubeSingleSolveHandler::appendReport(std::stringstream &report) {
     }
     int currLength = -1;
     for (size_t i = 0; i < size(solutionsVect); ++i) {
-        if (size(solutionsVect[i]) != currLength) {
+        if (static_cast<int>(size(solutionsVect[i])) != currLength) {
             if (currLength != -1 and flags.headers) {
                     report << "\n";
             }

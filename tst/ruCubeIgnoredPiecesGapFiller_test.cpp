@@ -26,7 +26,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillNoGapsTest) 
 
     const std::vector<cornersArray> expectedCornersOrient = cornersOrient;
 
-    for (uint8_t i = 0; i < size(cornersOrient); ++i) {
+    for (size_t i = 0; i < size(cornersOrient); ++i) {
         auto orient = cornersOrient[i];
         ASSERT_TRUE(filler.cornersOrientationIgnoredGapsFill(orient));
         ASSERT_EQ(expectedCornersOrient[i], orient);
@@ -66,7 +66,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillWithGapsTest
         {  0,  0,  0,  0,  0,  0 },
     };
 
-    for (uint8_t i = 0; i < size(cornersOrient); ++i) {
+    for (size_t i = 0; i < size(cornersOrient); ++i) {
         ASSERT_TRUE(filler.cornersOrientationIgnoredGapsFill(cornersOrient[i]));
         ASSERT_EQ(expectedCornersOrient[i], cornersOrient[i]);
     }
@@ -187,7 +187,7 @@ TEST(ruCubeIgnoredPiecesGapFiller, permutationIgnoredGapsFillNextTest) {
         },
     };
 
-    for (uint8_t i = 0; i < size(permutations); ++i) {
+    for (size_t i = 0; i < size(permutations); ++i) {
         auto& [cp, ep] = permutations[i];
         filler.permutationIgnoredGapsFillInit(cp, ep);
 

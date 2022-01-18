@@ -191,9 +191,9 @@ namespace lutGenerators {
 
     void edgesPartialPermPruningDfs(ruCube &cube,
                                     ruCubeStateConverter &conv,
-                                    uint8_t depth,
-                                    uint8_t maxDepth,
-                                    int8_t prevMove,
+                                    int depth,
+                                    int maxDepth,
+                                    int prevMove,
                                     uint8_t partInd,
                                     std::unordered_map<uint32_t, uint8_t> &pruningTable,
                                     std::unordered_map<uint32_t, std::unordered_set<uint32_t>> &partialPermOwners) {
@@ -208,11 +208,11 @@ namespace lutGenerators {
 
                 partialPermOwners[partialPerm].insert(conv.intEdgesToLexIndexEdges(cube.getEdges()));
                 if (pruningTable.find(partialPerm) == pruningTable.end()) {
-                    pruningTable[partialPerm] = depth;
+                    pruningTable[partialPerm] = static_cast<uint8_t>(depth);
 
                 } else {
                     if (depth < pruningTable[partialPerm]) {
-                        pruningTable[partialPerm] = depth;
+                        pruningTable[partialPerm] = static_cast<uint8_t>(depth);
                     }
                 }
 
@@ -223,19 +223,19 @@ namespace lutGenerators {
     }
 
     std::array<std::array<int8_t, noOfPartialEdgesPermCases>, noOfEdgesPermutations> generateEdgesPermPruningTable() {
-        std::ifstream f("edgesPruningTable.pru");
+        std::ifstream inFile("edgesPruningTable.pru");
         std::array<std::array<int8_t, noOfPartialEdgesPermCases>, noOfEdgesPermutations>  ans {};
-        if (f.good()) {
+        if (inFile.good()) {
             std::cout << std::setw(48) << std::left << "Loading edges pruning table..." << std::flush;
             ruCubeSimpleBenchmarkTimer bt;
 
             for (uint16_t i = 0; i < lutGenerators::noOfEdgesPermutations; ++i) {
-                f.read((char*)ans[i].data(), lutGenerators::noOfPartialEdgesPermCases);
+                inFile.read((char*)ans[i].data(), lutGenerators::noOfPartialEdgesPermCases);
             }
 
             std::cout << "DONE ";
         } else {
-            f.close();
+            inFile.close();
             {
                 std::cout << std::setw(48) << std::left << "Generating edges pruning table..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
@@ -265,15 +265,15 @@ namespace lutGenerators {
             {
                 std::cout << std::setw(48) << std::left << "Saving edges pruning table..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
-                std::ofstream f("edgesPruningTable.pru");
+                std::ofstream outFile("edgesPruningTable.pru");
 
-                if (f.good()) {
+                if (outFile.good()) {
                     for (uint16_t i = 0; i < lutGenerators::noOfEdgesPermutations; ++i) {
-                        f.write((char*)ans[i].data(), lutGenerators::noOfPartialEdgesPermCases);
+                        outFile.write((char*)ans[i].data(), lutGenerators::noOfPartialEdgesPermCases);
                     }
                 }
 
-                f.close();
+                outFile.close();
                 std::cout << "DONE ";
             }
         }
@@ -282,7 +282,7 @@ namespace lutGenerators {
     }
 
 
-    void cornersPruningDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> &pruningTable) {
+    void cornersPruningDfs(ruCube &cube, ruCubeStateConverter &conv, int depth, int maxDepth, int prevMove, std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> &pruningTable) {
         if (depth <= maxDepth) {
             for (int8_t i = 0; i < 6; ++i) {
                 if (i / 3 == prevMove / 3) {
@@ -293,7 +293,7 @@ namespace lutGenerators {
                 auto lexIndexCornersPerm = conv.intCornersToLexIndexCornersPerm(cube.getCorners());
                 auto lexIndexCornersOrient = conv.intCornersToLexIndexCornersOrient(cube.getCorners());
                 if (depth < pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] or pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] == -1) {
-                    pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] = depth;
+                    pruningTable[lexIndexCornersPerm][lexIndexCornersOrient] = static_cast<uint8_t>(depth);
                 }
 
                 cornersPruningDfs(cube, conv, depth + 1, maxDepth, i, pruningTable);
@@ -303,20 +303,20 @@ namespace lutGenerators {
     }
 
     std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> generateCornersPruningTable() {
-        std::ifstream f("cornersPruningTable.pru");
+        std::ifstream inFile("cornersPruningTable.pru");
         std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, noOfCornersPermutations> ans {};
-        if (f.good()) {
+        if (inFile.good()) {
             std::cout << std::setw(48) << std::left << "Loading corners pruning table..." << std::flush;
             ruCubeSimpleBenchmarkTimer bt;
 
-            if (f.good()) {
+            if (inFile.good()) {
                 for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
-                    f.read((char*)ans[i].data(), lutGenerators::noOfCornersOrientations);
+                    inFile.read((char*)ans[i].data(), lutGenerators::noOfCornersOrientations);
                 }
             }
             std::cout << "DONE ";
         } else {
-            f.close();
+            inFile.close();
             {
                 std::cout << std::setw(48) << std::left << "Generating corners pruning table..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
@@ -334,13 +334,13 @@ namespace lutGenerators {
             {
                 std::cout << std::setw(48) << std::left << "Saving corners pruning table..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
-                std::ofstream f("cornersPruningTable.pru");
-                if (f.good()) {
+                std::ofstream outFile("cornersPruningTable.pru");
+                if (outFile.good()) {
                     for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
-                        f.write((char*)ans[i].data(), lutGenerators::noOfCornersOrientations);
+                        outFile.write((char*)ans[i].data(), lutGenerators::noOfCornersOrientations);
                     }
                 }
-                f.close();
+                outFile.close();
                 std::cout << "DONE ";
             }
         }
@@ -349,7 +349,7 @@ namespace lutGenerators {
     }
 
 
-    void fullCubePruningDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::vector<std::vector<std::vector<int8_t>>> &pruningTable) {
+    void fullCubePruningDfs(ruCube &cube, ruCubeStateConverter &conv, int depth, int maxDepth, int prevMove, std::vector<std::vector<std::vector<int8_t>>> &pruningTable) {
         if (depth <= maxDepth) {
             for (int8_t i = 0; i < 6; ++i) {
                 if (i / 3 == prevMove / 3) {
@@ -361,7 +361,7 @@ namespace lutGenerators {
                 auto lexIndexCornersOrient = conv.intCornersToLexIndexCornersOrient(cube.getCorners());
                 auto lexIndexEdgesPerm = conv.intEdgesToLexIndexEdges(cube.getEdges());
                 if (depth < pruningTable[lexIndexCornersPerm][lexIndexCornersOrient][lexIndexEdgesPerm] or pruningTable[lexIndexCornersPerm][lexIndexCornersOrient][lexIndexEdgesPerm] == -1) {
-                    pruningTable[lexIndexCornersPerm][lexIndexCornersOrient][lexIndexEdgesPerm] = depth;
+                    pruningTable[lexIndexCornersPerm][lexIndexCornersOrient][lexIndexEdgesPerm] = static_cast<uint8_t>(depth);
                 }
 
                 fullCubePruningDfs(cube, conv, depth + 1, maxDepth, i, pruningTable);
@@ -372,24 +372,24 @@ namespace lutGenerators {
 
     std::vector<std::vector<std::vector<int8_t>>> generateFullCubePruningTable() {
         std::vector<std::vector<std::vector<int8_t>>> ans (noOfCornersPermutations, std::vector(noOfCornersOrientations, std::vector<int8_t>(noOfEdgesPermutations, -1)));
-        std::ifstream f;
+        std::ifstream inFile;
 
         #ifndef DEBUG
-            f.open("fullCubePruningTable.pru");
+            inFile.open("fullCubePruningTable.pru");
         #endif
 
-        if (f.good()) {
+        if (inFile.good()) {
             std::cout << std::setw(48) << std::left << std::string("Loading full cube pruning table (") + std::to_string((int)maxFullCubePruningDepth) + ")..." << std::flush;
             ruCubeSimpleBenchmarkTimer bt;
             for (uint16_t cp = 0; cp < lutGenerators::noOfCornersPermutations; ++cp) {
                 for (uint16_t co = 0; co < lutGenerators::noOfCornersOrientations; ++co ) {
-                    f.read((char*)(ans[cp][co].data()), lutGenerators::noOfEdgesPermutations);
+                    inFile.read((char*)(ans[cp][co].data()), lutGenerators::noOfEdgesPermutations);
                 }
             }
-            f.close();
+            inFile.close();
             std::cout << "DONE ";
         } else {
-            f.close();
+            inFile.close();
             {
                 std::cout << std::setw(48) << std::left << std::string("Generating full cube pruning table (") + std::to_string((int)maxFullCubePruningDepth) + ")..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
@@ -405,15 +405,15 @@ namespace lutGenerators {
             {
                 std::cout << std::setw(48) << std::left << std::string("Saving full cube pruning table (") + std::to_string((int)maxFullCubePruningDepth) + ")..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
-                std::ofstream f("fullCubePruningTable.pru");
-                if (f.good()) {
+                std::ofstream outFile("fullCubePruningTable.pru");
+                if (outFile.good()) {
                     for (uint16_t cp = 0; cp < lutGenerators::noOfCornersPermutations; ++cp) {
                         for (uint16_t co = 0; co < lutGenerators::noOfCornersOrientations; ++co) {
-                            f.write(reinterpret_cast<char*>(ans[cp][co].data()), lutGenerators::noOfEdgesPermutations);
+                            outFile.write(reinterpret_cast<char*>(ans[cp][co].data()), lutGenerators::noOfEdgesPermutations);
                         }
                     }
                 }
-                f.close();
+                outFile.close();
                 std::cout << "DONE ";
             }
             #endif
@@ -422,7 +422,7 @@ namespace lutGenerators {
     }
 
 
-    void permutationValidityDfs(ruCube &cube, ruCubeStateConverter &conv, uint8_t depth, uint8_t maxDepth, int8_t prevMove, std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations> &pruningTable) {
+    void permutationValidityDfs(ruCube &cube, ruCubeStateConverter &conv, int depth, int maxDepth, int prevMove, std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations> &pruningTable) {
         if (depth <= maxDepth) {
             for (int8_t i = 0; i < 6; ++i) {
                 if (i / 3 == prevMove / 3) {
@@ -442,22 +442,22 @@ namespace lutGenerators {
 
     std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations> generatePermutationValidityTable() {
         std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations> ans {};
-        std::ifstream f("permutationValidityTable.pru");
+        std::ifstream inFile("permutationValidityTable.pru");
 
-        if (f.good()) {
+        if (inFile.good()) {
             std::cout << std::setw(48) << std::left << "Loading permutation validity table..." << std::flush;
             ruCubeSimpleBenchmarkTimer bt;
             char buff[lutGenerators::noOfEdgesPermutations];
 
             for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
 
-                f.read(buff, lutGenerators::noOfEdgesPermutations);
+                inFile.read(buff, lutGenerators::noOfEdgesPermutations);
                 ans[i] = std::bitset<lutGenerators::noOfEdgesPermutations>(std::string(buff));
             }
 
             std::cout << "DONE ";
         } else {
-            f.close();
+            inFile.close();
             {
                 std::cout << std::setw(48) << std::left << "Generating permutation validity table..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
@@ -475,13 +475,13 @@ namespace lutGenerators {
             {
                 std::cout << std::setw(48) << std::left << "Saving permutation validity table..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
-                std::ofstream f("permutationValidityTable.pru");
-                if (f.good()) {
+                std::ofstream outFile("permutationValidityTable.pru");
+                if (outFile.good()) {
                     for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
-                        f.write(ans[i].to_string().c_str(), lutGenerators::noOfEdgesPermutations);
+                        outFile.write(ans[i].to_string().c_str(), lutGenerators::noOfEdgesPermutations);
                     }
                 }
-                f.close();
+                outFile.close();
                 std::cout << "DONE ";
             }
         }
@@ -491,9 +491,9 @@ namespace lutGenerators {
 
     void cornersPartialPermPruningDfs(  ruCube &cube,
                                         ruCubeStateConverter &conv,
-                                        uint8_t depth,
-                                        uint8_t maxDepth,
-                                        int8_t prevMove,
+                                        int depth,
+                                        int maxDepth,
+                                        int prevMove,
                                         uint8_t partInd,
                                         std::unordered_map<uint32_t, uint8_t> &pruningTable,
                                         std::unordered_map<uint32_t, std::unordered_set<uint32_t>> &partialPermOwners) {
@@ -508,11 +508,11 @@ namespace lutGenerators {
 
                 partialPermOwners[partialPerm].insert(conv.intCornersToLexIndexCornersPerm(cube.getCorners()));
                 if (pruningTable.find(partialPerm) == pruningTable.end()) {
-                    pruningTable[partialPerm] = depth;
+                    pruningTable[partialPerm] = static_cast<uint8_t>(depth);
 
                 } else {
                     if (depth < pruningTable[partialPerm]) {
-                        pruningTable[partialPerm] = depth;
+                        pruningTable[partialPerm] = static_cast<uint8_t>(depth);
                     }
                 }
 
@@ -523,19 +523,19 @@ namespace lutGenerators {
     }
 
     std::array<std::array<int8_t, noOfPartialCornersPermCases>, noOfCornersPermutations> generateCornersPermPruningTable() {
-        std::ifstream f("cornersPermPruningTable.pru");
+        std::ifstream inFile("cornersPermPruningTable.pru");
         std::array<std::array<int8_t, lutGenerators::noOfPartialCornersPermCases>, lutGenerators::noOfCornersPermutations>  ans {};
-        if (f.good()) {
+        if (inFile.good()) {
             std::cout << std::setw(48) << std::left << "Loading corners perm pruning table..." << std::flush;
             ruCubeSimpleBenchmarkTimer bt;
 
             for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
-                f.read((char*)ans[i].data(), lutGenerators::noOfPartialCornersPermCases);
+                inFile.read((char*)ans[i].data(), lutGenerators::noOfPartialCornersPermCases);
             }
 
             std::cout << "DONE ";
         } else {
-            f.close();
+            inFile.close();
             {
                 std::cout << std::setw(48) << std::left << "Generating corners perm pruning table..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
@@ -568,15 +568,15 @@ namespace lutGenerators {
             {
                 std::cout << std::setw(48) << std::left << "Saving corners perm pruning table..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
-                std::ofstream f("cornersPermPruningTable.pru");
+                std::ofstream outFile("cornersPermPruningTable.pru");
 
-                if (f.good()) {
+                if (outFile.good()) {
                     for (uint16_t i = 0; i < lutGenerators::noOfCornersPermutations; ++i) {
-                        f.write((char*)ans[i].data(), lutGenerators::noOfPartialCornersPermCases);
+                        outFile.write((char*)ans[i].data(), lutGenerators::noOfPartialCornersPermCases);
                     }
                 }
 
-                f.close();
+                outFile.close();
                 std::cout << "DONE ";
             }
         }
@@ -588,9 +588,9 @@ namespace lutGenerators {
 
     void cornersPartialOrientPruningDfs(ruCube &cube,
                                         ruCubeStateConverter &conv,
-                                        uint8_t depth,
-                                        uint8_t maxDepth,
-                                        int8_t prevMove,
+                                        int depth,
+                                        int maxDepth,
+                                        int prevMove,
                                         uint8_t partInd,
                                         std::unordered_map<uint32_t, uint8_t> &pruningTable,
                                         std::unordered_map<uint32_t, std::unordered_set<uint32_t>> &partialOrientOwners) {
@@ -605,11 +605,11 @@ namespace lutGenerators {
 
                 partialOrientOwners[partialOrient].insert(conv.intCornersToLexIndexCornersOrient(cube.getCorners()));
                 if (pruningTable.find(partialOrient) == pruningTable.end()) {
-                    pruningTable[partialOrient] = depth;
+                    pruningTable[partialOrient] = static_cast<uint8_t>(depth);
 
                 } else {
                     if (depth < pruningTable[partialOrient]) {
-                        pruningTable[partialOrient] = depth;
+                        pruningTable[partialOrient] = static_cast<uint8_t>(depth);
                     }
                 }
 
@@ -622,20 +622,20 @@ namespace lutGenerators {
 
 
     std::array<std::array<int8_t, noOfPartialCornersOrientCases>, noOfCornersOrientations> generateCornersOrientPruningTable() {
-        std::ifstream f("cornersOrientPruningTable.pru");
+        std::ifstream inFile("cornersOrientPruningTable.pru");
         std::array<std::array<int8_t, lutGenerators::noOfPartialCornersOrientCases>, lutGenerators::noOfCornersOrientations>  ans {};
 
-        if (f.good()) {
+        if (inFile.good()) {
             std::cout << std::setw(48) << std::left << "Loading corners orient pruning table..." << std::flush;
             ruCubeSimpleBenchmarkTimer bt;
 
             for (uint16_t i = 0; i < lutGenerators::noOfCornersOrientations; ++i) {
-                f.read((char*)ans[i].data(), lutGenerators::noOfPartialCornersOrientCases);
+                inFile.read((char*)ans[i].data(), lutGenerators::noOfPartialCornersOrientCases);
             }
 
             std::cout << "DONE ";
         } else {
-            f.close();
+            inFile.close();
             {
                 std::cout << std::setw(48) << std::left << "Generating corners orient pruning table..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
@@ -668,15 +668,15 @@ namespace lutGenerators {
             {
                 std::cout << std::setw(48) << std::left << "Saving corners orient pruning table..." << std::flush;
                 ruCubeSimpleBenchmarkTimer bt;
-                std::ofstream f("cornersOrientPruningTable.pru");
+                std::ofstream outFile("cornersOrientPruningTable.pru");
 
-                if (f.good()) {
+                if (outFile.good()) {
                     for (uint16_t i = 0; i < lutGenerators::noOfCornersOrientations; ++i) {
-                        f.write((char*)ans[i].data(), lutGenerators::noOfPartialCornersOrientCases);
+                        outFile.write((char*)ans[i].data(), lutGenerators::noOfPartialCornersOrientCases);
                     }
                 }
 
-                f.close();
+                outFile.close();
                 std::cout << "DONE ";
             }
         }

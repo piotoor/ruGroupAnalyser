@@ -54,7 +54,7 @@ TEST(ruCubeSingleSolveInputParserTest, getCubeFromScrambleTest) {
     };
 
     ruCubeSingleSolveInputParser parser;
-    for (uint8_t i = 0; i < size(scrambles); ++i) {
+    for (size_t i = 0; i < size(scrambles); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         ASSERT_EQ(expectedCubes[i], cube);
@@ -79,7 +79,7 @@ TEST(ruCubeSingleSolveInputParserTest, getCubeFromScrambleNegativeTest) {
 
     std::string expectedException = "ruCubeScrambleException: Parsing exception. Invalid scramble.";
     ruCubeSingleSolveInputParser parser;
-    uint8_t i = 0;
+    size_t i = 0;
     for (; i < size(scrambles); ++i) {
         try {
             auto cube = parser.getCubeFromScramble(scrambles[i]);
@@ -121,7 +121,7 @@ TEST(ruCubeSingleSolveInputParserTest, getCubeFromStateTest) {
     };
 
     ruCubeSingleSolveInputParser parser;
-    for (uint8_t i = 0; i < size(states); ++i) {
+    for (size_t i = 0; i < size(states); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromState(states[i]));
         std::cout << (int) i << std::endl;
@@ -176,7 +176,7 @@ TEST(ruCubeSingleSolveInputParserTest, getCubeFromStateNegativeTest) {
     };
 
     ruCubeSingleSolveInputParser parser;
-    uint8_t i = 0;
+    size_t i = 0;
     for (; i < size(states); ++i) {
         try {
             auto cube = parser.getCubeFromState(states[i]);

@@ -80,7 +80,7 @@ TEST(ruCubeGeneratorParametersParserTest, correctGeneratorParametersTest) {
         },
     };
 
-    for (uint8_t i = 0; i < size(expectedGenParams); ++i) {
+    for (size_t i = 0; i < size(expectedGenParams); ++i) {
         generatorParameters genParams;
         ASSERT_NO_THROW(genParams = ruCubeGeneratorParametersParser::strGeneratorParametersToStruct(generatorParamsStr[i]));
         ASSERT_EQ(expectedGenParams[i].lockedEdges, genParams.lockedEdges);

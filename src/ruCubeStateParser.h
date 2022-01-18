@@ -7,6 +7,6 @@ using ruCubeStateVect = std::tuple<cornersArray, cornersArray, edgesArray>;
 
 namespace ruCubeStateParser {
      ruCubeStateVect stringStateToVect(std::string state);
-};
+}
 
 #endif // RUCUBESTATEPARSER_H

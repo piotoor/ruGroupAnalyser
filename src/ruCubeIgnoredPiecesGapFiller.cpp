@@ -32,7 +32,7 @@ bool ruCubeIgnoredPiecesGapFiller::cornersOrientationIgnoredGapsFill(cornersArra
         constexpr uint8_t maxTotalOrient = 12;
         uint8_t orientReplacement = (maxTotalOrient - sumOfPositiveOrients) % 3;
 
-        for (uint8_t i = 0; i < size(cornersOrient); ++i) {
+        for (size_t i = 0; i < size(cornersOrient); ++i) {
             if (cornersOrient[i] == -1) {
                 cornersOrient[i] = orientReplacement;
                 orientReplacement = 0;
@@ -90,11 +90,11 @@ void ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillInit(const cornersA
 bool ruCubeIgnoredPiecesGapFiller::permutationIgnoredGapsFillNext(cornersArray& cornersPerm, edgesArray& edgesPerm) {
     int validOutput = false;
     if (hasNextEdgesPerm) {
-        for (uint8_t i = 0; i < size(missingCorners); ++i) {
+        for (size_t i = 0; i < size(missingCorners); ++i) {
             cornersPerm[cornersPermIgnoredIndices[i]] = missingCorners[i];
         }
 
-        for (uint8_t i = 0; i < size(missingEdges); ++i) {
+        for (size_t i = 0; i < size(missingEdges); ++i) {
             edgesPerm[edgesPermIgnoredIndices[i]] = missingEdges[i];
         }
         validOutput = true;

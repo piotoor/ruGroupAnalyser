@@ -39,7 +39,7 @@ uint64_t ruCubeStateConverter::vectCornersToIntCorners(const cornersArray& orien
     constexpr uint8_t maxTotalOrient = 12;
     uint8_t orientReplacement = (maxTotalOrient - sumOfPositiveOrients) % 3;
 
-    for (uint8_t i = 0; i < size(perm); ++i) {
+    for (size_t i = 0; i < size(perm); ++i) {
         ans <<= 3;
         if (orient[i] != -1) {
             ans = ans | (01 << orient[i]);
@@ -67,7 +67,7 @@ uint32_t ruCubeStateConverter::vectEdgesToIntEdges(const edgesArray& perm) const
     }
     auto permIt = availPerm.begin();
 
-    for (uint8_t i = 0; i < size(perm); ++i) {
+    for (size_t i = 0; i < size(perm); ++i) {
         ans <<= 3;
         if (perm[i] != -1) {
             ans = ans | perm[i];
@@ -180,7 +180,7 @@ uint16_t ruCubeStateConverter::vectPermToLexIndexPerm(const T &perm) {
     visited.reset();
     uint16_t ans = 0;
 
-    for (uint8_t i = 0; i < size(perm); ++i) {
+    for (size_t i = 0; i < size(perm); ++i) {
         visited[perm[i]] = 1;
 
         int lehmer = perm[i] - (visited << (maxNumOfPieces - perm[i])).count();

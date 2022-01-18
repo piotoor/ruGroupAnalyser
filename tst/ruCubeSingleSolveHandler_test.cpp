@@ -39,7 +39,7 @@ TEST(ruCubeSingleSolveHandlerTest, getReportDefaultTest) {
         "R U2 R' U' R U' R'\n"
     };
 
-    for (uint8_t i = 0; i < size(scrambles); ++i) {
+    for (size_t i = 0; i < size(scrambles); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
@@ -80,7 +80,7 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolutionParametersTest) {
         "R U2 R' U2 R2 U R' U R U2 R2 U' R U R'\n"
     };
 
-    for (uint8_t i = 0; i < size(scrambles); ++i) {
+    for (size_t i = 0; i < size(scrambles); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
@@ -123,7 +123,7 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolutionParametersTest) {
         "R2 U2 R2 U2 R2 U R2 U2 R2 U2 R2 U'\n"
     };
 
-    for (uint8_t i = 0; i < size(scrambles); ++i) {
+    for (size_t i = 0; i < size(scrambles); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
@@ -185,7 +185,7 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersTest) {
         "R2 U2 R2 U2 R2 U R2 U2 R2 U2 R2 U'\n"
     };
 
-    for (uint8_t i = 0; i < size(expectedReports); ++i) {
+    for (size_t i = 0; i < size(expectedReports); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
@@ -247,7 +247,7 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "3. R2 U2 R2 U2 R2 U R2 U2 R2 U2 R2 U'\n"
     };
 
-    for (uint8_t i = 0; i < size(expectedReports); ++i) {
+    for (size_t i = 0; i < size(expectedReports); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
@@ -310,7 +310,7 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "3. R2 U2 R2 U2 R2 U  R2 U2 R2 U2 R2 U'\n"
     };
 
-    for (uint8_t i = 0; i < size(expectedReports); ++i) {
+    for (size_t i = 0; i < size(expectedReports); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
@@ -374,7 +374,7 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "3. R2U2R2U2R2UR2U2R2U2R2U'\n"
     };
 
-    for (uint8_t i = 0; i < size(expectedReports); ++i) {
+    for (size_t i = 0; i < size(expectedReports); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
@@ -444,7 +444,7 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "\nSolutions found: 3\n"
     };
 
-    for (uint8_t i = 0; i < size(expectedReports); ++i) {
+    for (size_t i = 0; i < size(expectedReports); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);
@@ -516,7 +516,7 @@ TEST(ruCubeSingleSolveHandlerTest, getReportCustomSolveReportFlagsHeadersLineNum
         "\nSolutions found: 3\n"
     };
 
-    for (uint8_t i = 0; i < size(expectedReports); ++i) {
+    for (size_t i = 0; i < size(expectedReports); ++i) {
         ruLutCube cube;
         ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
         handler.solve(cube);

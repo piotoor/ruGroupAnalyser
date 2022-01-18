@@ -40,7 +40,7 @@ namespace ruCubeSolvedMaskParser {
         std::bitset<64> cornersBits;
         std::bitset<32> edgesBits;
 
-        for (uint8_t i = 0; i < size(corners); ++i) {
+        for (size_t i = 0; i < size(corners); ++i) {
             if (i % 2 != 0) {
                 cornersBits[32 + i / 2] = corners[i] - '0';
             } else {
@@ -48,7 +48,7 @@ namespace ruCubeSolvedMaskParser {
             }
         }
 
-        for (uint8_t i = 0; i < size(edges); ++i) {
+        for (size_t i = 0; i < size(edges); ++i) {
             edgesBits[i] = edges[i] - '0';
         }
 

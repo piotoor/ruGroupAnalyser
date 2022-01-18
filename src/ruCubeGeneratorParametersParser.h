@@ -6,6 +6,6 @@
 
 namespace ruCubeGeneratorParametersParser {
     generatorParameters strGeneratorParametersToStruct(std::string strGenParams);
-};
+}
 
 #endif // RUCUBEGENERATORPARAMETERSPARSER_H

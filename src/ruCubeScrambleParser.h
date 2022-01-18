@@ -24,6 +24,6 @@ namespace ruCubeScrambleParser
 
     std::string vectorScrambleToStringScramble(const std::vector<uint8_t> &moves, bool compressSolution = false, bool alnumMoves = false);
     std::vector<uint8_t> stringScrambleToVectorScramble(const std::string &moves);
-};
+}
 
 #endif // RUCUBESCRAMBLEPARSER_H

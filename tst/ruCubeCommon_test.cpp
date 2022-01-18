@@ -26,12 +26,12 @@ namespace {
     TYPED_TEST(ruCubeAndLutCubeCommonCubeStateTests, commonSettersGettersTest) {
         this->cube->setEdges(1234);
         this->cube->setCorners(3432243);
-        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 1234, this->cube->getEdges());
-        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 3432243, this->cube->getCorners());
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, UINT32_C(1234), this->cube->getEdges());
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, UINT64_C(3432243), this->cube->getCorners());
 
         this->cube->setCube(423234, 1234);
-        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 1234, this->cube->getEdges());
-        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, 423234, this->cube->getCorners());
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, UINT32_C(1234), this->cube->getEdges());
+        EXPECT_PRED_FORMAT2(testCustomAsserts::AssertEqOct, UINT32_C(423234), this->cube->getCorners());
     }
 
     TYPED_TEST(ruCubeAndLutCubeCommonCubeStateTests, cubeStateResetTest) {
