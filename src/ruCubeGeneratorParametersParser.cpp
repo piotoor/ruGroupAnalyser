@@ -1,6 +1,7 @@
 #include "ruCubeGeneratorParametersParser.h"
-#include <regex>
 #include "ruException.h"
+#include <regex>
+
 
 namespace ruCubeGeneratorParametersParser {
     generatorParameters strGeneratorParametersToStruct(std::string strGenParams) {
