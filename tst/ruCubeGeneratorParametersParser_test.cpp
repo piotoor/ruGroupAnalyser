@@ -5,90 +5,128 @@
 #include <string>
 
 
-TEST(ruCubeGeneratorParametersParserTest, correctGeneratorParametersTest) {
-    std::vector<std::string> generatorParamsStr {
-        "GGGGGGGGGGGG;GGGGGGG",
-        "GGGGGGGGGGGG;IIIIIII",
-        "GGGGGGGGGGGG;LLLLLLL",
-        "GGGGGGGGGGGG;LILILIL",
-        "GGGGGGGGGGGG;LIGLIGL",
 
-        "IIIIIIIIIIII;LIGLIGL",
-        "2G2G2G2G2G1G;LIGLIGL",
-        "IL2G2I2G2G0I;LIGLIGL",
+namespace {
+    class ruCubeGeneratorParametersParserTestPamrameterizedTestFixture: public testing::TestWithParam<std::tuple<std::string, generatorParameters>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    auto [generatorParamsStr, expected] = testData.param;
+                    std::replace(begin(generatorParamsStr), end(generatorParamsStr), ';', '_');
+
+                    std::stringstream ss;
+                    ss  << generatorParamsStr;
+                    return ss.str();
+                }
+            };
+
+        protected:
+            ruLutCube cube;
+            ruCubeStateConverter conv;
     };
 
-    std::vector<generatorParameters> expectedGenParams {
-        generatorParameters(),
-        {
-            {},                         // lockedEdges
-            { 0, 1, 2, 3, 4, 5, 6 },    // ignoredEdges
-            {},                         // lockedCornersPerm
-            {},                         // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            {  0,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
-        },
-        {
-            { 0, 1, 2, 3, 4, 5, 6 },    // lockedEdges
-            {},                         // ignoredEdges
-            {},                         // lockedCornersPerm
-            {},                         // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            {  0,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
-        },
-        {
-            { 0, 2, 4, 6 },             // lockedEdges
-            { 1, 3, 5 },                // ignoredEdges
-            {},                         // lockedCornersPerm
-            {},                         // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            {  0,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
-        },
-        {
-            { 0, 3, 6 },                // lockedEdges
-            { 1, 4 },                   // ignoredEdges
-            {},                         // lockedCornersPerm
-            {},                         // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            {  0,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
-        },
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeGeneratorParametersParserTests,
+        ruCubeGeneratorParametersParserTestPamrameterizedTestFixture,
+        ::testing::ValuesIn( std::vector<std::tuple<std::string, generatorParameters>> {
+                {
+                    "GGGGGGGGGGGG;GGGGGGG",
+                    generatorParameters()
+                },
+                {
+                    "GGGGGGGGGGGG;IIIIIII",
+                    {
+                        {},                         // lockedEdges
+                        { 0, 1, 2, 3, 4, 5, 6 },    // ignoredEdges
+                        {},                         // lockedCornersPerm
+                        {},                         // ignoredCornersPerm
+                        { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                        {  0,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
+                    },
+                },
+                {
+                    "GGGGGGGGGGGG;LLLLLLL",
+                    {
+                        { 0, 1, 2, 3, 4, 5, 6 },    // lockedEdges
+                        {},                         // ignoredEdges
+                        {},                         // lockedCornersPerm
+                        {},                         // ignoredCornersPerm
+                        { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                        {  0,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
+                    },
+                },
+                {
+                    "GGGGGGGGGGGG;LILILIL",
+                    {
+                        { 0, 2, 4, 6 },             // lockedEdges
+                        { 1, 3, 5 },                // ignoredEdges
+                        {},                         // lockedCornersPerm
+                        {},                         // ignoredCornersPerm
+                        { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                        {  0,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
+                    },
+                },
+                {
+                    "GGGGGGGGGGGG;LIGLIGL",
+                    {
+                        { 0, 3, 6 },                // lockedEdges
+                        { 1, 4 },                   // ignoredEdges
+                        {},                         // lockedCornersPerm
+                        {},                         // ignoredCornersPerm
+                        { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                        {  0,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
+                    },
+                },
+                {
+                    "IIIIIIIIIIII;LIGLIGL",
+                    {
+                        { 0, 3, 6 },                // lockedEdges
+                        { 1, 4 },                   // ignoredEdges
+                        {},                         // lockedCornersPerm
+                        { 0, 1, 2, 3, 4, 5 },       // ignoredCornersPerm
+                        { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                        {  1,  1,  1,  1,  1,  1 }, // ignoredCornersOrient
+                    },
+                },
+                {
+                    "2G2G2G2G2G1G;LIGLIGL",
+                    {
+                        { 0, 3, 6 },                // lockedEdges
+                        { 1, 4 },                   // ignoredEdges
+                        {},                         // lockedCornersPerm
+                        {},                         // ignoredCornersPerm
+                        {  2,  2,  2,  2,  2,  1 }, // lockedCornersOrient
+                        {  0,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
+                    },
+                },
+                {
+                    "IL2G2I2G2G0I;LIGLIGL",
+                    {
+                        { 0, 3, 6 },                // lockedEdges
+                        { 1, 4 },                   // ignoredEdges
+                        { 0 },                      // lockedCornersPerm
+                        { 2, 5 },                   // ignoredCornersPerm
+                        { -1,  2,  2,  2,  2,  0 }, // lockedCornersOrient
+                        {  1,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
+                    },
+                }
+            }
+        ),
+        ruCubeGeneratorParametersParserTestPamrameterizedTestFixture::toString()
+    );
 
-
-        {
-            { 0, 3, 6 },                // lockedEdges
-            { 1, 4 },                   // ignoredEdges
-            {},                         // lockedCornersPerm
-            { 0, 1, 2, 3, 4, 5 },       // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            {  1,  1,  1,  1,  1,  1 }, // ignoredCornersOrient
-        },
-        {
-            { 0, 3, 6 },                // lockedEdges
-            { 1, 4 },                   // ignoredEdges
-            {},                         // lockedCornersPerm
-            {},                         // ignoredCornersPerm
-            {  2,  2,  2,  2,  2,  1 }, // lockedCornersOrient
-            {  0,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
-        },
-        {
-            { 0, 3, 6 },                // lockedEdges
-            { 1, 4 },                   // ignoredEdges
-            { 0 },                      // lockedCornersPerm
-            { 2, 5 },                   // ignoredCornersPerm
-            { -1,  2,  2,  2,  2,  0 }, // lockedCornersOrient
-            {  1,  0,  0,  0,  0,  0 }, // ignoredCornersOrient
-        },
-    };
-
-    for (size_t i = 0; i < size(expectedGenParams); ++i) {
+    TEST_P(ruCubeGeneratorParametersParserTestPamrameterizedTestFixture, correctGeneratorParametersTest) {
+        const auto& [generatorParamsStr, expected] = GetParam();
         generatorParameters genParams;
-        ASSERT_NO_THROW(genParams = ruCubeGeneratorParametersParser::strGeneratorParametersToStruct(generatorParamsStr[i]));
-        ASSERT_EQ(expectedGenParams[i].lockedEdges, genParams.lockedEdges);
-        ASSERT_EQ(expectedGenParams[i].ignoredEdges, genParams.ignoredEdges);
-        ASSERT_EQ(expectedGenParams[i].lockedCornersPerm, genParams.lockedCornersPerm);
-        ASSERT_EQ(expectedGenParams[i].ignoredCornersPerm, genParams.ignoredCornersPerm);
-        ASSERT_EQ(expectedGenParams[i].lockedCornersOrient, genParams.lockedCornersOrient);
-        ASSERT_EQ(expectedGenParams[i].ignoredCornersOrient, genParams.ignoredCornersOrient);
+        ASSERT_NO_THROW(genParams = ruCubeGeneratorParametersParser::strGeneratorParametersToStruct(generatorParamsStr));
+
+        ASSERT_EQ(expected.lockedEdges, genParams.lockedEdges);
+        ASSERT_EQ(expected.ignoredEdges, genParams.ignoredEdges);
+        ASSERT_EQ(expected.lockedCornersPerm, genParams.lockedCornersPerm);
+        ASSERT_EQ(expected.ignoredCornersPerm, genParams.ignoredCornersPerm);
+        ASSERT_EQ(expected.lockedCornersOrient, genParams.lockedCornersOrient);
+        ASSERT_EQ(expected.ignoredCornersOrient, genParams.ignoredCornersOrient);
     }
 }
 
