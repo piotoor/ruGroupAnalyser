@@ -128,39 +128,61 @@ namespace {
         ASSERT_EQ(expected.lockedCornersOrient, genParams.lockedCornersOrient);
         ASSERT_EQ(expected.ignoredCornersOrient, genParams.ignoredCornersOrient);
     }
-}
 
+    class ruCubeGeneratorParametersParserTestPamrameterizedNegativeTestFixture: public testing::TestWithParam<std::string>{
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    auto generatorParamsStr = testData.param;
+                    std::replace(begin(generatorParamsStr), end(generatorParamsStr), ';', '_');
+                    if (generatorParamsStr.empty()) {
+                        generatorParamsStr = "EMPTY";
+                    }
 
-TEST(ruCubeGeneratorParametersParserTest, negativeTest) {
-    std::vector<std::string> generatorParamsStr {
-        "GGGGGGGGGGGG;GGGGGgG",
-        "GGGGGGGGGGGG;IIiIIII",
-        "GGGGGGGGGGGG;LLlLLLL",
-        "GGGGGGGGGGGG;lilgGGl",
-        "IiIlIgIIIIII;LIGLIGL",
-        "2G2G2G3G2G1G;LIGLIGL",
-        "IL2G2I2G2GgI;LIGLIGL",
-        "Ib2G2I2G2GgI;LIGLIGL",
-        "LL;LIGLIGL",
-        "IL2G2I2G2GgI;L",
-        "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL;LLLLLLLLLLLLLLLLLL",
-        "IIIIIIIIII;IIIIIIIIIIIII;LLLLLLLLLLLLLL",
-        "",
-        "sdfasdfasdfasdkfjlas;dlkfjas;dlfkjas;dlf"
+                    std::stringstream ss;
+                    ss  << generatorParamsStr;
+                    return ss.str();
+                }
+            };
+
+        protected:
+            ruLutCube cube;
+            ruCubeStateConverter conv;
     };
 
-    std::string expectedException = "ruCubeGeneratorParametersException: Parsing exception. Invalid cube generator parameters.";
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeGeneratorParametersParserTests,
+        ruCubeGeneratorParametersParserTestPamrameterizedNegativeTestFixture,
+        ::testing::Values(
+            "GGGGGGGGGGGG;GGGGGgG",
+            "GGGGGGGGGGGG;IIiIIII",
+            "GGGGGGGGGGGG;LLlLLLL",
+            "GGGGGGGGGGGG;lilgGGl",
+            "IiIlIgIIIIII;LIGLIGL",
+            "2G2G2G3G2G1G;LIGLIGL",
+            "IL2G2I2G2GgI;LIGLIGL",
+            "Ib2G2I2G2GgI;LIGLIGL",
+            "LL;LIGLIGL",
+            "IL2G2I2G2GgI;L",
+            "LLLLLLLLLLLLLLLLLLLLLLLLLLLLLL;LLLLLLLLLLLLLLLLLL",
+            "IIIIIIIIII;IIIIIIIIIIIII;LLLLLLLLLLLLLL",
+            "",
+            "sdfasdfasdfasdkfjlas;dlkfjas;dlfkjas;dlf"
+        ),
+        ruCubeGeneratorParametersParserTestPamrameterizedNegativeTestFixture::toString()
+    );
 
-    uint8_t i = 0;
-    for (; i < size(generatorParamsStr); ++i) {
+    TEST_P(ruCubeGeneratorParametersParserTestPamrameterizedNegativeTestFixture, incorrectGeneratorParametersTest) {
+        const auto& generatorParamsStr = GetParam();
+        std::string expectedException = "ruCubeGeneratorParametersException: Parsing exception. Invalid cube generator parameters.";
+
         std::string exceptionMessage;
         try {
-            auto genPerms = ruCubeGeneratorParametersParser::strGeneratorParametersToStruct(generatorParamsStr[i]);
+            auto genPerms = ruCubeGeneratorParametersParser::strGeneratorParametersToStruct(generatorParamsStr);
         } catch (const ruCubeGeneratorParametersException &e) {
             exceptionMessage = std::string(e.what());
         }
         ASSERT_EQ(expectedException, exceptionMessage);
     }
-    ASSERT_EQ(size(generatorParamsStr), i);
 }
-
