@@ -194,17 +194,6 @@ TEST(ruCubeIgnoredPiecesGapFiller, permutationIgnoredGapsFillNextTest) {
         uint16_t j = 0;
         while (filler.permutationIgnoredGapsFillNext(cp, ep)) {
             const auto& [ecp, eep] = expectedPermutations[i][j];
-//            std::cout << "---------------i = " << (int) i << ": " << (int)j << std::endl;
-//            std::cout << "cp and ecp" << std::endl;
-//            std::copy(begin(cp), end(cp), std::ostream_iterator<int>(std::cout, " "));
-//            std::cout << std::endl;
-//            std::copy(begin(ecp), end(ecp), std::ostream_iterator<int>(std::cout, " "));
-//            std::cout << std::endl;
-//            std::cout << "ep and eep" << std::endl;
-//            std::copy(begin(ep), end(ep), std::ostream_iterator<int>(std::cout, " "));
-//            std::cout << std::endl;
-//            std::copy(begin(eep), end(eep), std::ostream_iterator<int>(std::cout, " "));
-//            std::cout << std::endl;
             ASSERT_EQ(ecp, cp);
             ASSERT_EQ(eep, ep);
             ++j;
