@@ -129,7 +129,6 @@ class ruCube: public ruBaseCube {
         void moveUi() override;
 
         uint32_t getOrientPartOfCorner(uint64_t corners, uint8_t i) const;
-
         bool isPartOfCornerIgnored(uint8_t currCorner, uint8_t mask) const;
         uint32_t getPermPartOfCorner(uint64_t corners, uint8_t i) const;
         void setCorner(uint32_t &corners, uint8_t i, uint32_t val) const;
@@ -157,7 +156,7 @@ class ruCube: public ruBaseCube {
             uint64_t    : 3;
             uint64_t URF: 3;
         };
-        struct cornersPermBits {;
+        struct cornersPermBits {
             uint64_t DFR: 6;
             uint64_t DRB: 6;
             uint64_t UBR: 6;

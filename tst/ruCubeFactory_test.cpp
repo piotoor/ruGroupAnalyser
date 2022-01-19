@@ -8,6 +8,6 @@ TEST(ruCubeFactoryTest, createCubeNegativeTest) {
     try {
         auto cube = ruCubeFactory::createCube(static_cast<ruCubeFactory::ruCubeType>(3));
     } catch (const ruCubeFactoryException &e) {
-        ASSERT_EQ(std::string("ruCubeFactoryException: Invalid cube type"), e.what());
+        ASSERT_EQ(std::string("ruCubeFactoryException: Invalid cube type"), std::string(e.what()));
     }
 }

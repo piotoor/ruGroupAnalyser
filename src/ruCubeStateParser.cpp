@@ -17,7 +17,7 @@ namespace ruCubeStateParser {
 
         cornersArray cornersPerm;
         cornersArray cornersOrient;
-        for (uint8_t i = 0; i < size(corners); ++i) {
+        for (size_t i = 0; i < size(corners); ++i) {
             if (i % 2 == 0) {
                 cornersOrient[i / 2] = corners[i] - '0';
             } else {
@@ -26,7 +26,7 @@ namespace ruCubeStateParser {
         }
 
         edgesArray edgesPerm;
-        for (uint8_t i = 0; i < size(edges); ++i) {
+        for (size_t i = 0; i < size(edges); ++i) {
             edgesPerm[i] = edges[i] - '0';
         }
 

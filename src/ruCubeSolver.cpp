@@ -26,7 +26,7 @@ void ruCubeSolver::solve(ruBaseCube *cube) {
     this->cube = cube;
 
     if (maxNumOfSolutions > 0) {
-        for (uint8_t length = minLength; length <= maxLength and solutions.size() < maxNumOfSolutions; ++length) {
+        for (size_t length = minLength; length <= maxLength and solutions.size() < maxNumOfSolutions; ++length) {
             currSolution.resize(length);
             dfs(0, length, -6);
         }

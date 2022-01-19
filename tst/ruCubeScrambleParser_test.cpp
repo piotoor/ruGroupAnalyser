@@ -28,7 +28,7 @@ TEST(ruCubeScrambleParserTest, vectorScrambleToStringScrambleTest) {
         "R U R U R U R' U' R2 U2 R2 U2 R U' R2 U2 R2 U2 R2 U'"
     };
 
-    for (uint8_t i = 0; i < size(scrambles); ++i) {
+    for (size_t i = 0; i < size(scrambles); ++i) {
         std::string scramble = ruCubeScrambleParser::vectorScrambleToStringScramble(scrambles[i]);
         ASSERT_EQ(expectedScrambles[i], scramble);
     }
@@ -60,7 +60,7 @@ TEST(ruCubeScrambleParserTest, vectorScrambleToStringScrambleCompressSolutionTes
     };
 
     const bool compressSolution = true;
-    for (uint8_t i = 0; i < size(scrambles); ++i) {
+    for (size_t i = 0; i < size(scrambles); ++i) {
         std::string scramble = ruCubeScrambleParser::vectorScrambleToStringScramble(scrambles[i], compressSolution);
         ASSERT_EQ(expectedScrambles[i], scramble);
     }
@@ -91,7 +91,7 @@ TEST(ruCubeScrambleParserTest, vectorScrambleToStringScrambleNegativeTest) {
         "R U R U R U R' U' R2 U2 R2 U2 R U' R2 U2 R2 U2 R2 U'"
     };
 
-    for (uint8_t i = 0; i < size(scrambles); ++i) {
+    for (size_t i = 0; i < size(scrambles); ++i) {
         std::string scramble = ruCubeScrambleParser::vectorScrambleToStringScramble(scrambles[i]);
         ASSERT_EQ(expectedScrambles[i], scramble);
     }
@@ -122,7 +122,7 @@ TEST(ruCubeScrambleParserTest, stringScrambleToVectorScrambleCleanInputTest) {
         { R, U, R, U, R, U, Ri, Ui, R2, U2, R2, U2, R, Ui, R2, U2, R2, U2, R2, Ui }
     };
 
-    for (uint8_t i = 0; i < size(scrambles); ++i) {
+    for (size_t i = 0; i < size(scrambles); ++i) {
         std::vector<uint8_t> scramble;
         ASSERT_NO_THROW(scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(scrambles[i]));
         ASSERT_EQ(expectedScrambles[i], scramble);
@@ -143,12 +143,13 @@ TEST(ruCubeScrambleParserTest, stringScrambleToVectorScrambleInvalidInputTest) {
     };
 
     std::string expectedException = "ruCubeScrambleException: Parsing exception. Invalid scramble.";
-    uint8_t i = 0;
+    size_t i = 0;
     for (; i < size(scrambles); ++i) {
         try {
             auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(scrambles[i]);
         } catch (const ruCubeScrambleException &e) {
-            ASSERT_EQ(expectedException, e.what());
+            std::cout << "piotoor = " << std::string(e.what()) << std::endl;
+            ASSERT_EQ(expectedException, std::string(e.what()));
         }
     }
     ASSERT_EQ(size(scrambles), i);

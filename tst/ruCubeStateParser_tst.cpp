@@ -26,7 +26,7 @@ TEST(ruCubeStateParserTest, correctStatesTest) {
         { { 1, 2, 1, 0, 2, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 3, 2, 3, 5, 4, 6 } },
     };
 
-    for (uint8_t i = 0; i < size(expectedVectStates); ++i) {
+    for (size_t i = 0; i < size(expectedVectStates); ++i) {
         ruCubeStateVect vectState;
         ASSERT_NO_THROW(vectState = ruCubeStateParser::stringStateToVect(cubeStatesStr[i]));
         ASSERT_EQ(expectedVectStates[i], vectState);
@@ -47,13 +47,13 @@ TEST(ruCubeStateParserTest, negativeTest) {
 
     std::string expectedException = "ruCubeStateException: Parsing exception. Invalid cube state definition.";
 
-    uint8_t i = 0;
+    size_t i = 0;
     for (; i < size(cubeStatesStr); ++i) {
         std::string exceptionMessage;
         try {
-            auto vectState = ruCubeStateParser::stringStateToVect(cubeStatesStr[i]);
+            ruCubeStateParser::stringStateToVect(cubeStatesStr[i]);
         } catch (const ruCubeStateException &e) {
-            exceptionMessage = e.what();
+            exceptionMessage = std::string(e.what());
         }
         ASSERT_EQ(expectedException, exceptionMessage);
     }

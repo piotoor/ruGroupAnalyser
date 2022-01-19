@@ -53,7 +53,6 @@ void ruCubeMultiSolveHandler::prepare() {
     uint32_t numOfCubes = calculateTotalNumberOfCubesToGenerate();
     uint64_t availableDiskSpace = calculateAvailableDiskSpace();
     bool canBeOptimizedFurther = true;
-    bool optimized = false;
 
 
     std::cout << "You are about to generate and solve " << numOfCubes << " cubes..." << std::endl;
@@ -65,7 +64,6 @@ void ruCubeMultiSolveHandler::prepare() {
     while (singleReportSize * numOfCubes > availableDiskSpace and canBeOptimizedFurther) {
         canBeOptimizedFurther = optimizeReport();
         singleReportSize = estimateSingleSolveReportSize();
-        optimized = true;
     }
 
     if (not canBeOptimizedFurther) {
@@ -193,16 +191,16 @@ uint64_t ruCubeMultiSolveHandler::calculateAvailableDiskSpace() {
 // k - permutable
 
 uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
-    uint8_t numOfIgnoredEdges = size(genParams.ignoredEdges);
-    uint8_t numOfLockedEdges = size(genParams.lockedEdges);
+    size_t numOfIgnoredEdges = size(genParams.ignoredEdges);
+    size_t numOfLockedEdges = size(genParams.lockedEdges);
     uint32_t ans = ruCubeStateConverter::factLookup[ruBaseCube::noOfEdges - numOfLockedEdges] / ruCubeStateConverter::factLookup[numOfIgnoredEdges];
 
     if (numOfIgnoredEdges < 2 and (ruBaseCube::noOfEdges - numOfLockedEdges) >= 2) {
         ans /= 2;
     }
 
-    uint8_t numOfIgnoredCorners = size(genParams.ignoredCornersPerm);
-    uint8_t numOfLockedCorners = size(genParams.lockedCornersPerm);
+    size_t numOfIgnoredCorners = size(genParams.ignoredCornersPerm);
+    size_t numOfLockedCorners = size(genParams.lockedCornersPerm);
     ans *= numOfCornerPerms[numOfIgnoredCorners][numOfLockedCorners];
 
     uint8_t numOfIgnoredCornersOrient = std::count(begin(genParams.ignoredCornersOrient),

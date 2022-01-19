@@ -45,7 +45,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedPiecesTest) {
 
     ruCubeStateConverter converter;
 
-    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+    for (size_t i = 0; i < size(expectedCubes); ++i ) {
         const auto &[corners, edges] = expectedCubes[i];
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
@@ -103,7 +103,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedPiecesTest) {
 //--------------------------------------------
     };
 
-    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+    for (size_t i = 0; i < size(expectedCubes); ++i ) {
         const auto &[corners, edges] = expectedCubes[i];
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
@@ -173,7 +173,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithIgnoredPiecesTest) {
 
     ruCubeStateConverter converter;
 
-    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+    for (size_t i = 0; i < size(expectedCubes); ++i ) {
         const auto &[corners, edges] = expectedCubes[i];
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
@@ -213,7 +213,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesWithLockedAndIgnoredPiecesTest) {
 
     ruCubeStateConverter converter;
 
-    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+    for (size_t i = 0; i < size(expectedCubes); ++i ) {
         const auto &[corners, edges] = expectedCubes[i];
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
@@ -316,7 +316,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesLastF2LPairTest) {
 
     ruCubeStateConverter converter;
 
-    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+    for (size_t i = 0; i < size(expectedCubes); ++i ) {
         const auto &[corners, edges] = expectedCubes[i];
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
@@ -360,7 +360,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesLLEdgesTest) {
 
     ruCubeStateConverter converter;
 
-    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+    for (size_t i = 0; i < size(expectedCubes); ++i ) {
         const auto &[corners, edges] = expectedCubes[i];
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
@@ -416,7 +416,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesLLCornersOrientationTest) {
 
     ruCubeStateConverter converter;
 
-    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+    for (size_t i = 0; i < size(expectedCubes); ++i ) {
         const auto &[corners, edges] = expectedCubes[i];
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
@@ -565,7 +565,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesRUCornersPermOnlyTest) {
 
     ruCubeStateConverter converter;
 
-    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+    for (size_t i = 0; i < size(expectedCubes); ++i ) {
         const auto &[corners, edges] = expectedCubes[i];
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();
@@ -820,7 +820,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesWithIgnoredAndLocked
         ruCubeMultiSolveHandler handler(params[i]);
         ASSERT_EQ(expectedNumberOfCubes[i], handler.calculateTotalNumberOfCubesToGenerate());
 
-        int noOfCubes = 0;
+        size_t noOfCubes = 0;
 
         for (; noOfCubes < expectedNumberOfCubes[i]; ++noOfCubes ) {
             ASSERT_TRUE(generator.hasNext());
@@ -860,7 +860,7 @@ TEST(ruLutCubeGeneratorTest, generateCubesLLCornersPermutationTest) {
 
     ruCubeStateConverter converter;
 
-    for (uint32_t i = 0; i < size(expectedCubes); ++i ) {
+    for (size_t i = 0; i < size(expectedCubes); ++i ) {
         const auto &[corners, edges] = expectedCubes[i];
         ASSERT_TRUE(generator.hasNext());
         auto ruLutCube = generator.next();

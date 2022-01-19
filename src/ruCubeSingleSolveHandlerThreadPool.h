@@ -32,15 +32,16 @@ class ruCubeSingleSolveHandlerThreadPool {
 
     private:
 
-        std::vector<std::thread> threads;
-        std::mutex stop_mutex;
-        bool stop;
-
-        std::shared_ptr<ruLutCubeQueue> cubeQueue;
         size_t numOfThreads;
+        bool stop;
         ruCubeFileWriter writer;
         int bufferSize;
         size_t numOfCubesToFetch;
+        std::shared_ptr<ruLutCubeQueue> cubeQueue;
+
+        std::vector<std::thread> threads;
+        std::mutex stop_mutex;
+
 };
 
 #endif // RUCUBESINGLESOLVEHANDLERPOOL_H

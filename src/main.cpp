@@ -32,7 +32,7 @@ int main(int argc, char const* argv[]) {
 
     uint8_t minLength = 0;
     uint8_t maxLength = 20;
-    int maxNumOfSolutions = 1;
+    uint8_t maxNumOfSolutions = 1;
     bool headers = false;
     bool lineNumbers = false;
     bool fixedWidthMoves = false;
@@ -53,22 +53,22 @@ int main(int argc, char const* argv[]) {
                             size_t semicolonIndex = str.find_first_of(";");
                             if (semicolonIndex == std::string::npos)
                                 throw std::runtime_error{""};
-                            solvingMode mode = solvingMode::SINGLE_SOLVE_SCRAMBLE;
+                            solvingMode sm = solvingMode::SINGLE_SOLVE_SCRAMBLE;
 
                             std::string_view modeStr = str.substr(0, semicolonIndex);
                             std::string_view args = str.substr(semicolonIndex + 1);
 
                             if (modeStr == "s") {
-                                mode = solvingMode::SINGLE_SOLVE_STATE;
+                                sm = solvingMode::SINGLE_SOLVE_STATE;
                             } else if (modeStr == "g") {
-                                mode = solvingMode::GENERATOR;
+                                sm = solvingMode::GENERATOR;
                             } else if (modeStr == "S") {
-                                mode = solvingMode::SINGLE_SOLVE_SCRAMBLE;
+                                sm = solvingMode::SINGLE_SOLVE_SCRAMBLE;
                             } else {
                                 throw std::runtime_error{""};
                             }
 
-                            return std::pair<solvingMode, std::string>{mode, args};
+                            return std::pair<solvingMode, std::string>{sm, args};
                         } catch (...) {
                             throw std::runtime_error{"Invalid cube state format: " + std::string{str}};
                         }
@@ -96,7 +96,7 @@ int main(int argc, char const* argv[]) {
                         try {
                             return ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(std::string{str});
                         } catch (const ruCubeSolvedMaskException &e) {
-                            throw std::runtime_error{e.what()};
+                            throw std::runtime_error{std::string(e.what())};
                         }
                 },
                 false },
@@ -125,7 +125,7 @@ int main(int argc, char const* argv[]) {
         p.validate();
 
     } catch (const std::runtime_error &e) {
-        std::cout << e.what() << std::endl;
+        std::cout << std::string(e.what()) << std::endl;
 
         return EXIT_FAILURE;
     }
@@ -150,7 +150,7 @@ int main(int argc, char const* argv[]) {
 
             std::cout << solveHandler.getReport();
         } catch (const ruCubeScrambleException &e) {
-            std::cout << e.what() << std::endl;
+            std::cout << std::string(e.what()) << std::endl;
             return EXIT_FAILURE;
         }
 
@@ -174,7 +174,7 @@ int main(int argc, char const* argv[]) {
 
             std::cout << solveHandler.getReport();
         } catch (const ruCubeStateException& e) {
-            std::cout << e.what() << std::endl;
+            std::cout << std::string(e.what()) << std::endl;
             return EXIT_FAILURE;
         }
 
@@ -194,11 +194,11 @@ int main(int argc, char const* argv[]) {
             try {
                 handler.generateAndSolve("default.ruc");
             } catch (ruCubeMultiSolveHandlerException &e) {
-                std::cout << e.what() << std::endl;
+                std::cout << std::string(e.what()) << std::endl;
                 return EXIT_FAILURE;
             }
         } catch (ruCubeGeneratorParametersException &e) {
-            std::cout << e.what() << std::endl;
+            std::cout << std::string(e.what()) << std::endl;
             return EXIT_FAILURE;
         }
     } else if (mode.first == solvingMode::ANALYSIS ){

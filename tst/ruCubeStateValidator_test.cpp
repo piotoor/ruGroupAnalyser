@@ -116,7 +116,7 @@ TEST(ruCubeStateValidatorTest, isVectEdgesValidTest) {
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(permutations), true);
 
-    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+    for (size_t i = 0; i < size(expectedValidities); ++i) {
         ASSERT_EQ(expectedValidities[i], validator.isVectEdgesValid(permutations[i]));
     }
 }
@@ -132,7 +132,7 @@ TEST(ruCubeStateValidatorTest, isVectEdgesValidNegativeTest) {
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(permutations), false);
 
-    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+    for (size_t i = 0; i < size(expectedValidities); ++i) {
         ASSERT_EQ(expectedValidities[i], validator.isVectEdgesValid(permutations[i]));
     }
 }
@@ -250,7 +250,7 @@ TEST(ruCubeStateValidatorTest, isVectCornersPermValidTest) {
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(permutations), true);
 
-    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+    for (size_t i = 0; i < size(expectedValidities); ++i) {
         ASSERT_EQ(expectedValidities[i], validator.isVectCornersPermValid(permutations[i]));
     }
 }
@@ -267,7 +267,7 @@ TEST(ruCubeStateValidatorTest, isVectCornersPermValidNegativeTest) {
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(permutations), false);
 
-    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+    for (size_t i = 0; i < size(expectedValidities); ++i) {
         ASSERT_EQ(expectedValidities[i], validator.isVectCornersPermValid(permutations[i]));
     }
 }
@@ -305,7 +305,7 @@ TEST(ruCubeStateValidatorTest, isVectCornersOrientValidTest) {
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(orientations), true);
 
-    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+    for (size_t i = 0; i < size(expectedValidities); ++i) {
         ASSERT_EQ(expectedValidities[i], validator.isVectCornersOrientValid(orientations[i]));
     }
 }
@@ -325,7 +325,7 @@ TEST(ruCubeStateValidatorTest, isVectCornersOrientValidNegativeTest) {
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(orientations), false);
 
-    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+    for (size_t i = 0; i < size(expectedValidities); ++i) {
         ASSERT_EQ(expectedValidities[i], validator.isVectCornersOrientValid(orientations[i]));
     }
 }
@@ -349,7 +349,7 @@ TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableTest) {
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(cubeStates), true);
 
-    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+    for (size_t i = 0; i < size(expectedValidities); ++i) {
         const auto &[co, cp, ep] = cubeStates[i];
         ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableQuick(co, cp, ep));
         ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableFull(co, cp, ep));
@@ -375,7 +375,7 @@ TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableNegativeTest) {
 
     const std::vector<bool> expectedValidities = std::vector<bool> (size(cubeStates), false);
 
-    for (uint8_t i = 0; i < size(expectedValidities); ++i) {
+    for (size_t i = 0; i < size(expectedValidities); ++i) {
         const auto &[co, cp, ep] = cubeStates[i];
         ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableQuick(co, cp, ep));
         ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableFull(co, cp, ep));

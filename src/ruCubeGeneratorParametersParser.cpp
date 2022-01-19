@@ -1,6 +1,7 @@
 #include "ruCubeGeneratorParametersParser.h"
-#include <regex>
 #include "ruException.h"
+#include <regex>
+
 
 namespace ruCubeGeneratorParametersParser {
     generatorParameters strGeneratorParametersToStruct(std::string strGenParams) {
@@ -14,7 +15,7 @@ namespace ruCubeGeneratorParametersParser {
         std::string corners = strGenParams.substr(0, semicolonIndex);
         std::string edges = strGenParams.substr(semicolonIndex + 1);
 
-        for (uint8_t i = 0; i < size(corners); ++i) {
+        for (size_t i = 0; i < size(corners); ++i) {
             if (i % 2 == 0) {
                 if (corners[i] == 'I' or corners[i] == 'i') {
                     ans.ignoredCornersOrient[i / 2] = 1;
@@ -31,7 +32,7 @@ namespace ruCubeGeneratorParametersParser {
             }
         }
 
-        for (uint8_t i = 0; i < size(edges); ++i) {
+        for (size_t i = 0; i < size(edges); ++i) {
             if (edges[i] == 'I' or edges[i] == 'i') {
                 ans.ignoredEdges.insert(i);
             } else if (edges[i] == 'L' or edges[i] == 'l') {
