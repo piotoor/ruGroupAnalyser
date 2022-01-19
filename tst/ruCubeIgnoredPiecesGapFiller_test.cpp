@@ -1,74 +1,107 @@
 #include "gtest/gtest.h"
 #include "ruCubeIgnoredPiecesGapFiller.h"
+#include "testCustomDefinitions.h"
 #include <vector>
 #include <iostream>
+#include <numeric>
 #include <iterator>
 
 using cornersArray = std::array<int8_t, 6>;
 using edgesArray = std::array<int8_t, 7>;
 
-TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillNoGapsTest) {
-    ruCubeIgnoredPiecesGapFiller filler;
 
-    const std::vector<cornersArray> cornersOrient = {
-        { 0, 0, 0, 0, 0, 0 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 0, 1, 0, 1 },
-        { 2, 2, 2, 2, 2, 2 },
-        { 2, 0, 2, 0, 2, 0 },
-        { 2, 1, 2, 1, 2, 1 },
-        { 2, 1, 2, 1, 2, 1 },
-        { 2, 0, 2, 0, 2, 0 },
-        { 2, 1, 2, 1, 0, 0 },
-        { 2, 1, 2, 1, 0, 0 },
-        { 2, 1, 1, 0, 1, 1 },
+namespace {
+    class ruCubeIgnoredOrientationGapFillerTestFixture: public testing::TestWithParam<std::tuple<cornersArray, cornersArray>>{
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto &[cornersOrientation, expected] = testData.param;
+                    std::string cornersOrientationStr = std::accumulate(begin(cornersOrientation),
+                                                                        end(cornersOrientation),
+                                                                        std::string(),
+                                                                        [] (std::string a, int8_t b) {
+                                                                            if (b < 0) {
+                                                                                return a + "_";
+                                                                            }
+                                                                            return a + std::to_string(b);
+                                                                        });
+                    return cornersOrientationStr;
+                }
+            };
+
+        protected:
+            ruCubeIgnoredPiecesGapFiller filler;
     };
 
-    const std::vector<cornersArray> expectedCornersOrient = cornersOrient;
+    INSTANTIATE_TEST_SUITE_P (
+        cornersOrientationIgnoredGapsFillNoGapsTests,
+        ruCubeIgnoredOrientationGapFillerTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<cornersArray, cornersArray> (
+            {
+                { 0, 0, 0, 0, 0, 0 },
+                { 1, 1, 1, 1, 1, 1 },
+                { 0, 1, 0, 1, 0, 1 },
+                { 2, 2, 2, 2, 2, 2 },
+                { 2, 0, 2, 0, 2, 0 },
+                { 2, 1, 2, 1, 2, 1 },
+                { 2, 1, 2, 1, 0, 0 },
+                { 2, 1, 1, 0, 1, 1 },
+            },
+            {
+                { 0, 0, 0, 0, 0, 0 },
+                { 1, 1, 1, 1, 1, 1 },
+                { 0, 1, 0, 1, 0, 1 },
+                { 2, 2, 2, 2, 2, 2 },
+                { 2, 0, 2, 0, 2, 0 },
+                { 2, 1, 2, 1, 2, 1 },
+                { 2, 1, 2, 1, 0, 0 },
+                { 2, 1, 1, 0, 1, 1 },
+            }
+        )),
+        ruCubeIgnoredOrientationGapFillerTestFixture::toString()
+    );
 
-    for (size_t i = 0; i < size(cornersOrient); ++i) {
-        auto orient = cornersOrient[i];
-        ASSERT_TRUE(filler.cornersOrientationIgnoredGapsFill(orient));
-        ASSERT_EQ(expectedCornersOrient[i], orient);
-    }
-}
+    INSTANTIATE_TEST_SUITE_P (
+        cornersOrientationIgnoredGapsFillWithGapsTests,
+        ruCubeIgnoredOrientationGapFillerTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<cornersArray, cornersArray> (
+            {
+                {  0,  0, -1,  0,  0,  0 },
+                { -1, -1,  1,  1,  1,  1 },
+                {  0, -1,  0, -1,  0, -1 },
+                { -1, -1,  2, -1, -1,  2 },
+                {  2,  0,  2,  0,  2, -1 },
+                {  2,  1, -1, -1, -1, -1 },
+                { -1, -1,  2,  1, -1,  1 },
+                { -1,  1, -1,  1, -1,  1 },
+                {  2, -1,  2, -1,  0,  0 },
+                {  2,  1,  2,  1, -1, -1 },
+                {  2,  1,  1,  0, -1,  1 },
+                { -1, -1, -1, -1, -1, -1 },
+            },
+            {
+                {  0,  0,  0,  0,  0,  0 },
+                {  2,  0,  1,  1,  1,  1 },
+                {  0,  0,  0,  0,  0,  0 },
+                {  2,  0,  2,  0,  0,  2 },
+                {  2,  0,  2,  0,  2,  0 },
+                {  2,  1,  0,  0,  0,  0 },
+                {  2,  0,  2,  1,  0,  1 },
+                {  0,  1,  0,  1,  0,  1 },
+                {  2,  2,  2,  0,  0,  0 },
+                {  2,  1,  2,  1,  0,  0 },
+                {  2,  1,  1,  0,  1,  1 },
+                {  0,  0,  0,  0,  0,  0 },
+            }
+        )),
+        ruCubeIgnoredOrientationGapFillerTestFixture::toString()
+    );
 
-TEST(ruCubeIgnoredPiecesGapFiller, cornersOrientationIgnoredGapsFillWithGapsTest) {
-    ruCubeIgnoredPiecesGapFiller filler;
-
-    std::vector<cornersArray> cornersOrient = {
-        {  0,  0, -1,  0,  0,  0 },
-        { -1, -1,  1,  1,  1,  1 },
-        {  0, -1,  0, -1,  0, -1 },
-        { -1, -1,  2, -1, -1,  2 },
-        {  2,  0,  2,  0,  2, -1 },
-        {  2,  1, -1, -1, -1, -1 },
-        { -1, -1,  2,  1, -1,  1 },
-        { -1,  1, -1,  1, -1,  1 },
-        {  2, -1,  2, -1,  0,  0 },
-        {  2,  1,  2,  1, -1, -1 },
-        {  2,  1,  1,  0, -1,  1 },
-        { -1, -1, -1, -1, -1, -1 },
-    };
-
-    const std::vector<cornersArray> expectedCornersOrient = {
-        {  0,  0,  0,  0,  0,  0 },
-        {  2,  0,  1,  1,  1,  1 },
-        {  0,  0,  0,  0,  0,  0 },
-        {  2,  0,  2,  0,  0,  2 },
-        {  2,  0,  2,  0,  2,  0 },
-        {  2,  1,  0,  0,  0,  0 },
-        {  2,  0,  2,  1,  0,  1 },
-        {  0,  1,  0,  1,  0,  1 },
-        {  2,  2,  2,  0,  0,  0 },
-        {  2,  1,  2,  1,  0,  0 },
-        {  2,  1,  1,  0,  1,  1 },
-        {  0,  0,  0,  0,  0,  0 },
-    };
-
-    for (size_t i = 0; i < size(cornersOrient); ++i) {
-        ASSERT_TRUE(filler.cornersOrientationIgnoredGapsFill(cornersOrient[i]));
-        ASSERT_EQ(expectedCornersOrient[i], cornersOrient[i]);
+    TEST_P(ruCubeIgnoredOrientationGapFillerTestFixture, cornersOrientationIgnoredGapsFill) {
+        auto [cornersOrientation, expected] = GetParam();
+        ASSERT_TRUE(filler.cornersOrientationIgnoredGapsFill(cornersOrientation));
+        ASSERT_EQ(expected, cornersOrientation);
     }
 }
 
