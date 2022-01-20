@@ -242,4 +242,20 @@ std::string ruCubeStateConverter::lexIndexCornersToIntCornersAsStrWithIgnored(ui
     return ans;
 }
 
+template <typename T>
+std::string ruCubeStateConverter::vectToString(const T &vect) {
+    static_assert(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>, "Only cornersArray and edgesArray are allowed.");
+    return std::accumulate(   begin(vect),
+                              end(vect),
+                              std::string(),
+                              [] (const auto &lhs, const auto &rhs) {
+                                    if (rhs < 0) {
+                                        return lhs + "_";
+                                    } else {
+                                        return lhs + std::to_string(rhs);
+                                    }
+                              });
+}
 
+template std::string ruCubeStateConverter::vectToString<cornersArray>(const cornersArray &perm);
+template std::string ruCubeStateConverter::vectToString<edgesArray>(const edgesArray &perm);
