@@ -148,7 +148,6 @@ TEST(ruCubeScrambleParserTest, stringScrambleToVectorScrambleInvalidInputTest) {
         try {
             auto scramble = ruCubeScrambleParser::stringScrambleToVectorScramble(scrambles[i]);
         } catch (const ruCubeScrambleException &e) {
-            std::cout << "piotoor = " << std::string(e.what()) << std::endl;
             ASSERT_EQ(expectedException, std::string(e.what()));
         }
     }
