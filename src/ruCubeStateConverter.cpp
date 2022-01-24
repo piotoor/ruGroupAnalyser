@@ -250,7 +250,7 @@ std::string ruCubeStateConverter::vectToString(const T &vect) {
                               std::string(),
                               [] (const auto &lhs, const auto &rhs) {
                                     if (rhs < 0) {
-                                        return lhs + "_";
+                                        return lhs + "x";
                                     } else {
                                         return lhs + std::to_string(rhs);
                                     }

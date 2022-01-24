@@ -11,10 +11,10 @@ using cornersArray = std::array<int8_t, 6>;
 class orientationGenerator
 {
     public:
-        orientationGenerator();
+        orientationGenerator() = default;
         explicit orientationGenerator(const orientationGenerator &other) = delete;
         orientationGenerator& operator=(const orientationGenerator &other) = delete;
-        virtual ~orientationGenerator();
+        virtual ~orientationGenerator() = default;
         std::vector<cornersArray> generateOrientations(const cornersArray &locked = { -1, -1, -1, -1, -1, -1 }, const cornersArray &ignored = { 0, 0, 0, 0, 0, 0 });
 
     protected:

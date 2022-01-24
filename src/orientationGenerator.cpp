@@ -3,17 +3,14 @@
 #include <iterator>
 #include <algorithm>
 
-orientationGenerator::orientationGenerator() {
-    //ctor
-}
-
-orientationGenerator::~orientationGenerator() {
-    //dtor
-}
 
 std::vector<cornersArray> orientationGenerator::generateOrientations(const cornersArray &locked, const cornersArray &ignored) {
     cleanup();
-    hasIgnoredPiece = !ignored.empty() and std::any_of(begin(ignored), end(ignored), [] (const auto &x) { return x == 1; });
+    hasIgnoredPiece = !ignored.empty() and std::any_of(begin(ignored),
+                                                       end(ignored),
+                                                       [] (const auto &x) {
+                                                            return x == 1;
+                                                        });
     dfs(0, ruBaseCube::noOfCorners, locked, ignored);
     return ans;
 }
@@ -33,8 +30,8 @@ void orientationGenerator::dfs(uint8_t depth, uint8_t maxDepth, const cornersArr
             currSum -= locked[depth];
         } else if (ignored[depth] == 1) {
             curr[depth] = -1;
-            dfs(depth + 1, maxDepth, locked, ignored);
 
+            dfs(depth + 1, maxDepth, locked, ignored);
         } else {
             for (int i = 0; i < 3; ++i) {
                 curr[depth] = i;
