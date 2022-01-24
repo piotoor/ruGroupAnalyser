@@ -15,20 +15,19 @@ class permutationGenerator
 {
     static_assert(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>,
                   "Only cornersArray and edgesArray are allowed.");
+
     public:
-        permutationGenerator();
+        permutationGenerator() = default;
         explicit permutationGenerator(const permutationGenerator &other) = delete;
         permutationGenerator& operator=(const permutationGenerator &other) = delete;
-        virtual ~permutationGenerator();
-
+        virtual ~permutationGenerator() = default;
         std::vector<T> generatePermutations(const std::set<int8_t> &locked = {}, const std::set<int8_t> &ignored = {});
 
     private:
         void cleanup();
         void generateAns(const std::set<int8_t> &locked);
-        //std::multiset<int8_t> pieces;
+
         std::vector<int8_t> pieces;
-        //std::multiset<int8_t> permuteablePieces;
         std::vector<int8_t> permuteablePieces;
         std::vector<T> ans;
         T tmp;
