@@ -811,19 +811,29 @@ namespace {
         }),
         cornersPermutationGeneratorTestFixture::toString()
     );
-//
-//    INSTANTIATE_TEST_SUITE_P (
-//        cornersPermutationWithLockedAndIgnoredPiecesGeneratorTest,
-//        cornersPermutationGeneratorTestFixture,
-//        ::testing::Values(std::tuple<std::set<int8_t> , std::set<int8_t> , std::vector<cornersArray>> {
-//            { },
-//            { },
-//            {
-//
-//            }
-//        }),
-//        cornersPermutationGeneratorTestFixture::toString()
-//    );
+
+    INSTANTIATE_TEST_SUITE_P (
+        cornersPermutationWithLockedAndIgnoredPiecesGeneratorTest,
+        cornersPermutationGeneratorTestFixture,
+        ::testing::ValuesIn(std::vector<std::tuple<std::set<int8_t>, std::set<int8_t>, std::vector<cornersArray>>> {
+            {
+                { 0, 1, 2, 3 },
+                { 4, 5 },
+                {
+                    {  0,  1,  2,  3, -1, -1 }
+                }
+            },
+            {
+                { 0, 1, 2, 3 },
+                { 4 },
+                {
+                    {  0,  1,  2,  3, -1,  5 },
+                    {  0,  1,  2,  3,  5, -1 }
+                },
+            }
+        }),
+        cornersPermutationGeneratorTestFixture::toString()
+    );
 
 
     TEST_P(cornersPermutationGeneratorTestFixture, generatePermutationTest) {
@@ -1145,34 +1155,6 @@ TEST(permutationGeneratorTest, generateEdgesPermutationsTest) {
     ASSERT_TRUE(size(perms) >= size(expectedPerms));
     for (uint32_t i = 0; i < size(expectedPerms); ++i) {
         ASSERT_EQ(expectedPerms[i], perms[i]);
-    }
-}
-
-TEST(permutationGeneratorTest, generateCornersPermutationsWithLockedAndIgnoredPiecesTest) {
-    const std::vector<std::vector<cornersArray>> expectedPerms = {
-        {{  0,  1,  2,  3, -1, -1 }},
-
-        {{  0,  1,  2,  3, -1,  5 },
-         {  0,  1,  2,  3,  5, -1 }},
-    };
-
-    const std::vector<std::set<int8_t>> lockedPieces = {
-        { 0, 1, 2, 3 },
-        { 0, 1, 2, 3 },
-    };
-
-    const std::vector<std::set<int8_t>> ignoredPieces = {
-        { 4, 5 },
-        { 4 },
-    };
-
-    permutationGenerator<cornersArray> gen;
-    for (uint32_t test = 0; test < size(expectedPerms); ++test) {
-        auto perms = gen.generatePermutations(lockedPieces[test], ignoredPieces[test]);
-        ASSERT_TRUE(size(perms) >= size(expectedPerms[test]));
-        for (uint32_t i = 0; i < expectedPerms[test].size(); ++i) {
-            ASSERT_EQ(expectedPerms[test][i], perms[i]);
-        }
     }
 }
 
