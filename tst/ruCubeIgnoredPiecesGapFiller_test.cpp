@@ -20,7 +20,7 @@ namespace {
                     const auto &[co, expected] = testData.param;
 
                     ruCubeStateConverter conv;
-                    std::string cornersOrientStr = conv.vectToString(co);
+                    std::string cornersOrientStr = conv.containerToString(co);
                     return cornersOrientStr;
                 }
             };
@@ -111,8 +111,8 @@ namespace {
                     const auto &[cp, ep] = permutation;
 
                     ruCubeStateConverter conv;
-                    std::string cornersPermStr = conv.vectToString(cp);
-                    std::string edgesPermStr = conv.vectToString(ep);
+                    std::string cornersPermStr = conv.containerToString(cp);
+                    std::string edgesPermStr = conv.containerToString(ep);
 
                     return cornersPermStr + "__" + edgesPermStr;
                 }

@@ -14,8 +14,8 @@ namespace {
                     const auto& [locked, ignored, expected] = testData.param;
 
                     ruCubeStateConverter conv;
-                    std::string lockedStr = conv.vectToString(locked);
-                    std::string ignoredStr = conv.vectToString(ignored);
+                    std::string lockedStr = conv.containerToString(locked);
+                    std::string ignoredStr = conv.containerToString(ignored);
 
                     return lockedStr + "_" + ignoredStr;
                 }

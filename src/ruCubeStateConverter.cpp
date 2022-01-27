@@ -243,10 +243,10 @@ std::string ruCubeStateConverter::lexIndexCornersToIntCornersAsStrWithIgnored(ui
 }
 
 template <typename T>
-std::string ruCubeStateConverter::vectToString(const T &vect) {
-    static_assert(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray>, "Only cornersArray and edgesArray are allowed.");
-    return std::accumulate(   begin(vect),
-                              end(vect),
+std::string ruCubeStateConverter::containerToString(const T &cont) {
+    static_assert(std::is_convertible_v<T, cornersArray> or std::is_convertible_v<T, edgesArray> or std::is_convertible_v<T, std::set<int8_t>>, "Only cornersArray and edgesArray are allowed.");
+    return std::accumulate(   begin(cont),
+                              end(cont),
                               std::string(),
                               [] (const auto &lhs, const auto &rhs) {
                                     if (rhs < 0) {
@@ -257,5 +257,6 @@ std::string ruCubeStateConverter::vectToString(const T &vect) {
                               });
 }
 
-template std::string ruCubeStateConverter::vectToString<cornersArray>(const cornersArray &perm);
-template std::string ruCubeStateConverter::vectToString<edgesArray>(const edgesArray &perm);
+template std::string ruCubeStateConverter::containerToString<cornersArray>(const cornersArray &cont);
+template std::string ruCubeStateConverter::containerToString<edgesArray>(const edgesArray &cont);
+template std::string ruCubeStateConverter::containerToString<std::set<int8_t>>(const std::set<int8_t> &cont);
