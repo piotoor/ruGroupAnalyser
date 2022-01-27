@@ -1479,21 +1479,29 @@ namespace {
         }),
         edgesPermutationGeneratorTestFixture::toString()
     );
-//
-//    INSTANTIATE_TEST_SUITE_P (
-//        edgesPermutationWithLockedAndIgnoredPiecesGeneratorTest,
-//        edgesPermutationGeneratorTestFixture,
-//        ::testing::ValuesIn(std::vector<std::tuple<std::set<int8_t>, std::set<int8_t>, std::vector<edgesArray>>> {
-//            {
-//                { },
-//                { },
-//                {
-//
-//                }
-//            },
-//        }),
-//        edgesPermutationGeneratorTestFixture::toString()
-//    );
+
+    INSTANTIATE_TEST_SUITE_P (
+        edgesPermutationWithLockedAndIgnoredPiecesGeneratorTest,
+        edgesPermutationGeneratorTestFixture,
+        ::testing::ValuesIn(std::vector<std::tuple<std::set<int8_t>, std::set<int8_t>, std::vector<edgesArray>>> {
+            {
+                { 0, 1, 2, 3, 4 },
+                { 5, 6 },
+                {
+                    {  0,  1,  2,  3,  4, -1, -1 }
+                }
+            },
+            {
+                { 0, 1, 2, 3, 5 },
+                { 4 },
+                {
+                    {  0,  1,  2,  3, -1,  5,  6 },
+                    {  0,  1,  2,  3,  6,  5, -1 }
+                }
+            },
+        }),
+        edgesPermutationGeneratorTestFixture::toString()
+    );
 
 
     TEST_P(edgesPermutationGeneratorTestFixture, generatePermutationTest) {
@@ -1503,33 +1511,3 @@ namespace {
         ASSERT_EQ(expected, perms);
     }
 }
-
-TEST(permutationGeneratorTest, generateEdgesPermutationsWithLockedAndIgnoredPiecesTest) {
-    const std::vector<std::vector<edgesArray>> expectedPerms = {
-        {{  0,  1,  2,  3,  4, -1, -1 }},
-
-        {{  0,  1,  2,  3, -1,  5,  6 },
-         {  0,  1,  2,  3,  6,  5, -1 }},
-
-    };
-
-    const std::vector<std::set<int8_t>> lockedPieces = {
-        { 0, 1, 2, 3, 4 },
-        { 0, 1, 2, 3, 5 },
-    };
-
-    const std::vector<std::set<int8_t>> ignoredPieces = {
-        { 5, 6 },
-        { 4 },
-    };
-
-    permutationGenerator<edgesArray> gen;
-    for (uint32_t test = 0; test < size(expectedPerms); ++test) {
-        auto perms = gen.generatePermutations(lockedPieces[test], ignoredPieces[test]);
-        ASSERT_TRUE(size(perms) >= size(expectedPerms[test]));
-        for (uint32_t i = 0; i < expectedPerms[test].size(); ++i) {
-            ASSERT_EQ(expectedPerms[test][i], perms[i]);
-        }
-    }
-}
-
