@@ -21,7 +21,7 @@ class ruBaseCube {
         ruBaseCube();
         ruBaseCube(const ruBaseCube &other) = default;
         ruBaseCube & operator=(const ruBaseCube &other) = default;
-        virtual ~ruBaseCube() = 0;
+        virtual ~ruBaseCube() = default;
 
         virtual uint64_t getCorners() const = 0;
         virtual uint32_t getEdges() const = 0;
@@ -72,7 +72,7 @@ class ruCube: public ruBaseCube {
         ruCube();
         ruCube(uint64_t corners, uint32_t edges);
         ruCube(const ruCube& other) = default;
-        ~ruCube();
+        ~ruCube() = default;
 
         uint64_t getCorners() const override;
         uint32_t getEdges() const override;
@@ -188,7 +188,7 @@ class ruLutCube: public ruBaseCube {
         ruLutCube(const ruLutCube& other) = default;
         ruLutCube& operator=(const ruLutCube& other);
         bool operator==(const ruLutCube &other) const;
-        ~ruLutCube();
+        ~ruLutCube() = default;
 
         uint64_t getCorners() const override;
         uint32_t getEdges() const override;

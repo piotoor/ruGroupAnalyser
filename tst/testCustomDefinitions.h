@@ -2,6 +2,8 @@
 #define TESTCUSTOMDEFINITIONS_H
 #include "gtest/gtest.h"
 #include "ruCubeScrambleParser.h"
+#include "permutationGenerator.h"
+#include "ruCubeStateConverter.h"
 #include <vector>
 
 namespace testDataGenerators {
@@ -104,6 +106,26 @@ namespace templateFixtureClasses {
 
         protected:
             T cube;
+    };
+
+    template <class T>
+    class permutationGeneratorBaseParameterizedTestFixture: public testing::TestWithParam<std::tuple<std::set<int8_t> , std::set<int8_t> , std::vector<T>>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                    std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                        const auto& [locked, ignored, expected] = testData.param;
+
+                        ruCubeStateConverter conv;
+                        std::string lockedStr = conv.containerToString(locked);
+                        std::string ignoredStr = conv.containerToString(ignored);
+
+                        return lockedStr + "_" + ignoredStr;
+                    }
+            };
+
+        protected:
+            permutationGenerator<T> generator;
     };
 }
 

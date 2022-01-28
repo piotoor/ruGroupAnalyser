@@ -6,16 +6,6 @@
 
 
 template <class T>
-permutationGenerator<T>::permutationGenerator() {
-    //ctor
-}
-
-template <class T>
-permutationGenerator<T>::~permutationGenerator() {
-    //dtor
-}
-
-template <class T>
 std::vector<T> permutationGenerator<T>::generatePermutations(const std::set<int8_t> &locked, const std::set<int8_t> &ignored) {
     cleanup();
 
@@ -26,16 +16,12 @@ std::vector<T> permutationGenerator<T>::generatePermutations(const std::set<int8
     }
 
     sort(begin(pieces), end(pieces));
-    if (!locked.empty()) {
-        std::set_difference( begin(pieces),
-                        end(pieces),
-                        begin(locked),
-                        end(locked),
-                        back_inserter(permuteablePieces));
+    std::set_difference( begin(pieces),
+                    end(pieces),
+                    begin(locked),
+                    end(locked),
+                    back_inserter(permuteablePieces));
 
-    } else {
-        permuteablePieces = pieces;
-    }
 
     generateAns(locked);
     return ans;

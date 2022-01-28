@@ -34,6 +34,9 @@ class ruCubeStateConverter
         uint16_t vectCornersPermToLexIndexCornersPerm(const cornersArray &perm);
         uint16_t vectCornersOrientToLexIndexCornersOrient(const cornersArray &orient);
 
+        template <typename T>
+        std::string containerToString(const T &cont);
+
     private:
         uint16_t intPermToLexIndexPerm(const uint64_t perm, uint8_t pieceSize, uint8_t shiftBase, uint8_t numOfPieces);
 

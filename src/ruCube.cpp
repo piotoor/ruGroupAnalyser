@@ -40,9 +40,6 @@ ruBaseCube:: ruBaseCube() {
     };
 }
 
-ruBaseCube::~ruBaseCube() {
-}
-
 void ruBaseCube::turn(uint8_t turnIndex) {
     if (turnIndex > 5) {
         throw ruCubeTurnException(turnIndex);
@@ -73,10 +70,6 @@ void ruBaseCube::inverseScramble(std::vector<uint8_t> moves) {
 
 ruCube::ruCube() {
     reset();
-}
-
-ruCube::~ruCube() {
-
 }
 
 ruCube::ruCube(uint64_t corners, uint32_t edges): corners(corners), edges(edges) {
@@ -289,10 +282,6 @@ ruLutCube::ruLutCube(uint16_t cornersOrient, uint16_t cornersPerm, uint16_t edge
     this->cornersOrient = cornersOrient;
     this->cornersPerm = cornersPerm;
     setEdges(edgesPerm);
-}
-
-ruLutCube::~ruLutCube() {
-
 }
 
 ruLutCube& ruLutCube::operator=(const ruLutCube& other) {
