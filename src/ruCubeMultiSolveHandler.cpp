@@ -182,7 +182,7 @@ uint64_t ruCubeMultiSolveHandler::calculateAvailableDiskSpace() {
     return si.available;
 }
 
-uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
+uint32_t ruCubeMultiSolveHandler::calculateNumberOfEdgesPerms() {
     size_t numOfIgnoredEdges = size(genParams.ignoredEdges);
     size_t numOfLockedEdges = size(genParams.lockedEdges);
     uint32_t ans = ruCubeStateConverter::factLookup[ruBaseCube::noOfEdges - numOfLockedEdges] / ruCubeStateConverter::factLookup[numOfIgnoredEdges];
@@ -191,10 +191,17 @@ uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
         ans /= 2;
     }
 
+    return ans;
+}
+
+uint32_t ruCubeMultiSolveHandler::calculateNumberOfCornersPerms() {
     size_t numOfIgnoredCorners = size(genParams.ignoredCornersPerm);
     size_t numOfLockedCorners = size(genParams.lockedCornersPerm);
-    ans *= numOfCornerPerms[numOfIgnoredCorners][numOfLockedCorners];
 
+    return numOfCornerPerms[numOfIgnoredCorners][numOfLockedCorners];
+}
+
+uint32_t ruCubeMultiSolveHandler::calculateNumberOfCornersOrients() {
     uint8_t numOfIgnoredCornersOrient = std::count(begin(genParams.ignoredCornersOrient),
                                                    end(genParams.ignoredCornersOrient),
                                                    1);
@@ -215,8 +222,11 @@ uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
         }
     }
 
-    ans *= numOfCornersOrients;
-    return ans;
+    return numOfCornersOrients;
+}
+
+uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
+    return calculateNumberOfEdgesPerms() * calculateNumberOfCornersPerms() * calculateNumberOfCornersOrients();
 }
 
 bool ruCubeMultiSolveHandler::optimizeReportStep() {

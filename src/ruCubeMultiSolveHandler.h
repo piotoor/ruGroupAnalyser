@@ -36,6 +36,10 @@ class ruCubeMultiSolveHandler
         void compressCubeState();
         void dropMaxNumOfSolutionsToN(uint8_t n);
 
+        uint32_t calculateNumberOfEdgesPerms();
+        uint32_t calculateNumberOfCornersPerms();
+        uint32_t calculateNumberOfCornersOrients();
+
         void optimizeReport();
         void printOptimizations();
         bool optimizeReportStep();
