@@ -15,7 +15,7 @@ std::vector<T> permutationGenerator<T>::generatePermutations(const std::set<int8
         }
     }
 
-    sort(begin(pieces), end(pieces));
+    std::sort(begin(pieces), end(pieces));
     std::set_difference( begin(pieces),
                     end(pieces),
                     begin(locked),
@@ -31,7 +31,6 @@ template <class T>
 void permutationGenerator<T>::cleanup() {
     permuteablePieces.clear();
     ans.clear();
-    pieces.resize(size(tmp));
 
     std::iota(begin(pieces),
               end(pieces),
