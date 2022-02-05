@@ -10,10 +10,6 @@ ruCubeIgnoredPiecesGapFiller::ruCubeIgnoredPiecesGapFiller() {
     permutationIgnoredGapsFillCleanup();
 }
 
-ruCubeIgnoredPiecesGapFiller::~ruCubeIgnoredPiecesGapFiller() {
-    //dtor
-}
-
 bool ruCubeIgnoredPiecesGapFiller::cornersOrientationIgnoredGapsFill(cornersArray& cornersOrient) {
     uint8_t numOfNegativeOrients = 0;
     uint8_t sumOfPositiveOrients = std::accumulate(begin(cornersOrient),

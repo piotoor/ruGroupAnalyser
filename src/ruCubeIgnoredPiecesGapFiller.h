@@ -12,7 +12,7 @@ class ruCubeIgnoredPiecesGapFiller
 {
     public:
         ruCubeIgnoredPiecesGapFiller();
-        virtual ~ruCubeIgnoredPiecesGapFiller();
+        virtual ~ruCubeIgnoredPiecesGapFiller() = default;
         bool cornersOrientationIgnoredGapsFill(cornersArray &cornersOrient);
         void permutationIgnoredGapsFillInit(const cornersArray& cornersPerm, const edgesArray& edgesPerm);
         bool permutationIgnoredGapsFillNext(cornersArray& cornersPerm, edgesArray& edgesPerm);
