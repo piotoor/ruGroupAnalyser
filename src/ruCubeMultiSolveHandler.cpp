@@ -1,14 +1,15 @@
 #include "ruCubeMultiSolveHandler.h"
 #include "ruCubeStateConverter.h"
+#include "ruException.h"
+#include "ruCubeSingleSolveHandlerThreadPool.h"
+#include "ruLutCubeQueue.h"
+#include "ruLutCubeGeneratorThread.h"
 #include <cmath>
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <thread>
-#include "ruException.h"
-#include "ruCubeSingleSolveHandlerThreadPool.h"
-#include "ruLutCubeQueue.h"
-#include "ruLutCubeGeneratorThread.h"
+
 
 auto operator""_MB(long double x) -> uint64_t {
     return 1024ULL * 1024ULL * x;
