@@ -30,9 +30,6 @@ ruCubeMultiSolveHandler::ruCubeMultiSolveHandler(   const generatorParameters &g
 
 }
 
-ruCubeMultiSolveHandler::~ruCubeMultiSolveHandler() {
-}
-
 uint8_t ruCubeMultiSolveHandler::calculateNumOfAvailableThreads() {
     uint8_t cores = std::thread::hardware_concurrency();
     return fmaxf ( cores, UINT8_C(1) );

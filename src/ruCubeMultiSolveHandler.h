@@ -15,7 +15,7 @@ class ruCubeMultiSolveHandler
         ruCubeMultiSolveHandler(const generatorParameters &genParams = generatorParameters(),
                                 const solutionParameters &solParams = solutionParameters(),
                                 const solveReportFlags &flags = solveReportFlags());
-        virtual ~ruCubeMultiSolveHandler();
+        virtual ~ruCubeMultiSolveHandler() = default;
         void configure( const generatorParameters &genParams = generatorParameters(),
                         const solutionParameters &solParams = solutionParameters(),
                         const solveReportFlags &flags = solveReportFlags());
