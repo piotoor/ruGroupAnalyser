@@ -52,7 +52,6 @@ void ruCubeMultiSolveHandler::prepare() {
     uint64_t availableDiskSpace = calculateAvailableDiskSpace();
     bool canBeOptimizedFurther = true;
 
-
     std::cout << "You are about to generate and solve " << numOfCubes << " cubes..." << std::endl;
     if (singleReportSize * numOfCubes > availableDiskSpace) {
         std::cout << "Not enough available disk space to save the output." << std::endl;
@@ -69,7 +68,6 @@ void ruCubeMultiSolveHandler::prepare() {
         throw ruCubeMultiSolveHandlerException("Not enough available disk space. Exiting...");
     }
 
-    // number of threads
     std::cout << "DONE" << std::endl;
     printOptimizations();
 }
@@ -183,10 +181,6 @@ uint64_t ruCubeMultiSolveHandler::calculateAvailableDiskSpace() {
     const std::filesystem::space_info si = std::filesystem::space(".", ec);
     return si.available;
 }
-
-
-// K - non locked
-// k - permutable
 
 uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
     size_t numOfIgnoredEdges = size(genParams.ignoredEdges);
