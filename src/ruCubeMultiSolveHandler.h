@@ -36,9 +36,9 @@ class ruCubeMultiSolveHandler
         void compressCubeState();
         void dropMaxNumOfSolutionsToN(uint8_t n);
 
-        void prepare();
+        void optimizeReport();
         void printOptimizations();
-        bool optimizeReport();
+        bool optimizeReportStep();
 
         static inline const uint8_t maxCubeStateStrSize = 69;                       // cube state; solved mask printed once
         static inline const uint8_t maxCompressedCubeStateStrSize = 21;

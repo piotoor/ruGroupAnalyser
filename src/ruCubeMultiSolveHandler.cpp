@@ -46,7 +46,7 @@ void ruCubeMultiSolveHandler::configure( const generatorParameters &genParams,
     this->flagsInitial = flags;
 }
 
-void ruCubeMultiSolveHandler::prepare() {
+void ruCubeMultiSolveHandler::optimizeReport() {
     uint64_t singleReportSize = estimateSingleSolveReportSize();
     uint32_t numOfCubes = calculateTotalNumberOfCubesToGenerate();
     uint64_t availableDiskSpace = calculateAvailableDiskSpace();
@@ -59,7 +59,7 @@ void ruCubeMultiSolveHandler::prepare() {
     }
 
     while (singleReportSize * numOfCubes > availableDiskSpace and canBeOptimizedFurther) {
-        canBeOptimizedFurther = optimizeReport();
+        canBeOptimizedFurther = optimizeReportStep();
         singleReportSize = estimateSingleSolveReportSize();
     }
 
@@ -73,7 +73,7 @@ void ruCubeMultiSolveHandler::prepare() {
 }
 
 void ruCubeMultiSolveHandler::generateAndSolve(std::string fileName) {
-    prepare();
+    optimizeReport();
     std::cout << "\nNumber of threads: " << numOfThreads;
     std::cout << "\nGenerating..." << std::endl;
     ruCubeSimpleBenchmarkTimer bt;
@@ -219,7 +219,7 @@ uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
     return ans;
 }
 
-bool ruCubeMultiSolveHandler::optimizeReport() {
+bool ruCubeMultiSolveHandler::optimizeReportStep() {
     if (solParams.maxNumOfSolutions > 0) {
         if (flags.lineNumbers) {
             disableLineNumbers();
