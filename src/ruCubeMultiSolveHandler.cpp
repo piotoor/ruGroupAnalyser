@@ -1,14 +1,15 @@
 #include "ruCubeMultiSolveHandler.h"
 #include "ruCubeStateConverter.h"
+#include "ruException.h"
+#include "ruCubeSingleSolveHandlerThreadPool.h"
+#include "ruLutCubeQueue.h"
+#include "ruLutCubeGeneratorThread.h"
 #include <cmath>
 #include <algorithm>
 #include <filesystem>
 #include <fstream>
 #include <thread>
-#include "ruException.h"
-#include "ruCubeSingleSolveHandlerThreadPool.h"
-#include "ruLutCubeQueue.h"
-#include "ruLutCubeGeneratorThread.h"
+
 
 auto operator""_MB(long double x) -> uint64_t {
     return 1024ULL * 1024ULL * x;
@@ -30,12 +31,9 @@ ruCubeMultiSolveHandler::ruCubeMultiSolveHandler(   const generatorParameters &g
 
 }
 
-ruCubeMultiSolveHandler::~ruCubeMultiSolveHandler() {
-}
-
 uint8_t ruCubeMultiSolveHandler::calculateNumOfAvailableThreads() {
     uint8_t cores = std::thread::hardware_concurrency();
-    return fmaxf ( cores, UINT8_C(1) );
+    return std::max( cores, static_cast<uint8_t>(1) );
 }
 
 void ruCubeMultiSolveHandler::configure( const generatorParameters &genParams,
@@ -48,12 +46,11 @@ void ruCubeMultiSolveHandler::configure( const generatorParameters &genParams,
     this->flagsInitial = flags;
 }
 
-void ruCubeMultiSolveHandler::prepare() {
+void ruCubeMultiSolveHandler::optimizeReport() {
     uint64_t singleReportSize = estimateSingleSolveReportSize();
     uint32_t numOfCubes = calculateTotalNumberOfCubesToGenerate();
     uint64_t availableDiskSpace = calculateAvailableDiskSpace();
     bool canBeOptimizedFurther = true;
-
 
     std::cout << "You are about to generate and solve " << numOfCubes << " cubes..." << std::endl;
     if (singleReportSize * numOfCubes > availableDiskSpace) {
@@ -62,7 +59,7 @@ void ruCubeMultiSolveHandler::prepare() {
     }
 
     while (singleReportSize * numOfCubes > availableDiskSpace and canBeOptimizedFurther) {
-        canBeOptimizedFurther = optimizeReport();
+        canBeOptimizedFurther = optimizeReportStep();
         singleReportSize = estimateSingleSolveReportSize();
     }
 
@@ -71,13 +68,12 @@ void ruCubeMultiSolveHandler::prepare() {
         throw ruCubeMultiSolveHandlerException("Not enough available disk space. Exiting...");
     }
 
-    // number of threads
     std::cout << "DONE" << std::endl;
     printOptimizations();
 }
 
 void ruCubeMultiSolveHandler::generateAndSolve(std::string fileName) {
-    prepare();
+    optimizeReport();
     std::cout << "\nNumber of threads: " << numOfThreads;
     std::cout << "\nGenerating..." << std::endl;
     ruCubeSimpleBenchmarkTimer bt;
@@ -186,11 +182,7 @@ uint64_t ruCubeMultiSolveHandler::calculateAvailableDiskSpace() {
     return si.available;
 }
 
-
-// K - non locked
-// k - permutable
-
-uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
+uint32_t ruCubeMultiSolveHandler::calculateNumberOfEdgesPerms() {
     size_t numOfIgnoredEdges = size(genParams.ignoredEdges);
     size_t numOfLockedEdges = size(genParams.lockedEdges);
     uint32_t ans = ruCubeStateConverter::factLookup[ruBaseCube::noOfEdges - numOfLockedEdges] / ruCubeStateConverter::factLookup[numOfIgnoredEdges];
@@ -199,10 +191,17 @@ uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
         ans /= 2;
     }
 
+    return ans;
+}
+
+uint32_t ruCubeMultiSolveHandler::calculateNumberOfCornersPerms() {
     size_t numOfIgnoredCorners = size(genParams.ignoredCornersPerm);
     size_t numOfLockedCorners = size(genParams.lockedCornersPerm);
-    ans *= numOfCornerPerms[numOfIgnoredCorners][numOfLockedCorners];
 
+    return numOfCornerPerms[numOfIgnoredCorners][numOfLockedCorners];
+}
+
+uint32_t ruCubeMultiSolveHandler::calculateNumberOfCornersOrients() {
     uint8_t numOfIgnoredCornersOrient = std::count(begin(genParams.ignoredCornersOrient),
                                                    end(genParams.ignoredCornersOrient),
                                                    1);
@@ -223,11 +222,14 @@ uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
         }
     }
 
-    ans *= numOfCornersOrients;
-    return ans;
+    return numOfCornersOrients;
 }
 
-bool ruCubeMultiSolveHandler::optimizeReport() {
+uint32_t ruCubeMultiSolveHandler::calculateTotalNumberOfCubesToGenerate() {
+    return calculateNumberOfEdgesPerms() * calculateNumberOfCornersPerms() * calculateNumberOfCornersOrients();
+}
+
+bool ruCubeMultiSolveHandler::optimizeReportStep() {
     if (solParams.maxNumOfSolutions > 0) {
         if (flags.lineNumbers) {
             disableLineNumbers();

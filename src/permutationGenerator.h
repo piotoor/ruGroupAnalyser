@@ -27,7 +27,7 @@ class permutationGenerator
         void cleanup();
         void generateAns(const std::set<int8_t> &locked);
 
-        std::vector<int8_t> pieces;
+        T pieces;
         std::vector<int8_t> permuteablePieces;
         std::vector<T> ans;
         T tmp;
