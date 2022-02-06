@@ -11,9 +11,6 @@ ruCubeSingleSolveHandler::ruCubeSingleSolveHandler( const solutionParameters &so
 
 }
 
-ruCubeSingleSolveHandler::~ruCubeSingleSolveHandler() {
-}
-
 ruCubeSingleSolveHandler::ruCubeSingleSolveHandler(const ruCubeSingleSolveHandler &other) {
     solver = other.solver;
     report.str( std::string() );

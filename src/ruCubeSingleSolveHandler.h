@@ -22,7 +22,7 @@ class ruCubeSingleSolveHandler
                                  const solvedMasks &masks = solvedMasks(),
                                  const solveReportFlags &flags = solveReportFlags());
 
-        virtual ~ruCubeSingleSolveHandler();
+        virtual ~ruCubeSingleSolveHandler() = default;
 
         ruCubeSingleSolveHandler(const ruCubeSingleSolveHandler&);
 
