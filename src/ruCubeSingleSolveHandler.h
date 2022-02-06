@@ -3,8 +3,8 @@
 
 #include "ruCube.h"
 #include "ruCubeSolver.h"
-#include <sstream>
 #include "ruCubeSimpleBenchmarkTimer.h"
+#include <sstream>
 
 struct solveReportFlags {
     bool headers = false;
