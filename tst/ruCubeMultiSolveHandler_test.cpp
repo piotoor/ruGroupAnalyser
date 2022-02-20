@@ -3,14 +3,14 @@
 #include "ruLutCubeGenerator.h"
 
 namespace {
-    class ruCubeMultiSolveHandlerTestFixture: public testing::TestWithParam<std::tuple<generatorParameters, int>>{
+    class ruCubeMultiSolveHandlerCalculationsTestFixture: public testing::TestWithParam<std::tuple<generatorParameters, int>>{
         protected:
             ruCubeMultiSolveHandler handler;
     };
 
     INSTANTIATE_TEST_SUITE_P (
         numberOfCubesToGenerateTests,
-        ruCubeMultiSolveHandlerTestFixture,
+        ruCubeMultiSolveHandlerCalculationsTestFixture,
         ::testing::Values(
             std::tuple<generatorParameters, int> {
                 generatorParameters(),
@@ -173,7 +173,7 @@ namespace {
         )
     );
 
-    TEST_P(ruCubeMultiSolveHandlerTestFixture, calculateTotalNumberOfCubesToGenerateTest) {
+    TEST_P(ruCubeMultiSolveHandlerCalculationsTestFixture, calculateTotalNumberOfCubesToGenerateTest) {
         const auto &[genParams, expected] = GetParam();
         handler.configure(genParams);
         ASSERT_EQ(handler.calculateTotalNumberOfCubesToGenerate(), expected);
