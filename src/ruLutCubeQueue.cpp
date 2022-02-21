@@ -1,6 +1,6 @@
 #include "ruLutCubeQueue.h"
 
-ruLutCubeQueue::ruLutCubeQueue() {
+ruLutCubeQueue::ruLutCubeQueue(): stopped(false) {
     //ctor
 }
 
@@ -14,15 +14,20 @@ void ruLutCubeQueue::push(ruLutCube cube) {
     condition.notify_one();
 }
 
-ruLutCube ruLutCubeQueue::pop() {
+std::optional<ruLutCube> ruLutCubeQueue::pop() {
     std::unique_lock<std::mutex> lock(queue_mutex);
     this->condition.wait(   lock,
                             [this] {
-                                return not this->cubeQueue.empty();
+                                return not this->cubeQueue.empty() or stopped;
                             });
-    ruLutCube ans = std::move(cubeQueue.front());
-    cubeQueue.pop();
-    return ans;
+
+    if (stopped) {
+        return std::nullopt;
+    } else {
+        ruLutCube ans = std::move(cubeQueue.front());
+        cubeQueue.pop();
+        return ans;
+    }
 }
 
 bool ruLutCubeQueue::isEmpty() {
@@ -30,4 +35,7 @@ bool ruLutCubeQueue::isEmpty() {
     return cubeQueue.empty();
 }
 
-
+void ruLutCubeQueue::stop() {
+    stopped = true;
+    this->condition.notify_all();
+}

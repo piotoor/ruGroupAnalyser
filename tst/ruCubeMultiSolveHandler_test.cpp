@@ -2,6 +2,9 @@
 #include "ruCubeMultiSolveHandler.h"
 #include "ruLutCubeGenerator.h"
 
+#include <filesystem>
+#include <fstream>
+
 namespace {
     class ruCubeMultiSolveHandlerCalculationsTestFixture: public testing::TestWithParam<std::tuple<generatorParameters, int>>{
         protected:
@@ -130,7 +133,7 @@ namespace {
                 {   // all pieces but three edges and two corners are locked. The rest is ignored.
                     { 0, 1, 3, 6 },             // lockedEdges
                     { 2, 4, 5 },                // ignoredEdges
-                    { 0, 1, 3, 4 },             // locchristy modelkedCornersPerm
+                    { 0, 1, 3, 4 },             // lockedCornersPerm
                     { 2, 5 },                   // ignoredCornersPerm
                     { 0, 0, -1, 0, -1, 0 },     // lockedCornersOrient
                     { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
@@ -177,5 +180,82 @@ namespace {
         const auto &[genParams, expected] = GetParam();
         handler.configure(genParams);
         ASSERT_EQ(handler.calculateTotalNumberOfCubesToGenerate(), expected);
+    }
+}
+
+namespace {
+    class ruCubeMultiSolveHandlerGenerateTestFixture: public testing::TestWithParam<std::tuple<generatorParameters, std::string>>{
+        protected:
+            ruCubeMultiSolveHandler handler;
+    };
+
+    INSTANTIATE_TEST_SUITE_P (
+        numberOfCubesToGenerateTests,
+        ruCubeMultiSolveHandlerGenerateTestFixture,
+        ::testing::Values(
+            std::tuple<generatorParameters, std::string> {
+                {   // all pieces but two edges and two corners are locked. The rest is ignored.
+                    { 0, 1, 3, 4, 6 },          // lockedEdges
+                    { 2, 5 },                   // ignoredEdges
+                    { 0, 1, 3, 4 },             // lockedCornersPerm
+                    { 2, 5 },                   // ignoredCornersPerm
+                    { 0, 0, -1, 0, -1, 0 },     // lockedCornersOrient
+                    { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
+                },
+                "+------------+-------+\n"
+                "|0001--03-40-;01-34-6|\n"
+                "+------------+-------+\n"
+                "\n"
+                "\n"
+            },
+            std::tuple<generatorParameters, std::string> {
+                {   // UL - UB - UR edges
+                    { 0, 4, 5, 6 },             // lockedEdges
+                    { },                        // ignoredEdges
+                    { 0, 1, 2, 3, 4, 5 },       // lockedCornersPerm
+                    { },                        // ignoredCornersPerm
+                    { 0, 0, 0, 0, 0, 0 },       // lockedCornersOrient
+                    { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+                },
+                "+------------+-------+\n"
+                "|000102030405;0123456|\n"
+                "+------------+-------+\n"
+                "\n"
+                "\n"
+                "+------------+-------+\n"
+                "|000102030405;0231456|\n"
+                "+------------+-------+\n"
+                "R' U R' U' R' U' R' U R U R2\n"
+                "\n"
+                "+------------+-------+\n"
+                "|000102030405;0312456|\n"
+                "+------------+-------+\n"
+                "R2 U' R' U' R U R U R U' R\n"
+                "\n"
+            }
+        )
+    );
+
+    TEST_P(ruCubeMultiSolveHandlerGenerateTestFixture, generateAndSolveTest) {
+        const auto &[genParams, expected] = GetParam();
+        handler.configure(genParams);
+        const std::string testFileName = "testSolutions.txt";
+        handler.generateAndSolve(testFileName);
+
+        std::ifstream solutionsFile(testFileName);
+        if (solutionsFile.is_open()) {
+            std::stringstream ss;
+            ss << solutionsFile.rdbuf();
+            solutionsFile.close();
+            ASSERT_EQ(ss.str(), expected);
+        } else {
+            std::cout << "Error opening " << testFileName << std::endl;
+        }
+
+        try {
+            std::filesystem::remove(testFileName);
+        } catch (const std::filesystem::filesystem_error& err) {
+            std::cout << "Filesystem error: " << err.what() << std::endl;
+        }
     }
 }
