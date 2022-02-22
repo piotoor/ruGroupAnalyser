@@ -184,7 +184,7 @@ namespace {
 }
 
 namespace {
-    class ruCubeMultiSolveHandlerGenerateTestFixture: public testing::TestWithParam<std::tuple<generatorParameters, std::string>>{
+    class ruCubeMultiSolveHandlerGenerateTestFixture: public testing::TestWithParam<std::tuple<generatorParameters, std::set<std::string>>>{
         protected:
             ruCubeMultiSolveHandler handler;
     };
@@ -193,7 +193,7 @@ namespace {
         numberOfCubesToGenerateTests,
         ruCubeMultiSolveHandlerGenerateTestFixture,
         ::testing::Values(
-            std::tuple<generatorParameters, std::string> {
+            std::tuple<generatorParameters, std::set<std::string>> {
                 {   // all pieces but two edges and two corners are locked. The rest is ignored.
                     { 0, 1, 3, 4, 6 },          // lockedEdges
                     { 2, 5 },                   // ignoredEdges
@@ -202,13 +202,15 @@ namespace {
                     { 0, 0, -1, 0, -1, 0 },     // lockedCornersOrient
                     { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
                 },
-                "+------------+-------+\n"
-                "|0001--03-40-;01-34-6|\n"
-                "+------------+-------+\n"
-                "\n"
-                "\n"
+                std::set<std::string> {
+                    "+------------+-------+\n"
+                    "|0001--03-40-;01-34-6|\n"
+                    "+------------+-------+\n"
+                    "\n"
+                    "\n"
+                }
             },
-            std::tuple<generatorParameters, std::string> {
+            std::tuple<generatorParameters, std::set<std::string>> {
                 {   // UL - UB - UR edges
                     { 0, 4, 5, 6 },             // lockedEdges
                     { },                        // ignoredEdges
@@ -217,21 +219,23 @@ namespace {
                     { 0, 0, 0, 0, 0, 0 },       // lockedCornersOrient
                     { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
                 },
-                "+------------+-------+\n"
-                "|000102030405;0123456|\n"
-                "+------------+-------+\n"
-                "\n"
-                "\n"
-                "+------------+-------+\n"
-                "|000102030405;0231456|\n"
-                "+------------+-------+\n"
-                "R' U R' U' R' U' R' U R U R2\n"
-                "\n"
-                "+------------+-------+\n"
-                "|000102030405;0312456|\n"
-                "+------------+-------+\n"
-                "R2 U' R' U' R U R U R U' R\n"
-                "\n"
+                std::set<std::string> {
+                    "+------------+-------+\n"
+                    "|000102030405;0123456|\n"
+                    "+------------+-------+\n"
+                    "\n"
+                    "\n",
+                    "+------------+-------+\n"
+                    "|000102030405;0231456|\n"
+                    "+------------+-------+\n"
+                    "R' U R' U' R' U' R' U R U R2\n"
+                    "\n",
+                    "+------------+-------+\n"
+                    "|000102030405;0312456|\n"
+                    "+------------+-------+\n"
+                    "R2 U' R' U' R U R U R U' R\n"
+                    "\n"
+                }
             }
         )
     );
@@ -244,10 +248,22 @@ namespace {
 
         std::ifstream solutionsFile(testFileName);
         if (solutionsFile.is_open()) {
-            std::stringstream ss;
-            ss << solutionsFile.rdbuf();
+            std::set<std::string> actual;
+            std::string line;
+            std::string cube;
+
+            int n = 0;
+            while (getline(solutionsFile, line)) {
+                cube += line + "\n";
+                if (n % 5 == 4) {
+                    actual.insert(cube);
+                    cube.clear();
+                }
+                ++n;
+            }
+
             solutionsFile.close();
-            ASSERT_EQ(ss.str(), expected);
+            ASSERT_EQ(actual, expected);
         } else {
             std::cout << "Error opening " << testFileName << std::endl;
         }
