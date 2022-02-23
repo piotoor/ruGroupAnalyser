@@ -22,6 +22,11 @@ std::optional<ruLutCube> ruLutCubeQueue::pop() {
                             });
 
     if (stopped) {
+        if (not this->cubeQueue.empty()) {
+            ruLutCube ans = std::move(cubeQueue.front());
+            cubeQueue.pop();
+            return ans;
+        }
         return std::nullopt;
     } else {
         ruLutCube ans = std::move(cubeQueue.front());

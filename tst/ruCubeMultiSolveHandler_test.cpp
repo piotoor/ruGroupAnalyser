@@ -255,9 +255,7 @@ namespace {
             int n = 0;
             while (getline(solutionsFile, line)) {
                 cube += line + "\n";
-                std::cout << "line = " << line << std::endl;
                 if (n % 5 == 4) {
-                    std::cout << "CUBE___DEBUG = " << cube << std::endl;
                     actual.insert(cube);
                     cube.clear();
                 }
