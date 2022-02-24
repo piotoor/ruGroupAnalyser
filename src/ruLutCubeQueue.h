@@ -3,6 +3,7 @@
 #include <queue>
 #include <mutex>
 #include <condition_variable>
+#include <optional>
 
 #include "ruCube.h"
 
@@ -11,14 +12,16 @@ class ruLutCubeQueue {
         ruLutCubeQueue();
         virtual ~ruLutCubeQueue();
         void push(ruLutCube cube);
-        ruLutCube pop();
+        std::optional<ruLutCube> pop();
         bool isEmpty();
-
+        void stop();
 
     private:
         std::queue<ruLutCube> cubeQueue;
         std::mutex queue_mutex;
         std::condition_variable condition;
+
+        bool stopped;
 };
 
 #endif // RULUTCUBEQUEUE_H

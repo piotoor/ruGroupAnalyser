@@ -1,4 +1,5 @@
 #include "ruCubeSingleSolveHandlerThreadPool.h"
+#include <optional>
 
 ruCubeSingleSolveHandlerThreadPool::ruCubeSingleSolveHandlerThreadPool( std::string fileName,
                                                                         std::shared_ptr<ruLutCubeQueue> cubeQueue,
@@ -23,11 +24,17 @@ ruCubeSingleSolveHandlerThreadPool::ruCubeSingleSolveHandlerThreadPool( std::str
                 while (true) {
                     ruLutCube cube;
                     {
-                        if(this->stop && this->cubeQueue->isEmpty()) {
+                        if (this->stop && this->cubeQueue->isEmpty()) {
                             this->writer.write(buff.str());
                             return;
                         }
-                        cube = this->cubeQueue->pop();
+
+                        auto res = this->cubeQueue->pop();
+                        if (res) {
+                            cube = *res;
+                        } else {
+                            return;
+                        }
                     }
 
                     handler.solve(cube);
@@ -37,7 +44,6 @@ ruCubeSingleSolveHandlerThreadPool::ruCubeSingleSolveHandlerThreadPool( std::str
                     this->writer.write(buff.str());
                     buff.str( std::string() );
                     buff.clear();
-
                 }
             }
         );
@@ -48,8 +54,10 @@ ruCubeSingleSolveHandlerThreadPool::~ruCubeSingleSolveHandlerThreadPool() {
     {
         std::unique_lock<std::mutex> lock(stop_mutex);
         stop = true;
+        this->cubeQueue->stop();
     }
 
-    for(std::thread &worker: threads)
+    for(std::thread &worker: threads) {
         worker.join();
+    }
 }

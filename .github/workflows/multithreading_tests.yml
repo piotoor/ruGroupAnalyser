@@ -1,0 +1,36 @@
+name: Multithreading repeated tests
+
+on:
+  push:
+    branches: [ main ]
+  pull_request:
+    branches: [ main ]
+
+env:
+  BUILD_TYPE: Debug
+
+jobs:
+  Build_and_run_tests:
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Configure submodules
+      working-directory: ${{github.workspace}}/lib
+      run: git submodule update --init --recursive
+
+    - name: Configure CMake
+      run: cmake -B ${{github.workspace}}/build -DCMAKE_BUILD_TYPE=${{env.BUILD_TYPE}} -DBUILD_TEST=ON
+
+    - name: Build
+      working-directory: ${{github.workspace}}/build
+      run: |
+              pwd
+              tree
+              make all
+
+    - name: Run unit tests
+      working-directory: ${{github.workspace}}/build/debug
+      run: ./ruGroupAnalyser_tst --gtest_filter=*ruCubeMultiSolveHandlerGenerateTestFixture* --gtest_repeat=100
+

@@ -3,8 +3,8 @@
 
 #include "ruCube.h"
 #include "ruCubeSolver.h"
-#include <sstream>
 #include "ruCubeSimpleBenchmarkTimer.h"
+#include <sstream>
 
 struct solveReportFlags {
     bool headers = false;
@@ -22,7 +22,7 @@ class ruCubeSingleSolveHandler
                                  const solvedMasks &masks = solvedMasks(),
                                  const solveReportFlags &flags = solveReportFlags());
 
-        virtual ~ruCubeSingleSolveHandler();
+        virtual ~ruCubeSingleSolveHandler() = default;
 
         ruCubeSingleSolveHandler(const ruCubeSingleSolveHandler&);
 

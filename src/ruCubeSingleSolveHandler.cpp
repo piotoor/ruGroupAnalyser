@@ -7,11 +7,7 @@ ruCubeSingleSolveHandler::ruCubeSingleSolveHandler( const solutionParameters &so
                                                     const solveReportFlags &flags):
                                                         solver(solParams,
                                                                masks),
-                                                        flags(flags){
-
-}
-
-ruCubeSingleSolveHandler::~ruCubeSingleSolveHandler() {
+                                                        flags(flags) {
 }
 
 ruCubeSingleSolveHandler::ruCubeSingleSolveHandler(const ruCubeSingleSolveHandler &other) {
@@ -53,18 +49,22 @@ void ruCubeSingleSolveHandler::appendReport(std::stringstream &report) {
         report << "|" << currCube.toString() << "|" << "\n";
         report << "+------------+-------+" << "\n";
     }
+
     int currLength = -1;
+
     for (size_t i = 0; i < size(solutionsVect); ++i) {
         if (static_cast<int>(size(solutionsVect[i])) != currLength) {
             if (currLength != -1 and flags.headers) {
                     report << "\n";
             }
-            currLength = size(solutionsVect[i]);
-            if (flags.headers) {
 
+            currLength = size(solutionsVect[i]);
+
+            if (flags.headers) {
                 report << "Solutions of length " << std::setw(2) << std::to_string(currLength) << "..." << "\n";
             }
         }
+
         if (flags.lineNumbers) {
             report << std::setw(log(size(solutionsVect)) + 1) << std::left << std::to_string(i + 1) + "." << " ";
         }
@@ -72,13 +72,16 @@ void ruCubeSingleSolveHandler::appendReport(std::stringstream &report) {
 
         if (flags.fixedWidthMoves and not flags.compressSolutions) {
             std::string solution;
+
             for (const auto &x: solutionsStr[i]) {
 
                 if (!solution.empty() and x == ' ' and isalpha(solution.back())) {
                     solution += ' ';
                 }
+
                 solution += x;
             }
+
             report << solution << "\n";
         } else {
             report << solutionsStr[i] << "\n";
@@ -95,6 +98,7 @@ std::string ruCubeSingleSolveHandler::getReport() {
     report.str( std::string() );
     report.clear();
     appendReport(report);
+
     return report.str();
 }
 
