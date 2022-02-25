@@ -8,9 +8,6 @@ ruLutCube ruCubeSingleSolveInputParser::getCubeFromScramble(std::string scramble
     return cube;
 }
 
-// cp, co, ep
-using ruCubeStateVect = std::tuple<cornersArray, cornersArray, edgesArray>;
-
 ruLutCube ruCubeSingleSolveInputParser::getCubeFromState(std::string state) {
     auto [co, cp, ep] = ruCubeStateParser::stringStateToVect(state);
     if (!validator.isVectCornersPermValid(cp)) {
