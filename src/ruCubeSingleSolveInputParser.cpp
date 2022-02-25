@@ -1,14 +1,6 @@
 #include "ruCubeSingleSolveInputParser.h"
 #include "ruException.h"
 
-ruCubeSingleSolveInputParser::ruCubeSingleSolveInputParser() {
-    //ctor
-}
-
-ruCubeSingleSolveInputParser::~ruCubeSingleSolveInputParser() {
-    //dtor
-}
-
 ruLutCube ruCubeSingleSolveInputParser::getCubeFromScramble(std::string scramble) {
     auto scr = ruCubeScrambleParser::stringScrambleToVectorScramble(scramble);
     ruLutCube cube;

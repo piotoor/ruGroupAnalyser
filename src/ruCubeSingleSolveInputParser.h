@@ -8,8 +8,8 @@
 
 class ruCubeSingleSolveInputParser {
     public:
-        ruCubeSingleSolveInputParser();
-        virtual ~ruCubeSingleSolveInputParser();
+        ruCubeSingleSolveInputParser() = default;
+        virtual ~ruCubeSingleSolveInputParser() = default;
 
         ruLutCube getCubeFromScramble(std::string scramble);
         ruLutCube getCubeFromState(std::string state);
