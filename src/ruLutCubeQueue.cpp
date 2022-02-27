@@ -1,13 +1,5 @@
 #include "ruLutCubeQueue.h"
 
-ruLutCubeQueue::ruLutCubeQueue(): stopped(false) {
-    //ctor
-}
-
-ruLutCubeQueue::~ruLutCubeQueue() {
-    //dtor
-}
-
 void ruLutCubeQueue::push(ruLutCube cube) {
     std::unique_lock<std::mutex> lock(queue_mutex);
     cubeQueue.push(cube);

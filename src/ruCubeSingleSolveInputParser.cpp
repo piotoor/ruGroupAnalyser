@@ -1,23 +1,12 @@
 #include "ruCubeSingleSolveInputParser.h"
 #include "ruException.h"
 
-ruCubeSingleSolveInputParser::ruCubeSingleSolveInputParser() {
-    //ctor
-}
-
-ruCubeSingleSolveInputParser::~ruCubeSingleSolveInputParser() {
-    //dtor
-}
-
 ruLutCube ruCubeSingleSolveInputParser::getCubeFromScramble(std::string scramble) {
     auto scr = ruCubeScrambleParser::stringScrambleToVectorScramble(scramble);
     ruLutCube cube;
     cube.scramble(scr);
     return cube;
 }
-
-// cp, co, ep
-using ruCubeStateVect = std::tuple<cornersArray, cornersArray, edgesArray>;
 
 ruLutCube ruCubeSingleSolveInputParser::getCubeFromState(std::string state) {
     auto [co, cp, ep] = ruCubeStateParser::stringStateToVect(state);
