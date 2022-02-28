@@ -151,29 +151,50 @@ namespace {
     }
 }
 
-TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntSimpleCorrectMasksNegativeTest) {
-    std::vector<std::string> masksStr {
-        "111111111111;1111211",
-        "000200000000;0000000",
-        "111111211111;0002000",
-        "0000;0000000;1111111",
-        "1001010101010;1010101",
-        "0f0101010101;01010100",
-        "",
+namespace {
+    class ruCubeSolvedMaskParserStringSolvedMaskToIntSimpleNegativeMasksTestFixture: public testing::TestWithParam<std::string> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    std::string mask = "_" + testData.param;
+                    std::replace_if(begin(mask),
+                                    end(mask),
+                                    ::ispunct,
+                                    '_');
+                    return mask;
+                }
+            };
     };
 
-    std::string expectedException = "ruCubeSolvedMaskException: Parsing exception. Invalid cube solved mask definition.";
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeSolvedMaskParserTests,
+        ruCubeSolvedMaskParserStringSolvedMaskToIntSimpleNegativeMasksTestFixture,
+        ::testing::Values(
+            "111111111111;1111211",
+            "000200000000;0000000",
+            "111111211111;0002000",
+            "0000;0000000;1111111",
+            "1001010101010;1010101",
+            "0f0101010101;01010100",
+            ""
+        ),
+        ruCubeSolvedMaskParserStringSolvedMaskToIntSimpleNegativeMasksTestFixture::toString()
+    );
 
-    size_t i = 0;
-    for (; i < size(masksStr); ++i) {
-        std::string exceptionMessage;
-        try {
-            ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masksStr[i]);
-        } catch (const ruCubeSolvedMaskException &e) {
-            exceptionMessage = std::string(e.what());
-        }
-        ASSERT_EQ(expectedException, exceptionMessage);
+    TEST_P(ruCubeSolvedMaskParserStringSolvedMaskToIntSimpleNegativeMasksTestFixture, stringSolvedMaskToIntSimpleCorrectMasksNegativeTest) {
+        std::string masks = GetParam();
+        const std::string expectedException = "ruCubeSolvedMaskException: Parsing exception. Invalid cube solved mask definition.";
+        ASSERT_THROW (
+            try {
+                ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masks);
+            } catch (const ruCubeSolvedMaskException &e) {
+                std::cout << std::string(e.what()) << std::endl;
+                ASSERT_EQ(expectedException, std::string(e.what()));
+                throw;
+            },
+            ruCubeSolvedMaskException
+        );
+
     }
-    ASSERT_EQ(size(masksStr), i);
 }
-
