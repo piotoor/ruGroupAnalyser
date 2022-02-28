@@ -3,61 +3,94 @@
 #include "ruCube.h"
 #include "ruCubeStateConverter.h"
 #include "ruException.h"
+#include "testCustomDefinitions.h"
 #include <vector>
 #include <iostream>
 #include <string>
+#include <sstream>
 
-TEST(ruCubeSingleSolveInputParserTest, getCubeFromScrambleTest) {
-    std::vector<std::string> scrambles = {
-        "",
-        "R",
-        "R'",
-        "R2",
-        "U",
-        "U'",
-        "U2",
-        "R2 U2 R2 U2 R2 U2",
-        "R U R' U' R U R' U' R U2 R U2 R U2 R'",
-        "R U R' U R U2 R' U2"
+
+namespace {
+    class ruCubeSingleSolveInputParserGetCubeFromScrambleTestFixture: public testing::TestWithParam<std::tuple<std::string, ruLutCube>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto& [scramble, expected] = testData.param;
+                    std::string compressedScramble = std::string("_") + scramble;
+                    auto eraseFrom = std::remove(begin(compressedScramble),
+                                                 end(compressedScramble),
+                                                 ' ');
+
+                    std::replace(begin(compressedScramble),
+                                 end(compressedScramble),
+                                 '\'',
+                                 'i');
+
+                    compressedScramble.erase(eraseFrom, end(compressedScramble));
+                    return compressedScramble;
+                }
+            };
+
+        protected:
+            ruCubeSingleSolveInputParser parser;
     };
 
-    ruCubeStateConverter c;
-    std::vector<ruLutCube> expectedCubes = {
-        ruLutCube(),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0251112402344),
-                  c.intCornersToLexIndexCornersPerm(0251112402344),
-                  c.intEdgesToLexIndexEdges(00126345)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0231112442540),
-                  c.intCornersToLexIndexCornersPerm(0231112442540),
-                  c.intEdgesToLexIndexEdges(00124563)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0141112151013),
-                  c.intCornersToLexIndexCornersPerm(0141112151013),
-                  c.intEdgesToLexIndexEdges(00125634)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0131011121415),
-                  c.intCornersToLexIndexCornersPerm(0131011121415),
-                  c.intEdgesToLexIndexEdges(03012456)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0111213101415),
-                  c.intCornersToLexIndexCornersPerm(0111213101415),
-                  c.intEdgesToLexIndexEdges(01230456)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0121310111415),
-                  c.intCornersToLexIndexCornersPerm(0121310111415),
-                  c.intEdgesToLexIndexEdges(02301456)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0101112131415),
-                  c.intCornersToLexIndexCornersPerm(0101112131415),
-                  c.intEdgesToLexIndexEdges(02103654)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0224543202144),
-                  c.intCornersToLexIndexCornersPerm(0224543202144),
-                  c.intEdgesToLexIndexEdges(06403125)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0401142431415),
-                  c.intCornersToLexIndexCornersPerm(0401142431415),
-                  c.intEdgesToLexIndexEdges(03102456)),
-    };
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeSingleSolveInputParserTests,
+        ruCubeSingleSolveInputParserGetCubeFromScrambleTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::string, ruLutCube> (
+            {
+                "",
+                "R",
+                "R'",
+                "R2",
+                "U",
+                "U'",
+                "U2",
+                "R2 U2 R2 U2 R2 U2",
+                "R U R' U' R U R' U' R U2 R U2 R U2 R'",
+                "R U R' U R U2 R' U2"
+            },
+            {
+                ruLutCube(),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0251112402344),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0251112402344),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(00126345)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0231112442540),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0231112442540),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(00124563)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0141112151013),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0141112151013),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(00125634)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0131011121415),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0131011121415),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(03012456)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0111213101415),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0111213101415),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(01230456)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0121310111415),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0121310111415),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(02301456)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0101112131415),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0101112131415),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(02103654)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0224543202144),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0224543202144),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(06403125)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0401142431415),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0401142431415),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(03102456)),
+            }
+        )),
+        ruCubeSingleSolveInputParserGetCubeFromScrambleTestFixture::toString()
+    );
 
-    ruCubeSingleSolveInputParser parser;
-    for (size_t i = 0; i < size(scrambles); ++i) {
+    TEST_P(ruCubeSingleSolveInputParserGetCubeFromScrambleTestFixture, getCubeFromScrambleTest) {
+        const auto &[scramble, expected] = GetParam();
         ruLutCube cube;
-        ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scrambles[i]));
-        ASSERT_EQ(expectedCubes[i], cube);
+        ASSERT_NO_THROW(cube = parser.getCubeFromScramble(scramble));
+        ASSERT_EQ(expected, cube);
     }
 }
 
