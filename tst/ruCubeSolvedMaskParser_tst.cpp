@@ -104,32 +104,50 @@ namespace {
     }
 }
 
-TEST(ruCubeSolvedMaskParserTest, stringSolvedMaskToIntSimpleCorrectMasksTest) {
-    std::vector<std::string> masksStr {
-        "111111111111;1111111",
-        "000000000000;0000000",
-        "111111111111;0000000",
-        "000000000000;1111111",
-        "101010101010;1010101",
-        "010101010101;0101010",
-        "000001010101;1101110",
+namespace {
+    class ruCubeSolvedMaskParserStringSolvedMaskToIntSimpleCorrectMasksTestFixture: public testing::TestWithParam<std::tuple<std::string, ruCubeSolvedMaskPair>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    auto [mask, expected] = testData.param;
+                    std::replace(begin(mask), end(mask), ';', '_');
+                    return mask;
+                }
+            };
     };
 
-    std::vector<ruCubeSolvedMaskPair> expectedMasks {
-        { 0x0000003F'0000003F, 0x0000007F },
-        { 0x00000000'00000000, 0x00000000 },
-        { 0x0000003F'0000003F, 0x00000000 },
-        { 0x00000000'00000000, 0x0000007F },
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeSolvedMaskParserTests,
+        ruCubeSolvedMaskParserStringSolvedMaskToIntSimpleCorrectMasksTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::string, ruCubeSolvedMaskPair> (
+            {
+                "111111111111;1111111",
+                "000000000000;0000000",
+                "111111111111;0000000",
+                "000000000000;1111111",
+                "101010101010;1010101",
+                "010101010101;0101010",
+                "000001010101;1101110",
+            },
+            {
+                { 0x0000003F'0000003F, 0x0000007F },
+                { 0x00000000'00000000, 0x00000000 },
+                { 0x0000003F'0000003F, 0x00000000 },
+                { 0x00000000'00000000, 0x0000007F },
+                { 0x0000003F'00000000, 0x00000055 },
+                { 0x00000000'0000003F, 0x0000002A },
+                { 0x00000000'0000000F, 0x0000006E },
+            }
+        )),
+        ruCubeSolvedMaskParserStringSolvedMaskToIntSimpleCorrectMasksTestFixture::toString()
+    );
 
-        { 0x0000003F'00000000, 0x00000055 },
-        { 0x00000000'0000003F, 0x0000002A },
-        { 0x00000000'0000000F, 0x0000006E },
-    };
-
-    for (size_t i = 0; i < size(expectedMasks); ++i) {
+    TEST_P(ruCubeSolvedMaskParserStringSolvedMaskToIntSimpleCorrectMasksTestFixture, stringSolvedMaskToIntSimpleCorrectMasksTest) {
+        const auto &[maskStr, expected] = GetParam();
         ruCubeSolvedMaskPair masks;
-        ASSERT_NO_THROW(masks = ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(masksStr[i]));
-        ASSERT_EQ(expectedMasks[i], masks);
+        ASSERT_NO_THROW(masks = ruCubeSolvedMaskParser::stringSolvedMaskToIntSimple(maskStr));
+        ASSERT_EQ(expected, masks);
     }
 }
 
