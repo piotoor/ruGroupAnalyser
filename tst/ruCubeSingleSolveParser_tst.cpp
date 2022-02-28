@@ -1,11 +1,11 @@
 #include "gtest/gtest.h"
 #include "ruCubeSingleSolveInputParser.h"
-#include <vector>
-#include <iostream>
-#include <string>
 #include "ruCube.h"
 #include "ruCubeStateConverter.h"
 #include "ruException.h"
+#include <vector>
+#include <iostream>
+#include <string>
 
 TEST(ruCubeSingleSolveInputParserTest, getCubeFromScrambleTest) {
     std::vector<std::string> scrambles = {
