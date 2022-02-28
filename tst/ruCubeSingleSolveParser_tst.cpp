@@ -94,33 +94,67 @@ namespace {
     }
 }
 
-TEST(ruCubeSingleSolveInputParserTest, getCubeFromScrambleNegativeTest) {
-    std::vector<std::string> scrambles = {
-        "                          ",
-        "  2234123412341234                        ",
-        "dupa",
-        "R3",
-        "3R'",
-        "R  2",
-        "Ulrich Von Jungingen",
-        "U'",
-        "U2 Concert",
-        "R21 U2 R2222 U23 R2' 'U2",
-        "R U R'2 U' R U R' U' R U2 R U2 R U2 R'",
-        "R U-( R' U R U2 R') U2"
+namespace {
+    class ruCubeSingleSolveInputParserGetCubeFromScrambleNegativeTestFixture: public testing::TestWithParam<std::string> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    std::string scramble = testData.param;
+                    std::string compressedScramble = std::string("_") + scramble;
+                    auto eraseFrom = std::remove(begin(compressedScramble),
+                                                 end(compressedScramble),
+                                                 ' ');
+
+                    std::replace(begin(compressedScramble),
+                                 end(compressedScramble),
+                                 '\'',
+                                 'i');
+
+                    compressedScramble.erase(eraseFrom, end(compressedScramble));
+                    return compressedScramble;
+                }
+            };
+
+        protected:
+            ruCubeSingleSolveInputParser parser;
     };
 
-    std::string expectedException = "ruCubeScrambleException: Parsing exception. Invalid scramble.";
-    ruCubeSingleSolveInputParser parser;
-    size_t i = 0;
-    for (; i < size(scrambles); ++i) {
-        try {
-            auto cube = parser.getCubeFromScramble(scrambles[i]);
-        } catch (const ruCubeScrambleException &e) {
-            ASSERT_EQ(expectedException, std::string(e.what()));
-        }
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeSingleSolveInputParserTests,
+        ruCubeSingleSolveInputParserGetCubeFromScrambleNegativeTestFixture,
+        ::testing::Values(
+            "                          ",
+            "  2234123412341234                        ",
+            "dupa",
+            "R3",
+            "3R'",
+            "R  2",
+            "Ulrich Von Jungingen",
+            "U'",
+            "U2 Concert",
+            "R21 U2 R2222 U23 R2' 'U2",
+            "R U R'2 U' R U R' U' R U2 R U2 R U2 R'",
+            "R U-( R' U R U2 R') U2"
+        ),
+        ruCubeSingleSolveInputParserGetCubeFromScrambleNegativeTestFixture::toString()
+    );
+
+    TEST_P(ruCubeSingleSolveInputParserGetCubeFromScrambleNegativeTestFixture, getCubeFromScrambleNegativeTest) {
+        std::string scramble = GetParam();
+        const std::string expectedException = "ruCubeScrambleException: Parsing exception. Invalid scramble.";
+        ASSERT_THROW (
+            try {
+                auto cube = parser.getCubeFromScramble(scramble);
+            } catch (const ruCubeScrambleException &e) {
+                std::cout << std::string(e.what()) << std::endl;
+                ASSERT_EQ(expectedException, std::string(e.what()));
+                throw;
+            },
+            ruCubeScrambleException
+        );
+
     }
-    ASSERT_EQ(size(scrambles), i);
 }
 
 TEST(ruCubeSingleSolveInputParserTest, getCubeFromStateTest) {
