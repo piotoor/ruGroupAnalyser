@@ -101,18 +101,20 @@ namespace {
                 template <class ParamType>
                 std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
                     std::string scramble = testData.param;
-                    std::string compressedScramble = std::string("_") + scramble;
-                    auto eraseFrom = std::remove(begin(compressedScramble),
-                                                 end(compressedScramble),
-                                                 ' ');
 
-                    std::replace(begin(compressedScramble),
-                                 end(compressedScramble),
+                    std::replace(begin(scramble),
+                                 end(scramble),
                                  '\'',
                                  'i');
 
-                    compressedScramble.erase(eraseFrom, end(compressedScramble));
-                    return compressedScramble;
+                    auto eraseFrom = std::remove_if(begin(scramble),
+                                                    end(scramble),
+                                                    [] (const auto &c) {
+                                                        return not isalnum(c);
+                                                    });
+
+                    scramble.erase(eraseFrom, end(scramble));
+                    return std::string("_") + scramble;
                 }
             };
 
@@ -131,7 +133,7 @@ namespace {
             "3R'",
             "R  2",
             "Ulrich Von Jungingen",
-            "U'",
+            "U''",
             "U2 Concert",
             "R21 U2 R2222 U23 R2' 'U2",
             "R U R'2 U' R U R' U' R U2 R U2 R U2 R'",
@@ -157,42 +159,67 @@ namespace {
     }
 }
 
-TEST(ruCubeSingleSolveInputParserTest, getCubeFromStateTest) {
-    std::vector<std::string> states = {
-        "000102030405;0123456",
-        "101112030405;0123456",
-        "101112031425;0123456",
-        "121310011425;0123456",
-        "121310011425;0123645",
-        "121310011425;2013645",
+
+namespace {
+    class ruCubeSingleSolveInputParserGetCubeFromStateTestFixture: public testing::TestWithParam<std::tuple<std::string, ruLutCube>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    auto [state, expected] = testData.param;
+
+                    std::replace(begin(state),
+                                 end(state),
+                                 ';',
+                                 '_');
+
+                    return state;
+                }
+            };
+
+        protected:
+            ruCubeSingleSolveInputParser parser;
     };
 
-    ruCubeStateConverter c;
-    std::vector<ruLutCube> expectedCubes = {
-        ruLutCube(),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0202122131415),
-                  c.intCornersToLexIndexCornersPerm(0202122131415),
-                  c.intEdgesToLexIndexEdges(00123456)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0202122132445),
-                  c.intCornersToLexIndexCornersPerm(0202122132445),
-                  c.intEdgesToLexIndexEdges(00123456)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0222320112445),
-                  c.intCornersToLexIndexCornersPerm(0222320112445),
-                  c.intEdgesToLexIndexEdges(00123456)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0222320112445),
-                  c.intCornersToLexIndexCornersPerm(0222320112445),
-                  c.intEdgesToLexIndexEdges(00123645)),
-        ruLutCube(c.intCornersToLexIndexCornersOrient(0222320112445),
-                  c.intCornersToLexIndexCornersPerm(0222320112445),
-                  c.intEdgesToLexIndexEdges(02013645)),
-    };
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeSingleSolveInputParserTests,
+        ruCubeSingleSolveInputParserGetCubeFromStateTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::string, ruLutCube> (
+            {
+                "000102030405;0123456",
+                "101112030405;0123456",
+                "101112031425;0123456",
+                "121310011425;0123456",
+                "121310011425;0123645",
+                "121310011425;2013645",
+            },
+            {
+                ruLutCube(),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0202122131415),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0202122131415),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(00123456)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0202122132445),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0202122132445),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(00123456)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0222320112445),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0222320112445),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(00123456)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0222320112445),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0222320112445),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(00123645)),
+                ruLutCube(ruCubeStateConverter().intCornersToLexIndexCornersOrient(0222320112445),
+                          ruCubeStateConverter().intCornersToLexIndexCornersPerm(0222320112445),
+                          ruCubeStateConverter().intEdgesToLexIndexEdges(02013645)),
+            }
+        )),
+        ruCubeSingleSolveInputParserGetCubeFromStateTestFixture::toString()
+    );
 
-    ruCubeSingleSolveInputParser parser;
-    for (size_t i = 0; i < size(states); ++i) {
+    TEST_P(ruCubeSingleSolveInputParserGetCubeFromStateTestFixture, GetCubeFromStateTest) {
+        const auto &[state, expected] = GetParam();
         ruLutCube cube;
-        ASSERT_NO_THROW(cube = parser.getCubeFromState(states[i]));
-        std::cout << (int) i << std::endl;
-        ASSERT_EQ(expectedCubes[i], cube);
+        ASSERT_NO_THROW(cube = parser.getCubeFromState(state));
+        ASSERT_EQ(expected, cube);
     }
 }
 
