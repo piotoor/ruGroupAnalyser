@@ -24,7 +24,7 @@ namespace ruCubeScrambleParser {
 
     std::vector<uint8_t> stringScrambleToVectorScramble(const std::string &moves) {
         std::vector<uint8_t> ans;
-        std::regex scrambleValidator("^([RU][[:space:]]*['2]?[[:space:]]*)*$");
+        std::regex scrambleValidator("^([RU][[:space:]]?['2]?[[:space:]]*)*$");
         if (not std::regex_match (moves, scrambleValidator)) {
             throw ruCubeScrambleException("Parsing exception. Invalid scramble.");
         }
