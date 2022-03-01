@@ -155,7 +155,6 @@ namespace {
             },
             ruCubeScrambleException
         );
-
     }
 }
 
@@ -223,63 +222,88 @@ namespace {
     }
 }
 
-TEST(ruCubeSingleSolveInputParserTest, getCubeFromStateNegativeTest) {
-    std::vector<std::string> states = {
-        "0001020304;05;0123456",
-        "010200030;405;0123456",
-        "020100030407;0123456",
-        "0001020304305;0123546",
-        "102112032405;0323546423423",
-        "102112032405;0323547",
-        "",
+namespace {
+    class ruCubeSingleSolveInputParserGetCubeFromStateNegativeTestFixture: public testing::TestWithParam<std::tuple<std::string, std::string>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    auto [state, expected] = testData.param;
 
-        "000102030404;0123456",
-        "000102030304;0123456",
-        "101112031405;0123456",
-        "001112031405;0123456",
-        "101112031425;0123455",
-        "101112031425;0123450",
+                    std::replace(begin(state),
+                                 end(state),
+                                 ';',
+                                 '_');
 
-        "000102030504;0123456",
-        "000103020504;0123456",
-        "000102040503;0123456",
-        "000102040503;0123546",
+                    return std::string("_") + state;
+                }
+            };
+
+        protected:
+            ruCubeSingleSolveInputParser parser;
     };
 
-    ruCubeStateConverter c;
-    std::vector<std::string> exceptions = {
-        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
-        "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeSingleSolveInputParserTests,
+        ruCubeSingleSolveInputParserGetCubeFromStateNegativeTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::string, std::string> (
+            {
+                "0001020304;05;0123456",
+                "010200030;405;0123456",
+                "020100030407;0123456",
+                "0001020304305;0123546",
+                "102112032405;0323546423423",
+                "102112032405;0323547",
+                "",
 
-        "ruCubeStateException: Validation exception. Invalid corners permutation.",
-        "ruCubeStateException: Validation exception. Invalid corners permutation.",
-        "ruCubeStateException: Validation exception. Invalid corners orientation.",
-        "ruCubeStateException: Validation exception. Invalid corners orientation.",
-        "ruCubeStateException: Validation exception. Invalid edges permutation.",
-        "ruCubeStateException: Validation exception. Invalid edges permutation.",
+                "000102030404;0123456",
+                "000102030304;0123456",
+                "101112031405;0123456",
+                "201112031405;0123456",
+                "101112031425;0123455",
+                "101112031425;0123450",
 
-        "ruCubeStateException: Validation exception. Unsolvable state.",
-        "ruCubeStateException: Validation exception. Unsolvable state.",
-        "ruCubeStateException: Validation exception. Unsolvable state.",
-        "ruCubeStateException: Validation exception. Unsolvable state.",
-    };
+                "000102030504;0123456",
+                "000103020504;0123456",
+                "000102040503;0123456",
+                "000102040503;0123546",
+            },
+            {
+                "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+                "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+                "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+                "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+                "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+                "ruCubeStateException: Parsing exception. Invalid cube state definition.",
+                "ruCubeStateException: Parsing exception. Invalid cube state definition.",
 
-    ruCubeSingleSolveInputParser parser;
-    size_t i = 0;
-    for (; i < size(states); ++i) {
-        try {
-            auto cube = parser.getCubeFromState(states[i]);
-        } catch (const ruCubeStateException &e) {
-            ASSERT_EQ(exceptions[i], std::string(e.what()));
-        }
+                "ruCubeStateException: Validation exception. Invalid corners permutation.",
+                "ruCubeStateException: Validation exception. Invalid corners permutation.",
+                "ruCubeStateException: Validation exception. Invalid corners orientation.",
+                "ruCubeStateException: Validation exception. Invalid corners orientation.",
+                "ruCubeStateException: Validation exception. Invalid edges permutation.",
+                "ruCubeStateException: Validation exception. Invalid edges permutation.",
+
+                "ruCubeStateException: Validation exception. Unsolvable state.",
+                "ruCubeStateException: Validation exception. Unsolvable state.",
+                "ruCubeStateException: Validation exception. Unsolvable state.",
+                "ruCubeStateException: Validation exception. Unsolvable state.",
+            }
+        )),
+        ruCubeSingleSolveInputParserGetCubeFromStateNegativeTestFixture::toString()
+    );
+
+    TEST_P(ruCubeSingleSolveInputParserGetCubeFromStateNegativeTestFixture, GetCubeFromStateTest) {
+        const auto &[state, expected] = GetParam();
+        ASSERT_THROW (
+            try {
+                auto cube = parser.getCubeFromState(state);
+            } catch (const ruCubeStateException &e) {
+                std::cout << std::string(e.what()) << std::endl;
+                ASSERT_EQ(expected, std::string(e.what()));
+                throw;
+            },
+            ruCubeStateException
+        );
     }
-    ASSERT_EQ(size(states), i);
 }
-
-
-
