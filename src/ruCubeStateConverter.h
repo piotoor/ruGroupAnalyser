@@ -1,12 +1,11 @@
 #ifndef RUCUBESTATECONVERTER_H
 #define RUCUBESTATECONVERTER_H
 
-
-
+#include "ruCube.h"
 #include <vector>
 #include <array>
 #include <bitset>
-#include "ruCube.h"
+
 
 using cornersArray = std::array<int8_t, 6>;
 using edgesArray = std::array<int8_t, 7>;
