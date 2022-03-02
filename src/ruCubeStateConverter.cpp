@@ -6,14 +6,6 @@
 #include <type_traits>
 #include <string>
 
-ruCubeStateConverter::ruCubeStateConverter() {
-
-}
-
-ruCubeStateConverter::~ruCubeStateConverter() {
-
-}
-
 uint64_t ruCubeStateConverter::vectCornersToIntCorners(const cornersArray& orient, const cornersArray& perm) const {
     uint64_t ans = 0;
 
