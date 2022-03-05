@@ -67,28 +67,47 @@ namespace {
     }
 }
 
-TEST(ruCubeStateConverterTest, convertvectEdgesToIntEdgesTest) {
-    ruCubeStateConverter conv;
+namespace {
+    class ruCubeStateConverterConvertVectEdgesToIntEdgesTestFixture: public testing::TestWithParam<std::tuple<edgesArray, uint64_t>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    ruCubeStateConverter conv;
+                    const auto &[edges, expected] = testData.param;
+                    return conv.containerToString(edges);
+                }
+            };
 
-    const std::vector<edgesArray> edgesPerm = {
-        { 0, 1, 2, 3, 4, 5, 6 },
-        { 6, 5, 4, 3, 2, 1, 0 },
-        { 1, 3, 0, 2, 4, 5, 6 },
-        { 6, 5, 1, 3, 4, 2, 0 },
-        { 2, 0, 1, 3, 6, 4, 5 },
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    const std::vector<uint64_t> expectedEdges = {
-        00123456,
-        06543210,
-        01302456,
-        06513420,
-        02013645,
-    };
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertVectEdgesToIntEdgesTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<edgesArray, uint64_t> (
+            {
+                { 0, 1, 2, 3, 4, 5, 6 },
+                { 6, 5, 4, 3, 2, 1, 0 },
+                { 1, 3, 0, 2, 4, 5, 6 },
+                { 6, 5, 1, 3, 4, 2, 0 },
+                { 2, 0, 1, 3, 6, 4, 5 },
+            },
+            {
+                00123456,
+                06543210,
+                01302456,
+                06513420,
+                02013645,
+            }
+        )),
+        ruCubeStateConverterConvertVectEdgesToIntEdgesTestFixture::toString()
+    );
 
-    for (size_t i = 0; i < std::size(edgesPerm); ++i) {
-        auto edges = conv.vectEdgesToIntEdges(edgesPerm[i]);
-        ASSERT_EQ(expectedEdges[i], edges);
+    TEST_P(ruCubeStateConverterConvertVectEdgesToIntEdgesTestFixture, convertVectEdgesToIntEdgesTest) {
+        const auto &[edges, expected] = GetParam();
+        ASSERT_EQ(expected, conv.vectEdgesToIntEdges(edges));
     }
 }
 
