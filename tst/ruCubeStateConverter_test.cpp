@@ -3,57 +3,67 @@
 #include <vector>
 #include <iostream>
 #include "ruCube.h"
+#include "testCustomDefinitions.h"
 
 using cornersArray = std::array<int8_t, 6>;
 using edgesArray = std::array<int8_t, 7>;
 
-TEST(ruCubeStateConverterTest, convertvectCornersToIntCornersTest) {
-    ruCubeStateConverter conv;
-    const std::vector<cornersArray> cornersOrient = {
-        { 0, 0, 0, 0, 0, 0 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 0, 1, 0, 1 },
-        { 2, 2, 2, 2, 2, 2 },
-        { 2, 0, 2, 0, 2, 0 },
-        { 2, 1, 2, 1, 2, 1 },
-        { 2, 1, 2, 1, 2, 1 },
-        { 2, 0, 2, 0, 2, 0 },
-        { 2, 1, 2, 1, 0, 0 },
-        { 2, 1, 2, 1, 0, 0 },
-        { 2, 1, 1, 0, 1, 1 },
+namespace {
+    class ruCubeStateConverterConvertVectCornersToIntCornersTestFixture: public testing::TestWithParam<std::tuple<std::tuple<cornersArray, cornersArray>, uint64_t>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    ruCubeStateConverter conv;
+                    const auto &[corners, expected] = testData.param;
+                    const auto &[co, cp] = corners;
+
+                    return conv.containerToString(co) + "_" + conv.containerToString(cp);
+                }
+            };
+
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    const std::vector<cornersArray> cornersPerm = {
-        { 0, 1, 2, 3, 4, 5 },
-        { 0, 1, 2, 3, 4, 5 },
-        { 0, 1, 2, 3, 4, 5 },
-        { 0, 1, 2, 3, 4, 5 },
-        { 0, 1, 2, 3, 4, 5 },
-        { 0, 1, 2, 3, 4, 5 },
-        { 5, 4, 3, 2, 1, 0 },
-        { 5, 4, 3, 2, 1, 0 },
-        { 5, 4, 3, 2, 1, 0 },
-        { 2, 4, 3, 1, 5, 0 },
-        { 0, 4, 3, 1, 2, 5 },
-    };
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertVectCornersToIntCornersTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::tuple<cornersArray, cornersArray>, uint64_t> (
+            {
+                { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 } },
+                { { 1, 1, 1, 1, 1, 1 }, { 0, 1, 2, 3, 4, 5 } },
+                { { 0, 1, 0, 1, 0, 1 }, { 0, 1, 2, 3, 4, 5 } },
+                { { 2, 2, 2, 2, 2, 2 }, { 0, 1, 2, 3, 4, 5 } },
+                { { 2, 0, 2, 0, 2, 0 }, { 0, 1, 2, 3, 4, 5 } },
+                { { 2, 1, 2, 1, 2, 1 }, { 0, 1, 2, 3, 4, 5 } },
+                { { 2, 1, 2, 1, 2, 1 }, { 5, 4, 3, 2, 1, 0 } },
+                { { 2, 0, 2, 0, 2, 0 }, { 5, 4, 3, 2, 1, 0 } },
+                { { 2, 1, 2, 1, 0, 0 }, { 5, 4, 3, 2, 1, 0 } },
+                { { 2, 1, 2, 1, 0, 0 }, { 2, 4, 3, 1, 5, 0 } },
+                { { 2, 1, 1, 0, 1, 1 }, { 0, 4, 3, 1, 2, 5 } }
+            },
+            {
+                0101112131415,
+                0202122232425,
+                0102112231425,
+                0404142434445,
+                0401142134415,
+                0402142234425,
+                0452443224120,
+                0451443124110,
+                0452443221110,
+                0422443211510,
+                0402423112225,
+            }
+        )),
+        ruCubeStateConverterConvertVectCornersToIntCornersTestFixture::toString()
+    );
 
-    const std::vector<uint64_t> expectedCorners = {
-        0101112131415,
-        0202122232425,
-        0102112231425,
-        0404142434445,
-        0401142134415,
-        0402142234425,
-        0452443224120,
-        0451443124110,
-        0452443221110,
-        0422443211510,
-        0402423112225,
-    };
-
-    for (size_t i = 0; i < std::size(cornersOrient); ++i) {
-        auto corners = conv.vectCornersToIntCorners(cornersOrient[i], cornersPerm[i]);
-        ASSERT_EQ(expectedCorners[i], corners);
+    TEST_P(ruCubeStateConverterConvertVectCornersToIntCornersTestFixture, convertVectCornersToIntCornersTest) {
+        const auto &[corners, expected] = GetParam();
+        const auto &[co, cp] = corners;
+        ASSERT_EQ(expected, conv.vectCornersToIntCorners(co, cp));
     }
 }
 
