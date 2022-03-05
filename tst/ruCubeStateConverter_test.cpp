@@ -41,7 +41,17 @@ namespace {
                 { { 2, 0, 2, 0, 2, 0 }, { 5, 4, 3, 2, 1, 0 } },
                 { { 2, 1, 2, 1, 0, 0 }, { 5, 4, 3, 2, 1, 0 } },
                 { { 2, 1, 2, 1, 0, 0 }, { 2, 4, 3, 1, 5, 0 } },
-                { { 2, 1, 1, 0, 1, 1 }, { 0, 4, 3, 1, 2, 5 } }
+                { { 2, 1, 1, 0, 1, 1 }, { 0, 4, 3, 1, 2, 5 } },
+
+                { {  0,  0,  0,  0,  0,  0 }, {  0,  1,  2,  3, -1, -1 } },
+                { { -1,  1,  1,  1,  1, -1 }, {  0,  1,  2,  3,  4,  5 } },
+                { { -1,  1,  1,  1,  1, -1 }, {  0, -1, -1,  3,  4,  5 } },
+                { { -1, -1, -1, -1, -1, -1 }, {  0,  1,  2,  3,  4,  5 } },
+                { {  0,  0,  0,  0,  0,  0 }, { -1, -1, -1, -1, -1, -1 } },
+                { { -1, -1, -1, -1, -1, -1 }, { -1, -1, -1, -1, -1, -1 } },
+                { {  2,  2,  2,  2,  2, -1 }, { -1, -1, -1, -1, -1, -1 } },
+                { {  2,  2,  2,  1,  1, -1 }, { -1, -1, -1, -1, -1, -1 } },
+                { {  2,  2,  2,  1,  1,  1 }, {  5,  4,  3, -1, -1,  1 } }
             },
             {
                 0101112131415,
@@ -55,6 +65,16 @@ namespace {
                 0452443221110,
                 0422443211510,
                 0402423112225,
+
+                0101112131415,
+                0402122232415,
+                0402122232415,
+                0101112131415,
+                0101112131415,
+                0101112131415,
+                0404142434445,
+                0404142232425,
+                0454443202221,
             }
         )),
         ruCubeStateConverterConvertVectCornersToIntCornersTestFixture::toString()
@@ -109,51 +129,6 @@ namespace {
         const auto &[edges, expected] = GetParam();
         ASSERT_EQ(expected, conv.vectEdgesToIntEdges(edges));
     }
-}
-
-TEST(ruCubeStateConverterTest, convertVectCornersWithIgnoredPiecesToIntTest) {
-    ruCubeStateConverter conv;
-
-    const std::vector<cornersArray> cornersOrient = {
-        {  0,  0,  0,  0,  0,  0 },
-        { -1,  1,  1,  1,  1, -1 },
-        { -1,  1,  1,  1,  1, -1 },
-        { -1, -1, -1, -1, -1, -1 },
-        {  0,  0,  0,  0,  0,  0 },
-        { -1, -1, -1, -1, -1, -1 },
-        {  2,  2,  2,  2,  2, -1 },
-        {  2,  2,  2,  1,  1, -1 },
-        {  2,  2,  2,  1,  1,  1 },
-    };
-    const std::vector<cornersArray> cornersPerm = {
-        {  0,  1,  2,  3, -1, -1 },
-        {  0,  1,  2,  3,  4,  5 },
-        {  0, -1, -1,  3,  4,  5 },
-        {  0,  1,  2,  3,  4,  5 },
-        { -1, -1, -1, -1, -1, -1 },
-        { -1, -1, -1, -1, -1, -1 },
-        { -1, -1, -1, -1, -1, -1 },
-        { -1, -1, -1, -1, -1, -1 },
-        {  5,  4,  3, -1, -1,  1 },
-    };
-
-    const std::vector<uint64_t> expectedCorners = {
-        0101112131415,
-        0402122232415,
-        0402122232415,
-        0101112131415,
-        0101112131415,
-        0101112131415,
-        0404142434445,
-        0404142232425,
-        0454443202221,
-    };
-
-    for (size_t i = 0; i < std::size(cornersPerm); ++i) {
-        auto corners = conv.vectCornersToIntCorners(cornersOrient[i], cornersPerm[i]);
-        ASSERT_EQ(expectedCorners[i], corners);
-    }
-
 }
 
 TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
