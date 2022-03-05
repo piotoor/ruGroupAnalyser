@@ -113,6 +113,12 @@ namespace {
                 { 1, 3, 0, 2, 4, 5, 6 },
                 { 6, 5, 1, 3, 4, 2, 0 },
                 { 2, 0, 1, 3, 6, 4, 5 },
+
+                {  0,  1,  2,  3,  4,  5, -1 },
+                {  6,  5, -1,  3,  2,  1,  0 },
+                {  6,  5, -1, -1, -1, -1,  0 },
+                { -1, -1, -1, -1, -1, -1,  1 },
+                {  3, -1,  0, -1, -1, -1,  1 },
             },
             {
                 00123456,
@@ -120,6 +126,12 @@ namespace {
                 01302456,
                 06513420,
                 02013645,
+
+                00123456,
+                06543210,
+                06512340,
+                00234561,
+                03204561,
             }
         )),
         ruCubeStateConverterConvertVectEdgesToIntEdgesTestFixture::toString()
@@ -128,31 +140,6 @@ namespace {
     TEST_P(ruCubeStateConverterConvertVectEdgesToIntEdgesTestFixture, convertVectEdgesToIntEdgesTest) {
         const auto &[edges, expected] = GetParam();
         ASSERT_EQ(expected, conv.vectEdgesToIntEdges(edges));
-    }
-}
-
-TEST(ruCubeStateConverterTest, convertVectEdgesWithIgnoredPiecesToIntTest) {
-    ruCubeStateConverter conv;
-
-    const std::vector<edgesArray> edgesPerm = {
-        {  0,  1,  2,  3,  4,  5, -1 },
-        {  6,  5, -1,  3,  2,  1,  0 },
-        {  6,  5, -1, -1, -1, -1,  0 },
-        { -1, -1, -1, -1, -1, -1,  1 },
-        {  3, -1,  0, -1, -1, -1,  1 },
-    };
-
-    const std::vector<uint64_t> expectedEdges = {
-        00123456,
-        06543210,
-        06512340,
-        00234561,
-        03204561,
-    };
-
-    for (size_t i = 0; i < std::size(edgesPerm); ++i) {
-        auto edges = conv.vectEdgesToIntEdges(edgesPerm[i]);
-        ASSERT_EQ(expectedEdges[i], edges);
     }
 }
 
