@@ -1339,25 +1339,56 @@ namespace {
     }
 }
 
-TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersPermTurnTest) {
-    ruCubeStateConverter conv;
-    ruCube cube;
+namespace {
+    class ruCubeStateConverterConvertIntCornersToLexIndexCornersPermTurnTestFixture: public testing::TestWithParam<std::tuple<ruCubeMove, uint16_t>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto &[turn, expected] = testData.param;
+                    bool compressedSolution = true;
+                    bool alnumMoves = true;
+                    return ruCubeScrambleParser::vectorScrambleToStringScramble({turn}, compressedSolution, alnumMoves);
+                }
+            };
 
-    const std::vector<uint16_t> expectedLexIndexCornersPerms = {
-        630,    // 5 1 2 0 3 4
-        514,    // 4 1 2 5 0 3
-        393,    // 3 1 2 4 5 0
-
-        360,    // 3 0 1 2 4 5
-        288,    // 2 3 0 1 4 5
-        150     // 1 2 3 0 4 5
+        protected:
+            ruCubeStateConverter conv;
+            ruCube cube;
     };
 
-    for (uint8_t t = R; t <= Ui; ++t) {
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertIntCornersToLexIndexCornersPermTurnTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<ruCubeMove, uint16_t> (
+            {
+                R,
+                R2,
+                Ri,
+
+                U,
+                U2,
+                Ui
+            },
+            {
+                630,    // 5 1 2 0 3 4
+                514,    // 4 1 2 5 0 3
+                393,    // 3 1 2 4 5 0
+
+                360,    // 3 0 1 2 4 5
+                288,    // 2 3 0 1 4 5
+                150     // 1 2 3 0 4 5
+            }
+        )),
+        ruCubeStateConverterConvertIntCornersToLexIndexCornersPermTurnTestFixture::toString()
+    );
+
+    TEST_P(ruCubeStateConverterConvertIntCornersToLexIndexCornersPermTurnTestFixture, convertIntCornersToLexIndexCornersPermTurnTest) {
+        const auto &[t, expected] = GetParam();
         cube.turn(t);
         auto cornersInt = cube.getCorners();
         cube.inverseTurn(t);
-        ASSERT_EQ(expectedLexIndexCornersPerms[t], conv.intCornersToLexIndexCornersPerm(cornersInt));
+        ASSERT_EQ(expected, conv.intCornersToLexIndexCornersPerm(cornersInt));
     }
 }
 
