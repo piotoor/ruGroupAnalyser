@@ -1,18 +1,9 @@
 #include "ruCubeStateConverter.h"
-
 #include <set>
 #include <numeric>
 #include <iterator>
 #include <type_traits>
 #include <string>
-
-ruCubeStateConverter::ruCubeStateConverter() {
-
-}
-
-ruCubeStateConverter::~ruCubeStateConverter() {
-
-}
 
 uint64_t ruCubeStateConverter::vectCornersToIntCorners(const cornersArray& orient, const cornersArray& perm) const {
     uint64_t ans = 0;
@@ -58,7 +49,6 @@ uint64_t ruCubeStateConverter::vectCornersToIntCorners(const cornersArray& orien
     return ans;
 }
 
-#include <iostream>
 uint32_t ruCubeStateConverter::vectEdgesToIntEdges(const edgesArray& perm) const {
     uint32_t ans = 0;
     std::set<int8_t> availPerm { 0, 1, 2, 3, 4, 5, 6 };

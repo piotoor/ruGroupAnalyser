@@ -39,5 +39,9 @@ jobs:
 
     - name: Run unit tests
       working-directory: ${{github.workspace}}/build/debug
-      run: ./ruGroupAnalyser_tst --gtest_filter=*ruCubeMultiSolveHandlerGenerateTestFixture* --gtest_repeat=${{ github.event.inputs.filter }}
-
+      run: |
+        if [ -z "${{ github.event.inputs.filter }}" ]; then
+            ./ruGroupAnalyser_tst --gtest_filter=*ruCubeMultiSolveHandlerGenerateTestFixture* --gtest_repeat=100
+        else
+            ./ruGroupAnalyser_tst --gtest_filter=*ruCubeMultiSolveHandlerGenerateTestFixture* --gtest_repeat=${{ github.event.inputs.filter }}
+        fi

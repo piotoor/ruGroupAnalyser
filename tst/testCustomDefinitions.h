@@ -5,6 +5,7 @@
 #include "permutationGenerator.h"
 #include "ruCubeStateConverter.h"
 #include <vector>
+#include <numeric>
 
 namespace testDataGenerators {
     template<class T1, class T2>
@@ -42,6 +43,13 @@ namespace testDataGenerators {
             }
         }
 
+        return ans;
+    }
+
+    template<class T>
+    std::vector<T> vectorIota(size_t n, T value) {
+        std::vector<T> ans(n);
+        std::iota(begin(ans), end(ans), value);
         return ans;
     }
 }

@@ -1,12 +1,11 @@
 #ifndef RUCUBESTATECONVERTER_H
 #define RUCUBESTATECONVERTER_H
 
-
-
+#include "ruCube.h"
 #include <vector>
 #include <array>
 #include <bitset>
-#include "ruCube.h"
+
 
 using cornersArray = std::array<int8_t, 6>;
 using edgesArray = std::array<int8_t, 7>;
@@ -14,10 +13,10 @@ using edgesArray = std::array<int8_t, 7>;
 class ruCubeStateConverter
 {
     public:
-        ruCubeStateConverter();
-        explicit ruCubeStateConverter(const ruCubeStateConverter &other) = delete;
+        ruCubeStateConverter() = default;
+        ruCubeStateConverter(const ruCubeStateConverter &other) = delete;
         ruCubeStateConverter& operator=(const ruCubeStateConverter &other) = delete;
-        virtual ~ruCubeStateConverter();
+        virtual ~ruCubeStateConverter() = default;
         uint64_t vectCornersToIntCorners(const cornersArray &orient, const cornersArray &perm) const;
         uint32_t vectEdgesToIntEdges(const edgesArray &perm) const;
         uint16_t intEdgesToLexIndexEdges(const uint32_t edges);
