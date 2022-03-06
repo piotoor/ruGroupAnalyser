@@ -1,9 +1,9 @@
 #include "gtest/gtest.h"
 #include "ruCubeStateConverter.h"
-#include <vector>
-#include <iostream>
 #include "ruCube.h"
 #include "testCustomDefinitions.h"
+#include <vector>
+#include <iostream>
 #include <sstream>
 
 using cornersArray = std::array<int8_t, 6>;
@@ -161,8 +161,6 @@ namespace {
         protected:
             ruCubeStateConverter conv;
     };
-
-
 
     INSTANTIATE_TEST_SUITE_P (
         ruCubeStateConverterTests,
@@ -598,8 +596,6 @@ namespace {
         protected:
             ruCubeStateConverter conv;
     };
-
-
 
     INSTANTIATE_TEST_SUITE_P (
         ruCubeStateConverterTests,
