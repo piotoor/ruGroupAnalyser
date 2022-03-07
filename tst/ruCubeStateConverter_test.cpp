@@ -1874,53 +1874,77 @@ namespace {
     }
 }
 
-TEST(ruCubeStateConverterTest, convertLexIndexEdgesToIntEdgesAsStrWithIgnoredTest) {
-    ruCubeStateConverter conv;
+namespace {
+    class ruCubeStateConverterConvertLexIndexEdgesToIntEdgesAsStrWithIgnoredTestFixture: public testing::TestWithParam<std::tuple<std::tuple<uint16_t, std::bitset<ruBaseCube::noOfEdges>>, std::string>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto &[edges, expected] = testData.param;
+                    const auto &[ep, epi] = edges;
+                    std::stringstream ss;
 
-    const std::vector<std::pair<uint16_t, std::bitset<ruBaseCube::noOfEdges>>> lexIndexEdges {
-        { 0,  0b0000000 },
-        { 1,  0b0000000 },
-        { 2,  0b0000000 } ,
-        { 3,  0b0000000 },
-        { 4,  0b0000000 },
+                    ss << ep << "_" << epi;
+                    return ss.str();
+                }
+            };
 
-        { 5,  0b1111111 },
-        { 6,  0b0000001 },
-        { 7,  0b0000010 },
-        { 8,  0b0000100 },
-        { 9,  0b0001000 },
-
-        { 10, 0b0010000 },
-        { 11, 0b0100000 },
-        { 12, 0b1000000 },
-        { 13, 0b1111000 },
-        { 14, 0b0000111 },
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    const std::vector<std::string> expectedEdgesStrings = {
-        "0123456",
-        "0123465",
-        "0123546",
-        "0123564",
-        "0123645",
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertLexIndexEdgesToIntEdgesAsStrWithIgnoredTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::tuple<uint16_t, std::bitset<ruBaseCube::noOfEdges>>, std::string> (
+            {
+                { 0,  0b0000000 },
+                { 1,  0b0000000 },
+                { 2,  0b0000000 },
+                { 3,  0b0000000 },
+                { 4,  0b0000000 },
 
-        "-------",
-        "-124356",
-        "0-24365",
-        "01-4536",
-        "012456-",
+                { 5,  0b1111111 },
+                { 6,  0b0000001 },
+                { 7,  0b0000010 },
+                { 8,  0b0000100 },
+                { 9,  0b0001000 },
 
-        "012-635",
-        "01246-3",
-        "012534-",
-        "012----",
-        "---5436",
-    };
+                { 10, 0b0010000 },
+                { 11, 0b0100000 },
+                { 12, 0b1000000 },
+                { 13, 0b1111000 },
+                { 14, 0b0000111 },
+            },
+            {
+                "0123456",
+                "0123465",
+                "0123546",
+                "0123564",
+                "0123645",
 
-    for (size_t i = 0; i < std::size(expectedEdgesStrings); ++i) {
-        const auto &[ep, epi] = lexIndexEdges[i];
+                "-------",
+                "-124356",
+                "0-24365",
+                "01-4536",
+                "012456-",
+
+                "012-635",
+                "01246-3",
+                "012534-",
+                "012----",
+                "---5436",
+            }
+        )),
+        ruCubeStateConverterConvertLexIndexEdgesToIntEdgesAsStrWithIgnoredTestFixture::toString()
+    );
+
+
+    TEST_P(ruCubeStateConverterConvertLexIndexEdgesToIntEdgesAsStrWithIgnoredTestFixture, convertLexIndexEdgesToIntEdgesAsStrWithIgnoredTest) {
+        const auto &[edges, expected] = GetParam();
+        const auto &[ep, epi] = edges;
         auto strEdges = conv.lexIndexEdgesToIntEdgesAsStrWithIgnored(ep, epi);
-        ASSERT_EQ(expectedEdgesStrings[i], strEdges);
+        ASSERT_EQ(expected, strEdges);
     }
 }
 
