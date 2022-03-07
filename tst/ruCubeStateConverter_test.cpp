@@ -1392,89 +1392,73 @@ namespace {
     }
 }
 
-TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersOrientTest) {
-    ruCubeStateConverter conv;
+namespace {
+    class ruCubeStateConverterConvertIntCornersToLexIndexCornersOrientTestFixture: public testing::TestWithParam<std::tuple<uint16_t, uint16_t, uint64_t>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto &[lexIndexCornersOrients, lexIndexCornersPerms, intCorners] = testData.param;
 
-    const std::vector<uint64_t> cornersInts = {
-        0101112131415,
-        0202122232425,
-        0102112231425,
-        0404142434445,
+                    std::stringstream ss;
+                    ss << lexIndexCornersOrients << "_" << lexIndexCornersPerms << "_" << std::oct << intCorners;
+                    return ss.str();
+                }
+            };
 
-        0401142134415,
-        0402142234425,
-        0452443224120,
-        0451443124110,
-
-        0452443221110,
-        0422443211510,
-        0402423112225,
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    const std::vector<uint16_t> cornersOrientsExpected = {
-        0,
-        364,
-        91,
-        728,
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertIntCornersToLexIndexCornersOrientTestFixture,
+        ::testing::Values(
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                0, 0, 0101112131415
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                364, 1, 0202122232524
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                91, 2, 0102112241325
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                728, 3, 0404142444543
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                546, 4, 0401142154314
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                637, 5, 0402142254423
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                637, 6, 0402143224425
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                546, 7, 0401143124514
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                630, 8, 0402143241215
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                630, 9, 0402143241512
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                598, 10, 0402123152224
+            }
+        ),
+        ruCubeStateConverterConvertIntCornersToLexIndexCornersOrientTestFixture::toString()
+    );
 
-        546,
-        637,
-        637,
-        546,
-
-        630,
-        630,
-        598
-    };
-
-    for (size_t i = 0; i < std::size(cornersInts); ++i) {
-        uint16_t cornersLexIndex = conv.intCornersToLexIndexCornersOrient(cornersInts[i]);
-        ASSERT_EQ(cornersOrientsExpected[i], cornersLexIndex);
+    TEST_P(ruCubeStateConverterConvertIntCornersToLexIndexCornersOrientTestFixture, convertIntCornersToLexIndexCornersOrientTest) {
+        const auto &[expectedLexIndexCornersOrient, lexIndexCornersPerm, intCorners] = GetParam();
+        ASSERT_EQ(expectedLexIndexCornersOrient, conv.intCornersToLexIndexCornersOrient(intCorners));
     }
-}
 
-TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersTest) {
-    ruCubeStateConverter conv;
-
-    const std::vector<uint16_t> lexIndexCornersPerms = {
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
-    };
-
-    const std::vector<uint16_t> lexIndexCornersOrients = {
-        0,
-        364,
-        91,
-        728,
-
-        546,
-        637,
-        637,
-        546,
-
-        630,
-        630,
-        598
-    };
-
-    const std::vector<uint64_t> expectedCornersInts = {
-        0101112131415,
-        0202122232524,
-        0102112241325,
-        0404142444543,
-
-        0401142154314,
-        0402142254423,
-        0402143224425,
-        0401143124514,
-
-        0402143241215,
-        0402143241512,
-        0402123152224,
-    };
-
-    for (size_t i = 0; i < std::size(expectedCornersInts); ++i) {
-        uint64_t cornersInt = conv.lexIndexCornersToIntCorners(lexIndexCornersOrients[i], lexIndexCornersPerms[i]);
-        ASSERT_EQ(expectedCornersInts[i], cornersInt);
+    TEST_P(ruCubeStateConverterConvertIntCornersToLexIndexCornersOrientTestFixture, convertLexIndexCornersToIntCornersTest) {
+        const auto &[lexIndexCornersOrient, lexIndexCornersPerm, expectedIntCorners] = GetParam();
+        ASSERT_EQ(expectedIntCorners, conv.lexIndexCornersToIntCorners(lexIndexCornersOrient, lexIndexCornersPerm));
     }
 }
 
