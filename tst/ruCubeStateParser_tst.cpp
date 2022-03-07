@@ -9,7 +9,7 @@
 using ruCubeStateVect = std::tuple<cornersArray, cornersArray, edgesArray>;
 
 namespace {
-    class ruCubeStateParserCorrectStatesTest: public testing::TestWithParam<std::tuple<std::string, ruCubeStateVect>> {
+    class ruCubeStateParserCorrectStatesTestFixture: public testing::TestWithParam<std::tuple<std::string, ruCubeStateVect>> {
         public:
             struct toString {
                 template <class ParamType>
@@ -31,7 +31,7 @@ namespace {
 
     INSTANTIATE_TEST_SUITE_P (
         ruCubeStateParserTests,
-        ruCubeStateParserCorrectStatesTest,
+        ruCubeStateParserCorrectStatesTestFixture,
         ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::string, ruCubeStateVect> (
             {
                 "000102030405;0123456",
@@ -50,10 +50,10 @@ namespace {
                 { { 1, 2, 1, 0, 2, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 3, 2, 3, 5, 4, 6 } },
             }
         )),
-        ruCubeStateParserCorrectStatesTest::toString()
+        ruCubeStateParserCorrectStatesTestFixture::toString()
     );
 
-    TEST_P(ruCubeStateParserCorrectStatesTest, correctStatesTest) {
+    TEST_P(ruCubeStateParserCorrectStatesTestFixture, correctStatesTest) {
         const auto &[cubeStateStr, expected] = GetParam();
         ruCubeStateVect vectState;
         ASSERT_NO_THROW(vectState = ruCubeStateParser::stringStateToVect(cubeStateStr));
