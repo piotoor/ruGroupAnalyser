@@ -1948,76 +1948,97 @@ namespace {
     }
 }
 
-TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersAsStrWithIgnoredTest) {
-    ruCubeStateConverter conv;
+namespace {
+    class ruCubeStateConverterConvertLexIndexCornersToIntCornersAsStrWithIgnoredTestFixture: public testing::TestWithParam<std::tuple<std::tuple<uint16_t, uint16_t, std::bitset<ruBaseCube::noOfCorners>, std::bitset<ruBaseCube::noOfCorners>>, std::string>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto &[corners, expected] = testData.param;
+                    const auto &[cp, co, cpi, coi] = corners;
+                    std::stringstream ss;
 
-    const std::vector<std::tuple<   uint16_t,
-                                    uint16_t,
-                                    std::bitset<ruBaseCube::noOfCorners>, // cpi
-                                    std::bitset<ruBaseCube::noOfCorners>>> lexIndexCubes { // coi
-        { 0,    0,      0b0, 0b0 },
-        { 1,    364,    0b0, 0b0 },
-        { 2,    91,     0b0, 0b0 },
-        { 3,    728,    0b0, 0b0 },
-        { 4,    546,    0b0, 0b0 },
+                    ss << cp << "_" << co << "_" << cpi << "_" << coi;
+                    return ss.str();
+                }
+            };
 
-        { 5,    637,    0b0, 0b0 },
-        { 6,    637,    0b0, 0b0 },
-        { 7,    546,    0b0, 0b0 },
-        { 8,    630,    0b0, 0b0 },
-        { 9,    630,    0b0, 0b0 },
-
-        { 10,   598,    0b0, 0b0 },
-
-
-        { 0,    0,      0b111111, 0b111111 },
-        { 1,    364,    0b0,      0b111111 },
-        { 2,    91,     0b111111, 0b0 },
-        { 3,    728,    0b001111, 0b001111 },
-        { 4,    546,    0b010101, 0b101010 },
-
-        { 5,    637,    0b000001, 0b100000 },
-        { 6,    637,    0b000000, 0b000100 },
-        { 7,    546,    0b011011, 0b011111 },
-        { 8,    630,    0b100001, 0b100010 },
-        { 9,    630,    0b000111, 0b111000 },
-
-        { 10,   598,    0b010010, 0b010101 },
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    const std::vector<std::string> expectedCornersIntsAsStr = {
-        "000102030405",
-        "101112131514",
-        "001102140315",
-        "202122242523",
-        "200122052304",
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertLexIndexCornersToIntCornersAsStrWithIgnoredTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::tuple<uint16_t, uint16_t, std::bitset<ruBaseCube::noOfCorners>, std::bitset<ruBaseCube::noOfCorners>>, std::string> (
+            {
+                { 0,    0,      0b0, 0b0 },
+                { 1,    364,    0b0, 0b0 },
+                { 2,    91,     0b0, 0b0 },
+                { 3,    728,    0b0, 0b0 },
+                { 4,    546,    0b0, 0b0 },
 
-        "201122152413",
-        "201123122415",
-        "200123022504",
-        "201123140205",
-        "201123140502",
+                { 5,    637,    0b0, 0b0 },
+                { 6,    637,    0b0, 0b0 },
+                { 7,    546,    0b0, 0b0 },
+                { 8,    630,    0b0, 0b0 },
+                { 9,    630,    0b0, 0b0 },
 
-        "201113051214",
+                { 10,   598,    0b0, 0b0 },
 
 
-        "------------",
-        "-0-1-2-3-5-4",
-        "0-1-0-1-0-1-",
-        "------2425--",
-        "2--12--5-30-",
+                { 0,    0,      0b111111, 0b111111 },
+                { 1,    364,    0b0,      0b111111 },
+                { 2,    91,     0b111111, 0b0 },
+                { 3,    728,    0b001111, 0b001111 },
+                { 4,    546,    0b010101, 0b101010 },
 
-        "2-1122-52413",
-        "201123-22415",
-        "-------225--",
-        "2--1231402--",
-        "2-1--3-4-50-",
-        "-01-1305-2--",
-    };
+                { 5,    637,    0b000001, 0b100000 },
+                { 6,    637,    0b000000, 0b000100 },
+                { 7,    546,    0b011011, 0b011111 },
+                { 8,    630,    0b100001, 0b100010 },
+                { 9,    630,    0b000111, 0b111000 },
 
-    for (size_t i = 0; i < std::size(expectedCornersIntsAsStr); ++i) {
-        const auto &[cp, co, cpi, coi] = lexIndexCubes[i];
+                { 10,   598,    0b010010, 0b010101 },
+            },
+            {
+                "000102030405",
+                "101112131514",
+                "001102140315",
+                "202122242523",
+                "200122052304",
+
+                "201122152413",
+                "201123122415",
+                "200123022504",
+                "201123140205",
+                "201123140502",
+
+                "201113051214",
+
+
+                "------------",
+                "-0-1-2-3-5-4",
+                "0-1-0-1-0-1-",
+                "------2425--",
+                "2--12--5-30-",
+
+                "2-1122-52413",
+                "201123-22415",
+                "-------225--",
+                "2--1231402--",
+                "2-1--3-4-50-",
+                "-01-1305-2--",
+            }
+        )),
+        ruCubeStateConverterConvertLexIndexCornersToIntCornersAsStrWithIgnoredTestFixture::toString()
+    );
+
+
+    TEST_P(ruCubeStateConverterConvertLexIndexCornersToIntCornersAsStrWithIgnoredTestFixture, convertLexIndexCornersToIntCornersAsStrWithIgnoredTest) {
+        const auto &[corners, expected] = GetParam();
+        const auto &[cp, co, cpi, coi] = corners;
         std::string cornersStr = conv.lexIndexCornersToIntCornersAsStrWithIgnored(cp, co, cpi, coi);
-        ASSERT_EQ(expectedCornersIntsAsStr[i], cornersStr);
+        ASSERT_EQ(expected, cornersStr);
     }
 }
