@@ -61,28 +61,56 @@ namespace {
     }
 }
 
-TEST(ruCubeStateParserTest, negativeTest) {
-    std::vector<std::string> cubeStatesStr {
-        "0001020304;05;0123456",
-        "010200030;405;0123456",
-        "020100030407;0123456",
-        "0001020304305;0123546",
-        "102112032405;0323546423423",
-        "102112032405;0323547",
-        ""
+namespace {
+    class ruCubeStateParserNegativeStatesTestFixture: public testing::TestWithParam<std::tuple<std::string, std::string>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    ruCubeStateConverter conv;
+                    const auto &[cubeStateStr, expected] = testData.param;
+
+                    std::string parsedCubeStateStr = "_" + cubeStateStr;
+                    std::replace_if(begin(parsedCubeStateStr),
+                                    end(parsedCubeStateStr),
+                                    ::ispunct,
+                                    '_');
+
+                    return parsedCubeStateStr;
+                }
+            };
     };
 
-    std::string expectedException = "ruCubeStateException: Parsing exception. Invalid cube state definition.";
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateParserTests,
+        ruCubeStateParserNegativeStatesTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::string, std::string> (
+            {
+                "0001020304;05;0123456",
+                "010200030;405;0123456",
+                "020100030407;0123456",
+                "0001020304305;0123546",
+                "102112032405;0323546423423",
+                "102112032405;0323547",
+                ""
+            },
+            std::vector<std::string> (7, "ruCubeStateException: Parsing exception. Invalid cube state definition.")
+        )),
+        ruCubeStateParserNegativeStatesTestFixture::toString()
+    );
 
-    size_t i = 0;
-    for (; i < size(cubeStatesStr); ++i) {
-        std::string exceptionMessage;
-        try {
-            ruCubeStateParser::stringStateToVect(cubeStatesStr[i]);
-        } catch (const ruCubeStateException &e) {
-            exceptionMessage = std::string(e.what());
-        }
-        ASSERT_EQ(expectedException, exceptionMessage);
+    TEST_P(ruCubeStateParserNegativeStatesTestFixture, negativeTest) {
+        const auto &[cubeStateStr, expected] = GetParam();
+
+        ASSERT_THROW (
+            try {
+                ruCubeStateParser::stringStateToVect(cubeStateStr);
+            } catch (const ruCubeStateException &e) {
+                std::cout << std::string(e.what()) << std::endl;
+                ASSERT_EQ(expected, std::string(e.what()));
+                throw;
+            },
+            ruCubeStateException
+        );
     }
-    ASSERT_EQ(size(cubeStatesStr), i);
 }
