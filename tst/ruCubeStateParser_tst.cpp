@@ -59,17 +59,30 @@ namespace {
         ASSERT_NO_THROW(vectState = ruCubeStateParser::stringStateToVect(cubeStateStr));
         ASSERT_EQ(expected, vectState);
     }
+}
 
-    TEST_P(ruCubeStateParserCorrectStatesTest, negativeTest) {
-        const auto &[cubeStateStr, expected] = GetParam();
-        std::string expectedException = "ruCubeStateException: Parsing exception. Invalid cube state definition.";
+TEST(ruCubeStateParserTest, negativeTest) {
+    std::vector<std::string> cubeStatesStr {
+        "0001020304;05;0123456",
+        "010200030;405;0123456",
+        "020100030407;0123456",
+        "0001020304305;0123546",
+        "102112032405;0323546423423",
+        "102112032405;0323547",
+        ""
+    };
 
+    std::string expectedException = "ruCubeStateException: Parsing exception. Invalid cube state definition.";
+
+    size_t i = 0;
+    for (; i < size(cubeStatesStr); ++i) {
         std::string exceptionMessage;
         try {
-            ruCubeStateParser::stringStateToVect(cubeStateStr);
+            ruCubeStateParser::stringStateToVect(cubeStatesStr[i]);
         } catch (const ruCubeStateException &e) {
             exceptionMessage = std::string(e.what());
         }
         ASSERT_EQ(expectedException, exceptionMessage);
     }
+    ASSERT_EQ(size(cubeStatesStr), i);
 }
