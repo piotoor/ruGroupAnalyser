@@ -1462,39 +1462,57 @@ namespace {
     }
 }
 
-TEST(ruCubeStateConverterTest, convertVectCornersOrientToLexIndexCornersOrientTest) {
-    ruCubeStateConverter conv;
-    const std::vector<cornersArray> cornersOrient = {
-        { 0, 0, 0, 0, 0, 0 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 0, 1, 0, 1 },
-        { 2, 2, 2, 2, 2, 2 },
-        { 2, 0, 2, 0, 2, 0 },
-        { 2, 1, 2, 1, 2, 1 },
-        { 2, 1, 2, 1, 2, 1 },
-        { 2, 0, 2, 0, 2, 0 },
-        { 2, 1, 2, 1, 0, 0 },
-        { 2, 1, 2, 1, 2, 2 },
-        { 2, 1, 1, 0, 1, 1 },
+namespace {
+    class ruCubeStateConverterConvertVectCornersOrientToLexIndexCornersOrientTestFixture: public testing::TestWithParam<std::tuple<cornersArray, uint16_t>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    ruCubeStateConverter conv;
+                    const auto &[corners, expected] = testData.param;
+
+                    return conv.containerToString(corners);
+                }
+            };
+
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    const std::vector<uint16_t> expectedLexIndexCornersOrients = {
-        0,
-        364,
-        91,
-        728,
-        546,
-        637,
-        637,
-        546,
-        630,
-        638,
-        598
-    };
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertVectCornersOrientToLexIndexCornersOrientTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<cornersArray, uint16_t> (
+            {
+                { 0, 0, 0, 0, 0, 0 },
+                { 1, 1, 1, 1, 1, 1 },
+                { 0, 1, 0, 1, 0, 1 },
+                { 2, 2, 2, 2, 2, 2 },
+                { 2, 1, 2, 1, 2, 1 },
+                { 2, 0, 2, 0, 2, 0 },
+                { 2, 1, 2, 1, 0, 0 },
+                { 2, 1, 2, 1, 2, 2 },
+                { 2, 1, 1, 0, 1, 1 },
+            },
+            {
+                0,
+                364,
+                91,
+                728,
+                637,
+                546,
+                630,
+                638,
+                598
+            }
+        )),
+        ruCubeStateConverterConvertVectCornersOrientToLexIndexCornersOrientTestFixture::toString()
+    );
 
-    for (size_t i = 0; i < std::size(cornersOrient); ++i) {
-        auto lexIndexCornersOrient = conv.vectCornersOrientToLexIndexCornersOrient(cornersOrient[i]);
-        ASSERT_EQ(expectedLexIndexCornersOrients[i], lexIndexCornersOrient);
+    TEST_P(ruCubeStateConverterConvertVectCornersOrientToLexIndexCornersOrientTestFixture, convertVectCornersOrientToLexIndexCornersOrientTest) {
+        const auto &[cornersOrient, expected] = GetParam();
+        auto lexIndexCornersOrient = conv.vectCornersOrientToLexIndexCornersOrient(cornersOrient);
+        ASSERT_EQ(expected, lexIndexCornersOrient);
     }
 }
 
