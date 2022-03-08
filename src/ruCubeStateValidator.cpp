@@ -5,12 +5,6 @@
 #include <iterator>
 
 
-ruCubeStateValidator::ruCubeStateValidator() {
-}
-
-ruCubeStateValidator::~ruCubeStateValidator() {
-}
-
 bool ruCubeStateValidator::isVectCornersValid(const cornersArray& orient, const cornersArray& perm) {
     return isVectCornersOrientValid(orient) and isPermutationValid(perm);
 }
