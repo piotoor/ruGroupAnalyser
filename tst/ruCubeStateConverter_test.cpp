@@ -1339,580 +1339,706 @@ namespace {
     }
 }
 
-TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersPermTurnTest) {
-    ruCubeStateConverter conv;
-    ruCube cube;
+namespace {
+    class ruCubeStateConverterConvertIntCornersToLexIndexCornersPermTurnTestFixture: public testing::TestWithParam<std::tuple<ruCubeMove, uint16_t>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto &[turn, expected] = testData.param;
+                    bool compressedSolution = true;
+                    bool alnumMoves = true;
+                    return ruCubeScrambleParser::vectorScrambleToStringScramble({turn}, compressedSolution, alnumMoves);
+                }
+            };
 
-    const std::vector<uint16_t> expectedLexIndexCornersPerms = {
-        630,    // 5 1 2 0 3 4
-        514,    // 4 1 2 5 0 3
-        393,    // 3 1 2 4 5 0
-
-        360,    // 3 0 1 2 4 5
-        288,    // 2 3 0 1 4 5
-        150     // 1 2 3 0 4 5
+        protected:
+            ruCubeStateConverter conv;
+            ruCube cube;
     };
 
-    for (uint8_t t = R; t <= Ui; ++t) {
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertIntCornersToLexIndexCornersPermTurnTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<ruCubeMove, uint16_t> (
+            {
+                R,
+                R2,
+                Ri,
+
+                U,
+                U2,
+                Ui
+            },
+            {
+                630,    // 5 1 2 0 3 4
+                514,    // 4 1 2 5 0 3
+                393,    // 3 1 2 4 5 0
+
+                360,    // 3 0 1 2 4 5
+                288,    // 2 3 0 1 4 5
+                150     // 1 2 3 0 4 5
+            }
+        )),
+        ruCubeStateConverterConvertIntCornersToLexIndexCornersPermTurnTestFixture::toString()
+    );
+
+    TEST_P(ruCubeStateConverterConvertIntCornersToLexIndexCornersPermTurnTestFixture, convertIntCornersToLexIndexCornersPermTurnTest) {
+        const auto &[t, expected] = GetParam();
         cube.turn(t);
         auto cornersInt = cube.getCorners();
         cube.inverseTurn(t);
-        ASSERT_EQ(expectedLexIndexCornersPerms[t], conv.intCornersToLexIndexCornersPerm(cornersInt));
+        ASSERT_EQ(expected, conv.intCornersToLexIndexCornersPerm(cornersInt));
     }
 }
 
-TEST(ruCubeStateConverterTest, convertIntCornersToLexIndexCornersOrientTest) {
-    ruCubeStateConverter conv;
+namespace {
+    class ruCubeStateConverterConvertIntCornersToLexIndexCornersOrientTestFixture: public testing::TestWithParam<std::tuple<uint16_t, uint16_t, uint64_t>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto &[lexIndexCornersOrients, lexIndexCornersPerms, intCorners] = testData.param;
 
-    const std::vector<uint64_t> cornersInts = {
-        0101112131415,
-        0202122232425,
-        0102112231425,
-        0404142434445,
+                    std::stringstream ss;
+                    ss << lexIndexCornersOrients << "_" << lexIndexCornersPerms << "_" << std::oct << intCorners;
+                    return ss.str();
+                }
+            };
 
-        0401142134415,
-        0402142234425,
-        0452443224120,
-        0451443124110,
-
-        0452443221110,
-        0422443211510,
-        0402423112225,
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    const std::vector<uint16_t> cornersOrientsExpected = {
-        0,
-        364,
-        91,
-        728,
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertIntCornersToLexIndexCornersOrientTestFixture,
+        ::testing::Values(
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                0, 0, 0101112131415
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                364, 1, 0202122232524
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                91, 2, 0102112241325
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                728, 3, 0404142444543
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                546, 4, 0401142154314
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                637, 5, 0402142254423
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                637, 6, 0402143224425
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                546, 7, 0401143124514
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                630, 8, 0402143241215
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                630, 9, 0402143241512
+            },
+            std::tuple<uint16_t, uint16_t, uint64_t> {
+                598, 10, 0402123152224
+            }
+        ),
+        ruCubeStateConverterConvertIntCornersToLexIndexCornersOrientTestFixture::toString()
+    );
 
-        546,
-        637,
-        637,
-        546,
+    TEST_P(ruCubeStateConverterConvertIntCornersToLexIndexCornersOrientTestFixture, convertIntCornersToLexIndexCornersOrientTest) {
+        const auto &[expectedLexIndexCornersOrient, lexIndexCornersPerm, intCorners] = GetParam();
+        ASSERT_EQ(expectedLexIndexCornersOrient, conv.intCornersToLexIndexCornersOrient(intCorners));
+    }
 
-        630,
-        630,
-        598
-    };
-
-    for (size_t i = 0; i < std::size(cornersInts); ++i) {
-        uint16_t cornersLexIndex = conv.intCornersToLexIndexCornersOrient(cornersInts[i]);
-        ASSERT_EQ(cornersOrientsExpected[i], cornersLexIndex);
+    TEST_P(ruCubeStateConverterConvertIntCornersToLexIndexCornersOrientTestFixture, convertLexIndexCornersToIntCornersTest) {
+        const auto &[lexIndexCornersOrient, lexIndexCornersPerm, expectedIntCorners] = GetParam();
+        ASSERT_EQ(expectedIntCorners, conv.lexIndexCornersToIntCorners(lexIndexCornersOrient, lexIndexCornersPerm));
     }
 }
 
-TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersTest) {
-    ruCubeStateConverter conv;
+namespace {
+    class ruCubeStateConverterConvertVectCornersOrientToLexIndexCornersOrientTestFixture: public testing::TestWithParam<std::tuple<cornersArray, uint16_t>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    ruCubeStateConverter conv;
+                    const auto &[corners, expected] = testData.param;
 
-    const std::vector<uint16_t> lexIndexCornersPerms = {
-        0, 1, 2, 3, 4, 5, 6, 7, 8, 9, 10
+                    return conv.containerToString(corners);
+                }
+            };
+
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    const std::vector<uint16_t> lexIndexCornersOrients = {
-        0,
-        364,
-        91,
-        728,
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertVectCornersOrientToLexIndexCornersOrientTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<cornersArray, uint16_t> (
+            {
+                { 0, 0, 0, 0, 0, 0 },
+                { 1, 1, 1, 1, 1, 1 },
+                { 0, 1, 0, 1, 0, 1 },
+                { 2, 2, 2, 2, 2, 2 },
+                { 2, 1, 2, 1, 2, 1 },
+                { 2, 0, 2, 0, 2, 0 },
+                { 2, 1, 2, 1, 0, 0 },
+                { 2, 1, 2, 1, 2, 2 },
+                { 2, 1, 1, 0, 1, 1 },
+            },
+            {
+                0,
+                364,
+                91,
+                728,
+                637,
+                546,
+                630,
+                638,
+                598
+            }
+        )),
+        ruCubeStateConverterConvertVectCornersOrientToLexIndexCornersOrientTestFixture::toString()
+    );
 
-        546,
-        637,
-        637,
-        546,
-
-        630,
-        630,
-        598
-    };
-
-    const std::vector<uint64_t> expectedCornersInts = {
-        0101112131415,
-        0202122232524,
-        0102112241325,
-        0404142444543,
-
-        0401142154314,
-        0402142254423,
-        0402143224425,
-        0401143124514,
-
-        0402143241215,
-        0402143241512,
-        0402123152224,
-    };
-
-    for (size_t i = 0; i < std::size(expectedCornersInts); ++i) {
-        uint64_t cornersInt = conv.lexIndexCornersToIntCorners(lexIndexCornersOrients[i], lexIndexCornersPerms[i]);
-        ASSERT_EQ(expectedCornersInts[i], cornersInt);
+    TEST_P(ruCubeStateConverterConvertVectCornersOrientToLexIndexCornersOrientTestFixture, convertVectCornersOrientToLexIndexCornersOrientTest) {
+        const auto &[cornersOrient, expected] = GetParam();
+        auto lexIndexCornersOrient = conv.vectCornersOrientToLexIndexCornersOrient(cornersOrient);
+        ASSERT_EQ(expected, lexIndexCornersOrient);
     }
 }
 
-TEST(ruCubeStateConverterTest, convertVectCornersOrientToLexIndexCornersOrientTest) {
-    ruCubeStateConverter conv;
-    const std::vector<cornersArray> cornersOrient = {
-        { 0, 0, 0, 0, 0, 0 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 0, 1, 0, 1, 0, 1 },
-        { 2, 2, 2, 2, 2, 2 },
-        { 2, 0, 2, 0, 2, 0 },
-        { 2, 1, 2, 1, 2, 1 },
-        { 2, 1, 2, 1, 2, 1 },
-        { 2, 0, 2, 0, 2, 0 },
-        { 2, 1, 2, 1, 0, 0 },
-        { 2, 1, 2, 1, 2, 2 },
-        { 2, 1, 1, 0, 1, 1 },
+namespace {
+    class ruCubeStateConverterConvertVectCornersPermToLexIndexCornersPermTestFixture: public testing::TestWithParam<std::tuple<cornersArray, uint16_t>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    ruCubeStateConverter conv;
+                    const auto &[corners, expected] = testData.param;
+
+                    return conv.containerToString(corners);
+                }
+            };
+
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    const std::vector<uint16_t> expectedLexIndexCornersOrients = {
-        0,
-        364,
-        91,
-        728,
-        546,
-        637,
-        637,
-        546,
-        630,
-        638,
-        598
-    };
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertVectCornersPermToLexIndexCornersPermTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<cornersArray, uint16_t> (
+            {
+                { 0, 1, 2, 3, 4, 5 },
+                { 0, 1, 2, 3, 5, 4 },
+                { 0, 1, 2, 4, 3, 5 },
+                { 0, 1, 2, 4, 5, 3 },
+                { 0, 1, 2, 5, 3, 4 },
+                { 0, 1, 2, 5, 4, 3 },
+                { 0, 1, 3, 2, 4, 5 },
+                { 0, 1, 3, 2, 5, 4 },
+                { 0, 1, 3, 4, 2, 5 },
+                { 0, 1, 3, 4, 5, 2 },
+                { 0, 1, 3, 5, 2, 4 },
+                { 0, 1, 3, 5, 4, 2 },
+                { 0, 1, 4, 2, 3, 5 },
+                { 0, 1, 4, 2, 5, 3 },
+                { 0, 1, 4, 3, 2, 5 },
+                { 0, 1, 4, 3, 5, 2 },
+                { 0, 1, 4, 5, 2, 3 },
+                { 0, 1, 4, 5, 3, 2 },
+                { 0, 1, 5, 2, 3, 4 },
+                { 0, 1, 5, 2, 4, 3 },
+                { 0, 1, 5, 3, 2, 4 },
+                { 0, 1, 5, 3, 4, 2 },
+                { 0, 1, 5, 4, 2, 3 },
+                { 0, 1, 5, 4, 3, 2 },
+                { 0, 2, 1, 3, 4, 5 },
+                { 0, 2, 1, 3, 5, 4 },
+                { 0, 2, 1, 4, 3, 5 },
+                { 0, 2, 1, 4, 5, 3 },
+                { 0, 2, 1, 5, 3, 4 },
+                { 0, 2, 1, 5, 4, 3 },
+                { 0, 2, 3, 1, 4, 5 },
+                { 0, 2, 3, 1, 5, 4 },
+                { 0, 2, 3, 4, 1, 5 },
+                { 0, 2, 3, 4, 5, 1 },
+                { 0, 2, 3, 5, 1, 4 },
+                { 0, 2, 3, 5, 4, 1 },
+                { 0, 2, 4, 1, 3, 5 },
+                { 0, 2, 4, 1, 5, 3 },
+                { 0, 2, 4, 3, 1, 5 },
+                { 0, 2, 4, 3, 5, 1 },
+                { 0, 2, 4, 5, 1, 3 },
+                { 0, 2, 4, 5, 3, 1 },
+                { 0, 2, 5, 1, 3, 4 },
+                { 0, 2, 5, 1, 4, 3 },
+                { 0, 2, 5, 3, 1, 4 },
+                { 0, 2, 5, 3, 4, 1 },
+                { 0, 2, 5, 4, 1, 3 },
+                { 0, 2, 5, 4, 3, 1 },
+                { 0, 3, 1, 2, 4, 5 },
+                { 0, 3, 1, 2, 5, 4 },
+                { 0, 3, 1, 4, 2, 5 },
+                { 0, 3, 1, 4, 5, 2 },
+                { 0, 3, 1, 5, 2, 4 },
+                { 0, 3, 1, 5, 4, 2 },
+                { 0, 3, 2, 1, 4, 5 },
+                { 0, 3, 2, 1, 5, 4 },
+                { 0, 3, 2, 4, 1, 5 },
+                { 0, 3, 2, 4, 5, 1 },
+                { 0, 3, 2, 5, 1, 4 },
+                { 0, 3, 2, 5, 4, 1 },
+                { 0, 3, 4, 1, 2, 5 },
+                { 0, 3, 4, 1, 5, 2 },
+                { 0, 3, 4, 2, 1, 5 },
+                { 0, 3, 4, 2, 5, 1 },
+                { 0, 3, 4, 5, 1, 2 },
+                { 0, 3, 4, 5, 2, 1 },
+                { 0, 3, 5, 1, 2, 4 },
+                { 0, 3, 5, 1, 4, 2 },
+                { 0, 3, 5, 2, 1, 4 },
+                { 0, 3, 5, 2, 4, 1 },
+                { 0, 3, 5, 4, 1, 2 },
+                { 0, 3, 5, 4, 2, 1 },
+                { 0, 4, 1, 2, 3, 5 },
+                { 0, 4, 1, 2, 5, 3 },
+                { 0, 4, 1, 3, 2, 5 },
+                { 0, 4, 1, 3, 5, 2 },
+                { 0, 4, 1, 5, 2, 3 },
+                { 0, 4, 1, 5, 3, 2 },
+                { 0, 4, 2, 1, 3, 5 },
+                { 0, 4, 2, 1, 5, 3 },
+                { 0, 4, 2, 3, 1, 5 },
+                { 0, 4, 2, 3, 5, 1 },
+                { 0, 4, 2, 5, 1, 3 },
+                { 0, 4, 2, 5, 3, 1 },
+                { 0, 4, 3, 1, 2, 5 },
+                { 0, 4, 3, 1, 5, 2 },
+                { 0, 4, 3, 2, 1, 5 },
+                { 0, 4, 3, 2, 5, 1 },
+                { 0, 4, 3, 5, 1, 2 },
+                { 0, 4, 3, 5, 2, 1 },
+                { 0, 4, 5, 1, 2, 3 },
+                { 0, 4, 5, 1, 3, 2 },
+                { 0, 4, 5, 2, 1, 3 },
+                { 0, 4, 5, 2, 3, 1 },
+                { 0, 4, 5, 3, 1, 2 },
+                { 0, 4, 5, 3, 2, 1 },
+                { 0, 5, 1, 2, 3, 4 },
+                { 0, 5, 1, 2, 4, 3 },
+                { 0, 5, 1, 3, 2, 4 },
+                { 0, 5, 1, 3, 4, 2 },
+                { 0, 5, 1, 4, 2, 3 },
+                { 0, 5, 1, 4, 3, 2 },
+                { 0, 5, 2, 1, 3, 4 },
+                { 0, 5, 2, 1, 4, 3 },
+                { 0, 5, 2, 3, 1, 4 },
+                { 0, 5, 2, 3, 4, 1 },
+                { 0, 5, 2, 4, 1, 3 },
+                { 0, 5, 2, 4, 3, 1 },
+                { 0, 5, 3, 1, 2, 4 },
+                { 0, 5, 3, 1, 4, 2 },
+                { 0, 5, 3, 2, 1, 4 },
+                { 0, 5, 3, 2, 4, 1 },
+                { 0, 5, 3, 4, 1, 2 },
+                { 0, 5, 3, 4, 2, 1 },
+                { 0, 5, 4, 1, 2, 3 },
+                { 0, 5, 4, 1, 3, 2 },
+                { 0, 5, 4, 2, 1, 3 },
+                { 0, 5, 4, 2, 3, 1 },
+                { 0, 5, 4, 3, 1, 2 },
+                { 0, 5, 4, 3, 2, 1 },
+                { 1, 0, 2, 3, 4, 5 },
+                { 1, 0, 2, 3, 5, 4 },
+                { 1, 0, 2, 4, 3, 5 },
+                { 1, 0, 2, 4, 5, 3 },
+                { 1, 0, 2, 5, 3, 4 },
+                { 1, 0, 2, 5, 4, 3 },
+                { 1, 0, 3, 2, 4, 5 },
+                { 1, 0, 3, 2, 5, 4 },
+                { 1, 0, 3, 4, 2, 5 },
+                { 1, 0, 3, 4, 5, 2 },
+                { 1, 0, 3, 5, 2, 4 },
+                { 1, 0, 3, 5, 4, 2 },
+                { 1, 0, 4, 2, 3, 5 },
+                { 1, 0, 4, 2, 5, 3 },
+                { 1, 0, 4, 3, 2, 5 },
+                { 1, 0, 4, 3, 5, 2 },
+                { 1, 0, 4, 5, 2, 3 },
+                { 1, 0, 4, 5, 3, 2 },
+                { 1, 0, 5, 2, 3, 4 },
+                { 1, 0, 5, 2, 4, 3 },
+                { 1, 0, 5, 3, 2, 4 },
+                { 1, 0, 5, 3, 4, 2 },
+                { 1, 0, 5, 4, 2, 3 },
+                { 1, 0, 5, 4, 3, 2 },
+                { 1, 2, 0, 3, 4, 5 },
+                { 1, 2, 0, 3, 5, 4 },
+                { 1, 2, 0, 4, 3, 5 },
+                { 1, 2, 0, 4, 5, 3 },
+                { 1, 2, 0, 5, 3, 4 },
+                { 1, 2, 0, 5, 4, 3 },
+                { 1, 2, 3, 0, 4, 5 },
+                { 1, 2, 3, 0, 5, 4 },
+                { 1, 2, 3, 4, 0, 5 },
+                { 1, 2, 3, 4, 5, 0 },
+                { 1, 2, 3, 5, 0, 4 },
+                { 1, 2, 3, 5, 4, 0 },
+                { 1, 2, 4, 0, 3, 5 },
+                { 1, 2, 4, 0, 5, 3 },
+                { 1, 2, 4, 3, 0, 5 },
+                { 1, 2, 4, 3, 5, 0 },
+                { 1, 2, 4, 5, 0, 3 },
+                { 1, 2, 4, 5, 3, 0 },
+                { 1, 2, 5, 0, 3, 4 },
+                { 1, 2, 5, 0, 4, 3 },
+                { 1, 2, 5, 3, 0, 4 },
+                { 1, 2, 5, 3, 4, 0 },
+                { 1, 2, 5, 4, 0, 3 },
+                { 1, 2, 5, 4, 3, 0 },
+                { 1, 3, 0, 2, 4, 5 },
+                { 1, 3, 0, 2, 5, 4 },
+                { 1, 3, 0, 4, 2, 5 },
+                { 1, 3, 0, 4, 5, 2 },
+                { 1, 3, 0, 5, 2, 4 },
+                { 1, 3, 0, 5, 4, 2 },
+                { 1, 3, 2, 0, 4, 5 },
+                { 1, 3, 2, 0, 5, 4 },
+                { 1, 3, 2, 4, 0, 5 },
+                { 1, 3, 2, 4, 5, 0 },
+                { 1, 3, 2, 5, 0, 4 },
+                { 1, 3, 2, 5, 4, 0 },
+                { 1, 3, 4, 0, 2, 5 },
+                { 1, 3, 4, 0, 5, 2 },
+                { 1, 3, 4, 2, 0, 5 }
+            },
+            testDataGenerators::vectorIota<uint16_t>(183, 0)
+        )),
+        ruCubeStateConverterConvertVectCornersPermToLexIndexCornersPermTestFixture::toString()
+    );
 
-    for (size_t i = 0; i < std::size(cornersOrient); ++i) {
-        auto lexIndexCornersOrient = conv.vectCornersOrientToLexIndexCornersOrient(cornersOrient[i]);
-        ASSERT_EQ(expectedLexIndexCornersOrients[i], lexIndexCornersOrient);
+    TEST_P(ruCubeStateConverterConvertVectCornersPermToLexIndexCornersPermTestFixture, convertVectCornersPermToLexIndexCornersPermTest) {
+        const auto &[cornersPerm, expected] = GetParam();
+        auto lexIndexCornersPerm = conv.vectCornersPermToLexIndexCornersPerm(cornersPerm);
+        ASSERT_EQ(expected, lexIndexCornersPerm);
     }
 }
 
-TEST(ruCubeStateConverterTest, convertVectCornersPermToLexIndexCornersPermTest) {
-    ruCubeStateConverter conv;
-    const std::vector<cornersArray> cornersPerm = {
-        { 0, 1, 2, 3, 4, 5 },
-        { 0, 1, 2, 3, 5, 4 },
-        { 0, 1, 2, 4, 3, 5 },
-        { 0, 1, 2, 4, 5, 3 },
-        { 0, 1, 2, 5, 3, 4 },
-        { 0, 1, 2, 5, 4, 3 },
-        { 0, 1, 3, 2, 4, 5 },
-        { 0, 1, 3, 2, 5, 4 },
-        { 0, 1, 3, 4, 2, 5 },
-        { 0, 1, 3, 4, 5, 2 },
-        { 0, 1, 3, 5, 2, 4 },
-        { 0, 1, 3, 5, 4, 2 },
-        { 0, 1, 4, 2, 3, 5 },
-        { 0, 1, 4, 2, 5, 3 },
-        { 0, 1, 4, 3, 2, 5 },
-        { 0, 1, 4, 3, 5, 2 },
-        { 0, 1, 4, 5, 2, 3 },
-        { 0, 1, 4, 5, 3, 2 },
-        { 0, 1, 5, 2, 3, 4 },
-        { 0, 1, 5, 2, 4, 3 },
-        { 0, 1, 5, 3, 2, 4 },
-        { 0, 1, 5, 3, 4, 2 },
-        { 0, 1, 5, 4, 2, 3 },
-        { 0, 1, 5, 4, 3, 2 },
-        { 0, 2, 1, 3, 4, 5 },
-        { 0, 2, 1, 3, 5, 4 },
-        { 0, 2, 1, 4, 3, 5 },
-        { 0, 2, 1, 4, 5, 3 },
-        { 0, 2, 1, 5, 3, 4 },
-        { 0, 2, 1, 5, 4, 3 },
-        { 0, 2, 3, 1, 4, 5 },
-        { 0, 2, 3, 1, 5, 4 },
-        { 0, 2, 3, 4, 1, 5 },
-        { 0, 2, 3, 4, 5, 1 },
-        { 0, 2, 3, 5, 1, 4 },
-        { 0, 2, 3, 5, 4, 1 },
-        { 0, 2, 4, 1, 3, 5 },
-        { 0, 2, 4, 1, 5, 3 },
-        { 0, 2, 4, 3, 1, 5 },
-        { 0, 2, 4, 3, 5, 1 },
-        { 0, 2, 4, 5, 1, 3 },
-        { 0, 2, 4, 5, 3, 1 },
-        { 0, 2, 5, 1, 3, 4 },
-        { 0, 2, 5, 1, 4, 3 },
-        { 0, 2, 5, 3, 1, 4 },
-        { 0, 2, 5, 3, 4, 1 },
-        { 0, 2, 5, 4, 1, 3 },
-        { 0, 2, 5, 4, 3, 1 },
-        { 0, 3, 1, 2, 4, 5 },
-        { 0, 3, 1, 2, 5, 4 },
-        { 0, 3, 1, 4, 2, 5 },
-        { 0, 3, 1, 4, 5, 2 },
-        { 0, 3, 1, 5, 2, 4 },
-        { 0, 3, 1, 5, 4, 2 },
-        { 0, 3, 2, 1, 4, 5 },
-        { 0, 3, 2, 1, 5, 4 },
-        { 0, 3, 2, 4, 1, 5 },
-        { 0, 3, 2, 4, 5, 1 },
-        { 0, 3, 2, 5, 1, 4 },
-        { 0, 3, 2, 5, 4, 1 },
-        { 0, 3, 4, 1, 2, 5 },
-        { 0, 3, 4, 1, 5, 2 },
-        { 0, 3, 4, 2, 1, 5 },
-        { 0, 3, 4, 2, 5, 1 },
-        { 0, 3, 4, 5, 1, 2 },
-        { 0, 3, 4, 5, 2, 1 },
-        { 0, 3, 5, 1, 2, 4 },
-        { 0, 3, 5, 1, 4, 2 },
-        { 0, 3, 5, 2, 1, 4 },
-        { 0, 3, 5, 2, 4, 1 },
-        { 0, 3, 5, 4, 1, 2 },
-        { 0, 3, 5, 4, 2, 1 },
-        { 0, 4, 1, 2, 3, 5 },
-        { 0, 4, 1, 2, 5, 3 },
-        { 0, 4, 1, 3, 2, 5 },
-        { 0, 4, 1, 3, 5, 2 },
-        { 0, 4, 1, 5, 2, 3 },
-        { 0, 4, 1, 5, 3, 2 },
-        { 0, 4, 2, 1, 3, 5 },
-        { 0, 4, 2, 1, 5, 3 },
-        { 0, 4, 2, 3, 1, 5 },
-        { 0, 4, 2, 3, 5, 1 },
-        { 0, 4, 2, 5, 1, 3 },
-        { 0, 4, 2, 5, 3, 1 },
-        { 0, 4, 3, 1, 2, 5 },
-        { 0, 4, 3, 1, 5, 2 },
-        { 0, 4, 3, 2, 1, 5 },
-        { 0, 4, 3, 2, 5, 1 },
-        { 0, 4, 3, 5, 1, 2 },
-        { 0, 4, 3, 5, 2, 1 },
-        { 0, 4, 5, 1, 2, 3 },
-        { 0, 4, 5, 1, 3, 2 },
-        { 0, 4, 5, 2, 1, 3 },
-        { 0, 4, 5, 2, 3, 1 },
-        { 0, 4, 5, 3, 1, 2 },
-        { 0, 4, 5, 3, 2, 1 },
-        { 0, 5, 1, 2, 3, 4 },
-        { 0, 5, 1, 2, 4, 3 },
-        { 0, 5, 1, 3, 2, 4 },
-        { 0, 5, 1, 3, 4, 2 },
-        { 0, 5, 1, 4, 2, 3 },
-        { 0, 5, 1, 4, 3, 2 },
-        { 0, 5, 2, 1, 3, 4 },
-        { 0, 5, 2, 1, 4, 3 },
-        { 0, 5, 2, 3, 1, 4 },
-        { 0, 5, 2, 3, 4, 1 },
-        { 0, 5, 2, 4, 1, 3 },
-        { 0, 5, 2, 4, 3, 1 },
-        { 0, 5, 3, 1, 2, 4 },
-        { 0, 5, 3, 1, 4, 2 },
-        { 0, 5, 3, 2, 1, 4 },
-        { 0, 5, 3, 2, 4, 1 },
-        { 0, 5, 3, 4, 1, 2 },
-        { 0, 5, 3, 4, 2, 1 },
-        { 0, 5, 4, 1, 2, 3 },
-        { 0, 5, 4, 1, 3, 2 },
-        { 0, 5, 4, 2, 1, 3 },
-        { 0, 5, 4, 2, 3, 1 },
-        { 0, 5, 4, 3, 1, 2 },
-        { 0, 5, 4, 3, 2, 1 },
-        { 1, 0, 2, 3, 4, 5 },
-        { 1, 0, 2, 3, 5, 4 },
-        { 1, 0, 2, 4, 3, 5 },
-        { 1, 0, 2, 4, 5, 3 },
-        { 1, 0, 2, 5, 3, 4 },
-        { 1, 0, 2, 5, 4, 3 },
-        { 1, 0, 3, 2, 4, 5 },
-        { 1, 0, 3, 2, 5, 4 },
-        { 1, 0, 3, 4, 2, 5 },
-        { 1, 0, 3, 4, 5, 2 },
-        { 1, 0, 3, 5, 2, 4 },
-        { 1, 0, 3, 5, 4, 2 },
-        { 1, 0, 4, 2, 3, 5 },
-        { 1, 0, 4, 2, 5, 3 },
-        { 1, 0, 4, 3, 2, 5 },
-        { 1, 0, 4, 3, 5, 2 },
-        { 1, 0, 4, 5, 2, 3 },
-        { 1, 0, 4, 5, 3, 2 },
-        { 1, 0, 5, 2, 3, 4 },
-        { 1, 0, 5, 2, 4, 3 },
-        { 1, 0, 5, 3, 2, 4 },
-        { 1, 0, 5, 3, 4, 2 },
-        { 1, 0, 5, 4, 2, 3 },
-        { 1, 0, 5, 4, 3, 2 },
-        { 1, 2, 0, 3, 4, 5 },
-        { 1, 2, 0, 3, 5, 4 },
-        { 1, 2, 0, 4, 3, 5 },
-        { 1, 2, 0, 4, 5, 3 },
-        { 1, 2, 0, 5, 3, 4 },
-        { 1, 2, 0, 5, 4, 3 },
-        { 1, 2, 3, 0, 4, 5 },
-        { 1, 2, 3, 0, 5, 4 },
-        { 1, 2, 3, 4, 0, 5 },
-        { 1, 2, 3, 4, 5, 0 },
-        { 1, 2, 3, 5, 0, 4 },
-        { 1, 2, 3, 5, 4, 0 },
-        { 1, 2, 4, 0, 3, 5 },
-        { 1, 2, 4, 0, 5, 3 },
-        { 1, 2, 4, 3, 0, 5 },
-        { 1, 2, 4, 3, 5, 0 },
-        { 1, 2, 4, 5, 0, 3 },
-        { 1, 2, 4, 5, 3, 0 },
-        { 1, 2, 5, 0, 3, 4 },
-        { 1, 2, 5, 0, 4, 3 },
-        { 1, 2, 5, 3, 0, 4 },
-        { 1, 2, 5, 3, 4, 0 },
-        { 1, 2, 5, 4, 0, 3 },
-        { 1, 2, 5, 4, 3, 0 },
-        { 1, 3, 0, 2, 4, 5 },
-        { 1, 3, 0, 2, 5, 4 },
-        { 1, 3, 0, 4, 2, 5 },
-        { 1, 3, 0, 4, 5, 2 },
-        { 1, 3, 0, 5, 2, 4 },
-        { 1, 3, 0, 5, 4, 2 },
-        { 1, 3, 2, 0, 4, 5 },
-        { 1, 3, 2, 0, 5, 4 },
-        { 1, 3, 2, 4, 0, 5 },
-        { 1, 3, 2, 4, 5, 0 },
-        { 1, 3, 2, 5, 0, 4 },
-        { 1, 3, 2, 5, 4, 0 },
-        { 1, 3, 4, 0, 2, 5 },
-        { 1, 3, 4, 0, 5, 2 },
-        { 1, 3, 4, 2, 0, 5 }
+namespace {
+    class ruCubeStateConverterConvertVectEdgesPermToLexIndexEdgesPermTestFixture: public testing::TestWithParam<std::tuple<edgesArray, uint16_t>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    ruCubeStateConverter conv;
+                    const auto &[edges, expected] = testData.param;
+
+                    return conv.containerToString(edges);
+                }
+            };
+
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    for (size_t i = 0; i < std::size(cornersPerm); ++i) {
-        auto lexIndexCornersPerm = conv.vectCornersPermToLexIndexCornersPerm(cornersPerm[i]);
-        ASSERT_EQ(i, lexIndexCornersPerm);
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertVectEdgesPermToLexIndexEdgesPermTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<edgesArray, uint16_t> (
+            {
+                { 0, 1, 2, 3, 4, 5, 6 },
+                { 0, 1, 2, 3, 4, 6, 5 },
+                { 0, 1, 2, 3, 5, 4, 6 },
+                { 0, 1, 2, 3, 5, 6, 4 },
+                { 0, 1, 2, 3, 6, 4, 5 },
+                { 0, 1, 2, 3, 6, 5, 4 },
+                { 0, 1, 2, 4, 3, 5, 6 },
+                { 0, 1, 2, 4, 3, 6, 5 },
+                { 0, 1, 2, 4, 5, 3, 6 },
+                { 0, 1, 2, 4, 5, 6, 3 },
+                { 0, 1, 2, 4, 6, 3, 5 },
+                { 0, 1, 2, 4, 6, 5, 3 },
+                { 0, 1, 2, 5, 3, 4, 6 },
+                { 0, 1, 2, 5, 3, 6, 4 },
+                { 0, 1, 2, 5, 4, 3, 6 },
+                { 0, 1, 2, 5, 4, 6, 3 },
+                { 0, 1, 2, 5, 6, 3, 4 },
+                { 0, 1, 2, 5, 6, 4, 3 },
+                { 0, 1, 2, 6, 3, 4, 5 },
+                { 0, 1, 2, 6, 3, 5, 4 },
+                { 0, 1, 2, 6, 4, 3, 5 },
+                { 0, 1, 2, 6, 4, 5, 3 },
+                { 0, 1, 2, 6, 5, 3, 4 },
+                { 0, 1, 2, 6, 5, 4, 3 },
+                { 0, 1, 3, 2, 4, 5, 6 },
+                { 0, 1, 3, 2, 4, 6, 5 },
+                { 0, 1, 3, 2, 5, 4, 6 },
+                { 0, 1, 3, 2, 5, 6, 4 },
+                { 0, 1, 3, 2, 6, 4, 5 },
+                { 0, 1, 3, 2, 6, 5, 4 },
+                { 0, 1, 3, 4, 2, 5, 6 },
+                { 0, 1, 3, 4, 2, 6, 5 },
+                { 0, 1, 3, 4, 5, 2, 6 },
+                { 0, 1, 3, 4, 5, 6, 2 },
+                { 0, 1, 3, 4, 6, 2, 5 },
+                { 0, 1, 3, 4, 6, 5, 2 },
+                { 0, 1, 3, 5, 2, 4, 6 },
+                { 0, 1, 3, 5, 2, 6, 4 },
+                { 0, 1, 3, 5, 4, 2, 6 },
+                { 0, 1, 3, 5, 4, 6, 2 },
+                { 0, 1, 3, 5, 6, 2, 4 },
+                { 0, 1, 3, 5, 6, 4, 2 },
+                { 0, 1, 3, 6, 2, 4, 5 },
+                { 0, 1, 3, 6, 2, 5, 4 },
+                { 0, 1, 3, 6, 4, 2, 5 },
+                { 0, 1, 3, 6, 4, 5, 2 },
+                { 0, 1, 3, 6, 5, 2, 4 },
+                { 0, 1, 3, 6, 5, 4, 2 },
+                { 0, 1, 4, 2, 3, 5, 6 },
+                { 0, 1, 4, 2, 3, 6, 5 },
+                { 0, 1, 4, 2, 5, 3, 6 },
+                { 0, 1, 4, 2, 5, 6, 3 },
+                { 0, 1, 4, 2, 6, 3, 5 },
+                { 0, 1, 4, 2, 6, 5, 3 },
+                { 0, 1, 4, 3, 2, 5, 6 },
+                { 0, 1, 4, 3, 2, 6, 5 },
+                { 0, 1, 4, 3, 5, 2, 6 },
+                { 0, 1, 4, 3, 5, 6, 2 },
+                { 0, 1, 4, 3, 6, 2, 5 },
+                { 0, 1, 4, 3, 6, 5, 2 },
+                { 0, 1, 4, 5, 2, 3, 6 },
+                { 0, 1, 4, 5, 2, 6, 3 },
+                { 0, 1, 4, 5, 3, 2, 6 },
+                { 0, 1, 4, 5, 3, 6, 2 },
+                { 0, 1, 4, 5, 6, 2, 3 },
+                { 0, 1, 4, 5, 6, 3, 2 },
+                { 0, 1, 4, 6, 2, 3, 5 },
+                { 0, 1, 4, 6, 2, 5, 3 },
+                { 0, 1, 4, 6, 3, 2, 5 },
+                { 0, 1, 4, 6, 3, 5, 2 },
+                { 0, 1, 4, 6, 5, 2, 3 },
+                { 0, 1, 4, 6, 5, 3, 2 },
+                { 0, 1, 5, 2, 3, 4, 6 },
+                { 0, 1, 5, 2, 3, 6, 4 },
+                { 0, 1, 5, 2, 4, 3, 6 },
+                { 0, 1, 5, 2, 4, 6, 3 },
+                { 0, 1, 5, 2, 6, 3, 4 },
+                { 0, 1, 5, 2, 6, 4, 3 },
+                { 0, 1, 5, 3, 2, 4, 6 },
+                { 0, 1, 5, 3, 2, 6, 4 },
+                { 0, 1, 5, 3, 4, 2, 6 },
+                { 0, 1, 5, 3, 4, 6, 2 },
+                { 0, 1, 5, 3, 6, 2, 4 },
+                { 0, 1, 5, 3, 6, 4, 2 },
+                { 0, 1, 5, 4, 2, 3, 6 },
+                { 0, 1, 5, 4, 2, 6, 3 },
+                { 0, 1, 5, 4, 3, 2, 6 },
+                { 0, 1, 5, 4, 3, 6, 2 },
+                { 0, 1, 5, 4, 6, 2, 3 },
+                { 0, 1, 5, 4, 6, 3, 2 },
+                { 0, 1, 5, 6, 2, 3, 4 },
+                { 0, 1, 5, 6, 2, 4, 3 },
+                { 0, 1, 5, 6, 3, 2, 4 },
+                { 0, 1, 5, 6, 3, 4, 2 },
+                { 0, 1, 5, 6, 4, 2, 3 },
+                { 0, 1, 5, 6, 4, 3, 2 },
+                { 0, 1, 6, 2, 3, 4, 5 },
+                { 0, 1, 6, 2, 3, 5, 4 },
+                { 0, 1, 6, 2, 4, 3, 5 },
+                { 0, 1, 6, 2, 4, 5, 3 },
+                { 0, 1, 6, 2, 5, 3, 4 },
+                { 0, 1, 6, 2, 5, 4, 3 },
+                { 0, 1, 6, 3, 2, 4, 5 },
+                { 0, 1, 6, 3, 2, 5, 4 },
+                { 0, 1, 6, 3, 4, 2, 5 }
+            },
+            testDataGenerators::vectorIota<uint16_t>(105, 0)
+        )),
+        ruCubeStateConverterConvertVectEdgesPermToLexIndexEdgesPermTestFixture::toString()
+    );
+
+    TEST_P(ruCubeStateConverterConvertVectEdgesPermToLexIndexEdgesPermTestFixture, convertVectEdgesPermToLexIndexEdgesPermTest) {
+        const auto &[edgesPerm, expected] = GetParam();
+        auto lexIndexEdgesPerm = conv.vectEdgesPermToLexIndexEdgesPerm(edgesPerm);
+        ASSERT_EQ(expected, lexIndexEdgesPerm);
     }
 }
 
-TEST(ruCubeStateConverterTest, convertVectEdgesPermToLexIndexEdgesPermTest) {
-    ruCubeStateConverter conv;
-    const std::vector<edgesArray> edgesPerm = {
-        { 0, 1, 2, 3, 4, 5, 6 },
-        { 0, 1, 2, 3, 4, 6, 5 },
-        { 0, 1, 2, 3, 5, 4, 6 },
-        { 0, 1, 2, 3, 5, 6, 4 },
-        { 0, 1, 2, 3, 6, 4, 5 },
-        { 0, 1, 2, 3, 6, 5, 4 },
-        { 0, 1, 2, 4, 3, 5, 6 },
-        { 0, 1, 2, 4, 3, 6, 5 },
-        { 0, 1, 2, 4, 5, 3, 6 },
-        { 0, 1, 2, 4, 5, 6, 3 },
-        { 0, 1, 2, 4, 6, 3, 5 },
-        { 0, 1, 2, 4, 6, 5, 3 },
-        { 0, 1, 2, 5, 3, 4, 6 },
-        { 0, 1, 2, 5, 3, 6, 4 },
-        { 0, 1, 2, 5, 4, 3, 6 },
-        { 0, 1, 2, 5, 4, 6, 3 },
-        { 0, 1, 2, 5, 6, 3, 4 },
-        { 0, 1, 2, 5, 6, 4, 3 },
-        { 0, 1, 2, 6, 3, 4, 5 },
-        { 0, 1, 2, 6, 3, 5, 4 },
-        { 0, 1, 2, 6, 4, 3, 5 },
-        { 0, 1, 2, 6, 4, 5, 3 },
-        { 0, 1, 2, 6, 5, 3, 4 },
-        { 0, 1, 2, 6, 5, 4, 3 },
-        { 0, 1, 3, 2, 4, 5, 6 },
-        { 0, 1, 3, 2, 4, 6, 5 },
-        { 0, 1, 3, 2, 5, 4, 6 },
-        { 0, 1, 3, 2, 5, 6, 4 },
-        { 0, 1, 3, 2, 6, 4, 5 },
-        { 0, 1, 3, 2, 6, 5, 4 },
-        { 0, 1, 3, 4, 2, 5, 6 },
-        { 0, 1, 3, 4, 2, 6, 5 },
-        { 0, 1, 3, 4, 5, 2, 6 },
-        { 0, 1, 3, 4, 5, 6, 2 },
-        { 0, 1, 3, 4, 6, 2, 5 },
-        { 0, 1, 3, 4, 6, 5, 2 },
-        { 0, 1, 3, 5, 2, 4, 6 },
-        { 0, 1, 3, 5, 2, 6, 4 },
-        { 0, 1, 3, 5, 4, 2, 6 },
-        { 0, 1, 3, 5, 4, 6, 2 },
-        { 0, 1, 3, 5, 6, 2, 4 },
-        { 0, 1, 3, 5, 6, 4, 2 },
-        { 0, 1, 3, 6, 2, 4, 5 },
-        { 0, 1, 3, 6, 2, 5, 4 },
-        { 0, 1, 3, 6, 4, 2, 5 },
-        { 0, 1, 3, 6, 4, 5, 2 },
-        { 0, 1, 3, 6, 5, 2, 4 },
-        { 0, 1, 3, 6, 5, 4, 2 },
-        { 0, 1, 4, 2, 3, 5, 6 },
-        { 0, 1, 4, 2, 3, 6, 5 },
-        { 0, 1, 4, 2, 5, 3, 6 },
-        { 0, 1, 4, 2, 5, 6, 3 },
-        { 0, 1, 4, 2, 6, 3, 5 },
-        { 0, 1, 4, 2, 6, 5, 3 },
-        { 0, 1, 4, 3, 2, 5, 6 },
-        { 0, 1, 4, 3, 2, 6, 5 },
-        { 0, 1, 4, 3, 5, 2, 6 },
-        { 0, 1, 4, 3, 5, 6, 2 },
-        { 0, 1, 4, 3, 6, 2, 5 },
-        { 0, 1, 4, 3, 6, 5, 2 },
-        { 0, 1, 4, 5, 2, 3, 6 },
-        { 0, 1, 4, 5, 2, 6, 3 },
-        { 0, 1, 4, 5, 3, 2, 6 },
-        { 0, 1, 4, 5, 3, 6, 2 },
-        { 0, 1, 4, 5, 6, 2, 3 },
-        { 0, 1, 4, 5, 6, 3, 2 },
-        { 0, 1, 4, 6, 2, 3, 5 },
-        { 0, 1, 4, 6, 2, 5, 3 },
-        { 0, 1, 4, 6, 3, 2, 5 },
-        { 0, 1, 4, 6, 3, 5, 2 },
-        { 0, 1, 4, 6, 5, 2, 3 },
-        { 0, 1, 4, 6, 5, 3, 2 },
-        { 0, 1, 5, 2, 3, 4, 6 },
-        { 0, 1, 5, 2, 3, 6, 4 },
-        { 0, 1, 5, 2, 4, 3, 6 },
-        { 0, 1, 5, 2, 4, 6, 3 },
-        { 0, 1, 5, 2, 6, 3, 4 },
-        { 0, 1, 5, 2, 6, 4, 3 },
-        { 0, 1, 5, 3, 2, 4, 6 },
-        { 0, 1, 5, 3, 2, 6, 4 },
-        { 0, 1, 5, 3, 4, 2, 6 },
-        { 0, 1, 5, 3, 4, 6, 2 },
-        { 0, 1, 5, 3, 6, 2, 4 },
-        { 0, 1, 5, 3, 6, 4, 2 },
-        { 0, 1, 5, 4, 2, 3, 6 },
-        { 0, 1, 5, 4, 2, 6, 3 },
-        { 0, 1, 5, 4, 3, 2, 6 },
-        { 0, 1, 5, 4, 3, 6, 2 },
-        { 0, 1, 5, 4, 6, 2, 3 },
-        { 0, 1, 5, 4, 6, 3, 2 },
-        { 0, 1, 5, 6, 2, 3, 4 },
-        { 0, 1, 5, 6, 2, 4, 3 },
-        { 0, 1, 5, 6, 3, 2, 4 },
-        { 0, 1, 5, 6, 3, 4, 2 },
-        { 0, 1, 5, 6, 4, 2, 3 },
-        { 0, 1, 5, 6, 4, 3, 2 },
-        { 0, 1, 6, 2, 3, 4, 5 },
-        { 0, 1, 6, 2, 3, 5, 4 },
-        { 0, 1, 6, 2, 4, 3, 5 },
-        { 0, 1, 6, 2, 4, 5, 3 },
-        { 0, 1, 6, 2, 5, 3, 4 },
-        { 0, 1, 6, 2, 5, 4, 3 },
-        { 0, 1, 6, 3, 2, 4, 5 },
-        { 0, 1, 6, 3, 2, 5, 4 },
-        { 0, 1, 6, 3, 4, 2, 5 }
+namespace {
+    class ruCubeStateConverterConvertLexIndexEdgesToIntEdgesAsStrWithIgnoredTestFixture: public testing::TestWithParam<std::tuple<std::tuple<uint16_t, std::bitset<ruBaseCube::noOfEdges>>, std::string>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto &[edges, expected] = testData.param;
+                    const auto &[ep, epi] = edges;
+                    std::stringstream ss;
+
+                    ss << ep << "_" << epi;
+                    return ss.str();
+                }
+            };
+
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    for (size_t i = 0; i < std::size(edgesPerm); ++i) {
-        auto lexIndexEdgesPerm = conv.vectEdgesPermToLexIndexEdgesPerm(edgesPerm[i]);
-        ASSERT_EQ(i, lexIndexEdgesPerm);
-    }
-}
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertLexIndexEdgesToIntEdgesAsStrWithIgnoredTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::tuple<uint16_t, std::bitset<ruBaseCube::noOfEdges>>, std::string> (
+            {
+                { 0,  0b0000000 },
+                { 1,  0b0000000 },
+                { 2,  0b0000000 },
+                { 3,  0b0000000 },
+                { 4,  0b0000000 },
 
-TEST(ruCubeStateConverterTest, convertLexIndexEdgesToIntEdgesAsStrWithIgnoredTest) {
-    ruCubeStateConverter conv;
+                { 5,  0b1111111 },
+                { 6,  0b0000001 },
+                { 7,  0b0000010 },
+                { 8,  0b0000100 },
+                { 9,  0b0001000 },
 
-    const std::vector<std::pair<uint16_t, std::bitset<ruBaseCube::noOfEdges>>> lexIndexEdges {
-        { 0,  0b0000000 },
-        { 1,  0b0000000 },
-        { 2,  0b0000000 } ,
-        { 3,  0b0000000 },
-        { 4,  0b0000000 },
+                { 10, 0b0010000 },
+                { 11, 0b0100000 },
+                { 12, 0b1000000 },
+                { 13, 0b1111000 },
+                { 14, 0b0000111 },
+            },
+            {
+                "0123456",
+                "0123465",
+                "0123546",
+                "0123564",
+                "0123645",
 
-        { 5,  0b1111111 },
-        { 6,  0b0000001 },
-        { 7,  0b0000010 },
-        { 8,  0b0000100 },
-        { 9,  0b0001000 },
+                "-------",
+                "-124356",
+                "0-24365",
+                "01-4536",
+                "012456-",
 
-        { 10, 0b0010000 },
-        { 11, 0b0100000 },
-        { 12, 0b1000000 },
-        { 13, 0b1111000 },
-        { 14, 0b0000111 },
-    };
+                "012-635",
+                "01246-3",
+                "012534-",
+                "012----",
+                "---5436",
+            }
+        )),
+        ruCubeStateConverterConvertLexIndexEdgesToIntEdgesAsStrWithIgnoredTestFixture::toString()
+    );
 
-    const std::vector<std::string> expectedEdgesStrings = {
-        "0123456",
-        "0123465",
-        "0123546",
-        "0123564",
-        "0123645",
 
-        "-------",
-        "-124356",
-        "0-24365",
-        "01-4536",
-        "012456-",
-
-        "012-635",
-        "01246-3",
-        "012534-",
-        "012----",
-        "---5436",
-    };
-
-    for (size_t i = 0; i < std::size(expectedEdgesStrings); ++i) {
-        const auto &[ep, epi] = lexIndexEdges[i];
+    TEST_P(ruCubeStateConverterConvertLexIndexEdgesToIntEdgesAsStrWithIgnoredTestFixture, convertLexIndexEdgesToIntEdgesAsStrWithIgnoredTest) {
+        const auto &[edges, expected] = GetParam();
+        const auto &[ep, epi] = edges;
         auto strEdges = conv.lexIndexEdgesToIntEdgesAsStrWithIgnored(ep, epi);
-        ASSERT_EQ(expectedEdgesStrings[i], strEdges);
+        ASSERT_EQ(expected, strEdges);
     }
 }
 
-TEST(ruCubeStateConverterTest, convertLexIndexCornersToIntCornersAsStrWithIgnoredTest) {
-    ruCubeStateConverter conv;
+namespace {
+    class ruCubeStateConverterConvertLexIndexCornersToIntCornersAsStrWithIgnoredTestFixture: public testing::TestWithParam<std::tuple<std::tuple<uint16_t, uint16_t, std::bitset<ruBaseCube::noOfCorners>, std::bitset<ruBaseCube::noOfCorners>>, std::string>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    const auto &[corners, expected] = testData.param;
+                    const auto &[cp, co, cpi, coi] = corners;
+                    std::stringstream ss;
 
-    const std::vector<std::tuple<   uint16_t,
-                                    uint16_t,
-                                    std::bitset<ruBaseCube::noOfCorners>, // cpi
-                                    std::bitset<ruBaseCube::noOfCorners>>> lexIndexCubes { // coi
-        { 0,    0,      0b0, 0b0 },
-        { 1,    364,    0b0, 0b0 },
-        { 2,    91,     0b0, 0b0 },
-        { 3,    728,    0b0, 0b0 },
-        { 4,    546,    0b0, 0b0 },
+                    ss << cp << "_" << co << "_" << cpi << "_" << coi;
+                    return ss.str();
+                }
+            };
 
-        { 5,    637,    0b0, 0b0 },
-        { 6,    637,    0b0, 0b0 },
-        { 7,    546,    0b0, 0b0 },
-        { 8,    630,    0b0, 0b0 },
-        { 9,    630,    0b0, 0b0 },
-
-        { 10,   598,    0b0, 0b0 },
-
-
-        { 0,    0,      0b111111, 0b111111 },
-        { 1,    364,    0b0,      0b111111 },
-        { 2,    91,     0b111111, 0b0 },
-        { 3,    728,    0b001111, 0b001111 },
-        { 4,    546,    0b010101, 0b101010 },
-
-        { 5,    637,    0b000001, 0b100000 },
-        { 6,    637,    0b000000, 0b000100 },
-        { 7,    546,    0b011011, 0b011111 },
-        { 8,    630,    0b100001, 0b100010 },
-        { 9,    630,    0b000111, 0b111000 },
-
-        { 10,   598,    0b010010, 0b010101 },
+        protected:
+            ruCubeStateConverter conv;
     };
 
-    const std::vector<std::string> expectedCornersIntsAsStr = {
-        "000102030405",
-        "101112131514",
-        "001102140315",
-        "202122242523",
-        "200122052304",
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateConverterTests,
+        ruCubeStateConverterConvertLexIndexCornersToIntCornersAsStrWithIgnoredTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::tuple<uint16_t, uint16_t, std::bitset<ruBaseCube::noOfCorners>, std::bitset<ruBaseCube::noOfCorners>>, std::string> (
+            {
+                { 0,    0,      0b0, 0b0 },
+                { 1,    364,    0b0, 0b0 },
+                { 2,    91,     0b0, 0b0 },
+                { 3,    728,    0b0, 0b0 },
+                { 4,    546,    0b0, 0b0 },
 
-        "201122152413",
-        "201123122415",
-        "200123022504",
-        "201123140205",
-        "201123140502",
+                { 5,    637,    0b0, 0b0 },
+                { 6,    637,    0b0, 0b0 },
+                { 7,    546,    0b0, 0b0 },
+                { 8,    630,    0b0, 0b0 },
+                { 9,    630,    0b0, 0b0 },
 
-        "201113051214",
+                { 10,   598,    0b0, 0b0 },
 
 
-        "------------",
-        "-0-1-2-3-5-4",
-        "0-1-0-1-0-1-",
-        "------2425--",
-        "2--12--5-30-",
+                { 0,    0,      0b111111, 0b111111 },
+                { 1,    364,    0b0,      0b111111 },
+                { 2,    91,     0b111111, 0b0 },
+                { 3,    728,    0b001111, 0b001111 },
+                { 4,    546,    0b010101, 0b101010 },
 
-        "2-1122-52413",
-        "201123-22415",
-        "-------225--",
-        "2--1231402--",
-        "2-1--3-4-50-",
-        "-01-1305-2--",
-    };
+                { 5,    637,    0b000001, 0b100000 },
+                { 6,    637,    0b000000, 0b000100 },
+                { 7,    546,    0b011011, 0b011111 },
+                { 8,    630,    0b100001, 0b100010 },
+                { 9,    630,    0b000111, 0b111000 },
 
-    for (size_t i = 0; i < std::size(expectedCornersIntsAsStr); ++i) {
-        const auto &[cp, co, cpi, coi] = lexIndexCubes[i];
+                { 10,   598,    0b010010, 0b010101 },
+            },
+            {
+                "000102030405",
+                "101112131514",
+                "001102140315",
+                "202122242523",
+                "200122052304",
+
+                "201122152413",
+                "201123122415",
+                "200123022504",
+                "201123140205",
+                "201123140502",
+
+                "201113051214",
+
+
+                "------------",
+                "-0-1-2-3-5-4",
+                "0-1-0-1-0-1-",
+                "------2425--",
+                "2--12--5-30-",
+
+                "2-1122-52413",
+                "201123-22415",
+                "-------225--",
+                "2--1231402--",
+                "2-1--3-4-50-",
+                "-01-1305-2--",
+            }
+        )),
+        ruCubeStateConverterConvertLexIndexCornersToIntCornersAsStrWithIgnoredTestFixture::toString()
+    );
+
+
+    TEST_P(ruCubeStateConverterConvertLexIndexCornersToIntCornersAsStrWithIgnoredTestFixture, convertLexIndexCornersToIntCornersAsStrWithIgnoredTest) {
+        const auto &[corners, expected] = GetParam();
+        const auto &[cp, co, cpi, coi] = corners;
         std::string cornersStr = conv.lexIndexCornersToIntCornersAsStrWithIgnored(cp, co, cpi, coi);
-        ASSERT_EQ(expectedCornersIntsAsStr[i], cornersStr);
+        ASSERT_EQ(expected, cornersStr);
     }
 }
