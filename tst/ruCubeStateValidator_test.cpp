@@ -358,54 +358,65 @@ namespace {
     }
 }
 
-TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableTest) {
-    ruCubeStateValidator validator;
+namespace {
+    class ruCubeStateValidatorIsCubeStateSolveableTestFixture: public testing::TestWithParam<std::tuple<std::tuple<cornersArray, cornersArray, edgesArray>, bool>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    ruCubeStateConverter conv;
+                    const auto &[cubeState, expected] = testData.param;
+                    const auto &[co, cp, ep] = cubeState;
 
-    const std::vector<std::tuple<cornersArray, cornersArray, edgesArray>> cubeStates {
-        { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
-        { { 1, 2, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
-        { { 1, 2, 1, 2, 1, 2 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
-        { { 1, 2, 1, 2, 1, 2 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
-        { { 1, 1, 1, 2, 2, 2 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+                    return conv.containerToString(co) + "_" + conv.containerToString(cp) + "_" + conv.containerToString(ep);
+                }
+            };
 
-        { { 1, 1, 1, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 5, 6, 4 } },
-        { { 1, 2, 1, 0, 0, 2 }, { 0, 1, 2, 3, 4, 5 }, { 2, 0, 1, 3, 5, 6, 4 } },
-        { { 1, 2, 1, 2, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 1, 2, 0, 3, 5, 6, 4 } },
-        { { 1, 1, 1, 0, 1, 2 }, { 3, 2, 0, 4, 1, 5 }, { 0, 2, 5, 3, 1, 6, 4 } },
-        { { 1, 2, 2, 1, 1, 2 }, { 3, 1, 4, 0, 2, 5 }, { 2, 0, 1, 3, 5, 6, 4 } },
+        protected:
+            ruCubeStateValidator validator;
     };
 
-    const std::vector<bool> expectedValidities = std::vector<bool> (size(cubeStates), true);
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateValidatorTests,
+        ruCubeStateValidatorIsCubeStateSolveableTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<std::tuple<cornersArray, cornersArray, edgesArray>, bool> (
+            {
+                { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+                { { 1, 2, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+                { { 1, 2, 1, 2, 1, 2 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+                { { 1, 2, 1, 2, 2, 1 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+                { { 1, 1, 1, 2, 2, 2 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+                { { 1, 1, 1, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 5, 6, 4 } },
+                { { 1, 2, 1, 0, 0, 2 }, { 0, 1, 2, 3, 4, 5 }, { 2, 0, 1, 3, 5, 6, 4 } },
+                { { 1, 2, 1, 2, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 1, 2, 0, 3, 5, 6, 4 } },
+                { { 1, 1, 1, 0, 1, 2 }, { 3, 2, 0, 4, 1, 5 }, { 0, 2, 5, 3, 1, 6, 4 } },
+                { { 1, 2, 2, 1, 1, 2 }, { 3, 1, 4, 0, 2, 5 }, { 2, 0, 1, 3, 5, 6, 4 } },
 
-    for (size_t i = 0; i < size(expectedValidities); ++i) {
-        const auto &[co, cp, ep] = cubeStates[i];
-        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableQuick(co, cp, ep));
-        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableFull(co, cp, ep));
+                { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 5, 4 }, { 0, 1, 2, 3, 4, 5, 6 } },
+                { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 1, 0, 2, 3, 4, 5, 6 } },
+                { { 1, 1, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+                { { 1, 2, 1, 2, 1, 2 }, { 5, 1, 2, 3, 4, 0 }, { 0, 1, 2, 3, 4, 5, 6 } },
+                { { 1, 1, 1, 2, 2, 2 }, { 2, 1, 0, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
+                { { 1, 1, 1, 0, 0, 0 }, { 0, 1, 3, 2, 4, 5 }, { 0, 1, 2, 3, 5, 6, 4 } },
+                { { 1, 2, 1, 0, 0, 2 }, { 0, 1, 2, 3, 4, 5 }, { 2, 0, 1, 5, 3, 6, 4 } },
+                { { 1, 2, 1, 2, 0, 0 }, { 0, 1, 2, 4, 5, 3 }, { 1, 2, 0, 3, 5, 6, 4 } },
+                { { 1, 1, 1, 0, 1, 2 }, { 3, 0, 2, 4, 1, 5 }, { 1, 2, 5, 3, 0, 6, 4 } },
+                { { 1, 2, 2, 1, 1, 2 }, { 3, 1, 0, 2, 4, 5 }, { 2, 0, 1, 3, 5, 6, 4 } },
+            },
+            testDataGenerators::vectorsConcat(std::vector<bool>(10, true), std::vector<bool>(10, false))
+        )),
+        ruCubeStateValidatorIsCubeStateSolveableTestFixture::toString()
+    );
+
+    TEST_P(ruCubeStateValidatorIsCubeStateSolveableTestFixture, isVectCubeStateSolveableFullTest) {
+        const auto &[cubeState, expected] = GetParam();
+        const auto &[co, cp, ep] = cubeState;
+        ASSERT_EQ(expected, validator.isVectCubeStateSolveableQuick(co, cp, ep));
     }
-}
 
-TEST(ruCubeStateValidatorTest, isVectCubeStateSolveableNegativeTest) {
-    ruCubeStateValidator validator;
-
-    const std::vector<std::tuple<cornersArray, cornersArray, edgesArray>> cubeStates {
-        { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 5, 4 }, { 0, 1, 2, 3, 4, 5, 6 } },
-        { { 0, 0, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 1, 0, 2, 3, 4, 5, 6 } },
-        { { 1, 1, 0, 0, 0, 0 }, { 0, 1, 2, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
-        { { 1, 2, 1, 2, 1, 2 }, { 5, 1, 2, 3, 4, 0 }, { 0, 1, 2, 3, 4, 5, 6 } },
-        { { 1, 1, 1, 2, 2, 2 }, { 2, 1, 0, 3, 4, 5 }, { 0, 1, 2, 3, 4, 5, 6 } },
-
-        { { 1, 1, 1, 0, 0, 0 }, { 0, 1, 3, 2, 4, 5 }, { 0, 1, 2, 3, 5, 6, 4 } },
-        { { 1, 2, 1, 0, 0, 2 }, { 0, 1, 2, 3, 4, 5 }, { 2, 0, 1, 5, 3, 6, 4 } },
-        { { 1, 2, 1, 2, 0, 0 }, { 0, 1, 2, 4, 5, 3 }, { 1, 2, 0, 3, 5, 6, 4 } },
-        { { 1, 1, 1, 0, 1, 2 }, { 3, 0, 2, 4, 1, 5 }, { 1, 2, 5, 3, 0, 6, 4 } },
-        { { 1, 2, 2, 1, 1, 2 }, { 3, 1, 0, 2, 4, 5 }, { 2, 0, 1, 3, 5, 6, 4 } },
-    };
-
-    const std::vector<bool> expectedValidities = std::vector<bool> (size(cubeStates), false);
-
-    for (size_t i = 0; i < size(expectedValidities); ++i) {
-        const auto &[co, cp, ep] = cubeStates[i];
-        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableQuick(co, cp, ep));
-        ASSERT_EQ(expectedValidities[i], validator.isVectCubeStateSolveableFull(co, cp, ep));
+    TEST_P(ruCubeStateValidatorIsCubeStateSolveableTestFixture, isVectCubeStateSolveableQuickTest) {
+        const auto &[cubeState, expected] = GetParam();
+        const auto &[co, cp, ep] = cubeState;
+        ASSERT_EQ(expected, validator.isVectCubeStateSolveableFull(co, cp, ep));
     }
 }
