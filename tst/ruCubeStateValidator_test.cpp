@@ -293,61 +293,70 @@ namespace {
     }
 }
 
-TEST(ruCubeStateValidatorTest, isVectCornersOrientValidTest) {
-    ruCubeStateValidator validator;
-
-    const std::vector<cornersArray> orientations {
-        { 0, 0, 0, 0, 0, 0 },
-        { 0, 0, 0, 0, 1, 2 },
-        { 0, 0, 1, 2, 1, 2 },
-        { 1, 2, 1, 2, 1, 2 },
-        { 1, 2, 1, 2, 0, 0 },
-        { 1, 2, 0, 0, 0, 0 },
-        { 2, 1, 1, 2, 0, 0 },
-        { 2, 2, 2, 2, 2, 2 },
-        { 1, 1, 1, 1, 1, 1 },
-        { 2, 1, 2, 1, 2, 1 },
-        { 1, 2, 1, 2, 1, 2 },
-        { 2, 0, 2, 0, 2, 0 },
-        { 1, 0, 1, 0, 1, 0 },
-        { 2, 1, 2, 0, 2, 2 },
-        { 0, 0, 1, 0, 1, 1 },
-        { 2, 1, 1, 0, 1, 1 },
-        { 0, 1, 1, 2, 1, 1 },
-        { 0, 1, 1, 2, 1, 1 },
+namespace {
+    class ruCubeStateValidatorIsVectCornersOrientValidTestTestFixture: public testing::TestWithParam<std::tuple<cornersArray, bool>> {
+        public:
+            struct toString {
+                template <class ParamType>
+                std::string operator()(const testing::TestParamInfo<ParamType>& testData) const {
+                    ruCubeStateConverter conv;
+                    const auto &[cornersOrient, expected] = testData.param;
 
 
-        { -1,  1,  1,  2,  1,  1 },
-        {  0,  1, -1, -1,  1,  1 },
-        { -1, -1, -1, -1, -1, -1 },
-        { -1, -1, -1, -1, -1,  0 },
-        { -1, -1,  2, -1, -1, -1 },
+                    return conv.containerToString(cornersOrient);
+                }
+            };
+
+        protected:
+            ruCubeStateValidator validator;
     };
 
-    const std::vector<bool> expectedValidities = std::vector<bool> (size(orientations), true);
+    INSTANTIATE_TEST_SUITE_P (
+        ruCubeStateValidatorTests,
+        ruCubeStateValidatorIsVectCornersOrientValidTestTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<cornersArray, bool> (
+            {
+                { 0, 0, 0, 0, 0, 0 },
+                { 0, 0, 0, 0, 1, 2 },
+                { 0, 0, 1, 2, 1, 2 },
+                { 1, 2, 1, 2, 1, 2 },
+                { 1, 2, 1, 2, 0, 0 },
+                { 1, 2, 0, 0, 0, 0 },
+                { 2, 1, 1, 2, 0, 0 },
+                { 2, 2, 2, 2, 2, 2 },
+                { 1, 1, 1, 1, 1, 1 },
+                { 2, 1, 2, 1, 2, 1 },
+                { 1, 2, 1, 2, 1, 2 },
+                { 2, 0, 2, 0, 2, 0 },
+                { 1, 0, 1, 0, 1, 0 },
+                { 2, 1, 2, 0, 2, 2 },
+                { 0, 0, 1, 0, 1, 1 },
+                { 2, 1, 1, 0, 1, 1 },
+                { 0, 1, 1, 2, 1, 1 },
+                { 0, 1, 1, 2, 1, 1 },
+                { -1,  1,  1,  2,  1,  1 },
+                {  0,  1, -1, -1,  1,  1 },
+                { -1, -1, -1, -1, -1, -1 },
+                { -1, -1, -1, -1, -1,  0 },
+                { -1, -1,  2, -1, -1, -1 },
 
-    for (size_t i = 0; i < size(expectedValidities); ++i) {
-        ASSERT_EQ(expectedValidities[i], validator.isVectCornersOrientValid(orientations[i]));
-    }
-}
+                { 1, 0, 0, 0, 0, 0 },
+                { 1, 1, 1, 1, 0, 0 },
+                { 1, 2, 0, 0, 0, 2 },
+                { 0, 0, 0, 4, 0, 0 },
+                { 0, 0, 0, 3, 0, 0 },
+                { 0, 0, 0, 3, 1, 0 },
+                { 9, 0, 0, 3, 0, 0 },
+            },
+            testDataGenerators::vectorsConcat(std::vector<bool>(23, true), std::vector<bool>(7, false))
+        )),
+        ruCubeStateValidatorIsVectCornersOrientValidTestTestFixture::toString()
+    );
 
-TEST(ruCubeStateValidatorTest, isVectCornersOrientValidNegativeTest) {
-    ruCubeStateValidator validator;
+    TEST_P(ruCubeStateValidatorIsVectCornersOrientValidTestTestFixture, isVectCornersOrientValidTest) {
+        const auto &[cornersOrient, expected] = GetParam();
 
-    const std::vector<cornersArray> orientations {
-        { 1, 0, 0, 0, 0, 0 },
-        { 1, 1, 1, 1, 0, 0 },
-        { 1, 2, 0, 0, 0, 2 },
-        { 0, 0, 0, 4, 0, 0 },
-        { 0, 0, 0, 3, 0, 0 },
-        { 0, 0, 0, 3, 1, 0 },
-        { 9, 0, 0, 3, 0, 0 },
-    };
-
-    const std::vector<bool> expectedValidities = std::vector<bool> (size(orientations), false);
-
-    for (size_t i = 0; i < size(expectedValidities); ++i) {
-        ASSERT_EQ(expectedValidities[i], validator.isVectCornersOrientValid(orientations[i]));
+        ASSERT_EQ(expected, validator.isVectCornersOrientValid(cornersOrient));
     }
 }
 
