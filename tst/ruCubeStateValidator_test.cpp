@@ -326,13 +326,11 @@ namespace {
                 { 2, 2, 2, 2, 2, 2 },
                 { 1, 1, 1, 1, 1, 1 },
                 { 2, 1, 2, 1, 2, 1 },
-                { 1, 2, 1, 2, 1, 2 },
                 { 2, 0, 2, 0, 2, 0 },
                 { 1, 0, 1, 0, 1, 0 },
                 { 2, 1, 2, 0, 2, 2 },
                 { 0, 0, 1, 0, 1, 1 },
                 { 2, 1, 1, 0, 1, 1 },
-                { 0, 1, 1, 2, 1, 1 },
                 { 0, 1, 1, 2, 1, 1 },
                 { -1,  1,  1,  2,  1,  1 },
                 {  0,  1, -1, -1,  1,  1 },
@@ -348,7 +346,7 @@ namespace {
                 { 0, 0, 0, 3, 1, 0 },
                 { 9, 0, 0, 3, 0, 0 },
             },
-            testDataGenerators::vectorsConcat(std::vector<bool>(23, true), std::vector<bool>(7, false))
+            testDataGenerators::vectorsConcat(std::vector<bool>(21, true), std::vector<bool>(7, false))
         )),
         ruCubeStateValidatorIsVectCornersOrientValidTestTestFixture::toString()
     );
