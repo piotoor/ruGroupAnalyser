@@ -85,6 +85,14 @@ namespace {
                     { },                        // ignoredCornersPerm
                     { 0, 0, 0, 0, 0, 0 },       // lockedCornersOrient
                     { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+                },
+                {
+                    { 0, 1, 2, 3, 4, 5, 6 },    // lockedEdges
+                    { },                        // ignoredEdges
+                    { 0, 1, 2, 3, 4, 5 },       // lockedCornersPerm
+                    { },                        // ignoredCornersPerm
+                    { -1, -1, -1, -1, 0, 0 },   // lockedCornersOrient
+                    { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
                 }
             },
             {
@@ -278,6 +286,35 @@ namespace {
                     { 0101112131415, 03021456 },
                     { 0101112131415, 03102456 },
                     { 0101112131415, 03210456 },
+                },
+                {
+                    { 0101112131415, 0123456 },
+                    { 0101122431415, 0123456 },
+                    { 0101142231415, 0123456 },
+                    { 0102112431415, 0123456 },
+                    { 0102122231415, 0123456 },
+                    { 0102142131415, 0123456 },
+                    { 0104112231415, 0123456 },
+                    { 0104122131415, 0123456 },
+                    { 0104142431415, 0123456 },
+                    { 0201112431415, 0123456 },
+                    { 0201122231415, 0123456 },
+                    { 0201142131415, 0123456 },
+                    { 0202112231415, 0123456 },
+                    { 0202122131415, 0123456 },
+                    { 0202142431415, 0123456 },
+                    { 0204112131415, 0123456 },
+                    { 0204122431415, 0123456 },
+                    { 0204142231415, 0123456 },
+                    { 0401112231415, 0123456 },
+                    { 0401122131415, 0123456 },
+                    { 0401142431415, 0123456 },
+                    { 0402112131415, 0123456 },
+                    { 0402122431415, 0123456 },
+                    { 0402142231415, 0123456 },
+                    { 0404112431415, 0123456 },
+                    { 0404122231415, 0123456 },
+                    { 0404142131415, 0123456 },
                 }
             }
         ))
@@ -299,62 +336,6 @@ namespace {
         ASSERT_FALSE(generator.hasNext());
         ASSERT_EQ(expected, generatedCubes);
     }
-}
-
-TEST(ruLutCubeGeneratorTest, generateCubesLLCornersOrientationTest) {
-    ruLutCubeGenerator generator;
-
-    generatorParameters params;
-    params.lockedCornersPerm = { 0, 1, 2, 3, 4, 5 };
-    params.ignoredCornersPerm = { };
-    params.lockedEdges = { 0, 1, 2, 3, 4, 5, 6 };
-    params.ignoredEdges = { };
-    params.lockedCornersOrient = { -1, -1, -1, -1, 0, 0 };
-    params.ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
-
-    generator.init(params);
-
-    std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes = {
-        { 0101112131415, 0123456 },
-        { 0101122431415, 0123456 },
-        { 0101142231415, 0123456 },
-        { 0102112431415, 0123456 },
-        { 0102122231415, 0123456 },
-        { 0102142131415, 0123456 },
-        { 0104112231415, 0123456 },
-        { 0104122131415, 0123456 },
-        { 0104142431415, 0123456 },
-        { 0201112431415, 0123456 },
-        { 0201122231415, 0123456 },
-        { 0201142131415, 0123456 },
-        { 0202112231415, 0123456 },
-        { 0202122131415, 0123456 },
-        { 0202142431415, 0123456 },
-        { 0204112131415, 0123456 },
-        { 0204122431415, 0123456 },
-        { 0204142231415, 0123456 },
-        { 0401112231415, 0123456 },
-        { 0401122131415, 0123456 },
-        { 0401142431415, 0123456 },
-        { 0402112131415, 0123456 },
-        { 0402122431415, 0123456 },
-        { 0402142231415, 0123456 },
-        { 0404112431415, 0123456 },
-        { 0404122231415, 0123456 },
-        { 0404142131415, 0123456 },
-    };
-
-    ruCubeStateConverter converter;
-
-    for (size_t i = 0; i < size(expectedCubes); ++i ) {
-        const auto &[corners, edges] = expectedCubes[i];
-        ASSERT_TRUE(generator.hasNext());
-        auto ruLutCube = generator.next();
-        ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
-    }
-
-    ASSERT_FALSE(generator.hasNext());
 }
 
 TEST(ruLutCubeGeneratorTest, generateCubesRUCornersPermOnlyTest) {
