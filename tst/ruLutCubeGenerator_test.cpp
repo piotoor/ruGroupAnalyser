@@ -6,26 +6,6 @@
 
 using cornersArray = std::array<int8_t, 6>;
 
-TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesTest) {
-    ruLutCubeGenerator generator;
-
-    generatorParameters params;
-
-    const int expectedNumberOfCubes = 73'483'200;
-
-    generator.init (params);
-
-    int i = 0;
-    for (; i < expectedNumberOfCubes; ++i ) {
-
-        ASSERT_TRUE(generator.hasNext());
-        auto ruLutCube = generator.next();
-    }
-    std::cout << "Total number of cubes: " << (int) i << std::endl;
-    ASSERT_FALSE(generator.hasNext());
-}
-
-
 namespace {
     class ruLutCubeGeneratorTestFixture: public testing::TestWithParam<std::tuple<generatorParameters, std::vector<std::tuple<uint64_t, uint32_t>>>> {
         protected:
@@ -695,6 +675,7 @@ namespace {
                     { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
                     { 0, 0, 1, 0, 0, 0 },       // ignoredCornersOrient
                 },
+                generatorParameters()
             },
             {
                 1296,
@@ -710,6 +691,7 @@ namespace {
                 1,
                 24'494'400,
                 24'494'400,
+                73'483'200,
                 73'483'200
             }
         ))
