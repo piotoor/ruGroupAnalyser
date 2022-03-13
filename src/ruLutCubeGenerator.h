@@ -35,8 +35,8 @@ struct generatorParameters {
 class ruLutCubeGenerator
 {
     public:
-        ruLutCubeGenerator();
-        virtual ~ruLutCubeGenerator();
+        ruLutCubeGenerator() = default;
+        virtual ~ruLutCubeGenerator() = default;
         void init(const generatorParameters &params = generatorParameters());
 
         ruLutCube next();
