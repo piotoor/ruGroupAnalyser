@@ -570,155 +570,166 @@ TEST(ruLutCubeGeneratorTest, generateCubesNumberOfEdgesPermutationsTest) {
     }
 }
 
-TEST(ruLutCubeGeneratorTest, generateCubesTotalNumberOfCubesWithIgnoredAndLockedTest) {
-    ruLutCubeGenerator generator;
 
-    std::vector<generatorParameters> params = {
-        {   // LL
-            { 4, 5, 6 },                // lockedEdges
-            { },                        // ignoredEdges
-            { 4, 5 },                   // lockedCornersPerm
-            { },                        // ignoredCornersPerm
-            { -1, -1, -1, -1, 0, 0 },   // lockedCornersOrient
-            { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
-        },
-        {   // PLL
-            { 4, 5, 6 },                // lockedEdges
-            { },                        // ignoredEdges
-            { 4, 5 },                   // lockedCornersPerm
-            { },                        // ignoredCornersPerm
-            { 0, 0, 0, 0, 0, 0 },       // lockedCornersOrient
-            { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
-        },
-        {   // Sune no AUF
-            { 4, 5, 6 },                // lockedEdges
-            { },                        // ignoredEdges
-            { 0, 1, 2, 3, 4, 5 },       // lockedCornersPerm
-            { },                        // ignoredCornersPerm
-            { 1, 0, 1, 1, 0, 0 },       // lockedCornersOrient
-            { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
-        },
-        {   // H no AUF
-            { 4, 5, 6 },                // lockedEdges
-            { },                        // ignoredEdges
-            { 0, 1, 2, 3, 4, 5 },       // lockedCornersPerm
-            { },                        // ignoredCornersPerm
-            { 1, 2, 1, 2, 0, 0 },       // lockedCornersOrient
-            { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
-        },
-        {   // corners flip
-            { 0, 1, 2, 3, 4, 5, 6 },    // lockedEdges
-            { },                        // ignoredEdges
-            { 0, 1, 2, 3, 4, 5 },       // lockedCornersPerm
-            { },                        // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
-        },
-        {   // permutation only
-            { },                        // lockedEdges
-            { },                        // ignoredEdges
-            { },                        // lockedCornersPerm
-            { },                        // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            { 1, 1, 1, 1, 1, 1 },       // ignoredCornersOrient
-        },
-        {   // permutation only, 2 edges ignored
-            { },                        // lockedEdges
-            { 3, 5 },                   // ignoredEdges
-            { },                        // lockedCornersPerm
-            { },                        // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            { 1, 1, 1, 1, 1, 1 },       // ignoredCornersOrient
-        },
-        {   // last F2L slot
-            { 4, 5 },                   // lockedEdges
-            { 0, 1, 2, 3 },             // ignoredEdges
-            { 4 },                      // lockedCornersPerm
-            { 0, 1, 2, 3 },             // ignoredCornersPerm
-            { -1, -1, -1, -1, 0, -1 },  // lockedCornersOrient
-            { 1, 1, 1, 1, 0, 0 },       // ignoredCornersOrient
-        },
-        {   // last two F2L slots
-            { 5 },                      // lockedEdges
-            { 0, 1, 2, 3 },             // ignoredEdges
-            { },                        // lockedCornersPerm
-            { 0, 1, 2, 3 },             // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            { 1, 1, 1, 1, 0, 0 },       // ignoredCornersOrient
-        },
-        {   // all pieces but two edges and two corners are locked. The rest is ignored.
-            { 0, 1, 3, 4, 6 },          // lockedEdges
-            { 2, 5 },                   // ignoredEdges
-            { 0, 1, 3, 4 },             // lockedCornersPerm
-            { 2, 5 },                   // ignoredCornersPerm
-            { 0, 0, -1, 0, -1, 0 },     // lockedCornersOrient
-            { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
-        },
-        {   // all pieces but three edges and two corners are locked. The rest is ignored.
-            { 0, 1, 3, 6 },             // lockedEdges
-            { 2, 4, 5 },                // ignoredEdges
-            { 0, 1, 3, 4 },             // lockedCornersPerm
-            { 2, 5 },                   // ignoredCornersPerm
-            { 0, 0, -1, 0, -1, 0 },     // lockedCornersOrient
-            { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
-        },
-        {   // two edges and two corners ignored
-            { },                        // lockedEdges
-            { 2, 4 },                   // ignoredEdges
-            {  },                       // lockedCornersPerm
-            { 2, 4 },                   // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
-        },
-        {   // one edge and two corners ignored
-            { },                        // lockedEdges
-            { 2 },                      // ignoredEdges
-            {  },                       // lockedCornersPerm
-            { 2, 4 },                   // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
-        },
-        {   // one edge and one corner ignored
-            { },                        // lockedEdges
-            { 2 },                      // ignoredEdges
-            {  },                       // lockedCornersPerm
-            { 4 },                      // ignoredCornersPerm
-            { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
-            { 0, 0, 1, 0, 0, 0 },       // ignoredCornersOrient
-        },
+namespace {
+    class ruLutCubeGeneratorTotalNumberOfCubesWithIgnoredAndLockedTestFixture: public testing::TestWithParam<std::tuple<generatorParameters, uint32_t>> {
+        protected:
+            ruLutCubeGenerator generator;
+            ruCubeStateConverter converter;
     };
 
-    std::vector<uint32_t> expectedNumberOfCubes = {
-        1296,
-        48,
-        12,
-        12,
-        243,
-        302'400,
-        302'400,
-        75,
-        8100,
-        1,
-        1,
-        24'494'400,
-        24'494'400,
-        73'483'200
-    };
+    INSTANTIATE_TEST_SUITE_P (
+        ruLutCubeGeneratorTests,
+        ruLutCubeGeneratorTotalNumberOfCubesWithIgnoredAndLockedTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<generatorParameters, uint32_t> (
+            {
+                {   // LL
+                    { 4, 5, 6 },                // lockedEdges
+                    { },                        // ignoredEdges
+                    { 4, 5 },                   // lockedCornersPerm
+                    { },                        // ignoredCornersPerm
+                    { -1, -1, -1, -1, 0, 0 },   // lockedCornersOrient
+                    { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+                },
+                {   // PLL
+                    { 4, 5, 6 },                // lockedEdges
+                    { },                        // ignoredEdges
+                    { 4, 5 },                   // lockedCornersPerm
+                    { },                        // ignoredCornersPerm
+                    { 0, 0, 0, 0, 0, 0 },       // lockedCornersOrient
+                    { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+                },
+                {   // Sune no AUF
+                    { 4, 5, 6 },                // lockedEdges
+                    { },                        // ignoredEdges
+                    { 0, 1, 2, 3, 4, 5 },       // lockedCornersPerm
+                    { },                        // ignoredCornersPerm
+                    { 1, 0, 1, 1, 0, 0 },       // lockedCornersOrient
+                    { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+                },
+                {   // H no AUF
+                    { 4, 5, 6 },                // lockedEdges
+                    { },                        // ignoredEdges
+                    { 0, 1, 2, 3, 4, 5 },       // lockedCornersPerm
+                    { },                        // ignoredCornersPerm
+                    { 1, 2, 1, 2, 0, 0 },       // lockedCornersOrient
+                    { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+                },
+                {   // corners flip
+                    { 0, 1, 2, 3, 4, 5, 6 },    // lockedEdges
+                    { },                        // ignoredEdges
+                    { 0, 1, 2, 3, 4, 5 },       // lockedCornersPerm
+                    { },                        // ignoredCornersPerm
+                    { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                    { 0, 0, 0, 0, 0, 0 },       // ignoredCornersOrient
+                },
+                {   // permutation only
+                    { },                        // lockedEdges
+                    { },                        // ignoredEdges
+                    { },                        // lockedCornersPerm
+                    { },                        // ignoredCornersPerm
+                    { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                    { 1, 1, 1, 1, 1, 1 },       // ignoredCornersOrient
+                },
+                {   // permutation only, 2 edges ignored
+                    { },                        // lockedEdges
+                    { 3, 5 },                   // ignoredEdges
+                    { },                        // lockedCornersPerm
+                    { },                        // ignoredCornersPerm
+                    { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                    { 1, 1, 1, 1, 1, 1 },       // ignoredCornersOrient
+                },
+                {   // last F2L slot
+                    { 4, 5 },                   // lockedEdges
+                    { 0, 1, 2, 3 },             // ignoredEdges
+                    { 4 },                      // lockedCornersPerm
+                    { 0, 1, 2, 3 },             // ignoredCornersPerm
+                    { -1, -1, -1, -1, 0, -1 },  // lockedCornersOrient
+                    { 1, 1, 1, 1, 0, 0 },       // ignoredCornersOrient
+                },
+                {   // last two F2L slots
+                    { 5 },                      // lockedEdges
+                    { 0, 1, 2, 3 },             // ignoredEdges
+                    { },                        // lockedCornersPerm
+                    { 0, 1, 2, 3 },             // ignoredCornersPerm
+                    { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                    { 1, 1, 1, 1, 0, 0 },       // ignoredCornersOrient
+                },
+                {   // all pieces but two edges and two corners are locked. The rest is ignored.
+                    { 0, 1, 3, 4, 6 },          // lockedEdges
+                    { 2, 5 },                   // ignoredEdges
+                    { 0, 1, 3, 4 },             // lockedCornersPerm
+                    { 2, 5 },                   // ignoredCornersPerm
+                    { 0, 0, -1, 0, -1, 0 },     // lockedCornersOrient
+                    { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
+                },
+                {   // all pieces but three edges and two corners are locked. The rest is ignored.
+                    { 0, 1, 3, 6 },             // lockedEdges
+                    { 2, 4, 5 },                // ignoredEdges
+                    { 0, 1, 3, 4 },             // lockedCornersPerm
+                    { 2, 5 },                   // ignoredCornersPerm
+                    { 0, 0, -1, 0, -1, 0 },     // lockedCornersOrient
+                    { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
+                },
+                {   // two edges and two corners ignored
+                    { },                        // lockedEdges
+                    { 2, 4 },                   // ignoredEdges
+                    {  },                       // lockedCornersPerm
+                    { 2, 4 },                   // ignoredCornersPerm
+                    { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                    { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
+                },
+                {   // one edge and two corners ignored
+                    { },                        // lockedEdges
+                    { 2 },                      // ignoredEdges
+                    {  },                       // lockedCornersPerm
+                    { 2, 4 },                   // ignoredCornersPerm
+                    { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                    { 0, 0, 1, 0, 1, 0 },       // ignoredCornersOrient
+                },
+                {   // one edge and one corner ignored
+                    { },                        // lockedEdges
+                    { 2 },                      // ignoredEdges
+                    {  },                       // lockedCornersPerm
+                    { 4 },                      // ignoredCornersPerm
+                    { -1, -1, -1, -1, -1, -1 }, // lockedCornersOrient
+                    { 0, 0, 1, 0, 0, 0 },       // ignoredCornersOrient
+                },
+            },
+            {
+                1296,
+                48,
+                12,
+                12,
+                243,
+                302'400,
+                302'400,
+                75,
+                8100,
+                1,
+                1,
+                24'494'400,
+                24'494'400,
+                73'483'200
+            }
+        ))
+    );
 
-
-    for (size_t i = 0; i < size(params); ++i) {
-        generator.init (params[i]);
-        ruCubeMultiSolveHandler handler(params[i]);
-        ASSERT_EQ(expectedNumberOfCubes[i], handler.calculateTotalNumberOfCubesToGenerate());
-
-        size_t noOfCubes = 0;
-
-        for (; noOfCubes < expectedNumberOfCubes[i]; ++noOfCubes ) {
-            ASSERT_TRUE(generator.hasNext());
+    TEST_P(ruLutCubeGeneratorTotalNumberOfCubesWithIgnoredAndLockedTestFixture, generateCubesTotalNumberOfCubesWithIgnoredAndLockedTest) {
+        const auto &[params, expected] = GetParam();
+        std::cout << "Total number of cubes = " << std::flush;
+        generator.init(params);
+        std::vector<std::tuple<uint64_t, uint32_t>> generatedCubes;
+        while (generator.hasNext()) {
             auto ruLutCube = generator.next();
+            generatedCubes.push_back(std::tuple<uint64_t, uint32_t> (
+                converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()),
+                converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges())
+            ));
         }
-        std::cout << "Total number of cubes [" << std::setw(3) << i << "] = " << (int) noOfCubes << std::endl;
+        std::cout << expected << std::endl;
         ASSERT_FALSE(generator.hasNext());
+        ASSERT_EQ(expected, size(generatedCubes));
     }
 }
 
