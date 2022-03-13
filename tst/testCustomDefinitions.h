@@ -52,6 +52,17 @@ namespace testDataGenerators {
         std::iota(begin(ans), end(ans), value);
         return ans;
     }
+
+    template<class T>
+    std::vector<T> vectorsConcat(const std::vector<T> &a, const std::vector<T> &b) {
+        auto ans = a;
+
+        std::copy(begin(b),
+                  end(b),
+                  back_inserter(ans));
+
+        return ans;
+    }
 }
 
 namespace testCustomAsserts {

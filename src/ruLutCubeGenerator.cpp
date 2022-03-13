@@ -2,14 +2,6 @@
 #include "ruCubeStateValidator.h"
 #include <algorithm>
 
-ruLutCubeGenerator::ruLutCubeGenerator() {
-
-}
-
-ruLutCubeGenerator::~ruLutCubeGenerator() {
-
-}
-
 void ruLutCubeGenerator::saveCompressedGeneratorIgnoredParams(const generatorParameters &params) {
     for (int8_t i = 0; i < ruCube::noOfEdges; ++i) {
         if (params.ignoredEdges.find(i) != params.ignoredEdges.end()) {

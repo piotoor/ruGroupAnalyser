@@ -12,10 +12,10 @@ using edgesArray = std::array<int8_t, 7>;
 class ruCubeStateValidator
 {
     public:
-        ruCubeStateValidator();
+        ruCubeStateValidator() = default;
         explicit ruCubeStateValidator(const ruCubeStateValidator &other) = delete;
         ruCubeStateValidator& operator=(const ruCubeStateValidator &other) = delete;
-        virtual ~ruCubeStateValidator();
+        virtual ~ruCubeStateValidator() = default;
         bool isVectCornersValid(const cornersArray &orient, const cornersArray &perm);
         bool isVectCornersOrientValid(const cornersArray &orient);
         bool isVectCornersPermValid(const cornersArray &perm);

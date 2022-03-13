@@ -5,12 +5,6 @@
 #include <iterator>
 
 
-ruCubeStateValidator::ruCubeStateValidator() {
-}
-
-ruCubeStateValidator::~ruCubeStateValidator() {
-}
-
 bool ruCubeStateValidator::isVectCornersValid(const cornersArray& orient, const cornersArray& perm) {
     return isVectCornersOrientValid(orient) and isPermutationValid(perm);
 }
@@ -25,14 +19,14 @@ bool ruCubeStateValidator::isVectCornersOrientValid(const cornersArray &orient) 
         return false;
     }
 
-    if (std::none_of( begin(orient),
-                end(orient),
-                [] (const auto &x) {
-                    return x == -1;
-                })) {
+    if (std::none_of(begin(orient),
+                     end(orient),
+                     [] (const auto &x) {
+                         return x == -1;
+                     })) {
         const int acc = std::accumulate(begin(orient),
-                                    end(orient),
-                                    0);
+                                        end(orient),
+                                        0);
         if (acc % 3 != 0) {
             return false;
         }
