@@ -733,43 +733,50 @@ namespace {
     }
 }
 
-TEST(ruLutCubeGeneratorTest, generateCubesLLCornersPermutationTest) {
-    ruLutCubeGenerator generator;
-
-    generatorParameters params;
-    params.lockedCornersPerm = { 4, 5 };
-    params.ignoredCornersPerm = { };
-    params.lockedEdges = { 4, 5, 6 };
-    params.ignoredEdges = { 0, 1, 2, 3, 4, 5, 6 };
-    params.lockedCornersOrient = { 0, 0, 0, 0, 0, 0 };
-    params.ignoredCornersOrient = { 0, 0, 0, 0, 0, 0 };
-
-    generator.init(params);
-
-    std::vector<std::tuple<uint64_t, uint32_t>> expectedCubes = {
-        { 0101112131415, 0123456 },
-        { 0111213101415, 0132456 },
-        { 0121310111415, 0123456 },
-        { 0131011121415, 0132456 },
+namespace {
+    class ruLutCubeGeneratorGenerateCubesLLCornersPermutationTestFixture: public testing::TestWithParam<std::tuple<generatorParameters, std::vector<std::string>>> {
+        protected:
+            ruLutCubeGenerator generator;
+            ruCubeStateConverter converter;
     };
 
-    const std::vector<std::string> expectedCubesAsString {
-        "000102030405;-------",
-        "010203000405;-------",
-        "020300010405;-------",
-        "030001020405;-------"
-    };
+    INSTANTIATE_TEST_SUITE_P (
+        ruLutCubeGeneratorTests,
+        ruLutCubeGeneratorGenerateCubesLLCornersPermutationTestFixture,
+        ::testing::ValuesIn(testDataGenerators::combine2VectorsLinear<generatorParameters, std::vector<std::string>> (
+            {
+                {
+                    { 4, 5, 6 },
+                    { 0, 1, 2, 3, 4, 5, 6 },
+                    { 4, 5 },
+                    { },
+                    { 0, 0, 0, 0, 0, 0 },
+                    { 0, 0, 0, 0, 0, 0 }
+                }
+            },
+            {
+                {
+                    "000102030405;-------",
+                    "010203000405;-------",
+                    "020300010405;-------",
+                    "030001020405;-------"
+                }
+            }
+        ))
+    );
 
-    ruCubeStateConverter converter;
+    TEST_P(ruLutCubeGeneratorGenerateCubesLLCornersPermutationTestFixture, generateCubesLLCornersPermutationTest) {
+        const auto &[params, expected] = GetParam();
 
-    for (size_t i = 0; i < size(expectedCubes); ++i ) {
-        const auto &[corners, edges] = expectedCubes[i];
-        ASSERT_TRUE(generator.hasNext());
-        auto ruLutCube = generator.next();
-        ASSERT_EQ(edges, converter.lexIndexEdgesToIntEdges(ruLutCube.getEdges()));
-        ASSERT_EQ(corners, converter.lexIndexCornersToIntCorners(ruLutCube.getCornersOrient(), ruLutCube.getCornersPerm()));
-        ASSERT_EQ(expectedCubesAsString[i], ruLutCube.toString());
+        generator.init(params);
+        std::vector<std::string> generatedCubes;
+
+        while (generator.hasNext()) {
+            auto ruLutCube = generator.next();
+            generatedCubes.push_back(ruLutCube.toString());
+        }
+
+        ASSERT_FALSE(generator.hasNext());
+        ASSERT_EQ(expected, generatedCubes);
     }
-
-    ASSERT_FALSE(generator.hasNext());
 }
