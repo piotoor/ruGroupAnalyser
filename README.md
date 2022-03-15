@@ -4,6 +4,7 @@
         * [Scrambling sequence](#scrambling-sequence)
         * [Cube state defintion](#cube-state-definition)
     * [Generator](#cube-generator)
+        * [Criteria](#criteria)
     * [Solution analyser](#solution-analyser)
     * [Solve parameters](#solve-parameters)
 * [Setup](#setup)
@@ -15,7 +16,8 @@
         * [Cube state defintion based](#cube-state-definition-based)
         * [Custom solve parameters](#custom-solve-parameters)
         * [Output formatting options](#output-formatting-options)
-        * [Other options](#other-options)
+    * [Cube generator run](#cube-generator-run)
+* [Other options](#other-options)
 * [Known bugs](#known-bugs)
 
 ## General info
@@ -105,7 +107,49 @@ whole: 201522041103;6430125
 Generating large portions of algorithms manually one by one can be painful and very time consuming. Here's where the cube generator feature comes in handy.
 Instead of specifying a single cube, one specifies a set of rules the generator uses to generate and then solve all possible cube states matching provided criteria.
 
-More details will follow.
+#### Criteria
+Cube generator uses the same cube state format as single solve mode:
+
+CO<sub>0</sub>CP<sub>0</sub>CO<sub>1</sub>CP<sub>1</sub>...CO<sub>5</sub>CP<sub>5</sub>
+
+But instead of providing concrete values, like these:
+
+```
+201522041103;6430125
+```
+
+One is expected to provide the following information:
+
+##### Corners orientation
+* G - piece state will be generated (from non-ignored and non-locked values)
+* I - piece will be ignored
+* [0..2] value - piece state will be locked to the provided value (number of clockwise turns needed to orient the piece correctly)
+
+##### Corners & edges permutation
+* G - piece state will be generated (from non-ignored and non-locked values)
+* I - piece state will be ignored
+* L - piece will stay solved
+
+##### Examples
+* All possible cubes:
+```
+GGGGGGGGGGGG;GGGGGGG
+```
+
+* PLLs:
+```
+0G0G0G0G0L0L;GGGGLLL
+```
+
+* All LL corners orientations:
+```
+GLGLGLGL0L0L;LLLLLLL
+```
+
+* Corners only, edges ignored:
+```
+GGGGGGGGGGGG;IIIIIII
+```
 
 ### Solution analyser
 [This feature is a work in progress]
@@ -126,7 +170,7 @@ First two are self-explanatory. Solved masks require explanation.
 
 They allow user to tell the solver what parts of the cube are expected to be solved (1), and what may be left scrambled (0).\
 The application expects here the very same format as in cube state definition. The only difference is that this time instead of numeric labels, it expects 0s for cube parts to be ignored
-and 1s for parts expected to be solved.
+and 1s for parts expected to be solved. Custom masks won't work in [Generator](#cube-generator).
 
 CO<sub>0</sub>CP<sub>0</sub>CO<sub>1</sub>CP<sub>1</sub>...CO<sub>5</sub>CP<sub>5</sub>;EP<sub>0</sub>EP<sub>1</sub>...EP<sub>6</sub>
 
@@ -363,7 +407,302 @@ Solving time: 5ms
 ```
 
 
-#### Other options
+### Cube generator run
+Example:
+```
+./ruGroupAnalyser_run -m="g;0G0G0G0G0L0L;GGGGLLL"
+```
+
+Output:
+```
+Generating corners orientation move map...      DONE (0 ms)
+Generating corners permutation move map...      DONE (0 ms)
+Generating edges permutation move map...        DONE (0 ms)
+Generating corners orientation solved table...  DONE (0 ms)
+Generating corners permutation solved table...  DONE (0 ms)
+Generating edges permutation solved table...    DONE (0 ms)
+Loading corners orient pruning table...         DONE (0 ms)
+Loading corners perm pruning table...           DONE (0 ms)
+Loading edges pruning table...                  DONE (0 ms)
+Loading corners pruning table...                DONE (0 ms)
+Loading full cube pruning table (17)...         DONE (425 ms)
+Loading permutation validity table...           DONE (2 ms)
+You are about to generate and solve 48 cubes...
+DONE
+
+The following optimizations have been applied to reduce the output size:
++--------------------------+-------+-------+
+| parameters               | old   | new   |
++--------------------------+-------+-------+
+| maxNumOfSolutions        | 1     | 1     |
+| headers                  | false | false |
+| line numbers             | false | false |
+| fixed width font         | false | false |
+| summary                  | false | false |
+| compressed solution      | false | false |
+| compressed cube state    | false | false |
++--------------------------+-------+-------+
+
+Number of threads: 12
+Generating...DONE
+(9 ms)
+```
+
+In this mode, generated solutions are not printed on the console. They are saved to a text file called "default.ruc" (This will be setable in the future).
+There's also a new table that shows what optimizations had to be applied to make the solutions file fit in the available disk space. Yes, generating all possible
+cubes together with maxNumOfSolutions set to a high value and all output formatting options enabled, can produce extremely large files.
+Solutions file looks like this. The output can vary, depending on what formatting options have been set. The format should be pretty self-explanatory right now.
+```
++------------+-------+
+|000102030405;0123456|
++------------+-------+
+
+
++------------+-------+
+|000102030405;0231456|
++------------+-------+
+R' U R' U' R' U' R' U R U R2
+
++------------+-------+
+|000102030405;0312456|
++------------+-------+
+R2 U' R' U' R U R U R U' R
+
++------------+-------+
+|000102030405;1320456|
++------------+-------+
+R2 U R U R' U' R' U' R' U R'
+
++------------+-------+
+|000102030405;3021456|
++------------+-------+
+R U' R U R U R U' R' U' R2
+
++------------+-------+
+|000102030405;3102456|
++------------+-------+
+R U2 R U R U R2 U' R' U' R2
+
++------------+-------+
+|000102030405;2130456|
++------------+-------+
+R2 U R U R2 U' R' U' R' U2 R'
+
++------------+-------+
+|010203000405;1230456|
++------------+-------+
+U
+
++------------+-------+
+|000102030405;2301456|
++------------+-------+
+R2 U2 R U2 R2 U2 R2 U2 R U2 R2
+
++------------+-------+
+|010203000405;0132456|
++------------+-------+
+R U' R U R U R U' R' U' R2 U
+
++------------+-------+
+|010203000405;0213456|
++------------+-------+
+R U2 R U R U R2 U' R' U' R2 U
+
++------------+-------+
+|010203000405;1023456|
++------------+-------+
+R2 U' R' U' R U R U R U' R U
+
++------------+-------+
+|010203000405;2031456|
++------------+-------+
+R2 U R U R' U' R' U' R' U R' U
+
++------------+-------+
+|010203000405;1302456|
++------------+-------+
+R' U R' U' R' U' R' U R U R2 U
+
++------------+-------+
+|010203000405;3012456|
++------------+-------+
+R2 U2 R2 U2 R2 U R2 U2 R2 U2 R2
+
++------------+-------+
+|010203000405;3201456|
++------------+-------+
+R2 U R U R2 U' R' U' R' U2 R' U
+
++------------+-------+
+|000102030405;1203456|
++------------+-------+
+U R' U R' U' R' U' R' U R U R2 U'
+
++------------+-------+
+|010203000405;2310456|
++------------+-------+
+U R' U R' U' R' U' R' U R U R2
+
++------------+-------+
+|010203000405;3120456|
++------------+-------+
+U R2 U' R' U' R U R U R U' R
+
++------------+-------+
+|020300010405;0123456|
++------------+-------+
+R2 U2 R U2 R2 U2 R2 U2 R U2 R2 U2
+
++------------+-------+
+|020300010405;0312456|
++------------+-------+
+R2 U R U R2 U' R' U' R' U2 R' U2
+
++------------+-------+
+|000102030405;2013456|
++------------+-------+
+U R2 U' R' U' R U R U R U' R U'
+
++------------+-------+
+|020300010405;2301456|
++------------+-------+
+U2
+
++------------+-------+
+|020300010405;0231456|
++------------+-------+
+U2 R U2 R U R U R2 U' R' U' R2
+
++------------+-------+
+|020300010405;1320456|
++------------+-------+
+R U2 R U R U R2 U' R' U' R2 U2
+
++------------+-------+
+|020300010405;1203456|
++------------+-------+
+R U' R U R U R U' R' U' R2 U2
+
++------------+-------+
+|020300010405;2013456|
++------------+-------+
+R' U R' U' R' U' R' U R U R2 U2
+
++------------+-------+
+|020300010405;3102456|
++------------+-------+
+R2 U R U R' U' R' U' R' U R' U2
+
++------------+-------+
+|020300010405;2130456|
++------------+-------+
+R2 U' R' U' R U R U R U' R U2
+
++------------+-------+
+|020300010405;3021456|
++------------+-------+
+U2 R2 U R U R2 U' R' U' R' U2 R'
+
++------------+-------+
+|030001020405;0213456|
++------------+-------+
+R2 U R U R' U' R' U' R' U R' U'
+
++------------+-------+
+|030001020405;1023456|
++------------+-------+
+R2 U R U R2 U' R' U' R' U2 R' U'
+
++------------+-------+
+|030001020405;0132456|
++------------+-------+
+U' R2 U R U R' U' R' U' R' U R'
+
++------------+-------+
+|030001020405;1230456|
++------------+-------+
+R2 U2 R2 U2 R2 U' R2 U2 R2 U2 R2
+
++------------+-------+
+|030001020405;3012456|
++------------+-------+
+U'
+
++------------+-------+
+|030001020405;2031456|
++------------+-------+
+R U2 R U R U R2 U' R' U' R2 U'
+
++------------+-------+
+|030001020405;1302456|
++------------+-------+
+U' R U' R U R U R U' R' U' R2
+
++------------+-------+
+|030001020405;2310456|
++------------+-------+
+R U' R U R U R U' R' U' R2 U'
+
++------------+-------+
+|000102030405;1032456|
++------------+-------+
+R2 U' R2 U' R U2 R2 U2 R2 U2 R U R2 U R2
+
++------------+-------+
+|020300010405;1032456|
++------------+-------+
+R U R' U R' U' R' U R U' R' U' R2 U R
+
++------------+-------+
+|010203000405;0321456|
++------------+-------+
+R2 U R2 U2 R2 U R2 U' R2 U R2 U2 R2 U R2
+
++------------+-------+
+|000102030405;3210456|
++------------+-------+
+R2 U R2 U R U2 R2 U2 R2 U2 R U' R2 U' R2
+
++------------+-------+
+|020300010405;3210456|
++------------+-------+
+R U R2 U' R' U' R U R' U' R' U R' U R
+
++------------+-------+
+|030001020405;0321456|
++------------+-------+
+R2 U' R2 U2 R2 U' R2 U R2 U' R2 U2 R2 U' R2
+
++------------+-------+
+|030001020405;3120456|
++------------+-------+
+R' U R' U' R' U' R' U R U R2 U'
+
++------------+-------+
+|030001020405;3201456|
++------------+-------+
+R2 U' R' U' R U R U R U' R U'
+
++------------+-------+
+|010203000405;2103456|
++------------+-------+
+R U R2 U' R' U' R U R' U' R' U R' U R U'
+
++------------+-------+
+|030001020405;2103456|
++------------+-------+
+R U R' U R' U' R' U R U' R' U' R2 U R U
+
+
+```
+
+#### Custom solve parameters
+Same options avaliable as in [Custom solve parameters](#custom-solve-parameters), except for custom solved masks.
+
+Warning: In cube generator mode these options are treated as suggestions. Whether they will or will not be applied depends on the estimated solution report
+size, which can be optimized when the available disk space is too low.
+
+## Other options
 
 Here's how to print help and usage screen:
 
