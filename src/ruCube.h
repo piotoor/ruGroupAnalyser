@@ -1,7 +1,6 @@
 #ifndef RUCUBE_H
 #define RUCUBE_H
 
-#include "lutGenerators.h"
 #include <cstdint>
 #include <vector>
 #include <memory>
@@ -53,6 +52,17 @@ class ruBaseCube {
         static inline const uint32_t noEdgesMask = 0;
         static inline const uint8_t noOfCorners = 6;
         static inline const uint8_t noOfEdges = 7;
+
+        inline static const uint8_t noOfTurns = 6;
+        inline static const uint16_t noOfEdgesPermutations = 5040;
+        inline static const uint16_t noOfCornersPermutations = 720;
+        inline static const uint16_t noOfCornersOrientations = 729;
+        inline static const uint16_t noOfCornersOrientSolvedStates = 11;
+        inline static const uint16_t noOfCornersPermSolvedStates = 11;
+        inline static const uint16_t noOfEdgesPermSolvedStates = 15;
+        inline static const uint8_t noOfPartialCornersOrientCases = 64;
+        inline static const uint8_t noOfPartialCornersPermCases = 64;
+        inline static const uint8_t noOfPartialEdgesPermCases = 128;
 
     protected:
         virtual void moveR() = 0;
@@ -239,21 +249,21 @@ class ruLutCube: public ruBaseCube {
         uint16_t edgesPerm;
         ruLutCubeIgnoredPieces ignoredPieces;
 
-        static std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfCornersOrientations>   cornersOrientMoveMap;
-        static std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfCornersPermutations>   cornersPermMoveMap;
-        static std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfEdgesPermutations>     edgesPermMoveMap;
+        static std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfCornersOrientations>   cornersOrientMoveMap;
+        static std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfCornersPermutations>   cornersPermMoveMap;
+        static std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfEdgesPermutations>     edgesPermMoveMap;
 
-        static std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerators::noOfCornersOrientations>    cornersOrientSolvedTable;
-        static std::array<std::bitset<lutGenerators::noOfCornersPermSolvedStates>, lutGenerators::noOfCornersPermutations>      cornersPermSolvedTable;
-        static std::array<std::bitset<lutGenerators::noOfEdgesPermSolvedStates>, lutGenerators::noOfEdgesPermutations>          edgesPermSolvedTable;
+        static std::array<std::bitset<ruBaseCube::noOfCornersOrientSolvedStates>, ruBaseCube::noOfCornersOrientations>    cornersOrientSolvedTable;
+        static std::array<std::bitset<ruBaseCube::noOfCornersPermSolvedStates>, ruBaseCube::noOfCornersPermutations>      cornersPermSolvedTable;
+        static std::array<std::bitset<ruBaseCube::noOfEdgesPermSolvedStates>, ruBaseCube::noOfEdgesPermutations>          edgesPermSolvedTable;
 
-        static std::array<std::array<int8_t, lutGenerators::noOfPartialCornersOrientCases>, lutGenerators::noOfCornersOrientations> cornersOrientPruningTable;
-        static std::array<std::array<int8_t, lutGenerators::noOfPartialCornersPermCases>, lutGenerators::noOfCornersPermutations>   cornersPermPruningTable;
-        static std::array<std::array<int8_t, lutGenerators::noOfPartialEdgesPermCases>, lutGenerators::noOfEdgesPermutations>       edgesPermPruningTable;
-        static std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>       cornersPruningTable;
+        static std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersOrientCases>, ruBaseCube::noOfCornersOrientations> cornersOrientPruningTable;
+        static std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersPermCases>, ruBaseCube::noOfCornersPermutations>   cornersPermPruningTable;
+        static std::array<std::array<int8_t, ruBaseCube::noOfPartialEdgesPermCases>, ruBaseCube::noOfEdgesPermutations>       edgesPermPruningTable;
+        static std::array<std::array<int8_t, ruBaseCube::noOfCornersOrientations>, ruBaseCube::noOfCornersPermutations>       cornersPruningTable;
         static std::vector<std::vector<std::vector<int8_t>>>                                                                        fullCubePruningTable;
 
-        static std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>      permutationValidityTable;
+        static std::array<std::bitset<ruBaseCube::noOfEdgesPermutations>, ruBaseCube::noOfCornersPermutations>      permutationValidityTable;
 };
 
 #endif // RUCUBE_H

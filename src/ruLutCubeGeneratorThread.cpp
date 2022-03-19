@@ -1,4 +1,5 @@
 #include "ruLutCubeGeneratorThread.h"
+#include <iostream>
 
 ruLutCubeGeneratorThread::ruLutCubeGeneratorThread(const generatorParameters &genParams,
                                                    std::shared_ptr<ruLutCubeQueue> cubeQueue): cubeQueue(cubeQueue) {

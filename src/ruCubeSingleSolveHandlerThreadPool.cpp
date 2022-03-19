@@ -1,5 +1,6 @@
 #include "ruCubeSingleSolveHandlerThreadPool.h"
 #include <optional>
+#include <iostream>
 
 ruCubeSingleSolveHandlerThreadPool::ruCubeSingleSolveHandlerThreadPool( std::string fileName,
                                                                         std::shared_ptr<ruLutCubeQueue> cubeQueue,

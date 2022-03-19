@@ -1,24 +1,25 @@
 #include "ruCube.h"
+#include "lutGenerators.h"
 #include "ruException.h"
 #include <iostream>
 #include <iomanip>
 #include <sstream>
 
-std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfCornersOrientations>  ruLutCube::cornersOrientMoveMap = lutGenerators::generateCornersOrientMoveMap();
-std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfCornersPermutations>  ruLutCube::cornersPermMoveMap   = lutGenerators::generateCornersPermMoveMap();
-std::array<std::array<uint16_t, lutGenerators::noOfTurns>, lutGenerators::noOfEdgesPermutations>    ruLutCube::edgesPermMoveMap     = lutGenerators::generateEdgesPermMoveMap();
+std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfCornersOrientations>  ruLutCube::cornersOrientMoveMap = lutGenerators::generateCornersOrientMoveMap();
+std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfCornersPermutations>  ruLutCube::cornersPermMoveMap   = lutGenerators::generateCornersPermMoveMap();
+std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfEdgesPermutations>    ruLutCube::edgesPermMoveMap     = lutGenerators::generateEdgesPermMoveMap();
 
-std::array<std::bitset<lutGenerators::noOfCornersOrientSolvedStates>, lutGenerators::noOfCornersOrientations>    ruLutCube::cornersOrientSolvedTable = lutGenerators::generateCornersOrientSolvedTable();
-std::array<std::bitset<lutGenerators::noOfCornersPermSolvedStates>, lutGenerators::noOfCornersPermutations>      ruLutCube::cornersPermSolvedTable  = lutGenerators::generateCornersPermSolvedTable();
-std::array<std::bitset<lutGenerators::noOfEdgesPermSolvedStates>, lutGenerators::noOfEdgesPermutations>          ruLutCube::edgesPermSolvedTable    = lutGenerators::generateEdgesPermSolvedTable();
+std::array<std::bitset<ruBaseCube::noOfCornersOrientSolvedStates>, ruBaseCube::noOfCornersOrientations>    ruLutCube::cornersOrientSolvedTable = lutGenerators::generateCornersOrientSolvedTable();
+std::array<std::bitset<ruBaseCube::noOfCornersPermSolvedStates>, ruBaseCube::noOfCornersPermutations>      ruLutCube::cornersPermSolvedTable  = lutGenerators::generateCornersPermSolvedTable();
+std::array<std::bitset<ruBaseCube::noOfEdgesPermSolvedStates>, ruBaseCube::noOfEdgesPermutations>          ruLutCube::edgesPermSolvedTable    = lutGenerators::generateEdgesPermSolvedTable();
 
-std::array<std::array<int8_t, lutGenerators::noOfPartialCornersOrientCases>, lutGenerators::noOfCornersOrientations>    ruLutCube::cornersOrientPruningTable = lutGenerators::generateCornersOrientPruningTable();
-std::array<std::array<int8_t, lutGenerators::noOfPartialCornersPermCases>, lutGenerators::noOfCornersPermutations>      ruLutCube::cornersPermPruningTable = lutGenerators::generateCornersPermPruningTable();
-std::array<std::array<int8_t, lutGenerators::noOfPartialEdgesPermCases>, lutGenerators::noOfEdgesPermutations>          ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
-std::array<std::array<int8_t, lutGenerators::noOfCornersOrientations>, lutGenerators::noOfCornersPermutations>          ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
-std::vector<std::vector<std::vector<int8_t>>>                                                                           ruLutCube::fullCubePruningTable = lutGenerators::generateFullCubePruningTable();
+std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersOrientCases>, ruBaseCube::noOfCornersOrientations>    ruLutCube::cornersOrientPruningTable = lutGenerators::generateCornersOrientPruningTable();
+std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersPermCases>, ruBaseCube::noOfCornersPermutations>      ruLutCube::cornersPermPruningTable = lutGenerators::generateCornersPermPruningTable();
+std::array<std::array<int8_t, ruBaseCube::noOfPartialEdgesPermCases>, ruBaseCube::noOfEdgesPermutations>          ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
+std::array<std::array<int8_t, ruBaseCube::noOfCornersOrientations>, ruBaseCube::noOfCornersPermutations>          ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
+std::vector<std::vector<std::vector<int8_t>>>                                                                     ruLutCube::fullCubePruningTable = lutGenerators::generateFullCubePruningTable();
 
-std::array<std::bitset<lutGenerators::noOfEdgesPermutations>, lutGenerators::noOfCornersPermutations>    ruLutCube::permutationValidityTable = lutGenerators::generatePermutationValidityTable();
+std::array<std::bitset<ruBaseCube::noOfEdgesPermutations>, ruBaseCube::noOfCornersPermutations>    ruLutCube::permutationValidityTable = lutGenerators::generatePermutationValidityTable();
 
 ruBaseCube:: ruBaseCube() {
     movesVect = {
@@ -432,13 +433,13 @@ void ruLutCube::setCornersPerm(uint16_t cornersPerm) {
 }
 
 bool ruLutCube::isCornersOrientationSolveable(uint16_t cornersOrient) {
-    return  cornersOrient < lutGenerators::noOfCornersOrientations and
+    return  cornersOrient < ruBaseCube::noOfCornersOrientations and
             cornersPruningTable[0][cornersOrient] != -1;
 }
 
 bool ruLutCube::isPermutationSolveable(uint16_t cornersPerm, uint16_t edgesPerm) {
-    return  cornersPerm < lutGenerators::noOfCornersPermutations and
-            edgesPerm < lutGenerators::noOfEdgesPermutations and
+    return  cornersPerm < ruBaseCube::noOfCornersPermutations and
+            edgesPerm < ruBaseCube::noOfEdgesPermutations and
             permutationValidityTable[cornersPerm][edgesPerm];
 }
 
