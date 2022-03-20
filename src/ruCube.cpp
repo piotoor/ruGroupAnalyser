@@ -37,9 +37,12 @@ std::array<std::bitset<ruBaseCube::noOfCornersOrientSolvedStates>, ruBaseCube::n
 std::array<std::bitset<ruBaseCube::noOfCornersPermSolvedStates>, ruBaseCube::noOfCornersPermutations>      ruLutCube::cornersPermSolvedTable  = lutGenerators::generateCornersPermSolvedTable();
 std::array<std::bitset<ruBaseCube::noOfEdgesPermSolvedStates>, ruBaseCube::noOfEdgesPermutations>          ruLutCube::edgesPermSolvedTable    = lutGenerators::generateEdgesPermSolvedTable();
 
-std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersOrientCases>, ruBaseCube::noOfCornersOrientations>    ruLutCube::cornersOrientPruningTable = lutGenerators::generateCornersOrientPruningTable();
-std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersPermCases>, ruBaseCube::noOfCornersPermutations>      ruLutCube::cornersPermPruningTable = lutGenerators::generateCornersPermPruningTable();
-std::array<std::array<int8_t, ruBaseCube::noOfPartialEdgesPermCases>, ruBaseCube::noOfEdgesPermutations>          ruLutCube::edgesPermPruningTable   = lutGenerators::generateEdgesPermPruningTable();
+std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersOrientCases>, ruBaseCube::noOfCornersOrientations>    ruLutCube::cornersOrientPruningTable = lutGenerators::generatePruningTable<ruBaseCube::noOfCornersOrientations, ruBaseCube::noOfPartialCornersOrientCases, lutGenerators::maxCornersOrientPruningDepth>("cornersOrientation", lutGenerators::cornersPartialOrientPruningDfs);
+std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersPermCases>, ruBaseCube::noOfCornersPermutations>      ruLutCube::cornersPermPruningTable = lutGenerators::generatePruningTable<ruBaseCube::noOfCornersPermutations, ruBaseCube::noOfPartialCornersPermCases, lutGenerators::maxCornersPermPruningDepth>("cornersPermutation", lutGenerators::cornersPartialPermPruningDfs);
+std::array<std::array<int8_t, ruBaseCube::noOfPartialEdgesPermCases>, ruBaseCube::noOfEdgesPermutations>          ruLutCube::edgesPermPruningTable   = lutGenerators::generatePruningTable<ruBaseCube::noOfEdgesPermutations, ruBaseCube::noOfPartialEdgesPermCases, lutGenerators::maxEdgesPermPruningDepth>("edgesPermutation", lutGenerators::edgesPartialPermPruningDfs);
+
+
+
 std::array<std::array<int8_t, ruBaseCube::noOfCornersOrientations>, ruBaseCube::noOfCornersPermutations>          ruLutCube::cornersPruningTable     = lutGenerators::generateCornersPruningTable();
 std::vector<std::vector<std::vector<int8_t>>>                                                                     ruLutCube::fullCubePruningTable = lutGenerators::generateFullCubePruningTable();
 

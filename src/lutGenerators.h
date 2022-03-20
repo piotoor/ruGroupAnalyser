@@ -11,6 +11,9 @@
 #include <iomanip>
 #include <vector>
 #include <functional>
+#include <unordered_map>
+#include <unordered_set>
+#include <fstream>
 
 namespace lutGenerators {
     template <int N>
@@ -36,6 +39,104 @@ namespace lutGenerators {
         std::cout << "DONE ";
         return ans;
     }
+
+    template <int N, int P, int MaxDepth>
+    std::array<std::array<int8_t, P>, N> generatePruningTable(std::string tableName, std::function<void(ruCube&, ruCubeStateConverter&, int, int, int, uint8_t, std::unordered_map<uint32_t, uint8_t>&, std::unordered_map<uint32_t, std::unordered_set<uint32_t>>&)> dfs) {
+        std::ifstream inFile(tableName + "PruningTable.pru");
+        std::array<std::array<int8_t, P>, N>  ans {};
+        if (inFile.good()) {
+            std::string message = "Loading " + tableName + " pruning table...";
+            std::cout << std::setw(48) << std::left << message << std::flush;
+
+            ruCubeSimpleBenchmarkTimer bt;
+
+            for (uint16_t i = 0; i < N; ++i) {
+                inFile.read((char*)ans[i].data(), P);
+            }
+
+            std::cout << "DONE ";
+        } else {
+            inFile.close();
+            {
+                std::string message = "Generating " + tableName + " pruning table...";
+                std::cout << std::setw(48) << std::left << message << std::flush;
+
+                ruCubeSimpleBenchmarkTimer bt;
+
+                for (auto &r: ans) {
+                    r.fill(-1);
+                }
+                ruCube cube;
+                ruCubeStateConverter converter;
+
+                std::unordered_map<uint32_t, uint8_t> partialPruningTable;
+                std::unordered_map<uint32_t, std::unordered_set<uint32_t>> partialOwners;
+
+                for (uint8_t partInd = 0; partInd < P; ++partInd) {
+                    partialOwners.clear();
+                    dfs(cube, converter, 1, MaxDepth, -6, partInd, partialPruningTable, partialOwners);
+                    for (const auto &[partial, fullCases]: partialOwners) {
+                        for (const auto &fullCase: fullCases) {
+                            if (ans[fullCase][partInd] == -1 or partialPruningTable[partial] < ans[fullCase][partInd]) {
+                                ans[fullCase][partInd] = partialPruningTable[partial];
+                            }
+
+                        }
+                    }
+                }
+                ans[0].fill(0);
+                std::cout << "DONE ";
+            }
+            {
+                std::string message = "Saving " + tableName + " pruning table...";
+                std::cout << std::setw(48) << std::left << message << std::flush;
+
+                ruCubeSimpleBenchmarkTimer bt;
+                std::ofstream outFile(tableName + "PruningTable.pru");
+
+                if (outFile.good()) {
+                    for (uint16_t i = 0; i < N; ++i) {
+                        outFile.write((char*)ans[i].data(), P);
+                    }
+                }
+
+                outFile.close();
+                std::cout << "DONE ";
+            }
+        }
+
+        return ans;
+    }
+
+    void cornersPartialOrientPruningDfs(ruCube &cube,
+                                        ruCubeStateConverter &conv,
+                                        int depth,
+                                        int maxDepth,
+                                        int prevMove,
+                                        uint8_t partInd,
+                                        std::unordered_map<uint32_t, uint8_t> &pruningTable,
+                                        std::unordered_map<uint32_t, std::unordered_set<uint32_t>> &partialOrientOwners);
+
+    void cornersPartialPermPruningDfs(  ruCube &cube,
+                                        ruCubeStateConverter &conv,
+                                        int depth,
+                                        int maxDepth,
+                                        int prevMove,
+                                        uint8_t partInd,
+                                        std::unordered_map<uint32_t, uint8_t> &pruningTable,
+                                        std::unordered_map<uint32_t, std::unordered_set<uint32_t>> &partialPermOwners);
+
+    void edgesPartialPermPruningDfs(ruCube &cube,
+                                ruCubeStateConverter &conv,
+                                int depth,
+                                int maxDepth,
+                                int prevMove,
+                                uint8_t partInd,
+                                std::unordered_map<uint32_t, uint8_t> &pruningTable,
+                                std::unordered_map<uint32_t, std::unordered_set<uint32_t>> &partialPermOwners);
+
+
+
 
     inline static const uint32_t edgesSolvedBitmask = 0x7FFF;
     enum class edgesPermSolvedState {
@@ -90,14 +191,8 @@ namespace lutGenerators {
     std::array<std::bitset<ruBaseCube::noOfCornersOrientSolvedStates>, ruBaseCube::noOfCornersOrientations> generateCornersOrientSolvedTable ();
 
     inline static const uint8_t maxEdgesPermPruningDepth = 11;
-    std::array<std::array<int8_t, ruBaseCube::noOfPartialEdgesPermCases>, ruBaseCube::noOfEdgesPermutations> generateEdgesPermPruningTable();
-
     inline static const uint8_t maxCornersPermPruningDepth = 6;
-    std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersPermCases>, ruBaseCube::noOfCornersPermutations> generateCornersPermPruningTable();
-
     inline static const uint8_t maxCornersOrientPruningDepth = 11;
-    std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersOrientCases>, ruBaseCube::noOfCornersOrientations> generateCornersOrientPruningTable();
-
 
     inline static const uint8_t maxCornersPruningDepth = 14;
     std::array<std::array<int8_t, ruBaseCube::noOfCornersOrientations>, ruBaseCube::noOfCornersPermutations> generateCornersPruningTable();
