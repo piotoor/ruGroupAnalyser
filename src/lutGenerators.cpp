@@ -459,13 +459,13 @@ namespace lutGenerators {
 
     std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersPermCases>, ruBaseCube::noOfCornersPermutations> generateCornersPermPruningTable() {
         std::ifstream inFile("cornersPermPruningTable.pru");
-        std::array<std::array<int8_t, ruBaseCube::ruBaseCube::noOfPartialCornersPermCases>, ruBaseCube::noOfCornersPermutations>  ans {};
+        std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersPermCases>, ruBaseCube::noOfCornersPermutations>  ans {};
         if (inFile.good()) {
             std::cout << std::setw(48) << std::left << "Loading corners perm pruning table..." << std::flush;
             ruCubeSimpleBenchmarkTimer bt;
 
             for (uint16_t i = 0; i < ruBaseCube::noOfCornersPermutations; ++i) {
-                inFile.read((char*)ans[i].data(), ruBaseCube::ruBaseCube::noOfPartialCornersPermCases);
+                inFile.read((char*)ans[i].data(), ruBaseCube::noOfPartialCornersPermCases);
             }
 
             std::cout << "DONE ";
@@ -485,7 +485,7 @@ namespace lutGenerators {
                 std::unordered_map<uint32_t, uint8_t> cornersPermPartialPermPruningTable;
                 std::unordered_map<uint32_t, std::unordered_set<uint32_t>> partialPermOwners;
 
-                for (uint8_t partInd = 0; partInd < ruBaseCube::ruBaseCube::noOfPartialCornersPermCases; ++partInd) {
+                for (uint8_t partInd = 0; partInd < ruBaseCube::noOfPartialCornersPermCases; ++partInd) {
                     partialPermOwners.clear();
                     cornersPartialPermPruningDfs(cube, converter, 1, maxCornersPermPruningDepth, -6, partInd, cornersPermPartialPermPruningTable, partialPermOwners);
                     for (const auto &[partial, perms]: partialPermOwners) {
@@ -507,7 +507,7 @@ namespace lutGenerators {
 
                 if (outFile.good()) {
                     for (uint16_t i = 0; i < ruBaseCube::noOfCornersPermutations; ++i) {
-                        outFile.write((char*)ans[i].data(), ruBaseCube::ruBaseCube::noOfPartialCornersPermCases);
+                        outFile.write((char*)ans[i].data(), ruBaseCube::noOfPartialCornersPermCases);
                     }
                 }
 
@@ -558,14 +558,14 @@ namespace lutGenerators {
 
     std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersOrientCases>, ruBaseCube::noOfCornersOrientations> generateCornersOrientPruningTable() {
         std::ifstream inFile("cornersOrientPruningTable.pru");
-        std::array<std::array<int8_t, ruBaseCube::ruBaseCube::noOfPartialCornersOrientCases>, ruBaseCube::noOfCornersOrientations>  ans {};
+        std::array<std::array<int8_t, ruBaseCube::noOfPartialCornersOrientCases>, ruBaseCube::noOfCornersOrientations>  ans {};
 
         if (inFile.good()) {
             std::cout << std::setw(48) << std::left << "Loading corners orient pruning table..." << std::flush;
             ruCubeSimpleBenchmarkTimer bt;
 
             for (uint16_t i = 0; i < ruBaseCube::noOfCornersOrientations; ++i) {
-                inFile.read((char*)ans[i].data(), ruBaseCube::ruBaseCube::noOfPartialCornersOrientCases);
+                inFile.read((char*)ans[i].data(), ruBaseCube::noOfPartialCornersOrientCases);
             }
 
             std::cout << "DONE ";
@@ -585,7 +585,7 @@ namespace lutGenerators {
                 std::unordered_map<uint32_t, uint8_t> cornersOrientPartialOrientPruningTable;
                 std::unordered_map<uint32_t, std::unordered_set<uint32_t>> partialOrientOwners;
 
-                for (uint8_t partInd = 0; partInd < ruBaseCube::ruBaseCube::noOfPartialCornersOrientCases; ++partInd) {
+                for (uint8_t partInd = 0; partInd < ruBaseCube::noOfPartialCornersOrientCases; ++partInd) {
                     partialOrientOwners.clear();
                     cornersPartialOrientPruningDfs(cube, converter, 1, maxCornersOrientPruningDepth, -6, partInd, cornersOrientPartialOrientPruningTable, partialOrientOwners);
                     for (const auto &[partial, orients]: partialOrientOwners) {
@@ -607,7 +607,7 @@ namespace lutGenerators {
 
                 if (outFile.good()) {
                     for (uint16_t i = 0; i < ruBaseCube::noOfCornersOrientations; ++i) {
-                        outFile.write((char*)ans[i].data(), ruBaseCube::ruBaseCube::noOfPartialCornersOrientCases);
+                        outFile.write((char*)ans[i].data(), ruBaseCube::noOfPartialCornersOrientCases);
                     }
                 }
 
