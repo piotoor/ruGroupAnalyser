@@ -108,7 +108,6 @@ namespace lutGenerators {
         inline static const uint8_t maxFullCubePruningDepth = 17;
     #endif
 
-    inline static const uint8_t maxRealFullCubePruningDepth = 20;
     std::vector<std::vector<std::vector<int8_t>>> generateFullCubePruningTable();
 
     inline static const uint8_t maxPermutationValidityDepth = 15;
