@@ -2,18 +2,40 @@
 #define LUTGENERATORS_H
 #include "ruCube.h"
 #include "ruCubeStateConverter.h"
-
+#include "ruCubeSimpleBenchmarkTimer.h"
+#include "ruCubeFactory.h"
 #include <bitset>
 #include <iostream>
 #include <iterator>
 #include <array>
 #include <iomanip>
 #include <vector>
+#include <functional>
 
 namespace lutGenerators {
-    std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfEdgesPermutations> generateEdgesPermMoveMap ();
-    std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfCornersPermutations> generateCornersPermMoveMap ();
-    std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfCornersOrientations> generateCornersOrientMoveMap ();
+    template <int N>
+    std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, N> generateMoveMap (std::function <void(std::unique_ptr<ruBaseCube>::pointer, ruCubeStateConverter&, uint16_t)> setter,
+                                                                                std::function <uint16_t(std::unique_ptr<ruBaseCube>::pointer, ruCubeStateConverter&)> getter,
+                                                                                std::string mapName) {
+        std::string message = "Generating " + mapName + " move map...";
+        std::cout << std::setw(48) << std::left << message << std::flush;
+        ruCubeSimpleBenchmarkTimer bt;
+
+        std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, N> ans {};
+        auto cube = ruCubeFactory::createCube(ruCubeFactory::ruCubeType::ruCube);
+        ruCubeStateConverter converter;
+
+        for (uint16_t lexIndex = 0; lexIndex < N; ++lexIndex) {
+            for (uint8_t t = R; t <= Ui; ++t) {
+                setter(cube.get(), converter, lexIndex);
+                cube->turn(t);
+                ans[lexIndex][t] = getter(cube.get(), converter);
+            }
+        }
+
+        std::cout << "DONE ";
+        return ans;
+    }
 
     inline static const uint32_t edgesSolvedBitmask = 0x7FFF;
     enum class edgesPermSolvedState {

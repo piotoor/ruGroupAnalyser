@@ -5,9 +5,33 @@
 #include <iomanip>
 #include <sstream>
 
-std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfCornersOrientations>  ruLutCube::cornersOrientMoveMap = lutGenerators::generateCornersOrientMoveMap();
-std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfCornersPermutations>  ruLutCube::cornersPermMoveMap   = lutGenerators::generateCornersPermMoveMap();
-std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfEdgesPermutations>    ruLutCube::edgesPermMoveMap     = lutGenerators::generateEdgesPermMoveMap();
+
+std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfCornersOrientations>  ruLutCube::cornersOrientMoveMap = lutGenerators::generateMoveMap <ruBaseCube::noOfCornersOrientations> (
+    [] (std::unique_ptr<ruBaseCube>::pointer cube, ruCubeStateConverter& converter, uint16_t lexIndex) {
+        cube->setCorners(converter.lexIndexCornersToIntCorners(lexIndex, ruLutCube::solvedLexIndexCornersPerm));
+    },
+    [] (std::unique_ptr<ruBaseCube>::pointer cube, ruCubeStateConverter& converter) -> uint16_t {
+        return converter.intCornersToLexIndexCornersOrient(cube->getCorners());
+    },
+    "corners orientation");
+
+std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfCornersPermutations>  ruLutCube::cornersPermMoveMap   = lutGenerators::generateMoveMap <ruBaseCube::noOfCornersPermutations> (
+    [] (std::unique_ptr<ruBaseCube>::pointer cube, ruCubeStateConverter& converter, uint16_t lexIndex) {
+        cube->setCorners(converter.lexIndexCornersToIntCorners(ruLutCube::solvedLexIndexCornersOrient, lexIndex));
+    },
+    [] (std::unique_ptr<ruBaseCube>::pointer cube, ruCubeStateConverter& converter) -> uint16_t {
+        return converter.intCornersToLexIndexCornersPerm(cube->getCorners());
+    },
+    "corners permutation");
+
+std::array<std::array<uint16_t, ruBaseCube::noOfTurns>, ruBaseCube::noOfEdgesPermutations>    ruLutCube::edgesPermMoveMap     = lutGenerators::generateMoveMap <ruBaseCube::noOfEdgesPermutations> (
+    [] (std::unique_ptr<ruBaseCube>::pointer cube, ruCubeStateConverter& converter, uint16_t lexIndex) {
+        cube->setEdges(converter.lexIndexEdgesToIntEdges(lexIndex));
+    },
+    [] (std::unique_ptr<ruBaseCube>::pointer cube, ruCubeStateConverter& converter) -> uint16_t {
+        return converter.intEdgesToLexIndexEdges(cube->getEdges());
+    },
+    "edges permutation");
 
 std::array<std::bitset<ruBaseCube::noOfCornersOrientSolvedStates>, ruBaseCube::noOfCornersOrientations>    ruLutCube::cornersOrientSolvedTable = lutGenerators::generateCornersOrientSolvedTable();
 std::array<std::bitset<ruBaseCube::noOfCornersPermSolvedStates>, ruBaseCube::noOfCornersPermutations>      ruLutCube::cornersPermSolvedTable  = lutGenerators::generateCornersPermSolvedTable();
